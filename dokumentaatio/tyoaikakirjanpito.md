@@ -1,4 +1,6 @@
 # työaikakirjanpito
 
-| päivä | aika | mitä tein |
-| :---: | :--- | :-------- |
+| päivä | aika | mitä tein                                    |
+| :---: | :--- | :------------------------------------------- |
+| 7.6.  | 2    | tietokanta ja sen sisältämien mallien luonti |
+| 8.6.  | 2    | tietokanta ja sen sisältämien mallien luonti |
