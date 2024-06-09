@@ -1,6 +1,5 @@
 import config from "./config.js";
-import typeDefs from "./schema.js";
-import resolvers from "./resolvers.js";
+import schema from "./graphql/schema.js";
 
 import mongoose from "mongoose";
 import { ApolloServer } from "@apollo/server";
@@ -15,10 +14,7 @@ mongoose
     console.log("error connection to MongoDB:", error.message);
   });
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+const server = new ApolloServer({ schema });
 
 startStandaloneServer(server, {
   listen: { port: 4000 },
