@@ -20,8 +20,7 @@ const emptyDataBase = async () => {
 };
 
 const hashPassword = async (password) => {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(password, salt);
+  return bcrypt.hash(password, 10);
 };
 
 const addUsers = async () => {
@@ -46,11 +45,11 @@ const addChats = async () => {
     chat.participants = chatParticipants;
     const addChat = await new Chat(chat).save();
     chatParticipants.forEach(async (participant) => {
-      const updatedUser = await User.findOne({
-        username: participant.username,
-      });
-      updatedUser.chats = updatedUser.chats.concat(addChat);
-      await updatedUser.save();
+      const updatedUser = await User.findOneAndUpdate(
+        { username: participant.username },
+        { $push: { chats: addChat } },
+        { new: true }
+      );
     });
   }
 };
