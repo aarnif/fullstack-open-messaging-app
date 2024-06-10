@@ -25,7 +25,12 @@ const resolvers = {
     allUsers: async (root, args) =>
       User.find({
         name: { $regex: `(?i)${args.name}(?-i)` },
-      }).populate("chats"),
+      })
+        .populate("chats")
+        .populate({
+          path: "chats",
+          populate: { path: "messages" },
+        }),
   },
 };
 

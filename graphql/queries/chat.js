@@ -5,6 +5,7 @@ const typeDefs = `
     id: ID!
     title: String
     participants: [User!]!
+    messages: [Message!]!
   }
 
   extend type Query {
@@ -16,7 +17,15 @@ const typeDefs = `
 const resolvers = {
   Query: {
     countChats: async () => Chat.collection.countDocuments(),
-    allChats: async () => Chat.find({}).populate("participants"),
+    allChats: async () => {
+      const chats = await Chat.find({})
+        .populate("participants")
+        .populate({
+          path: "messages",
+          populate: { path: "sender" },
+        });
+      return chats;
+    },
   },
 };
 
