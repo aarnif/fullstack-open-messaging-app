@@ -1,4 +1,5 @@
 import Chat from "../../models/chat.js";
+import User from "../../models/user.js";
 
 const typeDefs = `
   extend type Mutation {
@@ -19,6 +20,13 @@ const resolvers = {
 
       try {
         newChat.save();
+        const addChatToParticipatingUsersChats = args.participants.map(
+          async (participant) => {
+            await User.findByIdAndUpdate(participant, {
+              $push: { chats: newChat._id },
+            });
+          }
+        );
       } catch (error) {
         throw new GraphQLError("Creating chat failed", {
           extensions: {
