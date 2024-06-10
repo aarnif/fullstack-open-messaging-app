@@ -1,6 +1,10 @@
-import user from "./queries/user.js";
-import chat from "./queries/chat.js";
-import message from "./queries/message.js";
+import userQueries from "./queries/user.js";
+import chatQueries from "./queries/chat.js";
+import messageQueries from "./queries/message.js";
+
+import userMutations from "./mutations/user.js";
+import chatMutations from "./mutations/chat.js";
+import messageMutations from "./mutations/message.js";
 
 import pkg from "lodash";
 const { merge } = pkg;
@@ -13,15 +17,33 @@ const Query = `
   }
 `;
 
+const Mutation = `
+  type Mutation {
+    _empty: String
+  }
+`;
+
 const resolvers = {};
 
 const schema = makeExecutableSchema({
-  typeDefs: [Query, user.typeDefs, chat.typeDefs, message.typeDefs],
+  typeDefs: [
+    Query,
+    Mutation,
+    userQueries.typeDefs,
+    chatQueries.typeDefs,
+    messageQueries.typeDefs,
+    userMutations.typeDefs,
+    chatMutations.typeDefs,
+    messageMutations.typeDefs,
+  ],
   resolvers: merge(
     resolvers,
-    user.resolvers,
-    chat.resolvers,
-    message.resolvers
+    userQueries.resolvers,
+    chatQueries.resolvers,
+    messageQueries.resolvers,
+    userMutations.resolvers,
+    chatMutations.resolvers,
+    messageMutations.resolvers
   ),
 });
 
