@@ -15,12 +15,15 @@ const userSchema = new Schema({
   },
   name: {
     type: String,
+    default: "",
   },
   about: {
     type: String,
+    default: "",
   },
   profilePicture: {
     type: String,
+    default: "",
   },
   status: {
     type: String,
