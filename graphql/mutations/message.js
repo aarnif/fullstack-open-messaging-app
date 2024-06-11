@@ -3,6 +3,9 @@ import Chat from "../../models/chat.js";
 import Message from "../../models/message.js";
 
 import { GraphQLError } from "graphql";
+import { PubSub } from "graphql-subscriptions";
+
+const pubsub = new PubSub();
 
 const typeDefs = `
   extend type Mutation {
@@ -12,6 +15,9 @@ const typeDefs = `
       content: String!
     ): Message
   }
+  type Subscription {
+    messageAdded: Message!
+  }   
 `;
 
 const resolvers = {
@@ -58,9 +64,19 @@ const resolvers = {
           },
         });
       }
-      return Message.findById(newMessage.id)
+
+      const addedMessage = await Message.findById(newMessage.id)
         .populate("sender")
         .populate("chat");
+
+      pubsub.publish("MESSAGE_ADDED", { messageAdded: addedMessage });
+
+      return addedMessage;
+    },
+  },
+  Subscription: {
+    messageAdded: {
+      subscribe: () => pubsub.asyncIterator("MESSAGE_ADDED"),
     },
   },
 };
