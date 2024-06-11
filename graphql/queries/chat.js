@@ -11,6 +11,7 @@ const typeDefs = `
   extend type Query {
     countChats: Int!
     allChats: [Chat!]!
+    findChatById(id: ID!): Chat
   }
 `;
 
@@ -26,6 +27,22 @@ const resolvers = {
         });
       return chats;
     },
+    findChatById: async (root, args) =>
+      Chat.findById(args.id)
+        .populate("participants")
+        .populate({
+          path: "messages",
+          populate: { path: "sender" },
+        })
+        .catch((error) => {
+          throw new GraphQLError("Invalid id!", {
+            extensions: {
+              code: "INVALID_ID",
+              invalidArgs: args.id,
+              error,
+            },
+          });
+        }),
   },
 };
 

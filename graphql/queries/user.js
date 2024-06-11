@@ -1,5 +1,7 @@
 import User from "../../models/user.js";
 
+import { GraphQLError } from "graphql";
+
 const typeDefs = `
   scalar Date
   type User {
@@ -16,6 +18,7 @@ const typeDefs = `
   extend type Query {
     countUsers: Int!
     allUsers(name: String): [User!]!
+    findUserById(id: ID!): User
   }
 `;
 
@@ -24,12 +27,28 @@ const resolvers = {
     countUsers: async () => User.collection.countDocuments(),
     allUsers: async (root, args) =>
       User.find({
-        name: { $regex: `(?i)${args.name}(?-i)` },
+        name: { $regex: `(?i)${args.name ? args.name : ""}(?-i)` },
       })
         .populate("chats")
         .populate({
           path: "chats",
           populate: { path: "messages" },
+        }),
+    findUserById: async (root, args) =>
+      User.findById(args.id)
+        .populate("chats")
+        .populate({
+          path: "chats",
+          populate: { path: "messages" },
+        })
+        .catch((error) => {
+          throw new GraphQLError("Invalid id!", {
+            extensions: {
+              code: "INVALID_ID",
+              invalidArgs: args.id,
+              error,
+            },
+          });
         }),
   },
 };
