@@ -15,10 +15,15 @@ const typeDefs = `
     chats: [Chat!]!
   }
 
+  type Token {
+    value: String!
+  }
+
   extend type Query {
     countUsers: Int!
     allUsers(name: String): [User!]!
     findUserById(id: ID!): User
+    me: User
   }
 `;
 
@@ -50,6 +55,7 @@ const resolvers = {
             },
           });
         }),
+    me: async (root, args, context) => context.currentUser,
   },
 };
 

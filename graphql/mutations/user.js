@@ -2,6 +2,7 @@ import User from "../../models/user.js";
 
 import bcrypt from "bcrypt";
 import { GraphQLError } from "graphql";
+import jwt from "jsonwebtoken";
 
 const typeDefs = `
   extend type Mutation {
@@ -9,6 +10,10 @@ const typeDefs = `
       username: String!
       password: String!
     ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 `;
 
@@ -38,6 +43,37 @@ const resolvers = {
         throw error;
       }
       return user;
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username });
+      const error = new GraphQLError("Invalid username or password!", {
+        extensions: {
+          code: "BAD_USER_INPUT",
+          invalidArgs: args,
+        },
+      });
+
+      if (!user) {
+        console.log("Invalid username!");
+        throw error;
+      }
+
+      const passwordMatch = await bcrypt.compare(
+        args.password,
+        user.passwordHash
+      );
+
+      if (!passwordMatch) {
+        console.log("Password does not match!");
+        throw error;
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      };
+
+      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
     },
   },
 };
