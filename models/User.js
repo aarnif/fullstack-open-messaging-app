@@ -34,6 +34,12 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  contacts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   chats: [
     {
       type: Schema.Types.ObjectId,

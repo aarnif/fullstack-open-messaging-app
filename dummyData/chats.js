@@ -9,12 +9,12 @@ const chats = [
   },
   {
     title: "Book Club",
-    participants: [users[1], users[3], users[5], users[7]],
+    participants: [users[0], users[1], users[3], users[5], users[7]],
     messages: [],
   },
   {
     title: "Gaming Night",
-    participants: [users[2], users[4], users[6], users[8]],
+    participants: [users[0], users[2], users[4], users[6], users[8]],
     messages: [],
   },
   {
@@ -24,17 +24,17 @@ const chats = [
   },
   {
     title: "Music Band",
-    participants: [users[1], users[6], users[8]],
+    participants: [users[0], users[1], users[6], users[8]],
     messages: [],
   },
   {
     title: "Cooking Lovers",
-    participants: [users[3], users[4], users[9], users[1]],
+    participants: [users[0], users[3], users[4], users[9], users[1]],
     messages: [],
   },
   {
     title: "Photography Crew",
-    participants: [users[2], users[7], users[9], users[0]],
+    participants: [users[0], users[2], users[7], users[9]],
     messages: [],
   },
   {
@@ -44,12 +44,12 @@ const chats = [
   },
   {
     title: "Tech Geeks",
-    participants: [users[3], users[6], users[8]],
+    participants: [users[0], users[3], users[6], users[8]],
     messages: [],
   },
   {
     title: "Fitness Freaks",
-    participants: [users[4], users[5], users[9], users[2], users[3]],
+    participants: [users[0], users[4], users[5], users[9], users[2], users[3]],
     messages: [],
   },
   {

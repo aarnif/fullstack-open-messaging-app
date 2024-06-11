@@ -31,6 +31,14 @@ const addUsers = async () => {
     user = { ...user, passwordHash: hashedPassword };
     const addUser = await new User(user).save();
   }
+
+  // Put all the contacts to the test user only
+  const allUsers = await User.find({ username: { $ne: users[0].username } });
+  const addContactsToUser = await User.findOneAndUpdate(
+    { username: users[0].username },
+    { contacts: allUsers },
+    { new: true }
+  );
 };
 
 const addChats = async () => {

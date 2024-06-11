@@ -12,6 +12,7 @@ const typeDefs = `
     profilePicture: String
     status: String!
     createdAt: Date!
+    contacts: [User!]!
     chats: [Chat!]!
   }
 
@@ -34,6 +35,7 @@ const resolvers = {
       User.find({
         name: { $regex: `(?i)${args.name ? args.name : ""}(?-i)` },
       })
+        .populate("contacts")
         .populate("chats")
         .populate({
           path: "chats",

@@ -1,5 +1,14 @@
 const users = [
   {
+    username: "test",
+    password: "password",
+    name: "Test User",
+    about: "Test user for development purposes.",
+    profilePicture: "",
+    status: "online",
+    createdAt: new Date("2023-12-08T10:00:00Z"),
+  },
+  {
     username: "john_doe",
     password: "password",
     name: "John Doe",
