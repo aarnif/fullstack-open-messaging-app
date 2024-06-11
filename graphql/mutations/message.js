@@ -16,7 +16,15 @@ const typeDefs = `
 
 const resolvers = {
   Mutation: {
-    createMessage: async (root, args) => {
+    createMessage: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
       if (args.content.length < 1) {
         throw new GraphQLError("Message must be at least 1 character long", {
           extensions: {

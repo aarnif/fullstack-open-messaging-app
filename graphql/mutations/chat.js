@@ -12,7 +12,15 @@ const typeDefs = `
 
 const resolvers = {
   Mutation: {
-    createChat: async (root, args) => {
+    createChat: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
       const newChat = new Chat({
         title: args.title,
         participants: args.participants,

@@ -14,6 +14,7 @@ const typeDefs = `
       username: String!
       password: String!
     ): Token
+    logout: User
   }
 `;
 
@@ -74,6 +75,10 @@ const resolvers = {
       };
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+    },
+    logout: async (root, args, context) => {
+      context.currentUser = null;
+      return context.currentUser;
     },
   },
 };
