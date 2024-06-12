@@ -9,3 +9,4 @@
 | 10.6. | 3    | mutaatioiden lisäys ja tietokannan alustamis-scriptin korjaus                                           |
 | 11.6. | 3    | käyttäjähallinnan toteutus, uusien kyselyiden luonti, tietokannan mallin ja alustamis-scriptin päivitys |
 | 11.6. | 1    | palvelimen refaktorointi tilauksia varten ja tilauksen lisääminen uuden viestin lisäämisen yhteyteen    |
+| 12.6. | 5    | Tilauksen lisääminen uuden chatin lisäämisen yhteyteen ja käyttöliittymän teon aloittaminen             |

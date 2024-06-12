@@ -1,6 +1,11 @@
 import Chat from "../../models/chat.js";
 import User from "../../models/user.js";
 
+import { GraphQLError } from "graphql";
+import { PubSub } from "graphql-subscriptions";
+
+const pubsub = new PubSub();
+
 const typeDefs = `
   extend type Mutation {
     createChat(
@@ -8,6 +13,9 @@ const typeDefs = `
       participants: [ID!]!
     ): Chat
   }
+  type Subscription {
+    chatAdded: Chat!
+  }   
 `;
 
 const resolvers = {
@@ -44,7 +52,17 @@ const resolvers = {
           },
         });
       }
-      return newChat.populate("participants");
+
+      const addedChat = newChat.populate("participants");
+
+      pubsub.publish("CHAT_ADDED", { chatAdded: addedChat });
+
+      return addedChat;
+    },
+  },
+  Subscription: {
+    chatAdded: {
+      subscribe: () => pubsub.asyncIterator("CHAT_ADDED"),
     },
   },
 };
