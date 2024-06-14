@@ -1,6 +1,7 @@
 import config from "./config.js";
 import schema from "./graphql/schema.js";
 import User from "./models/user.js";
+import imageRouter from "./routes/imageRouter.js";
 
 import mongoose from "mongoose";
 import { ApolloServer } from "@apollo/server";
@@ -51,10 +52,13 @@ const server = new ApolloServer({
 
 await server.start();
 
+app.use(cors());
+app.use(express.json());
+
+app.use("/images", imageRouter);
+
 app.use(
   "/",
-  cors(),
-  express.json(),
   expressMiddleware(server, {
     context: async ({ req }) => {
       const auth = req ? req.headers.authorization : null;
