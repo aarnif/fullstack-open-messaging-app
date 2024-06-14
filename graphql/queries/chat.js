@@ -12,6 +12,7 @@ const typeDefs = `
     countChats: Int!
     allChats: [Chat!]!
     findChatById(id: ID!): Chat
+    allChatsByUser(userId: ID!): [Chat!]!
   }
 `;
 
@@ -42,6 +43,13 @@ const resolvers = {
               error,
             },
           });
+        }),
+    allChatsByUser: async (root, args) =>
+      Chat.find({ participants: { $in: args.userId } })
+        .populate("participants")
+        .populate({
+          path: "messages",
+          populate: { path: "sender" },
         }),
   },
 };
