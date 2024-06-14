@@ -27,8 +27,17 @@ const resolvers = {
           invalidArgs: args.password,
         },
       });
+      const checkIfUserNameExists = await User.findOne({
+        username: args.username,
+      });
+
+      if (checkIfUserNameExists) {
+        error.message = "Username already exists!";
+        throw error;
+      }
+
       if (args.password.length < 6) {
-        error.message = "Password must be at least 6 characters long";
+        error.message = "Password must be at least 6 characters long!";
         throw error;
       }
 
