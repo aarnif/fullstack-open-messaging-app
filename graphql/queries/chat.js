@@ -4,6 +4,7 @@ const typeDefs = `
   type Chat {
     id: ID!
     title: String
+    image: String
     participants: [User!]!
     messages: [Message!]!
   }

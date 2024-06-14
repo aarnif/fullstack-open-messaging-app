@@ -7,6 +7,10 @@ const chatSchema = new Schema({
     type: String,
     default: "",
   },
+  image: {
+    type: String,
+    default: "anonymous.png",
+  },
   participants: [
     {
       type: Schema.Types.ObjectId,
