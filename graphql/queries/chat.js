@@ -45,13 +45,22 @@ const resolvers = {
             },
           });
         }),
-    allChatsByUser: async (root, args) =>
-      Chat.find({ participants: { $in: args.userId } })
+    allChatsByUser: async (root, args) => {
+      const allUsersChats = await Chat.find({
+        participants: { $in: args.userId },
+      })
         .populate("participants")
         .populate({
           path: "messages",
           populate: { path: "sender" },
-        }),
+        });
+
+      return allUsersChats.sort((a, b) => {
+        const latestMessagesA = a.messages[a.messages.length - 1];
+        const latestMessageB = b.messages[b.messages.length - 1];
+        return latestMessageB?.createdAt - latestMessagesA?.createdAt;
+      });
+    },
   },
 };
 
