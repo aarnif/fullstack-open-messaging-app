@@ -1,61 +1,61 @@
-import users from "./users.js";
+import messages from "./messages.js";
 
 const chats = [
   // Group chats
   {
     title: "Weekend Hikers",
-    participants: [users[0], users[2], users[4]],
-    messages: [],
+    participants: [],
+    messages: messages[0],
   },
   {
     title: "Book Club",
-    participants: [users[0], users[1], users[3], users[5], users[7]],
-    messages: [],
+    participants: [],
+    messages: messages[1],
   },
   {
     title: "Gaming Night",
-    participants: [users[0], users[2], users[4], users[6], users[8]],
-    messages: [],
+    participants: [],
+    messages: messages[2],
   },
   {
     title: "Yoga Enthusiasts",
-    participants: [users[0], users[5], users[7], users[9]],
-    messages: [],
+    participants: [],
+    messages: messages[3],
   },
   {
     title: "Music Band",
-    participants: [users[0], users[1], users[6], users[8]],
-    messages: [],
+    participants: [],
+    messages: messages[4],
   },
   {
     title: "Cooking Lovers",
-    participants: [users[0], users[3], users[4], users[9], users[1]],
-    messages: [],
+    participants: [],
+    messages: messages[5],
   },
   {
     title: "Photography Crew",
-    participants: [users[0], users[2], users[7], users[9]],
-    messages: [],
+    participants: [],
+    messages: messages[6],
   },
   {
     title: "Movie Buffs",
-    participants: [users[0], users[1], users[8], users[4], users[5]],
-    messages: [],
+    participants: [],
+    messages: messages[7],
   },
   {
     title: "Tech Geeks",
-    participants: [users[0], users[3], users[6], users[8]],
-    messages: [],
+    participants: [],
+    messages: messages[8],
   },
   {
     title: "Fitness Freaks",
-    participants: [users[0], users[4], users[5], users[9], users[2], users[3]],
-    messages: [],
+    participants: [],
+    messages: messages[9],
   },
   {
     title: "Travel Buddies",
-    participants: [users[0], users[2], users[6], users[7]],
-    messages: [],
+    participants: [],
+    messages: messages[10],
   },
 ];
 
