@@ -1,12 +1,22 @@
 import Chat from "../../models/chat.js";
 
 const typeDefs = `
+  scalar Date
+  type Message {
+    id: ID!
+    sender: User!
+    content: String
+    createdAt: Date
+  }
+
   type Chat {
     id: ID!
     title: String
     image: String
     participants: [User!]!
     messages: [Message!]!
+    latestMessage: Message
+    createdAt: Date
   }
 
   extend type Query {
@@ -45,22 +55,20 @@ const resolvers = {
             },
           });
         }),
-    allChatsByUser: async (root, args) => {
-      const allUsersChats = await Chat.find({
+    allChatsByUser: async (root, args) =>
+      Chat.find({
         participants: { $in: args.userId },
       })
         .populate("participants")
         .populate({
           path: "messages",
           populate: { path: "sender" },
-        });
-
-      return allUsersChats.sort((a, b) => {
-        const latestMessagesA = a.messages[a.messages.length - 1];
-        const latestMessageB = b.messages[b.messages.length - 1];
-        return latestMessageB?.createdAt - latestMessagesA?.createdAt;
-      });
-    },
+        })
+        .populate({
+          path: "latestMessage",
+          populate: { path: "sender" },
+        })
+        .sort({ "latestMessage.createdAt": -1 }),
   },
 };
 
