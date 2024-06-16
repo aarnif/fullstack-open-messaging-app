@@ -21,7 +21,8 @@ const messageContent = {
 const chatSchema = new Schema({
   title: {
     type: String,
-    default: "",
+    required: true,
+    minlength: 1,
   },
   image: {
     type: String,
