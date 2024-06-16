@@ -12,4 +12,5 @@
 | 12.6. | 5    | Tilauksen lisääminen uuden chatin lisäämisen yhteyteen ja käyttöliittymän teon aloittaminen                              |
 | 13.6. | 5    | Lisää käyttäjän kirjautuminen käyttöliittymään ja aloita uuden käyttäjän lisäyksen tekeminen                             |
 | 14.6. | 5    | Uuden käyttäjän lisäys ja käyttäjän chattien hakeminen, kuvien tuominen palvelimelta, käyttäjän chats-sivun aloittaminen |
-| 15.6. | 3    | Tietokantamallien päivitys ja palvelinkoodin refaktorointi                                                               |
+| 15.6. | 3    | Tietokantamallien päivitys, palvelinkoodin refaktorointi ja käyttöliittymän chats-näkymän päivitys                       |
+| 16.6. | 4    | Hakutoiminnon lisäys chats-näkymään, react-spring-kirjaston opiskelu ja LoadingIcon-komponentin luonti                   |

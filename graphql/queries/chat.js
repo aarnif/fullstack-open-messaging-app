@@ -23,7 +23,7 @@ const typeDefs = `
     countChats: Int!
     allChats: [Chat!]!
     findChatById(id: ID!): Chat
-    allChatsByUser(userId: ID!): [Chat!]!
+    allChatsByUser(userId: ID!, searchByTitle: String): [Chat!]!
   }
 `;
 
@@ -58,6 +58,9 @@ const resolvers = {
     allChatsByUser: async (root, args) =>
       Chat.find({
         participants: { $in: args.userId },
+        title: {
+          $regex: `(?i)${args.searchByTitle ? args.searchByTitle : ""}(?-i)`,
+        },
       })
         .populate("participants")
         .populate({
