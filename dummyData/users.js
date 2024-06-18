@@ -9,7 +9,7 @@ const users = [
     createdAt: new Date("2023-12-08T10:00:00Z"),
   },
   {
-    username: "john_doe",
+    username: "hiker_john",
     password: "password",
     name: "John Doe",
     about: "Love hiking and outdoor adventures.",
@@ -18,7 +18,7 @@ const users = [
     createdAt: new Date("2023-12-08T10:00:00Z"),
   },
   {
-    username: "jane_smith",
+    username: "bookworm_jane",
     password: "password",
     name: "Jane Smith",
     about: "Avid reader and coffee enthusiast.",
@@ -27,7 +27,7 @@ const users = [
     createdAt: new Date("2024-01-15T14:30:00Z"),
   },
   {
-    username: "alice_jones",
+    username: "techie_alice",
     password: "password",
     name: "Alice Jones",
     about: "Tech geek and foodie.",
@@ -36,7 +36,7 @@ const users = [
     createdAt: new Date("2024-03-22T08:45:00Z"),
   },
   {
-    username: "bob_brown",
+    username: "music_bob",
     password: "password",
     name: "Bob Brown",
     about: "Musician and artist.",
@@ -45,7 +45,7 @@ const users = [
     createdAt: new Date("2024-05-28T16:20:00Z"),
   },
   {
-    username: "charlie_clark",
+    username: "streamer_charlie",
     password: "password",
     name: "Charlie Clark",
     about: "Gamer and streamer.",
@@ -54,7 +54,7 @@ const users = [
     createdAt: new Date("2024-06-01T10:00:00Z"),
   },
   {
-    username: "david_wilson",
+    username: "fit_david",
     password: "password",
     name: "David Wilson",
     about: "Fitness enthusiast.",
@@ -63,7 +63,7 @@ const users = [
     createdAt: new Date("2024-06-05T12:30:00Z"),
   },
   {
-    username: "emma_davis",
+    username: "travel_emma",
     password: "password",
     name: "Emma Davis",
     about: "Travel blogger.",
@@ -72,7 +72,7 @@ const users = [
     createdAt: new Date("2024-06-10T14:45:00Z"),
   },
   {
-    username: "frank_miller",
+    username: "history_frank",
     password: "password",
     name: "Frank Miller",
     about: "History buff.",
@@ -81,7 +81,7 @@ const users = [
     createdAt: new Date("2024-06-15T16:00:00Z"),
   },
   {
-    username: "grace_martin",
+    username: "photo_grace",
     password: "password",
     name: "Grace Martin",
     about: "Photographer.",
@@ -90,7 +90,7 @@ const users = [
     createdAt: new Date("2024-06-20T18:15:00Z"),
   },
   {
-    username: "harry_thompson",
+    username: "chef_harry",
     password: "password",
     name: "Harry Thompson",
     about: "Chef and food critic.",

@@ -24,7 +24,7 @@ const typeDefs = `
     countUsers: Int!
     allUsers(name: String): [User!]!
     findUserById(id: ID!): User
-    allContactsByUser: User
+    allContactsByUser(searchByName: String): User
     me: User
   }
 `;
@@ -59,7 +59,25 @@ const resolvers = {
           });
         }),
     allContactsByUser: async (root, args, context) =>
-      User.findById(context.currentUser).populate("contacts"),
+      User.findById(context.currentUser).populate({
+        path: "contacts",
+        match: {
+          $or: [
+            {
+              name: {
+                $regex: args.searchByName ? `${args.searchByName}` : "",
+                $options: "i",
+              },
+            },
+            {
+              username: {
+                $regex: args.searchByName ? `${args.searchByName}` : "",
+                $options: "i",
+              },
+            },
+          ],
+        },
+      }),
     me: async (root, args, context) => context.currentUser,
   },
 };
