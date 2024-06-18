@@ -24,6 +24,7 @@ const typeDefs = `
     countUsers: Int!
     allUsers(name: String): [User!]!
     findUserById(id: ID!): User
+    allContactsByUser: User
     me: User
   }
 `;
@@ -57,6 +58,8 @@ const resolvers = {
             },
           });
         }),
+    allContactsByUser: async (root, args, context) =>
+      User.findById(context.currentUser).populate("contacts"),
     me: async (root, args, context) => context.currentUser,
   },
 };
