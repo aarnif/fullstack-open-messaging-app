@@ -26,7 +26,7 @@ const chatSchema = new Schema({
   },
   image: {
     type: String,
-    default: "anonymous.png",
+    default: "chat-placeholder.png",
   },
   participants: [
     {

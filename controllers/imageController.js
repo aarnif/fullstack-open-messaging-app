@@ -1,11 +1,29 @@
+import Chat from "../models/chat.js";
+import User from "../models/user.js";
+
 import asyncHandler from "express-async-handler";
+import fs from "fs";
 
 const getChatImage = asyncHandler(async (req, res) => {
-  res.sendFile("anonymous.png", { root: "./assets/images" });
+  const findChat = await Chat.findById(req.params.chatId);
+  let imageFile = "chat_placeholder.png";
+
+  if (fs.existsSync(`./assets/images/chats/${findChat.image}`)) {
+    imageFile = findChat.image;
+  }
+
+  res.sendFile(imageFile, { root: "./assets/images/chats" });
 });
 
 const getContactImage = asyncHandler(async (req, res) => {
-  res.sendFile("anonymous.png", { root: "./assets/images" });
+  const findContact = await User.findById(req.params.contactId);
+  let imageFile = "profile_placeholder.png";
+
+  if (fs.existsSync(`./assets/images/profiles/${findContact.profilePicture}`)) {
+    imageFile = findContact.profilePicture;
+  }
+
+  res.sendFile(imageFile, { root: "./assets/images/profiles" });
 });
 
 export default {
