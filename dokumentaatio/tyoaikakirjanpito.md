@@ -15,3 +15,4 @@
 | 15.6. | 3    | Tietokantamallien päivitys, palvelinkoodin refaktorointi ja käyttöliittymän chats-näkymän päivitys                       |
 | 16.6. | 4    | Hakutoiminnon lisäys chats-näkymään, react-spring-kirjaston opiskelu ja LoadingIcon-komponentin luonti                   |
 | 17.6. | 6    | react-spring-kirjaston kanssa "säätäminen" ja valikon lisäys käyttöliittymään                                            |
+| 18.6. | 5    | Käyttöliittymävalikon päivitys ja Contacts-näkymän lisäys käyttöliittymään                                               |
