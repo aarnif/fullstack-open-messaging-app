@@ -1,4 +1,3 @@
-import e from "cors";
 import Chat from "../../models/chat.js";
 import User from "../../models/user.js";
 
@@ -13,9 +12,14 @@ const typeDefs = `
       title: String
       participants: [ID!]!
     ): Chat
+    addMessageToChat(
+      chatId: ID!
+      content: String!
+    ): Chat
   }
   type Subscription {
     chatAdded: Chat!
+    messageToChatAdded: Chat!
   }   
 `;
 
@@ -95,10 +99,62 @@ const resolvers = {
 
       return addedChat;
     },
+    addMessageToChat: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const newMessage = {
+        sender: context.currentUser.id,
+        content: args.content,
+      };
+
+      let updatedChat = null;
+
+      try {
+        updatedChat = await Chat.findByIdAndUpdate(
+          args.chatId,
+          {
+            $push: { messages: newMessage },
+            latestMessage: newMessage,
+          },
+          { new: true }
+        )
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          });
+      } catch (error) {
+        throw new GraphQLError("Adding message to chat failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args,
+            error,
+          },
+        });
+      }
+
+      console.log("updatedChat", updatedChat);
+
+      pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
+        messageToChatAdded: updatedChat,
+      });
+
+      return updatedChat;
+    },
   },
+
   Subscription: {
     chatAdded: {
       subscribe: () => pubsub.asyncIterator("CHAT_ADDED"),
+    },
+    messageToChatAdded: {
+      subscribe: () => pubsub.asyncIterator("MESSAGE_TO_CHAT_ADDED"),
     },
   },
 };
