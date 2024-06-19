@@ -22,7 +22,7 @@ const typeDefs = `
   extend type Query {
     countChats: Int!
     allChats: [Chat!]!
-    findChatById(id: ID!): Chat
+    findChatById(chatId: ID!): Chat
     allChatsByUser(userId: ID!, searchByTitle: String): [Chat!]!
   }
 `;
@@ -40,7 +40,7 @@ const resolvers = {
       return chats;
     },
     findChatById: async (root, args) =>
-      Chat.findById(args.id)
+      Chat.findById(args.chatId)
         .populate("participants")
         .populate({
           path: "messages",
@@ -50,7 +50,7 @@ const resolvers = {
           throw new GraphQLError("Invalid id!", {
             extensions: {
               code: "INVALID_ID",
-              invalidArgs: args.id,
+              invalidArgs: args.chatId,
               error,
             },
           });
