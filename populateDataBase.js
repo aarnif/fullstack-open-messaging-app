@@ -16,6 +16,9 @@ const usersInDataBase = [];
 const findUserFromUsersDataBase = (username) =>
   usersInDataBase.find((user) => user.username === username);
 
+const selectRandomChatParticipant = (participants) =>
+  participants[Math.floor(Math.random() * participants.length)];
+
 const getRandomUsers = (users) => {
   const numItems = Math.floor(Math.random() * 3) + 3;
   const shuffledUsers = users.sort(() => 0.5 - Math.random());
@@ -56,15 +59,28 @@ const addChats = async () => {
     const chat = chats[i];
     chat.participants = getRandomUsers(usersInDataBase);
 
-    // Add the test user to all chats
-    chat.participants.push(findUserFromUsersDataBase("test"));
+    const testUser = findUserFromUsersDataBase("test");
+
+    const chatParticipantNames = chat.participants.map(
+      (participant) => participant.username
+    );
+
+    // Add the test user to every chat
+    if (!chatParticipantNames.includes(testUser.username)) {
+      chat.participants.push(findUserFromUsersDataBase("test"));
+    }
 
     chat.messages = chat.messages.map((message) => {
-      const selectRandomChatParticipant = () =>
-        chat.participants[Math.floor(Math.random() * chat.participants.length)];
-      return { ...message, sender: selectRandomChatParticipant() };
+      return {
+        ...message,
+        sender: selectRandomChatParticipant(chat.participants),
+      };
     });
-    chat.latestMessage = chat.messages[chat.messages.length - 1];
+
+    // Save messages to the chat from the last message to the first
+    chat.messages.reverse();
+
+    chat.latestMessage = chat.messages[0];
     const addChat = await new Chat(chat).save();
   }
 };
