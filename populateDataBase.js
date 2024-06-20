@@ -84,6 +84,20 @@ const addChats = async () => {
   }
 };
 
+const addChatsToUsers = async () => {
+  console.log("adding chats to users...");
+  const allChats = await Chat.find({});
+  for (let i = 0; i < allChats.length; ++i) {
+    const chat = allChats[i];
+    for (let j = 0; j < chat.participants.length; ++j) {
+      const participant = chat.participants[j];
+      const user = await User.findById(participant);
+      user.chats = user.chats.concat(chat._id);
+      await user.save();
+    }
+  }
+};
+
 const main = async () => {
   try {
     mongoose.connect(MONGODB_URI);
@@ -91,6 +105,7 @@ const main = async () => {
     await emptyDataBase();
     await addUsers();
     await addChats();
+    await addChatsToUsers();
     console.log("close connection to MongoDB");
     mongoose.connection.close();
   } catch (error) {

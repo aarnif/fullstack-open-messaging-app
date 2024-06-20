@@ -16,4 +16,5 @@
 | 16.6. | 4    | Hakutoiminnon lisäys chats-näkymään, react-spring-kirjaston opiskelu ja LoadingIcon-komponentin luonti                   |
 | 17.6. | 6    | react-spring-kirjaston kanssa "säätäminen" ja valikon lisäys käyttöliittymään                                            |
 | 18.6. | 4    | Käyttöliittymävalikon päivitys ja Contacts-näkymän lisäys käyttöliittymään                                               |
-| 19.6. | 4    | Yksittäisen chat-näkymän lisäys käyttöliittymään ja uuden chatin lisäyksen aloitus                                       |
+| 19.6. | 4    | Yksittäisen chat-näkymän lisäys käyttöliittymään ja uuden chat-viestin lisäyksen aloitus                                 |
+| 20.6. | 4    | Uuden chat-viestin lisäys, Chat-mallin päivitys ja tilausten lisääminen käyttöliittymään aloitus                         |
