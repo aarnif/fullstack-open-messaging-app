@@ -19,7 +19,7 @@ const findUserFromUsersDataBase = (username) =>
 const selectRandomChatParticipant = (participants) =>
   participants[Math.floor(Math.random() * participants.length)];
 
-const getRandomUsers = (users) => {
+const addChatParticipantsRandomly = (users) => {
   const numItems = Math.floor(Math.random() * 3) + 3;
   const shuffledUsers = users.sort(() => 0.5 - Math.random());
   return shuffledUsers.slice(0, numItems);
@@ -57,7 +57,7 @@ const addChats = async () => {
   console.log("adding chats...");
   for (let i = 0; i < chats.length; ++i) {
     const chat = chats[i];
-    chat.participants = getRandomUsers(usersInDataBase);
+    chat.participants = addChatParticipantsRandomly(usersInDataBase);
 
     const testUser = findUserFromUsersDataBase("test");
 
@@ -80,7 +80,6 @@ const addChats = async () => {
     // Save messages to the chat from the last message to the first
     chat.messages.reverse();
 
-    chat.latestMessage = chat.messages[0];
     const addChat = await new Chat(chat).save();
   }
 };

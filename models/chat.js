@@ -2,22 +2,6 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const messageContent = {
-  sender: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  content: {
-    type: String,
-    required: true,
-    minlength: 1,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-};
-
 const chatSchema = new Schema({
   title: {
     type: String,
@@ -34,8 +18,23 @@ const chatSchema = new Schema({
       ref: "User",
     },
   ],
-  messages: [messageContent],
-  latestMessage: messageContent,
+  messages: [
+    {
+      sender: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+      content: {
+        type: String,
+        required: true,
+        minlength: 1,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

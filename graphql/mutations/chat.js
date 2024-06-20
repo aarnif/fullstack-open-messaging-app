@@ -119,8 +119,7 @@ const resolvers = {
         updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $push: { messages: newMessage },
-            latestMessage: newMessage,
+            $push: { messages: { $each: [newMessage], $position: 0 } },
           },
           { new: true }
         )

@@ -67,11 +67,7 @@ const resolvers = {
           path: "messages",
           populate: { path: "sender" },
         })
-        .populate({
-          path: "latestMessage",
-          populate: { path: "sender" },
-        })
-        .sort({ "latestMessage.createdAt": -1 }),
+        .sort({ "messages.0.createdAt": "desc" }),
   },
 };
 
