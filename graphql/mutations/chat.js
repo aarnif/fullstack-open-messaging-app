@@ -16,10 +16,14 @@ const typeDefs = `
       chatId: ID!
       content: String!
     ): Chat
+    deleteChat(
+      chatId: ID!
+    ): Chat
   }
   type Subscription {
     chatAdded: Chat!
     messageToChatAdded: Chat!
+    chatDeleted: Chat!
   }   
 `;
 
@@ -149,6 +153,49 @@ const resolvers = {
 
       return updatedChat;
     },
+    deleteChat: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const chatToBeDeleted = await Chat.findById(args.chatId).populate(
+        "participants"
+      );
+
+      if (!chatToBeDeleted) {
+        throw new GraphQLError("Chat not found!", {
+          extensions: {
+            code: "NOT_FOUND",
+            invalidArgs: args.chatId,
+          },
+        });
+      }
+
+      try {
+        const removeChat = await Chat.findByIdAndDelete(args.chatId);
+        const removeChatFromParticipatingUsersChats =
+          chatToBeDeleted.participants.map(async (participant) => {
+            const user = await User.findByIdAndUpdate(participant, {
+              $pull: { chats: args.chatId },
+            });
+          });
+      } catch (error) {
+        throw new GraphQLError("Removing chat failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args,
+            error,
+          },
+        });
+      }
+      pubsub.publish("CHAT_DELETED", { chatDeleted: chatToBeDeleted });
+
+      return chatToBeDeleted;
+    },
   },
 
   Subscription: {
@@ -157,6 +204,9 @@ const resolvers = {
     },
     messageToChatAdded: {
       subscribe: () => pubsub.asyncIterator("MESSAGE_TO_CHAT_ADDED"),
+    },
+    chatDeleted: {
+      subscribe: () => pubsub.asyncIterator("CHAT_DELETED"),
     },
   },
 };
