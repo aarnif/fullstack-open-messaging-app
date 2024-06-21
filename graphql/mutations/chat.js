@@ -27,6 +27,7 @@ const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
       let chatTitle = "";
+      let chatImage = "";
       const userInputError = new GraphQLError({
         extensions: {
           code: "BAD_USER_INPUT",
@@ -49,6 +50,7 @@ const resolvers = {
         );
         const findAnotherUser = await User.findById(anotherParticipantId);
         chatTitle = findAnotherUser.name;
+        chatImage = findAnotherUser.profilePicture;
       } else if (args.participants.length > 2 && !args.title) {
         userInputError.message = "Chat title is required for group chats!";
         throw userInputError;
@@ -67,6 +69,7 @@ const resolvers = {
 
       const newChat = new Chat({
         title: chatTitle,
+        image: chatImage,
         participants: args.participants,
         latestMessage: {
           sender: context.currentUser._id,
@@ -138,7 +141,7 @@ const resolvers = {
         });
       }
 
-      console.log("updatedChat", updatedChat);
+      // console.log("updatedChat", updatedChat);
 
       pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
         messageToChatAdded: updatedChat,

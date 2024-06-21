@@ -12,6 +12,13 @@ const getChatImage = asyncHandler(async (req, res) => {
     imageFile = findChat.image;
   }
 
+  if (findChat.participants.length === 2) {
+    const findAnotherUser = await User.findById(findChat.participants[1]);
+    imageFile = findAnotherUser.profilePicture;
+    res.sendFile(imageFile, { root: "./assets/images/profiles" });
+    return;
+  }
+
   res.sendFile(imageFile, { root: "./assets/images/chats" });
 });
 
