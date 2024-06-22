@@ -18,12 +18,12 @@ const typeDefs = `
     ): Chat
     deleteChat(
       chatId: ID!
-    ): Chat
+    ): String!
   }
   type Subscription {
     chatAdded: Chat!
     messageToChatAdded: Chat!
-    chatDeleted: Chat!
+    chatDeleted: String!
   }   
 `;
 
@@ -120,10 +120,8 @@ const resolvers = {
         content: args.content,
       };
 
-      let updatedChat = null;
-
       try {
-        updatedChat = await Chat.findByIdAndUpdate(
+        const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
             $push: { messages: { $each: [newMessage], $position: 0 } },
@@ -135,6 +133,11 @@ const resolvers = {
             path: "messages",
             populate: { path: "sender" },
           });
+        pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
+          messageToChatAdded: updatedChat,
+        });
+
+        return updatedChat;
       } catch (error) {
         throw new GraphQLError("Adding message to chat failed", {
           extensions: {
@@ -144,14 +147,6 @@ const resolvers = {
           },
         });
       }
-
-      // console.log("updatedChat", updatedChat);
-
-      pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
-        messageToChatAdded: updatedChat,
-      });
-
-      return updatedChat;
     },
     deleteChat: async (root, args, context) => {
       if (!context.currentUser) {
@@ -177,12 +172,15 @@ const resolvers = {
 
       try {
         const removeChat = await Chat.findByIdAndDelete(args.chatId);
+        console.log("removeChat", removeChat);
         const removeChatFromParticipatingUsersChats =
           chatToBeDeleted.participants.map(async (participant) => {
             const user = await User.findByIdAndUpdate(participant, {
               $pull: { chats: args.chatId },
             });
           });
+        pubsub.publish("CHAT_DELETED", { chatDeleted: removeChat.id });
+        return removeChat.id;
       } catch (error) {
         throw new GraphQLError("Removing chat failed", {
           extensions: {
@@ -192,9 +190,6 @@ const resolvers = {
           },
         });
       }
-      pubsub.publish("CHAT_DELETED", { chatDeleted: chatToBeDeleted });
-
-      return chatToBeDeleted;
     },
   },
 
