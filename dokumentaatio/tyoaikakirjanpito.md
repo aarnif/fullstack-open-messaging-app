@@ -19,3 +19,4 @@
 | 19.6. | 4    | Yksittäisen chat-näkymän lisäys käyttöliittymään ja uuden chat-viestin lisäyksen aloitus                                 |
 | 20.6. | 4    | Uuden chat-viestin lisäys, Chat-mallin päivitys ja tilausten lisääminen käyttöliittymään aloitus                         |
 | 21.6. | 4    | Tilausten lisäys uuden viestin osalta yksittäiseen chat- ja chats-näkymään, kahden henkilön chatin luonti                |
+| 22.6. | 4    | Chatin poiston teon aloitus ja tilausten kanssa "säätäminen"                                                             |
