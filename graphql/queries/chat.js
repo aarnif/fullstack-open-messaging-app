@@ -23,6 +23,7 @@ const typeDefs = `
     countChats: Int!
     allChats: [Chat!]!
     findChatById(chatId: ID!): Chat
+    findChatByParticipants(participants: [ID!]!): Chat
     allChatsByUser(userId: ID!, searchByTitle: String): [Chat!]!
   }
 `;
@@ -54,6 +55,13 @@ const resolvers = {
               error,
             },
           });
+        }),
+    findChatByParticipants: async (root, args) =>
+      Chat.findOne({ participants: args.participants })
+        .populate("participants")
+        .populate({
+          path: "messages",
+          populate: { path: "sender" },
         }),
     allChatsByUser: async (root, args) =>
       Chat.find({
