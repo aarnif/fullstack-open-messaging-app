@@ -4,7 +4,7 @@
 | :---: | :--- | :----------------------------------------------------------------------------------------------------------------------- |
 | 7.6.  | 2    | tietokanta ja sen sisältämien mallien luonti                                                                             |
 | 8.6.  | 2    | tietokanta ja sen sisältämien mallien luonti                                                                             |
-| 8.6.  | 4    | tietokantamallin päivitys ja tietokannan alustaminen "dummy" datalla                                                     |
+|       | 4    | tietokantamallin päivitys ja tietokannan alustaminen "dummy" datalla                                                     |
 | 9.6.  | 5    | graphql-skeeman modularisointi, uusien kyselyiden lisäys ja tietokannan alustamis-scriptin päivitys                      |
 | 10.6. | 3    | mutaatioiden lisäys ja tietokannan alustamis-scriptin korjaus                                                            |
 | 11.6. | 3    | käyttäjähallinnan toteutus, uusien kyselyiden luonti, tietokannan mallin ja alustamis-scriptin päivitys                  |
@@ -20,3 +20,4 @@
 | 20.6. | 4    | Uuden chat-viestin lisäys, Chat-mallin päivitys ja tilausten lisääminen käyttöliittymään aloitus                         |
 | 21.6. | 4    | Tilausten lisäys uuden viestin osalta yksittäiseen chat- ja chats-näkymään, kahden henkilön chatin luonti                |
 | 22.6. | 4    | Chatin poiston teon aloitus ja tilausten kanssa "säätäminen"                                                             |
+| 23.6. | 3    | Tilausten valmiiksi saattaminen chatin lisäyksen ja poiston sekä uuden viestin lisäyksen osalta                          |
