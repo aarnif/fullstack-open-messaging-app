@@ -31,7 +31,7 @@ const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
       let chatTitle = "";
-      let chatImage = "";
+      let chatImage = null;
       const userInputError = new GraphQLError({
         extensions: {
           code: "BAD_USER_INPUT",
