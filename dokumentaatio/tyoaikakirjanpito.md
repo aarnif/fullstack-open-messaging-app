@@ -21,3 +21,4 @@
 | 21.6. | 4    | Tilausten lisäys uuden viestin osalta yksittäiseen chat- ja chats-näkymään, kahden henkilön chatin luonti                |
 | 22.6. | 4    | Chatin poiston teon aloitus ja tilausten kanssa "säätäminen"                                                             |
 | 23.6. | 3    | Tilausten valmiiksi saattaminen chatin lisäyksen ja poiston sekä uuden viestin lisäyksen osalta                          |
+| 24.6. | 4    | Lisää ryhmächatin luonti mahdollisuus                                                                                    |
