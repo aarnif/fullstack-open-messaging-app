@@ -19,11 +19,15 @@ const typeDefs = `
     deleteChat(
       chatId: ID!
     ): String!
+    markAllMessagesInChatRead(
+      chatId: ID!
+    ): Chat
   }
   type Subscription {
     chatAdded: Chat!
     messageToChatAdded: Chat!
     chatDeleted: String!
+    messagesInChatRead: Chat!
   }   
 `;
 
@@ -191,6 +195,42 @@ const resolvers = {
         });
       }
     },
+    markAllMessagesInChatRead: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      try {
+        const updatedChat = await Chat.findByIdAndUpdate(
+          args.chatId,
+          {
+            $set: { "messages.$[].isRead": true },
+          },
+          { new: true }
+        )
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          });
+        pubsub.publish("MESSAGES_IN_CHAT_READ", {
+          messagesInChatRead: updatedChat,
+        });
+        return updatedChat;
+      } catch (error) {
+        throw new GraphQLError("Marking messages as read failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args,
+            error,
+          },
+        });
+      }
+    },
   },
 
   Subscription: {
@@ -202,6 +242,9 @@ const resolvers = {
     },
     chatDeleted: {
       subscribe: () => pubsub.asyncIterator("CHAT_DELETED"),
+    },
+    messagesInChatRead: {
+      subscribe: () => pubsub.asyncIterator("MESSAGES_IN_CHAT_READ"),
     },
   },
 };
