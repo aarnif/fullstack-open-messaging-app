@@ -119,9 +119,18 @@ const resolvers = {
         });
       }
 
+      const chatToBeUpdated = await Chat.findById(args.chatId).populate(
+        "participants"
+      );
+
       const newMessage = {
         sender: context.currentUser.id,
         content: args.content,
+        isReadBy: chatToBeUpdated.participants.map((participant) => {
+          return context.currentUser._id.equals(participant._id)
+            ? { member: participant._id, isRead: true }
+            : { member: participant._id, isRead: false };
+        }),
       };
 
       try {
@@ -136,6 +145,10 @@ const resolvers = {
           .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
           });
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
           messageToChatAdded: updatedChat,
@@ -208,15 +221,29 @@ const resolvers = {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $set: { "messages.$[].isRead": true },
+            $set: {
+              "messages.$[messageElem].isReadBy.$[readElem].isRead": true,
+            },
           },
-          { new: true }
+          {
+            arrayFilters: [
+              { "messageElem.isReadBy": { $exists: true } },
+              { "readElem.member": context.currentUser.id },
+            ],
+            new: true,
+          }
         )
           .populate("participants")
           .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
           });
+
+        console.log("updatedChat", updatedChat);
         pubsub.publish("MESSAGES_IN_CHAT_READ", {
           messagesInChatRead: updatedChat,
         });

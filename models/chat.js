@@ -29,10 +29,18 @@ const chatSchema = new Schema({
         required: true,
         minlength: 1,
       },
-      isRead: {
-        type: Boolean,
-        default: false,
-      },
+      isReadBy: [
+        {
+          member: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+          },
+          isRead: {
+            type: Boolean,
+            default: false,
+          },
+        },
+      ],
       createdAt: {
         type: Date,
         default: Date.now,

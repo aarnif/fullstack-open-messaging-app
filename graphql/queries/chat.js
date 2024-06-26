@@ -2,11 +2,17 @@ import Chat from "../../models/chat.js";
 
 const typeDefs = `
   scalar Date
+
+  type isReadBy {
+    member: User
+    isRead: Boolean
+  }
+
   type Message {
     id: ID!
     sender: User!
     content: String
-    isRead: Boolean
+    isReadBy: [isReadBy!]!
     createdAt: Date
   }
 
@@ -38,6 +44,10 @@ const resolvers = {
         .populate({
           path: "messages",
           populate: { path: "sender" },
+        })
+        .populate({
+          path: "messages",
+          populate: { path: "isReadBy.member" },
         });
       return chats;
     },
@@ -47,6 +57,10 @@ const resolvers = {
         .populate({
           path: "messages",
           populate: { path: "sender" },
+        })
+        .populate({
+          path: "messages",
+          populate: { path: "isReadBy.member" },
         })
         .catch((error) => {
           throw new GraphQLError("Invalid id!", {
@@ -63,6 +77,10 @@ const resolvers = {
         .populate({
           path: "messages",
           populate: { path: "sender" },
+        })
+        .populate({
+          path: "messages",
+          populate: { path: "isReadBy.member" },
         }),
     allChatsByUser: async (root, args) =>
       Chat.find({
@@ -75,6 +93,10 @@ const resolvers = {
         .populate({
           path: "messages",
           populate: { path: "sender" },
+        })
+        .populate({
+          path: "messages",
+          populate: { path: "isReadBy.member" },
         })
         .sort({ "messages.0.createdAt": "desc" }),
   },
