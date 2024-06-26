@@ -26,6 +26,7 @@ const addChatParticipantsRandomly = (users) => {
 };
 
 const emptyDataBase = async () => {
+  console.log("emptying database...");
   await User.deleteMany({});
   await Chat.deleteMany({});
 };
@@ -74,6 +75,9 @@ const addChats = async () => {
       return {
         ...message,
         sender: selectRandomChatParticipant(chat.participants),
+        isReadBy: chat.participants.map((participant) => {
+          return { member: participant._id, isRead: true };
+        }),
       };
     });
 
