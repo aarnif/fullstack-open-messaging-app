@@ -6,6 +6,7 @@ const typeDefs = `
     id: ID!
     sender: User!
     content: String
+    isRead: Boolean
     createdAt: Date
   }
 

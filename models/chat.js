@@ -29,6 +29,10 @@ const chatSchema = new Schema({
         required: true,
         minlength: 1,
       },
+      isRead: {
+        type: Boolean,
+        default: false,
+      },
       createdAt: {
         type: Date,
         default: Date.now,
