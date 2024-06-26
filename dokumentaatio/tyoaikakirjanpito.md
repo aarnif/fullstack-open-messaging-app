@@ -22,3 +22,5 @@
 | 22.6. | 4    | Chatin poiston teon aloitus ja tilausten kanssa "säätäminen"                                                             |
 | 23.6. | 3    | Tilausten valmiiksi saattaminen chatin lisäyksen ja poiston sekä uuden viestin lisäyksen osalta                          |
 | 24.6. | 4    | Lisää ryhmächatin luonti mahdollisuus                                                                                    |
+| 25.6. | 3    | Päivitä käyttöliittymässä chatin lisäys ikkunan ulkoasu                                                                  |
+| 26.6. | 4    | Ilmoita uusista viesteistä ja kuittaa uudet viestit luetuiksi vierailemalla kyseisessä chatissa                          |
