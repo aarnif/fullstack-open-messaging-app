@@ -24,3 +24,5 @@
 | 24.6. | 4    | Lisää ryhmächatin luonti mahdollisuus                                                                                    |
 | 25.6. | 3    | Päivitä käyttöliittymässä chatin lisäys ikkunan ulkoasu                                                                  |
 | 26.6. | 4    | Ilmoita uusista viesteistä ja kuittaa uudet viestit luetuiksi vierailemalla kyseisessä chatissa                          |
+| 27.6. | 2    | Näytä uudet viestit chat-ikkunassa                                                                                       |
+| 28.6. | 3    | Lisää yksittäisen chatin info-näkymä ja mahdollisuus poistua ryhmächatista                                               |
