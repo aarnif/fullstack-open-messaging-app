@@ -22,12 +22,16 @@ const typeDefs = `
     markAllMessagesInChatRead(
       chatId: ID!
     ): Chat
+    leaveGroupChat(
+      chatId: ID!
+    ): String!
   }
   type Subscription {
     chatAdded: Chat!
     messageToChatAdded: Chat!
     chatDeleted: String!
     messagesInChatRead: Chat!
+    leftGroupChat: String!
   }   
 `;
 
@@ -35,7 +39,7 @@ const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
       let chatTitle = "";
-      let chatImage = null;
+      let chatImage = "chat_placeholder.png";
       const userInputError = new GraphQLError({
         extensions: {
           code: "BAD_USER_INPUT",
@@ -84,6 +88,8 @@ const resolvers = {
           content: "Chat created",
         },
       });
+
+      console.log("newChat", newChat);
 
       try {
         newChat.save();
@@ -243,13 +249,61 @@ const resolvers = {
             populate: { path: "isReadBy.member" },
           });
 
-        console.log("updatedChat", updatedChat);
         pubsub.publish("MESSAGES_IN_CHAT_READ", {
           messagesInChatRead: updatedChat,
         });
         return updatedChat;
       } catch (error) {
         throw new GraphQLError("Marking messages as read failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args,
+            error,
+          },
+        });
+      }
+    },
+    leaveGroupChat: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      try {
+        const updatedChat = await Chat.findByIdAndUpdate(
+          args.chatId,
+          {
+            $pull: { participants: context.currentUser.id },
+          },
+          { new: true }
+        )
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
+          });
+
+        const removeChatFromParticipant = await User.findByIdAndUpdate(
+          context.currentUser.id,
+          {
+            $pull: { chats: args.chatId },
+          }
+        );
+
+        pubsub.publish("LEFT_GROUP_CHAT", {
+          leftGroupChat: updatedChat.id,
+        });
+
+        return updatedChat.id;
+      } catch (error) {
+        throw new GraphQLError("Removing chat participant failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             invalidArgs: args,
@@ -272,6 +326,9 @@ const resolvers = {
     },
     messagesInChatRead: {
       subscribe: () => pubsub.asyncIterator("MESSAGES_IN_CHAT_READ"),
+    },
+    leftGroupChat: {
+      subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHAT"),
     },
   },
 };
