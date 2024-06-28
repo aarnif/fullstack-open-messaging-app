@@ -20,6 +20,7 @@ const typeDefs = `
     id: ID!
     title: String
     image: String
+    description: String
     participants: [User!]!
     messages: [Message!]!
     latestMessage: Message

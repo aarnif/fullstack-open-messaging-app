@@ -10,7 +10,11 @@ const chatSchema = new Schema({
   },
   image: {
     type: String,
-    default: "chat-placeholder.png",
+    default: "chat_placeholder.png",
+  },
+  description: {
+    type: String,
+    default: "",
   },
   participants: [
     {
