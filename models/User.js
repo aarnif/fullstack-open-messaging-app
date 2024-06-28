@@ -23,7 +23,7 @@ const userSchema = new Schema({
   },
   profilePicture: {
     type: String,
-    default: "",
+    default: "profile_placeholder.png",
   },
   status: {
     type: String,
