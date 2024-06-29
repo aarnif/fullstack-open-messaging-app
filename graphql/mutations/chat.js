@@ -15,6 +15,7 @@ const typeDefs = `
     ): Chat
     addMessageToChat(
       chatId: ID!
+      type: String
       content: String!
     ): Chat
     deleteChat(
@@ -137,6 +138,7 @@ const resolvers = {
       );
 
       const newMessage = {
+        type: args.type,
         sender: context.currentUser.id,
         content: args.content,
         isReadBy: chatToBeUpdated.participants.map((participant) => {

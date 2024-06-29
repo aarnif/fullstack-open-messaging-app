@@ -28,6 +28,11 @@ const chatSchema = new Schema({
   ],
   messages: [
     {
+      type: {
+        type: String,
+        default: "message",
+        enum: ["notification", "message"],
+      },
       sender: {
         type: Schema.Types.ObjectId,
         ref: "User",

@@ -10,6 +10,7 @@ const typeDefs = `
 
   type Message {
     id: ID!
+    type: String
     sender: User!
     content: String
     isReadBy: [isReadBy!]!
