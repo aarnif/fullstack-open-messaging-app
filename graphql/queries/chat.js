@@ -23,6 +23,7 @@ const typeDefs = `
     image: String
     description: String
     isGroupChat: Boolean
+    admin: User
     participants: [User!]!
     messages: [Message!]!
     latestMessage: Message
@@ -43,6 +44,7 @@ const resolvers = {
     countChats: async () => Chat.collection.countDocuments(),
     allChats: async () => {
       const chats = await Chat.find({})
+        .populate("admin")
         .populate("participants")
         .populate({
           path: "messages",
@@ -56,6 +58,7 @@ const resolvers = {
     },
     findChatById: async (root, args) =>
       Chat.findById(args.chatId)
+        .populate("admin")
         .populate("participants")
         .populate({
           path: "messages",
@@ -76,6 +79,7 @@ const resolvers = {
         }),
     findChatByParticipants: async (root, args) =>
       Chat.findOne({ participants: args.participants })
+        .populate("admin")
         .populate("participants")
         .populate({
           path: "messages",
@@ -92,6 +96,7 @@ const resolvers = {
           $regex: `(?i)${args.searchByTitle ? args.searchByTitle : ""}(?-i)`,
         },
       })
+        .populate("admin")
         .populate("participants")
         .populate({
           path: "messages",

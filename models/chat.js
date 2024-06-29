@@ -20,6 +20,10 @@ const chatSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  admin: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   participants: [
     {
       type: Schema.Types.ObjectId,

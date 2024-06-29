@@ -9,6 +9,7 @@ const chats = [
     participants: [],
     messages: messages[0],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Book Club",
@@ -17,6 +18,7 @@ const chats = [
     participants: [],
     messages: messages[1],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Gaming Night",
@@ -25,6 +27,7 @@ const chats = [
     participants: [],
     messages: messages[2],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Yoga Enthusiasts",
@@ -33,6 +36,7 @@ const chats = [
     participants: [],
     messages: messages[3],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Music Band",
@@ -41,6 +45,7 @@ const chats = [
     participants: [],
     messages: messages[4],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Cooking Lovers",
@@ -49,6 +54,7 @@ const chats = [
     participants: [],
     messages: messages[5],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Photography Crew",
@@ -57,6 +63,7 @@ const chats = [
     participants: [],
     messages: messages[6],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Movie Buffs",
@@ -65,6 +72,7 @@ const chats = [
     participants: [],
     messages: messages[7],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Tech Geeks",
@@ -73,6 +81,7 @@ const chats = [
     participants: [],
     messages: messages[8],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Fitness Freaks",
@@ -81,6 +90,7 @@ const chats = [
     participants: [],
     messages: messages[9],
     isGroupChat: true,
+    admin: null,
   },
   {
     title: "Travel Buddies",
@@ -89,6 +99,7 @@ const chats = [
     participants: [],
     messages: messages[10],
     isGroupChat: true,
+    admin: null,
   },
 ];
 

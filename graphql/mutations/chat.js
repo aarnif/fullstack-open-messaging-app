@@ -133,9 +133,9 @@ const resolvers = {
         });
       }
 
-      const chatToBeUpdated = await Chat.findById(args.chatId).populate(
-        "participants"
-      );
+      const chatToBeUpdated = await Chat.findById(args.chatId)
+        .populate("admin")
+        .populate("participants");
 
       const newMessage = {
         type: args.type,
@@ -156,6 +156,7 @@ const resolvers = {
           },
           { new: true }
         )
+          .populate("admin")
           .populate("participants")
           .populate({
             path: "messages",
@@ -248,6 +249,7 @@ const resolvers = {
             new: true,
           }
         )
+          .populate("admin")
           .populate("participants")
           .populate({
             path: "messages",
@@ -289,6 +291,7 @@ const resolvers = {
           },
           { new: true }
         )
+          .populate("admin")
           .populate("participants")
           .populate({
             path: "messages",

@@ -71,6 +71,9 @@ const addChats = async () => {
       chat.participants.push(findUserFromUsersDataBase("test"));
     }
 
+    // Make test user admin of every chat
+    chat.admin = testUser;
+
     chat.messages = chat.messages.map((message) => {
       return {
         ...message,
