@@ -7,7 +7,7 @@ const getChatImage = asyncHandler(async (req, res) => {
   const findChat = await Chat.findById(req.params.chatId);
   let chatImage = findChat.image;
 
-  if (findChat.participants.length === 2) {
+  if (!findChat.isGroupChat) {
     const findAnotherUser = await User.findById(findChat.participants[1]);
     chatImage = findAnotherUser.profilePicture;
     res.sendFile(chatImage, { root: "./assets/images/profiles" });

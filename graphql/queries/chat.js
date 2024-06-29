@@ -21,6 +21,7 @@ const typeDefs = `
     title: String
     image: String
     description: String
+    isGroupChat: Boolean
     participants: [User!]!
     messages: [Message!]!
     latestMessage: Message

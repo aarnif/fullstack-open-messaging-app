@@ -10,6 +10,7 @@ const typeDefs = `
   extend type Mutation {
     createChat(
       title: String
+      description: String
       participants: [ID!]!
     ): Chat
     addMessageToChat(
@@ -40,6 +41,7 @@ const resolvers = {
     createChat: async (root, args, context) => {
       let chatTitle = "";
       let chatImage = "chat_placeholder.png";
+      let isGroupChat = false;
       const userInputError = new GraphQLError({
         extensions: {
           code: "BAD_USER_INPUT",
@@ -57,6 +59,7 @@ const resolvers = {
         userInputError.message = "At least two participants are required!";
         throw userInputError;
       } else if (args.participants.length === 2) {
+        console.log("Creating chat with two participants");
         const anotherParticipantId = args.participants.find(
           (participant) => participant !== context.currentUser.id
         );
@@ -67,7 +70,9 @@ const resolvers = {
         userInputError.message = "Chat title is required for group chats!";
         throw userInputError;
       } else {
+        console.log("Creating group chat");
         chatTitle = args.title;
+        isGroupChat = true;
       }
 
       const checkIfChatExists = await Chat.findOne({
@@ -82,6 +87,8 @@ const resolvers = {
       const newChat = new Chat({
         title: chatTitle,
         image: chatImage,
+        description: args.description,
+        isGroupChat: isGroupChat,
         participants: args.participants,
         latestMessage: {
           sender: context.currentUser._id,
