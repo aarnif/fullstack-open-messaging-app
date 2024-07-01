@@ -28,6 +28,10 @@ const typeDefs = `
       chatId: ID!
       participants: [ID!]!
     ): Chat
+    removeParticipantsFromGroupChat(
+      chatId: ID!
+      participants: [ID!]!
+    ): Chat
     leaveGroupChat(
       chatId: ID!
     ): String!
@@ -38,6 +42,7 @@ const typeDefs = `
     chatDeleted: String!
     messagesInChatRead: Chat!
     participantsAddedToGroupChat: Chat!
+    participantsRemovedFromGroupChat: Chat!
     leftGroupChat: String!
   }   
 `;
@@ -328,6 +333,13 @@ const resolvers = {
             populate: { path: "isReadBy.member" },
           });
 
+        const addChatToNewParticipants = await User.updateMany(
+          { _id: { $in: args.participants } },
+          {
+            $push: { chats: args.chatId },
+          }
+        );
+
         pubsub.publish("PARTICIPANTS_ADDED_TO_GROUP_CHAT", {
           participantsAddedToGroupChat: updatedChat,
         });
@@ -339,6 +351,80 @@ const resolvers = {
         return updatedChat;
       } catch (error) {
         throw new GraphQLError("Adding chat participants failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args,
+            error,
+          },
+        });
+      }
+    },
+
+    removeParticipantsFromGroupChat: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const newParticipants = await User.find({
+        _id: { $in: args.participants },
+      });
+
+      const notificationMessages = [];
+
+      newParticipants.forEach((participant) => {
+        notificationMessages.push({
+          type: "notification",
+          sender: context.currentUser.id,
+          content: `${participant.name} was removed`,
+        });
+      });
+
+      try {
+        const updatedChat = await Chat.findByIdAndUpdate(
+          args.chatId,
+          {
+            $pull: {
+              participants: { $in: args.participants },
+            },
+            $push: {
+              messages: { $each: notificationMessages, $position: 0 },
+            },
+          },
+          { new: true }
+        )
+          .populate("admin")
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
+          });
+
+        const removeChatFromRemovedParticipants = await User.updateMany(
+          { _id: { $in: args.participants } },
+          {
+            $pull: { chats: args.chatId },
+          }
+        );
+
+        pubsub.publish("PARTICIPANTS_REMOVED_FROM_GROUP_CHAT", {
+          participantsRemovedFromGroupChat: updatedChat,
+        });
+
+        pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
+          messageToChatAdded: updatedChat,
+        });
+
+        return updatedChat;
+      } catch (error) {
+        throw new GraphQLError("Removing chat participants failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             invalidArgs: args,
@@ -415,6 +501,10 @@ const resolvers = {
     },
     participantsAddedToGroupChat: {
       subscribe: () => pubsub.asyncIterator("PARTICIPANTS_ADDED_TO_GROUP_CHAT"),
+    },
+    participantsRemovedFromGroupChat: {
+      subscribe: () =>
+        pubsub.asyncIterator("PARTICIPANTS_REMOVED_FROM_GROUP_CHAT"),
     },
     leftGroupChat: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHAT"),
