@@ -443,12 +443,24 @@ const resolvers = {
         });
       }
 
+      const message = {
+        type: "notification",
+        sender: context.currentUser.id,
+        content: `${context.currentUser.name} left`,
+      };
+
       try {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
             $pull: { participants: context.currentUser.id },
           },
+          {
+            $push: {
+              messages: { $each: [message], $position: 0 },
+            },
+          },
+
           { new: true }
         )
           .populate("admin")
