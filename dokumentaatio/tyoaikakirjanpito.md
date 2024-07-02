@@ -26,3 +26,7 @@
 | 26.6. | 4    | Ilmoita uusista viesteistä ja kuittaa uudet viestit luetuiksi vierailemalla kyseisessä chatissa                          |
 | 27.6. | 2    | Näytä uudet viestit chat-ikkunassa                                                                                       |
 | 28.6. | 3    | Lisää yksittäisen chatin info-näkymä ja mahdollisuus poistua ryhmächatista                                               |
+| 29.6. | 3    | Laajenna chat-tietokanta mallia ja lisää ilmoitus chatista poistumisesta                                                 |
+| 30.6. | 1    | Uusien jäsenenien lisäys chattiin palvelinpuolelta                                                                       |
+| 1.7.  | 1    | Uusien jäsenenien poisto chattiin palvelinpuolelta                                                                       |
+| 2.7.  | 2    | Uusien jäsenenien lisäys ja poisto chattiin käyttöliittymässä                                                            |
