@@ -15,6 +15,9 @@ const typeDefs = `
       password: String!
     ): Token
     logout: User
+    addContacts(
+      contacts: [ID!]
+    ): User
   }
 `;
 
@@ -88,6 +91,34 @@ const resolvers = {
     logout: async (root, args, context) => {
       context.currentUser = null;
       return context.currentUser;
+    },
+    addContacts: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const findContacts = await User.find({ _id: { $in: args.contacts } });
+
+      if (!findContacts.length) {
+        throw new GraphQLError("Contacts not found!", {
+          extensions: {
+            code: "NOT_FOUND",
+            invalidArgs: args.contacts,
+          },
+        });
+      }
+
+      console.log("Adding contacts: ", args.contacts);
+
+      const user = await User.findByIdAndUpdate(context.currentUser, {
+        $addToSet: { contacts: { $each: args.contacts } },
+      }).populate("contacts");
+
+      return user;
     },
   },
 };
