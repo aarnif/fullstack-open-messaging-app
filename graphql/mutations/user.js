@@ -4,6 +4,10 @@ import bcrypt from "bcrypt";
 import { GraphQLError } from "graphql";
 import jwt from "jsonwebtoken";
 
+import { PubSub } from "graphql-subscriptions";
+
+const pubsub = new PubSub();
+
 const typeDefs = `
   extend type Mutation {
     createUser(
@@ -19,6 +23,9 @@ const typeDefs = `
       contacts: [ID!]
     ): User
   }
+  type Subscription {
+    contactsAdded: [User]
+  }   
 `;
 
 const resolvers = {
@@ -118,7 +125,17 @@ const resolvers = {
         $addToSet: { contacts: { $each: args.contacts } },
       }).populate("contacts");
 
+      const addedContacts = await User.find({ _id: { $in: args.contacts } });
+
+      pubsub.publish("CONTACTS_ADDED", { contactsAdded: addedContacts });
+
       return user;
+    },
+  },
+
+  Subscription: {
+    contactsAdded: {
+      subscribe: () => pubsub.asyncIterator("CONTACTS_ADDED"),
     },
   },
 };
