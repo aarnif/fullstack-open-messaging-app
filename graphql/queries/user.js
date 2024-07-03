@@ -22,7 +22,7 @@ const typeDefs = `
 
   extend type Query {
     countUsers: Int!
-    allUsers(name: String): [User!]!
+    allUsers(searchByName: String): [User!]!
     findUserById(id: ID!): User
     allContactsByUser(searchByName: String): User
     me: User
@@ -34,7 +34,18 @@ const resolvers = {
     countUsers: async () => User.collection.countDocuments(),
     allUsers: async (root, args) =>
       User.find({
-        name: { $regex: `(?i)${args.name ? args.name : ""}(?-i)` },
+        $or: [
+          {
+            name: {
+              $regex: `(?i)${args.searchByName ? args.searchByName : ""}(?-i)`,
+            },
+          },
+          {
+            username: {
+              $regex: `(?i)${args.searchByName ? args.searchByName : ""}(?-i)`,
+            },
+          },
+        ],
       })
         .populate("contacts")
         .populate("chats")
