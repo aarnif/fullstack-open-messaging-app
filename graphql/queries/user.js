@@ -25,6 +25,7 @@ const typeDefs = `
     allUsers(searchByName: String): [User!]!
     findUserById(id: ID!): User
     allContactsByUser(searchByName: String): User
+    allContactsExceptByUser(searchByName: String): [User!]!
     me: User
   }
 `;
@@ -88,6 +89,33 @@ const resolvers = {
             },
           ],
         },
+      }),
+    allContactsExceptByUser: async (root, args, context) =>
+      User.find({
+        $and: [
+          {
+            _id: {
+              $ne: context.currentUser,
+            },
+          },
+          {
+            _id: {
+              $nin: context.currentUser.contacts,
+            },
+          },
+        ],
+        $or: [
+          {
+            name: {
+              $regex: `(?i)${args.searchByName}(?-i)`,
+            },
+          },
+          {
+            username: {
+              $regex: `(?i)${args.searchByName}(?-i)`,
+            },
+          },
+        ],
       }),
     me: async (root, args, context) => context.currentUser,
   },
