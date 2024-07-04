@@ -100,9 +100,10 @@ const resolvers = {
         image: chatImage,
         description: args.description,
         isGroupChat: isGroupChat,
+        admin: context.currentUser,
         participants: args.participants,
         latestMessage: {
-          sender: context.currentUser._id,
+          sender: context.currentUser,
           content: "Chat created",
         },
       });
@@ -114,7 +115,7 @@ const resolvers = {
         const addChatToParticipatingUsersChats = args.participants.map(
           async (participant) => {
             await User.findByIdAndUpdate(participant, {
-              $push: { chats: newChat._id },
+              $push: { chats: newChat },
             });
           }
         );
