@@ -1,4 +1,9 @@
+import config from "../config.js";
+
 import mongoose from "mongoose";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config(config.CLOUDINARY);
 
 const Schema = mongoose.Schema;
 
@@ -23,7 +28,7 @@ const userSchema = new Schema({
   },
   profilePicture: {
     type: String,
-    default: "profile_placeholder.png",
+    default: cloudinary.url("profile_placeholder"),
   },
   status: {
     type: String,
