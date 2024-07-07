@@ -22,6 +22,10 @@ const typeDefs = `
     addContacts(
       contacts: [ID!]
     ): User
+    editProfile(
+      name: String
+      about: String
+    ): User
   }
   type Subscription {
     contactsAdded: [User]
@@ -130,6 +134,25 @@ const resolvers = {
       pubsub.publish("CONTACTS_ADDED", { contactsAdded: addedContacts });
 
       return user;
+    },
+    editProfile: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        context.currentUser,
+        args,
+        {
+          new: true,
+        }
+      );
+
+      return updatedUser;
     },
   },
 
