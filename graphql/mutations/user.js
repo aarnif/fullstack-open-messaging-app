@@ -25,6 +25,7 @@ const typeDefs = `
     editProfile(
       name: String
       about: String
+      profilePicture: String
     ): User
   }
   type Subscription {
