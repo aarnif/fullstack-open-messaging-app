@@ -1,9 +1,4 @@
-import config from "../config.js";
-
 import mongoose from "mongoose";
-import { v2 as cloudinary } from "cloudinary";
-
-cloudinary.config(config.CLOUDINARY);
 
 const Schema = mongoose.Schema;
 
@@ -15,7 +10,7 @@ const chatSchema = new Schema({
   },
   image: {
     type: String,
-    default: cloudinary.url("chat_placeholder"),
+    default: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
   },
   description: {
     type: String,
