@@ -21,6 +21,11 @@ const typeDefs = `
     deleteChat(
       chatId: ID!
     ): String!
+    updateGroupChat(
+      chatId: ID!
+      title: String
+      description: String
+    ): Chat
     markAllMessagesInChatRead(
       chatId: ID!
     ): Chat
@@ -40,6 +45,7 @@ const typeDefs = `
     chatAdded: Chat!
     messageToChatAdded: Chat!
     chatDeleted: String!
+    groupChatUpdated: Chat!
     messagesInChatRead: Chat!
     participantsAddedToGroupChat: Chat!
     participantsRemovedFromGroupChat: Chat!
@@ -229,6 +235,79 @@ const resolvers = {
         return removeChat.id;
       } catch (error) {
         throw new GraphQLError("Removing chat failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args,
+            error,
+          },
+        });
+      }
+    },
+
+    updateGroupChat: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const chatToBeUpdated = await Chat.findById(args.chatId).populate(
+        "participants"
+      );
+
+      if (!chatToBeUpdated) {
+        throw new GraphQLError("Chat not found!", {
+          extensions: {
+            code: "NOT_FOUND",
+            invalidArgs: args.chatId,
+          },
+        });
+      }
+
+      const notificationMessages = [];
+
+      for (const [key, value] of Object.entries(args)) {
+        if (key !== "chatId") {
+          notificationMessages.push({
+            type: "notification",
+            sender: context.currentUser.id,
+            content: `${
+              key[0].toUpperCase() + key.slice(1)
+            } was updated to: "${value}"`,
+          });
+        }
+      }
+
+      try {
+        const updatedChat = await Chat.findByIdAndUpdate(
+          args.chatId,
+          {
+            title: args.title,
+            description: args.description,
+            $push: {
+              messages: { $each: notificationMessages, $position: 0 },
+            },
+          },
+          { new: true }
+        )
+          .populate("admin")
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
+          });
+
+        pubsub.publish("GROUP_CHAT_UPDATED", { groupChatUpdated: updatedChat });
+
+        return updatedChat;
+      } catch (error) {
+        throw new GraphQLError("Updating chat failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             invalidArgs: args,
@@ -508,6 +587,9 @@ const resolvers = {
     },
     chatDeleted: {
       subscribe: () => pubsub.asyncIterator("CHAT_DELETED"),
+    },
+    groupChatUpdated: {
+      subscribe: () => pubsub.asyncIterator("GROUP_CHAT_UPDATED"),
     },
     messagesInChatRead: {
       subscribe: () => pubsub.asyncIterator("MESSAGES_IN_CHAT_READ"),
