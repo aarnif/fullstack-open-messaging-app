@@ -25,6 +25,7 @@ const typeDefs = `
       chatId: ID!
       title: String
       description: String
+      image: String
     ): Chat
     markAllMessagesInChatRead(
       chatId: ID!
@@ -269,13 +270,25 @@ const resolvers = {
       const notificationMessages = [];
 
       for (const [key, value] of Object.entries(args)) {
-        if (key !== "chatId") {
+        if (
+          key !== "chatId" &&
+          key !== "image" &&
+          value !== chatToBeUpdated[key]
+        ) {
+          console.log(`${key} was updated to: "${value}"`);
           notificationMessages.push({
             type: "notification",
             sender: context.currentUser.id,
             content: `${
               key[0].toUpperCase() + key.slice(1)
             } was updated to: "${value}"`,
+          });
+        } else if (key === "image" && value !== chatToBeUpdated.image) {
+          console.log("Image was updated");
+          notificationMessages.push({
+            type: "notification",
+            sender: context.currentUser.id,
+            content: "Image was updated",
           });
         }
       }
@@ -284,8 +297,7 @@ const resolvers = {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            title: args.title,
-            description: args.description,
+            $set: args,
             $push: {
               messages: { $each: notificationMessages, $position: 0 },
             },
