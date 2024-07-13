@@ -16,7 +16,8 @@ const typeDefs = `
     addMessageToChat(
       chatId: ID!
       type: String
-      content: String!
+      content: String
+      image: String
     ): Chat
     deleteChat(
       chatId: ID!
@@ -160,6 +161,7 @@ const resolvers = {
         type: args.type,
         sender: context.currentUser.id,
         content: args.content,
+        image: args.image,
         isReadBy: chatToBeUpdated.participants.map((participant) => {
           return context.currentUser._id.equals(participant._id)
             ? { member: participant._id, isRead: true }

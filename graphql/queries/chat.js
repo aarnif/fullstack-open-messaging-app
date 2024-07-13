@@ -13,6 +13,7 @@ const typeDefs = `
     type: String
     sender: User!
     content: String
+    image: String
     isReadBy: [isReadBy!]!
     createdAt: Date
   }
