@@ -42,8 +42,14 @@ const chatSchema = new Schema({
         ref: "User",
       },
       image: {
-        type: String,
-        default: "",
+        thumbnail: {
+          type: String,
+          default: "",
+        },
+        original: {
+          type: String,
+          default: "",
+        },
       },
       content: {
         type: String,

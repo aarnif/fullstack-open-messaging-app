@@ -7,6 +7,11 @@ import { PubSub } from "graphql-subscriptions";
 const pubsub = new PubSub();
 
 const typeDefs = `
+  input ImageInput {
+    thumbnail: String
+    original: String
+  }
+
   extend type Mutation {
     createChat(
       title: String
@@ -17,7 +22,7 @@ const typeDefs = `
       chatId: ID!
       type: String
       content: String
-      image: String
+      input: ImageInput
     ): Chat
     deleteChat(
       chatId: ID!
@@ -161,7 +166,7 @@ const resolvers = {
         type: args.type,
         sender: context.currentUser.id,
         content: args.content,
-        image: args.image,
+        image: args.input,
         isReadBy: chatToBeUpdated.participants.map((participant) => {
           return context.currentUser._id.equals(participant._id)
             ? { member: participant._id, isRead: true }

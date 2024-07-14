@@ -3,9 +3,14 @@ import Chat from "../../models/chat.js";
 const typeDefs = `
   scalar Date
 
-  type isReadBy {
+  type IsReadBy {
     member: User
     isRead: Boolean
+  }
+
+  type Image {
+    thumbnail: String
+    original: String
   }
 
   type Message {
@@ -13,8 +18,8 @@ const typeDefs = `
     type: String
     sender: User!
     content: String
-    image: String
-    isReadBy: [isReadBy!]!
+    image: Image
+    isReadBy: [IsReadBy!]!
     createdAt: Date
   }
 
