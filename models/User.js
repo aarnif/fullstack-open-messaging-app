@@ -22,8 +22,14 @@ const userSchema = new Schema({
     default: "",
   },
   profilePicture: {
-    type: String,
-    default: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+    thumbnail: {
+      type: String,
+      default: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+    },
+    original: {
+      type: String,
+      default: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
+    },
   },
   status: {
     type: String,

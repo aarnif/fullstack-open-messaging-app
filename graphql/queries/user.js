@@ -9,7 +9,7 @@ const typeDefs = `
     username: String!
     name: String
     about: String
-    profilePicture: String
+    profilePicture: Image
     status: String!
     createdAt: Date!
     contacts: [User!]!
