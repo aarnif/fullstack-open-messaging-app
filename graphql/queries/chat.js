@@ -26,7 +26,7 @@ const typeDefs = `
   type Chat {
     id: ID!
     title: String
-    image: String
+    image: Image
     description: String
     isGroupChat: Boolean
     admin: User

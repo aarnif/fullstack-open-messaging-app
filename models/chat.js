@@ -9,8 +9,14 @@ const chatSchema = new Schema({
     minlength: 1,
   },
   image: {
-    type: String,
-    default: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+    thumbnail: {
+      type: String,
+      default: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+    },
+    original: {
+      type: String,
+      default: "https://i.ibb.co/FqHrScZ/chat-placeholder.png",
+    },
   },
   description: {
     type: String,

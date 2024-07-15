@@ -31,7 +31,7 @@ const typeDefs = `
       chatId: ID!
       title: String
       description: String
-      image: String
+      input: ImageInput
     ): Chat
     markAllMessagesInChatRead(
       chatId: ID!
@@ -89,7 +89,10 @@ const resolvers = {
         );
         const findAnotherUser = await User.findById(anotherParticipantId);
         chatTitle = findAnotherUser.name;
-        chatImage = findAnotherUser.profilePicture;
+        chatImage = {
+          thumbnail: findAnotherUser.profilePicture.thumbnail,
+          original: findAnotherUser.profilePicture.original,
+        };
       } else if (args.participants.length > 2 && !args.title) {
         userInputError.message = "Chat title is required for group chats!";
         throw userInputError;
@@ -110,7 +113,7 @@ const resolvers = {
 
       const newChat = new Chat({
         title: chatTitle,
-        image: chatImage,
+        image: args.input,
         description: args.description,
         isGroupChat: isGroupChat,
         admin: context.currentUser,
