@@ -30,3 +30,17 @@
 | 30.6. | 1    | Uusien jäsenenien lisäys chattiin palvelinpuolelta                                                                       |
 | 1.7.  | 1    | Uusien jäsenenien poisto chattiin palvelinpuolelta                                                                       |
 | 2.7.  | 2    | Uusien jäsenenien lisäys ja poisto chattiin käyttöliittymässä                                                            |
+| 3.7.  | 3    |                                                                                                                          |
+| 4.7.  | 3    |                                                                                                                          |
+| 5.7.  | 3    | Profiilisivun luonti                                                                                                     |
+| 6.7.  | 3    |                                                                                                                          |
+| 7.7.  | 3    |                                                                                                                          |
+| 8.7.  | 3    |                                                                                                                          |
+| 9.7.  | 3    | Profiilisivun tietojen päivitys ja uuden profiilikuvan lataus                                                            |
+| 10.7. | 3    |                                                                                                                          |
+| 11.7. | 3    | Ryhmächatin tietojen päivitys ja uuden kuvan lataus                                                                      |
+| 12.7. | 3    |                                                                                                                          |
+| 13.7. | 3    |                                                                                                                          |
+| 14.7. | 3    | FullScreen kuvanäkymien lisäys ja kuvien lataus sovelluksesta kännykkään                                                 |
+| 15.7. | 3    |                                                                                                                          |
+| 16.7. | 1    |                                                                                                                          |
