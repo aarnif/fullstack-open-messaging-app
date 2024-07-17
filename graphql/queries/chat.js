@@ -34,6 +34,7 @@ const typeDefs = `
     messages: [Message!]!
     latestMessage: Message
     createdAt: Date
+    displayChatTitle: String!
   }
 
   extend type Query {
@@ -113,6 +114,10 @@ const resolvers = {
           populate: { path: "isReadBy.member" },
         })
         .sort({ "messages.0.createdAt": "desc" }),
+  },
+  Chat: {
+    displayChatTitle: (chat, args, context) =>
+      chat.displayChatTitle(context.currentUser.id),
   },
 };
 

@@ -86,6 +86,16 @@ const chatSchema = new Schema({
   },
 });
 
+chatSchema.methods.displayChatTitle = function (currentUserId) {
+  if (this.isGroupChat) {
+    return this.title;
+  }
+  const findTheOthersParticipantsName = this.participants.find(
+    (participant) => participant.id !== currentUserId
+  ).name;
+  return findTheOthersParticipantsName;
+};
+
 const Chat = mongoose.model("Chat", chatSchema);
 
 export default Chat;
