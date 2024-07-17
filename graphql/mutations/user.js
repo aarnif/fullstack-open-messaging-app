@@ -1,4 +1,5 @@
 import User from "../../models/user.js";
+import Chat from "../../models/chat.js";
 
 import bcrypt from "bcrypt";
 import { GraphQLError } from "graphql";
@@ -27,6 +28,9 @@ const typeDefs = `
       about: String
       profilePicture: String
     ): User
+    blockOrUnBlockContact(
+      contactId: ID!
+    ): Boolean
   }
   type Subscription {
     contactsAdded: [User]
@@ -155,8 +159,34 @@ const resolvers = {
 
       return updatedUser;
     },
-  },
+    blockOrUnBlockContact: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
 
+      let result = null;
+
+      const checkIfContactBlocked =
+        context.currentUser.blockedContacts.includes(args.contactId);
+
+      if (checkIfContactBlocked) {
+        await User.findByIdAndUpdate(context.currentUser, {
+          $pull: { blockedContacts: args.contactId },
+        });
+        result = false;
+      } else {
+        await User.findByIdAndUpdate(context.currentUser, {
+          $addToSet: { blockedContacts: args.contactId },
+        });
+        result = true;
+      }
+      return result;
+    },
+  },
   Subscription: {
     contactsAdded: {
       subscribe: () => pubsub.asyncIterator("CONTACTS_ADDED"),
