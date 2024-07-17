@@ -13,6 +13,7 @@ const typeDefs = `
     status: String!
     createdAt: Date!
     contacts: [User!]!
+    blockedContacts: [ID!]!
     chats: [Chat!]!
   }
 
