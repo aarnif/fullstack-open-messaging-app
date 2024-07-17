@@ -63,8 +63,7 @@ const typeDefs = `
 const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
-      let chatTitle = "";
-      let chatImage = "chat_placeholder.png";
+      let chatTitle = null;
       let isGroupChat = false;
       const userInputError = new GraphQLError({
         extensions: {
@@ -83,16 +82,8 @@ const resolvers = {
         userInputError.message = "At least two participants are required!";
         throw userInputError;
       } else if (args.participants.length === 2) {
-        console.log("Creating chat with two participants");
-        const anotherParticipantId = args.participants.find(
-          (participant) => participant !== context.currentUser.id
-        );
-        const findAnotherUser = await User.findById(anotherParticipantId);
-        chatTitle = findAnotherUser.name;
-        chatImage = {
-          thumbnail: findAnotherUser.profilePicture.thumbnail,
-          original: findAnotherUser.profilePicture.original,
-        };
+        console.log("Creating private chat with two participants");
+        chatTitle = "Private chat";
       } else if (args.participants.length > 2 && !args.title) {
         userInputError.message = "Chat title is required for group chats!";
         throw userInputError;
