@@ -156,6 +156,28 @@ const resolvers = {
         .populate("admin")
         .populate("participants");
 
+      if (chatToBeUpdated.title === "Private chat") {
+        const checkIfAnotherUserHasBlockedYou =
+          chatToBeUpdated.participants.find((participant) => {
+            console.log("Participant: ", participant);
+            return (
+              participant._id !== context.currentUser.id &&
+              participant.blockedContacts.includes(context.currentUser.id)
+            );
+          });
+
+        if (checkIfAnotherUserHasBlockedYou) {
+          throw new GraphQLError(
+            `${checkIfAnotherUserHasBlockedYou.name} has blocked you!`,
+            {
+              extensions: {
+                code: "FORBIDDEN",
+              },
+            }
+          );
+        }
+      }
+
       const newMessage = {
         type: args.type,
         sender: context.currentUser.id,
