@@ -44,3 +44,5 @@
 | 14.7. | 3    | FullScreen kuvanäkymien lisäys ja kuvien lataus sovelluksesta kännykkään                                                 |
 | 15.7. | 3    |                                                                                                                          |
 | 16.7. | 1    |                                                                                                                          |
+| 17.7. | 3    | Päivitä chat nimen luonti ja aloita käyttäjän blokkauksen teko                                                           |
+| 18.7. | 2    | Käyttäjän blokkaus ja routen luominen yksittäiselle kontaktille                                                          |
