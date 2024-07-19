@@ -41,7 +41,7 @@ const chatSchema = new Schema({
       type: {
         type: String,
         default: "message",
-        enum: ["notification", "message"],
+        enum: ["notification", "message", "singleEmoji"],
       },
       sender: {
         type: Schema.Types.ObjectId,

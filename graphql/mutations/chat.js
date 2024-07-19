@@ -3,6 +3,7 @@ import User from "../../models/user.js";
 
 import { GraphQLError } from "graphql";
 import { PubSub } from "graphql-subscriptions";
+import helpers from "../../utils/helpers.js";
 
 const pubsub = new PubSub();
 
@@ -159,7 +160,6 @@ const resolvers = {
       if (chatToBeUpdated.title === "Private chat") {
         const checkIfAnotherUserHasBlockedYou =
           chatToBeUpdated.participants.find((participant) => {
-            console.log("Participant: ", participant);
             return (
               participant._id !== context.currentUser.id &&
               participant.blockedContacts.includes(context.currentUser.id)
@@ -177,11 +177,14 @@ const resolvers = {
           );
         }
       }
+      const messageIsSingleEmoji = helpers.checkIfMessageIsSingleEmoji(
+        args.content.trim()
+      );
 
       const newMessage = {
-        type: args.type,
+        type: messageIsSingleEmoji ? "singleEmoji" : args.type,
         sender: context.currentUser.id,
-        content: args.content,
+        content: args.content.trim(),
         image: args.input,
         isReadBy: chatToBeUpdated.participants.map((participant) => {
           return context.currentUser._id.equals(participant._id)
