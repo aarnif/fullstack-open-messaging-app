@@ -46,3 +46,6 @@
 | 16.7. | 1    |                                                                                                                          |
 | 17.7. | 3    | Päivitä chat nimen luonti ja aloita käyttäjän blokkauksen teko                                                           |
 | 18.7. | 2    | Käyttäjän blokkaus ja routen luominen yksittäiselle kontaktille                                                          |
+| 19.7. | 2    | singleEmoji-viestin lisäys                                                                                               |
+| 20.7. | 4    | Dark Mode-teeman lisäys                                                                                                  |
+| 21.7. | 1    | Teeman tallennus ja hakeminen käyttäjän laitteelta                                                                       |
