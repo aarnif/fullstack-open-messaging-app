@@ -94,15 +94,6 @@ const resolvers = {
         isGroupChat = true;
       }
 
-      const checkIfChatExists = await Chat.findOne({
-        title: chatTitle,
-      });
-
-      if (checkIfChatExists) {
-        userInputError.message = "Chat already exists!";
-        throw userInputError;
-      }
-
       const newChat = new Chat({
         title: chatTitle,
         image: args.input,
@@ -115,8 +106,6 @@ const resolvers = {
           content: "Chat created",
         },
       });
-
-      console.log("newChat", newChat);
 
       try {
         newChat.save();
