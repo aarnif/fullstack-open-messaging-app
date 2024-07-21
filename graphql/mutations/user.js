@@ -26,7 +26,7 @@ const typeDefs = `
     editProfile(
       name: String
       about: String
-      profilePicture: String
+      input: ImageInput
     ): User
     blockOrUnBlockContact(
       contactId: ID!
@@ -151,7 +151,10 @@ const resolvers = {
 
       const updatedUser = await User.findByIdAndUpdate(
         context.currentUser,
-        args,
+        {
+          $set: args,
+          $set: { profilePicture: args.input },
+        },
         {
           new: true,
         }
