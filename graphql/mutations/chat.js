@@ -298,7 +298,7 @@ const resolvers = {
       for (const [key, value] of Object.entries(args)) {
         if (
           key !== "chatId" &&
-          key !== "image" &&
+          key !== "input" &&
           value !== chatToBeUpdated[key]
         ) {
           console.log(`${key} was updated to: "${value}"`);
@@ -309,8 +309,8 @@ const resolvers = {
               key[0].toUpperCase() + key.slice(1)
             } was updated to: "${value}"`,
           });
-        } else if (key === "image" && value !== chatToBeUpdated.image) {
-          console.log("Image was updated");
+        } else if (key === "input" && value !== chatToBeUpdated.image) {
+          console.log(`Updated image for chat: ${chatToBeUpdated.title}`);
           notificationMessages.push({
             type: "notification",
             sender: context.currentUser.id,
@@ -324,6 +324,7 @@ const resolvers = {
           args.chatId,
           {
             $set: args,
+            $set: { image: args.input },
             $push: {
               messages: { $each: notificationMessages, $position: 0 },
             },
