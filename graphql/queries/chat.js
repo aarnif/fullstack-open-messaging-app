@@ -35,6 +35,7 @@ const typeDefs = `
     latestMessage: Message
     createdAt: Date
     displayChatTitle: String!
+    displayChatImage: Image
   }
 
   extend type Query {
@@ -118,6 +119,8 @@ const resolvers = {
   Chat: {
     displayChatTitle: (chat, args, context) =>
       chat.displayChatTitle(context.currentUser.id),
+    displayChatImage: (chat, args, context) =>
+      chat.displayChatImage(context.currentUser.id),
   },
 };
 

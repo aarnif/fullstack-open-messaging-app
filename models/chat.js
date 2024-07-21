@@ -96,6 +96,20 @@ chatSchema.methods.displayChatTitle = function (currentUserId) {
   return findTheOthersParticipantsName;
 };
 
+chatSchema.methods.displayChatImage = function (currentUserId) {
+  if (this.isGroupChat) {
+    return this.image;
+  }
+  const findTheOthersParticipantsProfilePicture = this.participants.find(
+    (participant) => participant.id !== currentUserId
+  ).profilePicture;
+  console.log(
+    "Find the others participants profile picture: ",
+    findTheOthersParticipantsProfilePicture
+  );
+  return findTheOthersParticipantsProfilePicture;
+};
+
 const Chat = mongoose.model("Chat", chatSchema);
 
 export default Chat;
