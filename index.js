@@ -32,7 +32,25 @@ const wsServer = new WebSocketServer({
   path: "/",
 });
 
-const serverCleanup = useServer({ schema }, wsServer);
+const serverCleanup = useServer(
+  {
+    schema,
+    context: async (ctx, msg, args) => {
+      const auth =
+        ctx.connectionParams?.Authorization ||
+        ctx.connectionParams?.headers?.authorization; // Whether the client is using apollo server or apollo client
+      if (auth && auth.startsWith("Bearer ")) {
+        const decodedToken = jwt.verify(
+          auth.substring(7),
+          process.env.JWT_SECRET
+        );
+        const currentUser = await User.findById(decodedToken.id);
+        return { currentUser };
+      }
+    },
+  },
+  wsServer
+);
 
 const server = new ApolloServer({
   schema,
