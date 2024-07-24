@@ -4,6 +4,12 @@ import { GraphQLError } from "graphql";
 
 const typeDefs = `
   scalar Date
+
+  type Settings {
+    theme: String
+    time: String
+  }
+
   type User {
     id: ID!
     username: String!
@@ -11,6 +17,7 @@ const typeDefs = `
     about: String
     profilePicture: Image
     status: String!
+    settings: Settings
     createdAt: Date!
     contacts: [User!]!
     blockedContacts: [ID!]!

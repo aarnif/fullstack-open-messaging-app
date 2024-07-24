@@ -36,6 +36,18 @@ const userSchema = new Schema({
     default: "offline",
     enum: ["online", "offline"],
   },
+  settings: {
+    theme: {
+      type: String,
+      default: "light",
+      enum: ["light", "dark"],
+    },
+    time: {
+      type: String,
+      default: "24h",
+      enum: ["12h", "24h"],
+    },
+  },
   createdAt: {
     type: Date,
     default: Date.now,
