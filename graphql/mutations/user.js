@@ -28,6 +28,10 @@ const typeDefs = `
       about: String
       input: ImageInput
     ): User
+    editSettings(
+      theme: String
+      time: String
+    ): User
     blockOrUnBlockContact(
       contactId: ID!
     ): Boolean
@@ -155,6 +159,25 @@ const resolvers = {
           $set: args,
           $set: { profilePicture: args.input },
         },
+        {
+          new: true,
+        }
+      );
+
+      return updatedUser;
+    },
+    editSettings: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        context.currentUser,
+        { $set: { settings: args } },
         {
           new: true,
         }
