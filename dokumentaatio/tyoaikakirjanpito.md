@@ -49,3 +49,7 @@
 | 19.7. | 2    | singleEmoji-viestin lisäys                                                                                               |
 | 20.7. | 4    | Dark Mode-teeman lisäys                                                                                                  |
 | 21.7. | 1    | Teeman tallennus ja hakeminen käyttäjän laitteelta                                                                       |
+| 22.7. | 2    | GraphQL-kontekstin antaminen websocket-palvelimelle                                                                      |
+| 23.7. | 2    |                                                                                                                          |
+| 24.7. | 1    | Käyttäjäasetusten lisäys User-malliin ja niiden päivitys palvelimen kautta                                               |
+| 25.7. | 1    | Käyttäjäasetusten päivitys käyttöliittymän kautta                                                                        |
