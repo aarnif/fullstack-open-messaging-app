@@ -21,7 +21,7 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
-  profilePicture: {
+  image: {
     thumbnail: {
       type: String,
       default: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",

@@ -14,7 +14,7 @@ const users = [
     password: "password",
     name: "John Doe",
     about: "Love hiking and outdoor adventures.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/gRT6j6Z/6690caa54dc3eac2b83517ca.png",
       original:
         "https://i.ibb.co/Tg8rvrM/g-RT6j6-Z-6690caa54dc3eac2b83517ca.png",
@@ -28,7 +28,7 @@ const users = [
     password: "password",
     name: "Jane Smith",
     about: "Avid reader and coffee enthusiast.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/0QSZqjv/6690caa54dc3eac2b83517cc.png",
       original: "https://i.ibb.co/wYXCyNj/6690caa54dc3eac2b83517cc.png",
     },
@@ -41,7 +41,7 @@ const users = [
     password: "password",
     name: "Alice Jones",
     about: "Tech geek and foodie.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/YBz3jdp/6690caa54dc3eac2b83517ce.png",
       original: "https://i.ibb.co/r2Cmyp4/6690caa54dc3eac2b83517ce.png",
     },
@@ -54,7 +54,7 @@ const users = [
     password: "password",
     name: "Bob Brown",
     about: "Musician and artist.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/GcRP93m/6690caa54dc3eac2b83517d0.png",
       original: "https://i.ibb.co/qkp1CF6/6690caa54dc3eac2b83517d0.png",
     },
@@ -67,7 +67,7 @@ const users = [
     password: "password",
     name: "Charlie Clark",
     about: "Gamer and streamer.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/MBFDk3Q/6690caa54dc3eac2b83517d2.png",
       original: "https://i.ibb.co/GHzvQbN/6690caa54dc3eac2b83517d2.png",
     },
@@ -80,7 +80,7 @@ const users = [
     password: "password",
     name: "David Wilson",
     about: "Fitness enthusiast.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/SV2DWBX/6690caa54dc3eac2b83517d4.png",
       original: "https://i.ibb.co/r5gKTHG/6690caa54dc3eac2b83517d4.png",
     },
@@ -93,7 +93,7 @@ const users = [
     password: "password",
     name: "Emma Davis",
     about: "Travel blogger.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/nDQkfL2/6690caa54dc3eac2b83517d6.png",
       original: "https://i.ibb.co/rZ5yMwP/6690caa54dc3eac2b83517d6.png",
     },
@@ -106,7 +106,7 @@ const users = [
     password: "password",
     name: "Frank Miller",
     about: "History buff.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/HggGYm2/6690caa54dc3eac2b83517d8.png",
       original: "https://i.ibb.co/SvvV0qx/6690caa54dc3eac2b83517d8.png",
     },
@@ -119,7 +119,7 @@ const users = [
     password: "password",
     name: "Grace Martin",
     about: "Photographer.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/DG7wnT2/6690caa54dc3eac2b83517da.png",
       original: "https://i.ibb.co/vsJL8Rn/6690caa54dc3eac2b83517da.png",
     },
@@ -132,7 +132,7 @@ const users = [
     password: "password",
     name: "Harry Thompson",
     about: "Chef and food critic.",
-    profilePicture: {
+    image: {
       thumbnail: "https://i.ibb.co/pJz7k8K/6690caa54dc3eac2b83517dc.png",
       original: "https://i.ibb.co/WgyhRwz/6690caa54dc3eac2b83517dc.png",
     },

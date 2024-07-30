@@ -15,7 +15,7 @@ const typeDefs = `
     username: String!
     name: String
     about: String
-    profilePicture: Image
+    image: Image
     status: String!
     settings: Settings
     createdAt: Date!

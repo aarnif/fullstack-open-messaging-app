@@ -157,7 +157,7 @@ const resolvers = {
         context.currentUser,
         {
           $set: args,
-          $set: { profilePicture: args.input },
+          $set: { image: args.input },
         },
         {
           new: true,
