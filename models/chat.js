@@ -100,14 +100,10 @@ chatSchema.methods.displayChatImage = function (currentUserId) {
   if (this.isGroupChat) {
     return this.image;
   }
-  const findTheOthersParticipantsProfilePicture = this.participants.find(
+  const findTheOthersParticipantsProfileImage = this.participants.find(
     (participant) => participant.id !== currentUserId
-  ).profilePicture;
-  console.log(
-    "Find the others participants profile picture: ",
-    findTheOthersParticipantsProfilePicture
-  );
-  return findTheOthersParticipantsProfilePicture;
+  ).image;
+  return findTheOthersParticipantsProfileImage;
 };
 
 const Chat = mongoose.model("Chat", chatSchema);
