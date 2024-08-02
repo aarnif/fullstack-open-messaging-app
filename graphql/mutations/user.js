@@ -156,8 +156,8 @@ const resolvers = {
       const updatedUser = await User.findByIdAndUpdate(
         context.currentUser,
         {
-          $set: args,
           $set: { image: args.input },
+          $set: args,
         },
         {
           new: true,
