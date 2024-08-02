@@ -312,8 +312,8 @@ const resolvers = {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $set: args,
             $set: { image: args.input },
+            $set: args,
             $push: {
               messages: { $each: notificationMessages, $position: 0 },
             },
