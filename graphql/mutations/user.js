@@ -38,6 +38,7 @@ const typeDefs = `
   }
   type Subscription {
     contactsAdded: [User]
+    contactBlocked: String
   }   
 `;
 
@@ -210,12 +211,18 @@ const resolvers = {
         });
         result = true;
       }
+      pubsub.publish("CONTACT_BLOCKED", {
+        contactBlocked: args.contactId,
+      });
       return result;
     },
   },
   Subscription: {
     contactsAdded: {
       subscribe: () => pubsub.asyncIterator("CONTACTS_ADDED"),
+    },
+    contactBlocked: {
+      subscribe: () => pubsub.asyncIterator("CONTACT_BLOCKED"),
     },
   },
 };
