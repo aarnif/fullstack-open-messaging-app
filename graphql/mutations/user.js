@@ -23,6 +23,9 @@ const typeDefs = `
     addContacts(
       contacts: [ID!]
     ): User
+    removeContact(
+      contactId: ID!
+    ): String!
     editProfile(
       name: String
       about: String
@@ -39,6 +42,7 @@ const typeDefs = `
   type Subscription {
     contactsAdded: [User]
     contactBlocked: String
+    contactRemoved: String
   }   
 `;
 
@@ -145,6 +149,26 @@ const resolvers = {
 
       return user;
     },
+    removeContact: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const removeContactFromUser = await User.findByIdAndUpdate(
+        context.currentUser,
+        {
+          $pull: { contacts: args.contactId },
+        }
+      );
+
+      pubsub.publish("CONTACT_REMOVED", { contactRemoved: args.contactId });
+
+      return args.contactId;
+    },
     editProfile: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
@@ -222,6 +246,9 @@ const resolvers = {
     },
     contactBlocked: {
       subscribe: () => pubsub.asyncIterator("CONTACT_BLOCKED"),
+    },
+    contactRemoved: {
+      subscribe: () => pubsub.asyncIterator("CONTACT_REMOVED"),
     },
   },
 };
