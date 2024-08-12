@@ -53,3 +53,18 @@
 | 23.7. | 2    |                                                                                                                          |
 | 24.7. | 1    | Käyttäjäasetusten lisäys User-malliin ja niiden päivitys palvelimen kautta                                               |
 | 25.7. | 1    | Käyttäjäasetusten päivitys käyttöliittymän kautta                                                                        |
+| 27.7  | 1    | Koodin refaktorointia ja bugien korjausta sekä appin yleisen ulkoasun parannus                                           |
+| 28.7  | 1    |                                                                                                                          |
+| 29.7  | 2    |                                                                                                                          |
+| 30.7  | 2    |                                                                                                                          |
+| 31.7  | 2    |                                                                                                                          |
+|  1.8  | 2    |                                                                                                                          |
+|  2.8  | 1    |                                                                                                                          |
+|  3.8  | 2    |                                                                                                                          |
+|  4.8  | 2    |                                                                                                                          |
+|  5.8  | 2    |                                                                                                                          |
+|  6.8  | 1    | Sisäänkirjautumisen päivitys                                                                                             |
+|  8.8  | 1    | Ilmoitusten viestien tyylien päivitys                                                                                    |
+| 10.8  | 1    | Kontaktin poisto käyttäjän kontakteista                                                                                  |
+| 11.8  | 1    | Ilmoitus viestien siirto kontekstiin                                                                                     |
+| 12.8  | 1    | Kontakti näkymän päivitys                                                                                                |
