@@ -67,4 +67,7 @@
 |  8.8  | 1    | Ilmoitusten viestien tyylien päivitys                                                                                    |
 | 10.8  | 1    | Kontaktin poisto käyttäjän kontakteista                                                                                  |
 | 11.8  | 1    | Ilmoitus viestien siirto kontekstiin                                                                                     |
-| 12.8  | 1    | Kontakti näkymän päivitys                                                                                                |
+| 12.8  | 1    | Kontakti näkymän päivitys ja refaktorointi                                                                               |
+| 13.8  | 2    |                                                                                                                          |
+| 14.8  | 2    | Chatin muokkaus näkymän päivitys                                                                                         |
+| 15.8  | 2    |                                                                                                                          |
