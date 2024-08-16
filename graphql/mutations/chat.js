@@ -560,14 +560,13 @@ const resolvers = {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $pull: { participants: context.currentUser.id },
-          },
-          {
             $push: {
               messages: { $each: [message], $position: 0 },
             },
           },
-
+          {
+            $pull: { participants: context.currentUser.id },
+          },
           { new: true }
         )
           .populate("admin")
