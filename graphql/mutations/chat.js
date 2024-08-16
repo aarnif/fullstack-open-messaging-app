@@ -48,6 +48,9 @@ const typeDefs = `
     leaveGroupChat(
       chatId: ID!
     ): String!
+    leaveGroupChats(
+      chatIds: [ID!]!
+    ): [String!]!
   }
   type Subscription {
     chatAdded: Chat!
@@ -58,6 +61,7 @@ const typeDefs = `
     participantsAddedToGroupChat: Chat!
     participantsRemovedFromGroupChat: Chat!
     leftGroupChat: String!
+    leftGroupChats: [String!]!
   }   
 `;
 
@@ -563,8 +567,6 @@ const resolvers = {
             $push: {
               messages: { $each: [message], $position: 0 },
             },
-          },
-          {
             $pull: { participants: context.currentUser.id },
           },
           { new: true }
@@ -602,6 +604,68 @@ const resolvers = {
         });
       }
     },
+    leaveGroupChats: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const message = {
+        type: "notification",
+        sender: context.currentUser.id,
+        content: `${context.currentUser.name} left`,
+      };
+
+      try {
+        const updatedChats = await Chat.updateMany(
+          {
+            _id: { $in: args.chatIds },
+          },
+          {
+            $push: {
+              messages: { $each: [message], $position: 0 },
+            },
+            $pull: { participants: context.currentUser.id },
+          },
+          { new: true }
+        )
+          .populate("admin")
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
+          });
+
+        const removeChatFromCurrentUser = await User.findByIdAndUpdate(
+          context.currentUser.id,
+          {
+            $pull: { chats: { $in: args.chatIds } },
+          },
+          { new: true }
+        );
+
+        pubsub.publish("LEFT_GROUP_CHATS", {
+          leftGroupChats: args.chatIds,
+        });
+
+        return args.chatIds;
+      } catch (error) {
+        throw new GraphQLError("Removing chat participants failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args,
+            error,
+          },
+        });
+      }
+    },
   },
 
   Subscription: {
@@ -629,6 +693,9 @@ const resolvers = {
     },
     leftGroupChat: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHAT"),
+    },
+    leftGroupChats: {
+      subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHATS"),
     },
   },
 };
