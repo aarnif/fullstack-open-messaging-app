@@ -1,7 +1,6 @@
 import config from "./config.js";
 import schema from "./graphql/schema.js";
 import User from "./models/user.js";
-import imageRouter from "./routes/imageRouter.js";
 
 import mongoose from "mongoose";
 import { ApolloServer } from "@apollo/server";
@@ -72,8 +71,6 @@ await server.start();
 
 app.use(cors());
 app.use(express.json());
-
-app.use("/images", imageRouter);
 
 app.use(
   "/",
