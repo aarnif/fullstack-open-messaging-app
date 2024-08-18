@@ -45,9 +45,6 @@ const typeDefs = `
       chatId: ID!
       participants: [ID!]!
     ): Chat
-    leaveGroupChat(
-      chatId: ID!
-    ): String!
     leaveGroupChats(
       chatIds: [ID!]!
     ): [String!]!
@@ -60,7 +57,6 @@ const typeDefs = `
     messagesInChatRead: Chat!
     participantsAddedToGroupChat: Chat!
     participantsRemovedFromGroupChat: Chat!
-    leftGroupChat: String!
     leftGroupChats: [String!]!
   }   
 `;
@@ -544,66 +540,6 @@ const resolvers = {
         });
       }
     },
-
-    leaveGroupChat: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
-      }
-
-      const message = {
-        type: "notification",
-        sender: context.currentUser.id,
-        content: `${context.currentUser.name} left`,
-      };
-
-      try {
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $push: {
-              messages: { $each: [message], $position: 0 },
-            },
-            $pull: { participants: context.currentUser.id },
-          },
-          { new: true }
-        )
-          .populate("admin")
-          .populate("participants")
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-
-        const removeChatFromParticipant = await User.findByIdAndUpdate(
-          context.currentUser.id,
-          {
-            $pull: { chats: args.chatId },
-          }
-        );
-
-        pubsub.publish("LEFT_GROUP_CHAT", {
-          leftGroupChat: updatedChat.id,
-        });
-
-        return updatedChat.id;
-      } catch (error) {
-        throw new GraphQLError("Removing chat participant failed", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
-          },
-        });
-      }
-    },
     leaveGroupChats: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
@@ -690,9 +626,6 @@ const resolvers = {
     participantsRemovedFromGroupChat: {
       subscribe: () =>
         pubsub.asyncIterator("PARTICIPANTS_REMOVED_FROM_GROUP_CHAT"),
-    },
-    leftGroupChat: {
-      subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHAT"),
     },
     leftGroupChats: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHATS"),
