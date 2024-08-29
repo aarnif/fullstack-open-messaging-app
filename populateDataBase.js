@@ -25,7 +25,7 @@ const addChatParticipantsRandomly = (users) => {
   return shuffledUsers.slice(0, numItems);
 };
 
-const emptyDataBase = async () => {
+export const emptyDataBase = async () => {
   console.log("emptying database...");
   await User.deleteMany({});
   await Chat.deleteMany({});
@@ -35,7 +35,7 @@ const hashPassword = async (password) => {
   return bcrypt.hash(password, 10);
 };
 
-const addUsers = async () => {
+export const addUsers = async () => {
   console.log("adding users...");
   for (let i = 0; i < users.length; ++i) {
     let user = users[i];
@@ -54,7 +54,7 @@ const addUsers = async () => {
   );
 };
 
-const addChats = async () => {
+export const addChats = async () => {
   console.log("adding chats...");
   for (let i = 0; i < chats.length; ++i) {
     const chat = chats[i];
@@ -91,7 +91,7 @@ const addChats = async () => {
   }
 };
 
-const addChatsToUsers = async () => {
+export const addChatsToUsers = async () => {
   console.log("adding chats to users...");
   const allChats = await Chat.find({});
   for (let i = 0; i < allChats.length; ++i) {
@@ -120,4 +120,6 @@ const main = async () => {
   }
 };
 
-main();
+if (process.env.NODE_ENV !== "test") {
+  main();
+}
