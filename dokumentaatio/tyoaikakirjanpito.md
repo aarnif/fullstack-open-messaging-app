@@ -72,3 +72,4 @@
 | 14.8  | 2    | Chatin muokkaus näkymän päivitys                                                                                         |
 | 15.8  | 2    |                                                                                                                          |
 | 17.8  | 3    | Chattien poisto käyttäjän chat-näkymästä                                                                                 |
+| 29.8  | 3    | Palvelimen testien kirjoittaminen                                                                                        |
