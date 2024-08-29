@@ -23,73 +23,78 @@ mongoose
     console.log("error connection to MongoDB:", error.message);
   });
 
-const app = express();
-const httpServer = http.createServer(app);
+const start = async () => {
+  const JWT_SECRET = config.JWT_SECRET;
+  const app = express();
+  const httpServer = http.createServer(app);
 
-const wsServer = new WebSocketServer({
-  server: httpServer,
-  path: "/",
-});
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/",
+  });
 
-const serverCleanup = useServer(
-  {
-    schema,
-    context: async (ctx, msg, args) => {
-      const auth =
-        ctx.connectionParams?.Authorization ||
-        ctx.connectionParams?.headers?.authorization; // Whether the client is using apollo server or apollo client
-      if (auth && auth.startsWith("Bearer ")) {
-        const decodedToken = jwt.verify(
-          auth.substring(7),
-          process.env.JWT_SECRET
-        );
-        const currentUser = await User.findById(decodedToken.id);
-        return { currentUser };
-      }
-    },
-  },
-  wsServer
-);
-
-const server = new ApolloServer({
-  schema,
-  plugins: [
-    ApolloServerPluginDrainHttpServer({ httpServer }),
+  const serverCleanup = useServer(
     {
-      async serverWillStart() {
-        return {
-          async drainServer() {
-            await serverCleanup.dispose();
-          },
-        };
+      schema,
+      context: async (ctx, msg, args) => {
+        const auth =
+          ctx.connectionParams?.Authorization ||
+          ctx.connectionParams?.headers?.authorization; // Whether the client is using apollo server or apollo client
+        if (auth && auth.startsWith("Bearer ")) {
+          const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+          const currentUser = await User.findById(decodedToken.id);
+          return { currentUser };
+        }
       },
     },
-  ],
-});
+    wsServer
+  );
 
-await server.start();
+  const server = new ApolloServer({
+    schema,
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
+    ],
+  });
 
-app.use(cors());
-app.use(express.json());
+  await server.start();
 
-app.use(
-  "/",
-  expressMiddleware(server, {
-    context: async ({ req }) => {
-      const auth = req ? req.headers.authorization : null;
-      if (auth && auth.startsWith("Bearer ")) {
-        const decodedToken = jwt.verify(
-          auth.substring(7),
-          process.env.JWT_SECRET
-        );
-        const currentUser = await User.findById(decodedToken.id);
-        return { currentUser };
-      }
-    },
-  })
-);
+  app.use(cors());
+  app.use(express.json());
 
-const PORT = process.env.PORT || 4000;
-httpServer.listen(PORT, () =>
-  console.log(`Server is now running on port ${PORT}`)
-);
+  app.use(
+    "/",
+    expressMiddleware(server, {
+      context: async ({ req }) => {
+        const auth = req ? req.headers.authorization : null;
+        if (auth && auth.startsWith("Bearer ")) {
+          const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+          const currentUser = await User.findById(decodedToken.id);
+          return { currentUser };
+        }
+      },
+    })
+  );
+
+  const PORT = config.PORT || 4000;
+  httpServer.listen(PORT, () =>
+    console.log(`Server is now running on port ${PORT}`)
+  );
+
+  return server;
+};
+
+if (process.env.NODE_ENV !== "test") {
+  start();
+}
+
+export default start;

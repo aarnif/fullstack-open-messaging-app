@@ -1,14 +1,10 @@
 import "dotenv/config";
 
-const MONGODB_USERNAME = process.env.MONGODB_USERNAME;
-const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
-const MONGODB_URI = `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.wr1sesb.mongodb.net/database?retryWrites=true&w=majority&appName=Cluster0`;
+const PORT = process.env.NODE_ENV === "test" ? 4001 : 4000;
+const JWT_SECRET = process.env.JWT_SECRET;
+const MONGODB_URI =
+  process.env.NODE_ENV === "test"
+    ? process.env.TEST_MONGODB_URI
+    : process.env.MONGODB_URI;
 
-const CLOUDINARY = {
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
-};
-
-export default { MONGODB_URI, CLOUDINARY };
+export default { PORT, JWT_SECRET, MONGODB_URI };
