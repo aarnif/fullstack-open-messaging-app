@@ -1,3 +1,4 @@
+import config from "../config.js";
 import {
   emptyDataBase,
   addUsers,
@@ -11,14 +12,8 @@ import mongoose from "mongoose";
 
 import assert from "node:assert";
 
-const queryData = {
-  query: `query AllChats {
-  allChats {
-    id
-    title
-  }
-}`,
-};
+const requestData = async (queryData) =>
+  await request(`http://localhost:${config.PORT}`).post("/").send(queryData);
 
 describe("Server e2e tests", () => {
   let server;
@@ -37,10 +32,31 @@ describe("Server e2e tests", () => {
   });
 
   it("Get all dummy chats", async () => {
-    const response = await request("http://localhost:4001")
-      .post("/")
-      .send(queryData);
+    const response = await requestData({
+      query: `query AllChats {
+          allChats {
+            id
+            title
+          }
+        }`,
+    });
+
     expect(response.errors).toBeUndefined();
     assert.strictEqual(response.body.data.allChats.length, 11);
+  });
+
+  it("Get one chat by id", async () => {
+    const response = await requestData({
+      query: `query FindChatById($chatId: ID!) {
+        findChatById(chatId: $chatId) {
+          id
+          title
+        }
+      }`,
+      variables: { chatId: "6690cc6331f8d4e66b57ae22" },
+    });
+
+    expect(response.errors).toBeUndefined();
+    expect(response.body.data.findChatById.title).toBe("Weekend Hikers");
   });
 });
