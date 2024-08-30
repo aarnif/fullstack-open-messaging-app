@@ -1,7 +1,6 @@
 import "dotenv/config";
 
-const PORT =
-  process.env.NODE_ENV === "test" ? 4001 : process.env.NODE_ENV || 4000;
+const PORT = process.env.NODE_ENV === "test" ? 4001 : process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET;
 const MONGODB_URI =
   process.env.NODE_ENV === "test"
