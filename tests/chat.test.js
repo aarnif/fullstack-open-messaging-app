@@ -24,12 +24,12 @@ describe("Server e2e tests", () => {
     await addChats();
     await addChatsToUsers();
     server = await start();
-  });
+  }, 10000);
 
   afterAll(async () => {
     await server.stop();
     await mongoose.connection.close();
-  });
+  }, 10000);
 
   it("Get all dummy chats", async () => {
     const response = await requestData({
