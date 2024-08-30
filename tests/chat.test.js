@@ -29,7 +29,7 @@ describe("Server e2e tests", () => {
   }, timeOut);
 
   afterAll(async () => {
-    await server.stop();
+    await server?.stop();
     await mongoose.connection.close();
   }, timeOut);
 
