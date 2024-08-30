@@ -12,6 +12,8 @@ import mongoose from "mongoose";
 
 import assert from "node:assert";
 
+const timeOut = 20000;
+
 const requestData = async (queryData) =>
   await request(`http://localhost:${config.PORT}`).post("/").send(queryData);
 
@@ -24,12 +26,12 @@ describe("Server e2e tests", () => {
     await addChats();
     await addChatsToUsers();
     server = await start();
-  }, 10000);
+  }, timeOut);
 
   afterAll(async () => {
     await server.stop();
     await mongoose.connection.close();
-  }, 10000);
+  }, timeOut);
 
   it("Get all dummy chats", async () => {
     const response = await requestData({
