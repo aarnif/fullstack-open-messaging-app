@@ -1,4 +1,5 @@
-import config from "../config.js";
+import helpers from "../utils/helpers.js";
+
 import {
   emptyDataBase,
   addUsers,
@@ -7,17 +8,13 @@ import {
 } from "../populateDataBase.js";
 import start from "../index.js";
 
-import request from "supertest";
 import mongoose from "mongoose";
 
 import assert from "node:assert";
 
 const timeOut = 60000;
 
-const requestData = async (queryData) =>
-  await request(`http://localhost:${config.PORT}`).post("/").send(queryData);
-
-describe("Server e2e tests", () => {
+describe("Server e2e tests chats", () => {
   let server;
 
   beforeAll(async () => {
@@ -34,7 +31,7 @@ describe("Server e2e tests", () => {
   }, timeOut);
 
   it("Count all dummy chats", async () => {
-    const response = await requestData({
+    const response = await helpers.requestData({
       query: `query CountChats {
        countChats
       }`,
@@ -45,7 +42,7 @@ describe("Server e2e tests", () => {
   });
 
   it("Get all dummy chats", async () => {
-    const response = await requestData({
+    const response = await helpers.requestData({
       query: `query AllChats {
           allChats {
             id
@@ -59,7 +56,7 @@ describe("Server e2e tests", () => {
   });
 
   it("Get one chat by id", async () => {
-    const response = await requestData({
+    const response = await helpers.requestData({
       query: `query FindChatById($chatId: ID!) {
         findChatById(chatId: $chatId) {
           id
@@ -74,7 +71,7 @@ describe("Server e2e tests", () => {
   });
 
   it("Get one chat by participants", async () => {
-    const chatByIdWithParticipants = await requestData({
+    const chatByIdWithParticipants = await helpers.requestData({
       query: `query FindChatById($chatId: ID!) {
         findChatById(chatId: $chatId) {
           id
@@ -87,7 +84,7 @@ describe("Server e2e tests", () => {
       variables: { chatId: "6690cc6331f8d4e66b57ae22" },
     });
 
-    const chatByParticipants = await requestData({
+    const chatByParticipants = await helpers.requestData({
       query: `query FindChatByParticipants($participants: [ID!]!) {
         findChatByParticipants(participants: $participants) {
           id
