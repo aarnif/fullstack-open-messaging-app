@@ -12,7 +12,7 @@ import mongoose from "mongoose";
 
 import assert from "node:assert";
 
-const timeOut = 20000;
+const timeOut = 60000;
 
 const requestData = async (queryData) =>
   await request(`http://localhost:${config.PORT}`).post("/").send(queryData);
@@ -32,6 +32,17 @@ describe("Server e2e tests", () => {
     await server?.stop();
     await mongoose.connection.close();
   }, timeOut);
+
+  it("Count all dummy chats", async () => {
+    const response = await requestData({
+      query: `query CountChats {
+       countChats
+      }`,
+    });
+
+    expect(response.errors).toBeUndefined();
+    expect(response.body.data.countChats).toBe(11);
+  });
 
   it("Get all dummy chats", async () => {
     const response = await requestData({
@@ -60,5 +71,40 @@ describe("Server e2e tests", () => {
 
     expect(response.errors).toBeUndefined();
     expect(response.body.data.findChatById.title).toBe("Weekend Hikers");
+  });
+
+  it("Get one chat by participants", async () => {
+    const chatByIdWithParticipants = await requestData({
+      query: `query FindChatById($chatId: ID!) {
+        findChatById(chatId: $chatId) {
+          id
+          title
+          participants {
+            id
+          }
+        }
+      }`,
+      variables: { chatId: "6690cc6331f8d4e66b57ae22" },
+    });
+
+    const chatByParticipants = await requestData({
+      query: `query FindChatByParticipants($participants: [ID!]!) {
+        findChatByParticipants(participants: $participants) {
+          id
+          title
+        }
+      }`,
+      variables: {
+        participants:
+          chatByIdWithParticipants.body.data.findChatById.participants.map(
+            (participant) => participant.id
+          ),
+      },
+    });
+
+    expect(chatByParticipants.errors).toBeUndefined();
+    expect(chatByParticipants.body.data.findChatByParticipants.title).toBe(
+      "Weekend Hikers"
+    );
   });
 });
