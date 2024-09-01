@@ -18,7 +18,10 @@ const checkIfMessageIsSingleEmoji = (messageContent) => {
   );
 };
 
-const requestData = async (queryData) =>
-  await request(`http://localhost:${config.PORT}`).post("/").send(queryData);
+const requestData = async (queryData, token = "") =>
+  await request(`http://localhost:${config.PORT}`)
+    .post("/")
+    .set("Authorization", token)
+    .send(queryData);
 
 export default { checkIfMessageIsSingleEmoji, requestData };
