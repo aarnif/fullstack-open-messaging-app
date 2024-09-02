@@ -10,7 +10,7 @@ const credentials = {
   id: "",
   username: "test_user",
   password: "password",
-  auth: "",
+  token: "",
 };
 
 const contactDetails = [
@@ -92,7 +92,7 @@ describe("Server e2e tests users", () => {
       variables: credentials,
     });
 
-    credentials.auth = `Bearer ${response.body.data.login.value}`;
+    credentials.token = `Bearer ${response.body.data.login.value}`;
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.login.value).toBeDefined();
@@ -108,7 +108,7 @@ describe("Server e2e tests users", () => {
         }
     }`,
       },
-      credentials.auth
+      credentials.token
     );
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
@@ -133,7 +133,7 @@ describe("Server e2e tests users", () => {
             contacts: contactDetails.map((contact) => contact.id),
           },
         },
-        credentials.auth
+        credentials.token
       );
     }
 
@@ -162,7 +162,7 @@ describe("Server e2e tests users", () => {
           contactId: contactDetails[0].id,
         },
       },
-      credentials.auth
+      credentials.token
     );
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
@@ -183,7 +183,7 @@ describe("Server e2e tests users", () => {
           }
         }`,
       },
-      credentials.auth
+      credentials.token
     );
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
@@ -216,7 +216,7 @@ describe("Server e2e tests users", () => {
           participants: [credentials.id, "6690caa54dc3eac2b83517d0"],
         },
       },
-      credentials.auth
+      credentials.token
     );
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
@@ -263,7 +263,7 @@ describe("Server e2e tests users", () => {
           ],
         },
       },
-      credentials.auth
+      credentials.token
     );
 
     groupChatDetails.id = response.body.data.createChat.id;
@@ -313,7 +313,7 @@ describe("Server e2e tests users", () => {
           content: "Hello gamers!",
         },
       },
-      credentials.auth
+      credentials.token
     );
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
@@ -339,7 +339,7 @@ describe("Server e2e tests users", () => {
           contactId: "6690caa54dc3eac2b83517d0",
         },
       },
-      credentials.auth
+      credentials.token
     );
 
     const findUserById = await helpers.requestData(
@@ -353,7 +353,7 @@ describe("Server e2e tests users", () => {
           id: credentials.id,
         },
       },
-      credentials.auth
+      credentials.token
     );
 
     expect(JSON.parse(blockContact.text).errors).toBeUndefined();
