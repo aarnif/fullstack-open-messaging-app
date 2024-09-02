@@ -1,4 +1,7 @@
+import config from "../config.js";
+
 import emojiRegex from "emoji-regex";
+import request from "supertest";
 
 const checkIfMessageIsSingleEmoji = (messageContent) => {
   const regex = emojiRegex();
@@ -15,4 +18,10 @@ const checkIfMessageIsSingleEmoji = (messageContent) => {
   );
 };
 
-export default { checkIfMessageIsSingleEmoji };
+const requestData = async (queryData, token = "") =>
+  await request(`http://localhost:${config.PORT}`)
+    .post("/")
+    .set("Authorization", token)
+    .send(queryData);
+
+export default { checkIfMessageIsSingleEmoji, requestData };
