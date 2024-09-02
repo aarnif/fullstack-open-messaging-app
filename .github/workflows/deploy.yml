@@ -22,6 +22,7 @@ jobs:
         run: npm run test
         env:
           NODE_ENV: test
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
           PORT: ${{ secrets.PORT }}
 
