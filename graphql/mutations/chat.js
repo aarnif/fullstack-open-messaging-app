@@ -1,11 +1,10 @@
 import Chat from "../../models/chat.js";
 import User from "../../models/user.js";
 
-import { GraphQLError } from "graphql";
-import { PubSub } from "graphql-subscriptions";
 import helpers from "../../utils/helpers.js";
+import pubsub from "../../pubsub.js";
 
-const pubsub = new PubSub();
+import { GraphQLError } from "graphql";
 
 const typeDefs = `
   input ImageInput {
