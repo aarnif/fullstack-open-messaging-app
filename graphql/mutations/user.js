@@ -1,13 +1,11 @@
 import User from "../../models/user.js";
 import Chat from "../../models/chat.js";
 
+import pubsub from "../../pubsub.js";
+
 import bcrypt from "bcrypt";
 import { GraphQLError } from "graphql";
 import jwt from "jsonwebtoken";
-
-import { PubSub } from "graphql-subscriptions";
-
-const pubsub = new PubSub();
 
 const typeDefs = `
   extend type Mutation {
