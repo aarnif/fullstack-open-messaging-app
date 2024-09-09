@@ -45,7 +45,7 @@ const typeDefs = `
     allChats: [Chat!]!
     findChatById(chatId: ID!): Chat
     findChatByParticipants(participants: [ID!]!): Chat
-    allChatsByUser(userId: ID!, searchByTitle: String): [Chat!]!
+    allChatsByUser(searchByTitle: String): [Chat!]!
   }
 `;
 
