@@ -1,5 +1,7 @@
 import Chat from "../../models/chat.js";
 
+import { GraphQLError } from "graphql";
+
 const typeDefs = `
   scalar Date
 
@@ -97,9 +99,17 @@ const resolvers = {
           path: "messages",
           populate: { path: "isReadBy.member" },
         }),
-    allChatsByUser: async (root, args) =>
-      Chat.find({
-        participants: { $in: args.userId },
+    allChatsByUser: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      return Chat.find({
+        participants: { $in: context.currentUser.id },
         title: {
           $regex: `(?i)${args.searchByTitle ? args.searchByTitle : ""}(?-i)`,
         },
@@ -114,7 +124,8 @@ const resolvers = {
           path: "messages",
           populate: { path: "isReadBy.member" },
         })
-        .sort({ "messages.0.createdAt": "desc" }),
+        .sort({ "messages.0.createdAt": "desc" });
+    },
   },
   Chat: {
     displayChatTitle: (chat, args, context) =>
