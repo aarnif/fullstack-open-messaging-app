@@ -76,3 +76,5 @@
 | 30.8  | 3    |                                                                                                                          |
 | 31.8  | 2    |                                                                                                                          |
 |  1.9  | 2    |                                                                                                                          |
+|  2.9  | 1    |                                                                                                                          |
+|  9.9  | 3    | Palvelimen koodin refaktorointi ja päivittäminen                                                                         |
