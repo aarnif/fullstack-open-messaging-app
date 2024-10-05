@@ -5,6 +5,7 @@ import { GET_CURRENT_USER } from "../graphql/queries";
 import Header from "./components/Header";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
 import Footer from "./components/Footer";
 
 const App = () => {
@@ -33,7 +34,7 @@ const App = () => {
             path="/signin"
             element={data?.me ? <Navigate to="/chats" replace /> : <SignIn />}
           />
-          <Route path="/signup" element={<div>Sign Up</div>} />
+          <Route path="/signup" element={<SignUp />} />
           <Route element={<ProtectedRoutes user={data?.me} />}>
             <Route path="/chats" element={<div>Chats</div>} />
             <Route path="/chats/:id" element={<div>Individual Chat</div>} />
