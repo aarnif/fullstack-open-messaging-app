@@ -10,6 +10,7 @@ const credentials = {
   id: "",
   username: "test_user",
   password: "password",
+  confirmPassword: "password",
   token: "",
 };
 
@@ -50,8 +51,8 @@ describe("Server e2e tests users", () => {
 
   it("Create new user", async () => {
     const response = await helpers.requestData({
-      query: `mutation CreateUser($username: String!, $password: String!) {
-        createUser(username: $username, password: $password) {
+      query: `mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
+        createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
             id
             username
         }
@@ -67,8 +68,8 @@ describe("Server e2e tests users", () => {
 
   it("Try to create same user twice", async () => {
     const response = await helpers.requestData({
-      query: `mutation CreateUser($username: String!, $password: String!) {
-        createUser(username: $username, password: $password) {
+      query: `mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
+        createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
             id
             username
         }
