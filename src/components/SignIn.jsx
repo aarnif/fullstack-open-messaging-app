@@ -1,12 +1,13 @@
 import useField from "../../hooks/useField";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@apollo/client";
+import { useMutation, useApolloClient } from "@apollo/client";
 
 import { LOGIN } from "../../graphql/mutations";
 import useNotifyMessage from "../../hooks/useNotifyMessage";
 import Notify from "./Notify";
 
 const SignIn = () => {
+  const client = useApolloClient();
   const navigate = useNavigate();
   const username = useField("text", "Enter your username here...");
   const password = useField("password", "Enter your password here...");
@@ -34,6 +35,7 @@ const SignIn = () => {
     if (data) {
       console.log("Logged in successfully!");
       localStorage.setItem("messaging-app-user-token", data.login.value);
+      client.resetStore();
       navigate("/chats");
     }
   };

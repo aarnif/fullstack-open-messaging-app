@@ -11,7 +11,7 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("messagin-app-user-token");
+  const token = localStorage.getItem("messaging-app-user-token");
   return {
     headers: {
       ...headers,
