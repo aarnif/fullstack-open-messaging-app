@@ -12,6 +12,7 @@ const typeDefs = `
     createUser(
       username: String!
       password: String!
+      confirmPassword: String!
     ): User
     login(
       username: String!
@@ -53,6 +54,12 @@ const resolvers = {
           invalidArgs: args.password,
         },
       });
+
+      if (args.username.length < 4) {
+        error.message = "Username must be at least 4 characters long!";
+        throw error;
+      }
+
       const checkIfUserNameExists = await User.findOne({
         username: args.username,
       });
@@ -64,6 +71,11 @@ const resolvers = {
 
       if (args.password.length < 6) {
         error.message = "Password must be at least 6 characters long!";
+        throw error;
+      }
+
+      if (args.password !== args.confirmPassword) {
+        error.message = "Passwords do not match!";
         throw error;
       }
 
