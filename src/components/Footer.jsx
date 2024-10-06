@@ -1,5 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { FaGithub } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const Footer = () => {
@@ -22,11 +21,7 @@ const Footer = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <FontAwesomeIcon
-                icon={faGithub}
-                style={{ color: "white" }}
-                size={"xl"}
-              />
+              <FaGithub className="w-6 h-6 text-white fill-current" />
             </a>
           </motion.div>
         </li>
