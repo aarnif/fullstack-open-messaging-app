@@ -10,12 +10,12 @@ import {
 } from "react-icons/fa";
 
 const Menu = () => {
-  const [activePath, setIsActivePath] = useState("chats");
+  const [activePath, setActivePath] = useState("chats");
   const navigate = useNavigate();
   const client = useApolloClient();
 
   const handleNavigation = (event, path) => {
-    setIsActivePath(event.target.closest("li").id);
+    setActivePath(event.target.closest("li").id);
     navigate(path);
   };
 
