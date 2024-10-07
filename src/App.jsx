@@ -3,11 +3,14 @@ import { useQuery } from "@apollo/client";
 
 import { GET_CURRENT_USER } from "../graphql/queries";
 import Header from "./components/Header";
+import Home from "./components/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import Footer from "./components/Footer";
-import Menu from "./components/Menu";
+
+import Chats from "./components/Chats/Chats";
+import Chat from "./components/Chat/Chat";
 
 const App = () => {
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
@@ -20,21 +23,20 @@ const App = () => {
   return (
     <>
       <Header user={data?.me} />
-      <main className="flex-grow flex">
-        {data?.me && <Menu />}
-        <Routes>
-          <Route path="/" element={<Navigate to="/chats" replace />} />
-          <Route
-            path="/signin"
-            element={data?.me ? <Navigate to="/chats" replace /> : <SignIn />}
-          />
-          <Route
-            path="/signup"
-            element={data?.me ? <Navigate to="/chats" replace /> : <SignUp />}
-          />
-          <Route element={<ProtectedRoutes user={data?.me} />}>
-            <Route path="/chats" element={<div>Chats</div>} />
-            <Route path="/chats/:id" element={<div>Individual Chat</div>} />
+      <Routes>
+        <Route path="/" element={<Navigate to="/chats" replace />} />
+        <Route
+          path="/signin"
+          element={data?.me ? <Navigate to="/chats" replace /> : <SignIn />}
+        />
+        <Route
+          path="/signup"
+          element={data?.me ? <Navigate to="/chats" replace /> : <SignUp />}
+        />
+        <Route element={<ProtectedRoutes user={data?.me} />}>
+          <Route path="/" element={<Home user={data?.me} />}>
+            <Route path="/chats" element={<Chats user={data?.me} />} />
+            <Route path="/chats/:id" element={<Chat user={data?.me} />} />
             <Route path="/contacts" element={<div>Contacts</div>} />
             <Route
               path="/contacts/:id"
@@ -43,9 +45,9 @@ const App = () => {
             <Route path="/profile" element={<div>Profile</div>} />
             <Route path="/settings" element={<div>Settings</div>} />
           </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
       <Footer />
     </>
   );
