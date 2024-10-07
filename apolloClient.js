@@ -25,6 +25,14 @@ const httpLink = createHttpLink({ uri: import.meta.env.VITE_APOLLO_URI });
 const wsLink = new GraphQLWsLink(
   createClient({
     url: import.meta.env.VITE_APOLLO_WS_URI,
+    connectionParams: () => {
+      const token = localStorage.getItem("messaging-app-user-token");
+      return {
+        headers: {
+          authorization: token ? `Bearer ${token}` : null,
+        },
+      };
+    },
   })
 );
 
