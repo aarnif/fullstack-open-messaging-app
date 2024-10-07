@@ -53,9 +53,11 @@ const ChatCard = ({ user, chat }) => {
                 style={{
                   backgroundColor: newMessagesCount > 0 ? "#16a34a" : "white",
                 }}
-                className="mt-1 w-[20px] h-[20px] flex justify-center items-center rounded-full"
+                className="w-[22px] h-[22px] flex justify-center items-center rounded-full"
               >
-                <p className="text-white font-semibold">{newMessagesCount}</p>
+                <div className="flex justify-center items-center text-white font-semibold">
+                  {newMessagesCount}
+                </div>
               </div>
             </div>
           )}
