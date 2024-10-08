@@ -54,7 +54,7 @@ const ChatsList = ({ user, searchWord }) => {
 };
 
 const ChatsMenu = ({ user }) => {
-  const searchWord = useField("text", "Enter your username here...");
+  const searchWord = useField("text", "Search chats by title...");
 
   return (
     <div className="flex-grow max-w-[450px] flex flex-col bg-white">
