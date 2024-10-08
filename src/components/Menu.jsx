@@ -9,13 +9,20 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
-const Menu = () => {
+const Menu = ({ setActiveMenuComponent }) => {
   const [activePath, setActivePath] = useState("chats");
   const navigate = useNavigate();
   const client = useApolloClient();
 
   const handleNavigation = (event, path) => {
     setActivePath(event.target.closest("li").id);
+    console.log("Navigating to:", path);
+
+    if (path === "/chats") {
+      setActiveMenuComponent("chats");
+    } else if (path === "/contacts") {
+      setActiveMenuComponent("contacts");
+    }
     navigate(path);
   };
 

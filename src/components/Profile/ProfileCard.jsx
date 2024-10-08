@@ -9,11 +9,15 @@ const ProfileCard = ({ user }) => {
           style={{ width: "120px", height: "120px", borderRadius: "50%" }}
         />
 
-        <p className="mt-4 text-xl text-slate-800 font-bold ">{user.name}</p>
-        <p className="text-md text-slate-500 font-bold ">@{user.username}</p>
-        <p className="mt-4 mx-8 text-base text-slate-700 text-center ">
+        <div className="mt-4 text-xl text-slate-800 font-bold ">
+          {user.name}
+        </div>
+        <div className="text-md text-slate-500 font-bold ">
+          @{user.username}
+        </div>
+        <div className="mt-4 mx-8 text-base text-slate-700 text-center ">
           {user.about}
-        </p>
+        </div>
       </div>
     </>
   );
