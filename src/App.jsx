@@ -17,6 +17,7 @@ import Chat from "./components/Chat/Chat";
 import Contacts from "./components/Contacts/Contacts";
 import Contact from "./components/Contact/Contact";
 import Profile from "./components/Profile/Profile";
+import Settings from "./components/Settings/Settings";
 
 const App = () => {
   const [activePath, setActivePath] = useState("chats");
@@ -80,7 +81,21 @@ const App = () => {
                 />
               }
             />
-            <Route path="/settings" element={<div>Settings</div>} />
+            <Route
+              path="/settings"
+              element={
+                <Settings
+                  user={data?.me}
+                  menuComponent={
+                    activeMenuComponent === "chats" ? (
+                      <ChatsMenu user={data?.me} />
+                    ) : (
+                      <ContactsMenu user={data?.me} />
+                    )
+                  }
+                />
+              }
+            />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
