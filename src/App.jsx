@@ -11,6 +11,8 @@ import Footer from "./components/Footer";
 
 import Chats from "./components/Chats/Chats";
 import Chat from "./components/Chat/Chat";
+import Contacts from "./components/Contacts/Contacts";
+import Contact from "./components/Contact/Contact";
 
 const App = () => {
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
@@ -37,11 +39,8 @@ const App = () => {
           <Route path="/" element={<Home user={data?.me} />}>
             <Route path="/chats" element={<Chats user={data?.me} />} />
             <Route path="/chats/:id" element={<Chat user={data?.me} />} />
-            <Route path="/contacts" element={<div>Contacts</div>} />
-            <Route
-              path="/contacts/:id"
-              element={<div>Individual Contact</div>}
-            />
+            <Route path="/contacts" element={<Contacts user={data?.me} />} />
+            <Route path="/contacts/:id" element={<Contact user={data?.me} />} />
             <Route path="/profile" element={<div>Profile</div>} />
             <Route path="/settings" element={<div>Settings</div>} />
           </Route>
