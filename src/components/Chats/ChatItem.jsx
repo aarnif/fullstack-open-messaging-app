@@ -18,9 +18,9 @@ const ChatItem = ({ user, item, activePath, setActivePath }) => {
       >
         <div className="mr-4">
           <img
+            className="w-16 h-16 rounded-full"
             src={item.displayChatImage.thumbnail}
             alt="Chat Thumbnail"
-            style={{ width: 48, height: 48, borderRadius: "9999px" }}
           />
         </div>
         <div className="flex-1">
