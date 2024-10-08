@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApolloClient } from "@apollo/client";
 import {
@@ -9,8 +8,7 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
-const Menu = ({ setActiveMenuComponent }) => {
-  const [activePath, setActivePath] = useState("chats");
+const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
   const navigate = useNavigate();
   const client = useApolloClient();
 

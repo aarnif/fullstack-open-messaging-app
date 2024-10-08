@@ -19,6 +19,7 @@ import Contact from "./components/Contact/Contact";
 import Profile from "./components/Profile/Profile";
 
 const App = () => {
+  const [activePath, setActivePath] = useState("chats");
   const [activeMenuComponent, setActiveMenuComponent] = useState("chats");
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   console.log("Current user:", data);
@@ -46,14 +47,24 @@ const App = () => {
             element={
               <Home
                 user={data?.me}
+                activePath={activePath}
+                setActivePath={setActivePath}
                 setActiveMenuComponent={setActiveMenuComponent}
               />
             }
           >
             <Route path="/chats" element={<Chats user={data?.me} />} />
-            <Route path="/chats/:id" element={<Chat user={data?.me} />} />
+            <Route
+              path="/chats/:id"
+              element={<Chat user={data?.me} setActivePath={setActivePath} />}
+            />
             <Route path="/contacts" element={<Contacts user={data?.me} />} />
-            <Route path="/contacts/:id" element={<Contact user={data?.me} />} />
+            <Route
+              path="/contacts/:id"
+              element={
+                <Contact user={data?.me} setActivePath={setActivePath} />
+              }
+            />
             <Route
               path="/profile"
               element={

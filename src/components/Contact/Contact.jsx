@@ -1,15 +1,20 @@
-import { GET_USER_BY_ID } from "../../../graphql/queries";
-import ContactsMenu from "../ContactsMenu";
-
+import { useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
-const Contact = ({ user }) => {
+import { GET_USER_BY_ID } from "../../../graphql/queries";
+import ContactsMenu from "../ContactsMenu";
+
+const Contact = ({ user, setActivePath }) => {
   const match = useMatch("/contacts/:contactId").params;
   const { data, loading } = useQuery(GET_USER_BY_ID, {
     variables: {
       id: match.contactId,
     },
+  });
+
+  useEffect(() => {
+    setActivePath("contacts");
   });
 
   return (

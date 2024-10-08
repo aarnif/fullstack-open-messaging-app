@@ -1,15 +1,20 @@
-import { GET_CHAT_BY_ID } from "../../../graphql/queries";
-import ChatsMenu from "../ChatsMenu";
-
+import { useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
-const Chat = ({ user }) => {
+import { GET_CHAT_BY_ID } from "../../../graphql/queries";
+import ChatsMenu from "../ChatsMenu";
+
+const Chat = ({ user, setActivePath }) => {
   const match = useMatch("/chats/:chatId").params;
   const { data, loading } = useQuery(GET_CHAT_BY_ID, {
     variables: {
       chatId: match.chatId,
     },
+  });
+
+  useEffect(() => {
+    setActivePath("chats");
   });
 
   return (
