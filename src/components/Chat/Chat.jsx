@@ -4,6 +4,9 @@ import { useMatch } from "react-router-dom";
 
 import { GET_CHAT_BY_ID } from "../../../graphql/queries";
 import ChatsMenu from "../ChatsMenu";
+import ChatHeader from "./ChatHeader";
+import Messages from "./Messages";
+import NewMessage from "./NewMessage";
 
 const Chat = ({ user, setActivePath }) => {
   const match = useMatch("/chats/:chatId").params;
@@ -15,19 +18,25 @@ const Chat = ({ user, setActivePath }) => {
 
   useEffect(() => {
     setActivePath("chats");
-  });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log("Chat data:", data.findChatById.messages);
+
+  const reverseMessages = [...data?.findChatById.messages].reverse();
 
   return (
     <div className="flex-grow flex">
       <ChatsMenu user={user} />
-      <div className="flex-grow flex justify-center items-center">
-        <div>
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
-            <div>Chat with id {match.chatId}</div>
-          )}
+      <div className="flex-grow flex flex-col justify-start items-start">
+        <ChatHeader user={user} chat={data.findChatById} />
+        <div className="flex-grow w-full overflow-y-auto h-0">
+          <Messages user={user} messages={reverseMessages} />
         </div>
+        <NewMessage chatId={match.chatId} />
       </div>
     </div>
   );
