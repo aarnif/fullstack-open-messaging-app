@@ -1,4 +1,4 @@
-import IndividualContactCard from "../IndividualContactCard";
+import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
 
 const Profile = ({ user, menuComponent }) => {
   return (
