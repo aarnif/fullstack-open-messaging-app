@@ -1,12 +1,12 @@
-import ProfileCard from "./ProfileCard";
+import IndividualContactCard from "../IndividualContactCard";
 
 const Profile = ({ user, menuComponent }) => {
   return (
     <div className="flex-grow flex">
       {menuComponent}
       <div className="flex-grow flex justify-center items-start">
-        <div className="py-8 flex flex-col justify-start items-center">
-          <ProfileCard user={user} />
+        <div className="flex-grow p-8 flex flex-col justify-start items-center">
+          <IndividualContactCard user={user} contact={user} />
         </div>
       </div>
     </div>
