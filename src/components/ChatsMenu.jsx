@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 
 import { GET_CHATS_BY_USER } from "../../graphql/queries";
+import { NEW_MESSAGE_ADDED } from "../../graphql/subscriptions";
 import useField from "../../hooks/useField";
 import SearchBar from "./SearchBar";
 import ChatItem from "./Chats/ChatItem";
+import helpers from "../utils/helpers";
 
 const Header = ({ searchWord }) => {
   return (
@@ -19,10 +21,37 @@ const Header = ({ searchWord }) => {
 };
 
 const ChatsList = ({ user, searchWord }) => {
+  const client = useApolloClient();
   const [activePath, setActivePath] = useState(null);
   const { data, loading } = useQuery(GET_CHATS_BY_USER, {
     variables: {
       searchByTitle: searchWord.value,
+    },
+  });
+
+  useSubscription(NEW_MESSAGE_ADDED, {
+    onData: ({ data }) => {
+      console.log("Use NEW_MESSAGE_ADDED-subscription:");
+      const updatedChat = data.data.messageToChatAdded;
+      client.cache.updateQuery(
+        {
+          query: GET_CHATS_BY_USER,
+          variables: {
+            searchByTitle: "",
+          },
+        },
+        ({ allChatsByUser }) => {
+          4;
+          const sortedChats = helpers.sortChatsByDate(
+            allChatsByUser.map((chat) => {
+              return chat.id === updatedChat.id ? { ...updatedChat } : chat;
+            })
+          );
+          return {
+            allChatsByUser: sortedChats,
+          };
+        }
+      );
     },
   });
 
