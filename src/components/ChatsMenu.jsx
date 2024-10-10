@@ -4,21 +4,9 @@ import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 import { GET_CHATS_BY_USER } from "../../graphql/queries";
 import { NEW_MESSAGE_ADDED } from "../../graphql/subscriptions";
 import useField from "../../hooks/useField";
-import SearchBar from "./SearchBar";
 import ChatItem from "./Chats/ChatItem";
 import helpers from "../utils/helpers";
-
-const Header = ({ searchWord }) => {
-  return (
-    <div className="p-4">
-      <div className="flex justify-start items-center">
-        <h1 className="text-2xl text-slate-800 font-bold">Chats</h1>
-      </div>
-
-      <SearchBar searchWord={searchWord} />
-    </div>
-  );
-};
+import MenuHeader from "./MenuHeader";
 
 const ChatsList = ({ user, searchWord }) => {
   const client = useApolloClient();
@@ -87,7 +75,11 @@ const ChatsMenu = ({ user }) => {
 
   return (
     <div className="flex-grow max-w-[450px] flex flex-col bg-white">
-      <Header searchWord={searchWord} />
+      <MenuHeader
+        title={"Chats"}
+        handleCallBack={() => console.log("Clicked new chat")}
+        searchWord={searchWord}
+      />
       <ChatsList user={user} searchWord={searchWord} />
     </div>
   );

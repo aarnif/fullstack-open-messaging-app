@@ -3,20 +3,8 @@ import { useQuery } from "@apollo/client";
 
 import { GET_CONTACTS_BY_USER } from "../../graphql/queries";
 import useField from "../../hooks/useField";
-import SearchBar from "./SearchBar";
 import ContactItem from "./Contacts/ContactItem";
-
-const Header = ({ searchWord }) => {
-  return (
-    <div className="p-4">
-      <div className="flex justify-start items-center">
-        <h1 className="text-2xl text-slate-800 font-bold">Contacts</h1>
-      </div>
-
-      <SearchBar searchWord={searchWord} />
-    </div>
-  );
-};
+import MenuHeader from "./MenuHeader";
 
 const ContactsList = ({ user, searchWord }) => {
   const [activePath, setActivePath] = useState(null);
@@ -62,7 +50,11 @@ const ContactsMenu = ({ user }) => {
 
   return (
     <div className="flex-grow max-w-[450px] flex flex-col bg-white">
-      <Header searchWord={searchWord} />
+      <MenuHeader
+        title={"Contacts"}
+        handleCallBack={() => console.log("Clicked new contact")}
+        searchWord={searchWord}
+      />
       <ContactsList user={user} searchWord={searchWord} />
     </div>
   );
