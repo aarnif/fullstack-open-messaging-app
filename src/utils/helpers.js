@@ -29,8 +29,20 @@ const newMessagesCount = (user, messages) =>
       )
   ).length;
 
+const sortChatsByDate = (chats) =>
+  chats.sort((a, b) => {
+    if (!a.messages.length) return 1;
+
+    if (!b.messages.length) return -1;
+
+    return (
+      new Date(b.messages[0].createdAt) - new Date(a.messages[0].createdAt)
+    );
+  });
+
 export default {
   formatMessageTime,
   sliceLatestMessage,
   newMessagesCount,
+  sortChatsByDate,
 };
