@@ -18,16 +18,16 @@ const Contact = ({ user, setActivePath }) => {
     setActivePath("contacts");
   });
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="flex-grow flex">
       <ContactsMenu user={user} />
       <div className="flex-grow flex justify-center items-start">
         <div className="flex-grow p-8 flex flex-col justify-start items-center">
-          <IndividualContactCard user={user} contact={data.findUserById} />
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <IndividualContactCard user={user} contact={data.findUserById} />
+          )}
         </div>
       </div>
     </div>

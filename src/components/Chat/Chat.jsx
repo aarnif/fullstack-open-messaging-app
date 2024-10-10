@@ -20,23 +20,26 @@ const Chat = ({ user, setActivePath }) => {
     setActivePath("chats");
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  console.log("Chat data:", data.findChatById.messages);
-
-  const reverseMessages = [...data?.findChatById.messages].reverse();
+  console.log("Chat data:", data?.findChatById.messages);
 
   return (
     <div className="flex-grow flex">
       <ChatsMenu user={user} />
       <div className="flex-grow flex flex-col justify-start items-start">
-        <ChatHeader user={user} chat={data.findChatById} />
-        <div className="flex-grow w-full overflow-y-auto h-0">
-          <Messages user={user} messages={reverseMessages} />
-        </div>
-        <NewMessage chatId={match.chatId} />
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <>
+            <ChatHeader user={user} chat={data.findChatById} />
+            <div className="flex-grow w-full overflow-y-auto h-0">
+              <Messages
+                user={user}
+                messages={[...data?.findChatById.messages].reverse()}
+              />
+            </div>
+            <NewMessage chatId={match.chatId} />
+          </>
+        )}
       </div>
     </div>
   );
