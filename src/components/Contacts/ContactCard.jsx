@@ -1,6 +1,6 @@
 const ContactCard = ({ user, item }) => {
   return (
-    <div className="mr-4 w-full flex items-start">
+    <div className="mr-4 flex-grow flex items-start">
       <div>
         <img
           className="w-16 h-16 rounded-full"
