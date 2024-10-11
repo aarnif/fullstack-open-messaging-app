@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 
 import { GET_CONTACTS_BY_USER } from "../../graphql/queries";
 import useField from "../../hooks/useField";
+import Loading from "./Loading";
 import ContactItem from "./Contacts/ContactItem";
 import MenuHeader from "./MenuHeader";
 
@@ -17,7 +18,7 @@ const ContactsList = ({ user, searchWord }) => {
   console.log(data?.allContactsByUser.contacts.length);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!data.allContactsByUser.contacts.length) {

@@ -4,6 +4,7 @@ import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 import { GET_CHATS_BY_USER } from "../../graphql/queries";
 import { NEW_MESSAGE_ADDED } from "../../graphql/subscriptions";
 import useField from "../../hooks/useField";
+import Loading from "./Loading";
 import ChatItem from "./Chats/ChatItem";
 import helpers from "../utils/helpers";
 import MenuHeader from "./MenuHeader";
@@ -44,7 +45,7 @@ const ChatsList = ({ user, searchWord }) => {
   });
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!data.allChatsByUser.length) {
@@ -70,14 +71,14 @@ const ChatsList = ({ user, searchWord }) => {
   );
 };
 
-const ChatsMenu = ({ user }) => {
+const ChatsMenu = ({ user, handleClickNewChat }) => {
   const searchWord = useField("text", "Search chats by title...");
 
   return (
     <div className="flex-grow max-w-[450px] flex flex-col bg-white">
       <MenuHeader
         title={"Chats"}
-        handleCallBack={() => console.log("Clicked new chat")}
+        handleCallBack={handleClickNewChat}
         searchWord={searchWord}
       />
       <ChatsList user={user} searchWord={searchWord} />
