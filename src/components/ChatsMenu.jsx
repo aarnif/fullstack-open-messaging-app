@@ -76,12 +76,14 @@ const ChatsMenu = ({ user, handleClickNewChat }) => {
 
   return (
     <div className="flex-grow max-w-[450px] flex flex-col bg-white">
-      <MenuHeader
-        title={"Chats"}
-        handleCallBack={handleClickNewChat}
-        searchWord={searchWord}
-      />
-      <ChatsList user={user} searchWord={searchWord} />
+      <div className="flex-grow flex flex-col overflow-y-auto h-0">
+        <MenuHeader
+          title={"Chats"}
+          handleCallBack={handleClickNewChat}
+          searchWord={searchWord}
+        />
+        <ChatsList user={user} searchWord={searchWord} />
+      </div>
     </div>
   );
 };
