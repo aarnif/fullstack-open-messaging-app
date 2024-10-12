@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 
 import { GET_CHATS_BY_USER } from "../../graphql/queries";
-import { NEW_MESSAGE_ADDED } from "../../graphql/subscriptions";
+import { NEW_MESSAGE_ADDED, NEW_CHAT_ADDED } from "../../graphql/subscriptions";
 import useField from "../../hooks/useField";
 import Loading from "./Loading";
 import ChatItem from "./Chats/ChatItem";
@@ -35,6 +35,29 @@ const ChatsList = ({ user, searchWord }) => {
             allChatsByUser.map((chat) => {
               return chat.id === updatedChat.id ? { ...updatedChat } : chat;
             })
+          );
+          return {
+            allChatsByUser: sortedChats,
+          };
+        }
+      );
+    },
+  });
+
+  useSubscription(NEW_CHAT_ADDED, {
+    onData: ({ data }) => {
+      console.log("Use NEW_CHAT_ADDED-subscription:");
+      const newChat = data.data.chatAdded;
+      client.cache.updateQuery(
+        {
+          query: GET_CHATS_BY_USER,
+          variables: {
+            searchByTitle: "",
+          },
+        },
+        ({ allChatsByUser }) => {
+          const sortedChats = helpers.sortChatsByDate(
+            allChatsByUser.concat(newChat)
           );
           return {
             allChatsByUser: sortedChats,
