@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 
 import { GET_CURRENT_USER } from "../graphql/queries";
+import Loading from "./components/Loading";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
@@ -19,14 +20,23 @@ import Contact from "./components/Contact/Contact";
 import Profile from "./components/Profile/Profile";
 import Settings from "./components/Settings/Settings";
 
+import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
+
 const App = () => {
   const [activePath, setActivePath] = useState("chats");
   const [activeMenuComponent, setActiveMenuComponent] = useState("chats");
+  const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
+
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   console.log("Current user:", data);
 
+  const handleClickNewChat = () => {
+    console.log("Clicked new chat");
+    setShowNewChatDropdownBox(true);
+  };
+
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -54,12 +64,33 @@ const App = () => {
               />
             }
           >
-            <Route path="/chats" element={<Chats user={data?.me} />} />
+            <Route
+              path="/chats"
+              element={
+                <Chats
+                  user={data?.me}
+                  menuComponent={
+                    <ChatsMenu
+                      user={data?.me}
+                      handleClickNewChat={handleClickNewChat}
+                    />
+                  }
+                />
+              }
+            />
             <Route
               path="/chats/:id"
               element={<Chat user={data?.me} setActivePath={setActivePath} />}
             />
-            <Route path="/contacts" element={<Contacts user={data?.me} />} />
+            <Route
+              path="/contacts"
+              element={
+                <Contacts
+                  user={data?.me}
+                  menuComponent={<ContactsMenu user={data?.me} />}
+                />
+              }
+            />
             <Route
               path="/contacts/:id"
               element={
@@ -100,6 +131,11 @@ const App = () => {
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      {showNewChatDropdownBox && (
+        <NewChatDropDownBox
+          setShowNewChatDropdownBox={setShowNewChatDropdownBox}
+        />
+      )}
       <Footer />
     </>
   );
