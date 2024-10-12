@@ -16,7 +16,11 @@ import Loading from "../../Loading";
 import SearchBar from "../../SearchBar";
 import SelectContactsList from "./SelectContactsList";
 
+import useNotifyMessage from "../../../../hooks/useNotifyMessage";
+import Notify from "../../Notify";
+
 const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
+  const notifyMessage = useNotifyMessage();
   const navigate = useNavigate();
   const searchWord = useField("text", "Search contacts by name or username...");
   const [chosenUserId, setChosenUserId] = useState(null);
@@ -37,12 +41,18 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
     onError: (error) => {
       console.log("Error creating chat mutation:");
       console.log(error.graphQLErrors[0].message);
+      notifyMessage.show(error.graphQLErrors[0].message);
     },
   });
 
   const handleCreateIndividualChat = async () => {
     console.log("Press create a individual new chat!");
     console.log("Chosen user id:", chosenUserId);
+
+    if (!chosenUserId) {
+      notifyMessage.show("Please select a contact to create a chat with!");
+      return;
+    }
 
     // Check if user already has a chat with this contact and navigate to it
     if (res2.data?.findChatByParticipants) {
@@ -93,8 +103,8 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
         exit={{ y: -50, opacity: 0 }}
         transition={{ delay: 0.4, type: "tween" }}
       >
-        <div className="h-full flex-grow flex flex-col pt-4 px-4">
-          <div className="w-full flex justify-center items-center">
+        <div className="h-full flex-grow flex flex-col py-4 px-4">
+          <div className="w-full flex justify-center items-center pb-2">
             <button
               className="text-2xl text-slate-700"
               onClick={() => setShowNewIndividualChatModal(false)}
@@ -112,6 +122,7 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
             </button>
           </div>
           <>
+            <Notify notifyMessage={notifyMessage} />
             <SearchBar searchWord={searchWord} />
             {res1.loading ? (
               <Loading />
