@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
+import { AnimatePresence } from "framer-motion";
 
 import { GET_CURRENT_USER } from "../graphql/queries";
 import Loading from "./components/Loading";
@@ -21,11 +22,14 @@ import Profile from "./components/Profile/Profile";
 import Settings from "./components/Settings/Settings";
 
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
+import NewIndividualChatModal from "./components/Modals/NewIndividualChatModal/NewIndividualChatModal";
 
 const App = () => {
   const [activePath, setActivePath] = useState("chats");
   const [activeMenuComponent, setActiveMenuComponent] = useState("chats");
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
+  const [showNewIndividualChatModal, setShowNewIndividualChatModal] =
+    useState(false);
 
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   console.log("Current user:", data);
@@ -134,8 +138,17 @@ const App = () => {
       {showNewChatDropdownBox && (
         <NewChatDropDownBox
           setShowNewChatDropdownBox={setShowNewChatDropdownBox}
+          setShowNewIndividualChatModal={setShowNewIndividualChatModal}
         />
       )}
+      <AnimatePresence>
+        {showNewIndividualChatModal && (
+          <NewIndividualChatModal
+            user={data?.me}
+            setShowNewIndividualChatModal={setShowNewIndividualChatModal}
+          />
+        )}
+      </AnimatePresence>
       <Footer />
     </>
   );
