@@ -23,6 +23,7 @@ import Settings from "./components/Settings/Settings";
 
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
 import NewIndividualChatModal from "./components/Modals/NewIndividualChatModal/NewIndividualChatModal";
+import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupChatModal";
 
 const App = () => {
   const [activePath, setActivePath] = useState("chats");
@@ -30,6 +31,7 @@ const App = () => {
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
   const [showNewIndividualChatModal, setShowNewIndividualChatModal] =
     useState(false);
+  const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
 
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   console.log("Current user:", data);
@@ -84,7 +86,18 @@ const App = () => {
             />
             <Route
               path="/chats/:id"
-              element={<Chat user={data?.me} setActivePath={setActivePath} />}
+              element={
+                <Chat
+                  user={data?.me}
+                  setActivePath={setActivePath}
+                  menuComponent={
+                    <ChatsMenu
+                      user={data?.me}
+                      handleClickNewChat={handleClickNewChat}
+                    />
+                  }
+                />
+              }
             />
             <Route
               path="/contacts"
@@ -108,7 +121,10 @@ const App = () => {
                   user={data?.me}
                   menuComponent={
                     activeMenuComponent === "chats" ? (
-                      <ChatsMenu user={data?.me} />
+                      <ChatsMenu
+                        user={data?.me}
+                        handleClickNewChat={handleClickNewChat}
+                      />
                     ) : (
                       <ContactsMenu user={data?.me} />
                     )
@@ -123,7 +139,10 @@ const App = () => {
                   user={data?.me}
                   menuComponent={
                     activeMenuComponent === "chats" ? (
-                      <ChatsMenu user={data?.me} />
+                      <ChatsMenu
+                        user={data?.me}
+                        handleClickNewChat={handleClickNewChat}
+                      />
                     ) : (
                       <ContactsMenu user={data?.me} />
                     )
@@ -139,6 +158,7 @@ const App = () => {
         <NewChatDropDownBox
           setShowNewChatDropdownBox={setShowNewChatDropdownBox}
           setShowNewIndividualChatModal={setShowNewIndividualChatModal}
+          setShowNewGroupChatModal={setShowNewGroupChatModal}
         />
       )}
       <AnimatePresence>
@@ -146,6 +166,12 @@ const App = () => {
           <NewIndividualChatModal
             user={data?.me}
             setShowNewIndividualChatModal={setShowNewIndividualChatModal}
+          />
+        )}
+        {showNewGroupChatModal && (
+          <NewGroupChatModal
+            user={data?.me}
+            setShowNewGroupChatModal={setShowNewGroupChatModal}
           />
         )}
       </AnimatePresence>

@@ -3,12 +3,11 @@ import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
 import { GET_CHAT_BY_ID } from "../../../graphql/queries";
-import ChatsMenu from "../ChatsMenu";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";
 
-const Chat = ({ user, setActivePath }) => {
+const Chat = ({ user, setActivePath, menuComponent }) => {
   const match = useMatch("/chats/:chatId").params;
   const { data, loading } = useQuery(GET_CHAT_BY_ID, {
     variables: {
@@ -24,7 +23,7 @@ const Chat = ({ user, setActivePath }) => {
 
   return (
     <div className="flex-grow flex">
-      <ChatsMenu user={user} />
+      {menuComponent}
       <div className="flex-grow flex flex-col justify-start items-start">
         {loading ? (
           <div>Loading...</div>

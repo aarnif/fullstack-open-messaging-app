@@ -14,6 +14,7 @@ const DropDownMenuItem = ({ menuItem }) => {
 const NewChatDropDownBox = ({
   setShowNewChatDropdownBox,
   setShowNewIndividualChatModal,
+  setShowNewGroupChatModal,
 }) => {
   const menuItems = [
     {
@@ -24,7 +25,14 @@ const NewChatDropDownBox = ({
         setShowNewIndividualChatModal(true);
       },
     },
-    { id: 2, title: "New Group Chat", handleClick: () => {} },
+    {
+      id: 2,
+      title: "New Group Chat",
+      handleClick: () => {
+        setShowNewChatDropdownBox(false);
+        setShowNewGroupChatModal(true);
+      },
+    },
   ];
 
   return (
