@@ -30,7 +30,6 @@ const ChatsList = ({ user, searchWord }) => {
           },
         },
         ({ allChatsByUser }) => {
-          4;
           const sortedChats = helpers.sortChatsByDate(
             allChatsByUser.map((chat) => {
               return chat.id === updatedChat.id ? { ...updatedChat } : chat;
