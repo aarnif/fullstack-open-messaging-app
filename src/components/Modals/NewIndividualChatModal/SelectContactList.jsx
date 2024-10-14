@@ -1,6 +1,6 @@
 import SelectContactItem from "./SelectContactItem";
 
-const SelectContactsList = ({ data, chosenUserId, setChosenUserId }) => {
+const SelectContactList = ({ data, chosenUserId, setChosenUserId }) => {
   if (!data.length) {
     return (
       <div className="flex flex-col justify-start items-center bg-white w-full h-full">
@@ -25,4 +25,4 @@ const SelectContactsList = ({ data, chosenUserId, setChosenUserId }) => {
   );
 };
 
-export default SelectContactsList;
+export default SelectContactList;

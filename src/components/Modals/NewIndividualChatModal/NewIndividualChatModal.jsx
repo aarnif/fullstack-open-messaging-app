@@ -13,7 +13,7 @@ import useField from "../../../../hooks/useField";
 
 import Loading from "../../Loading";
 import SearchBar from "../../SearchBar";
-import SelectContactsList from "./SelectContactsList";
+import SelectContactList from "./SelectContactList";
 
 import useNotifyMessage from "../../../../hooks/useNotifyMessage";
 import Notify from "../../Notify";
@@ -115,7 +115,7 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
             ) : (
               <>
                 <div className="flex-grow w-full overflow-y-auto h-0">
-                  <SelectContactsList
+                  <SelectContactList
                     user={user}
                     data={res1.data.allContactsByUser.contacts}
                     chosenUserId={chosenUserId}

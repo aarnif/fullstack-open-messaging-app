@@ -1,4 +1,4 @@
-import SelectContactItem from "./SelectContactItem";
+import SelectContactsItem from "./SelectContactsItem";
 
 const SelectContactsList = ({ data, chosenUserIds, setChosenUserIds }) => {
   if (!data.length) {
@@ -14,7 +14,7 @@ const SelectContactsList = ({ data, chosenUserIds, setChosenUserIds }) => {
   return (
     <div className="w-full bg-white">
       {data.map((item) => (
-        <SelectContactItem
+        <SelectContactsItem
           key={item.id}
           item={item}
           chosenUserIds={chosenUserIds}

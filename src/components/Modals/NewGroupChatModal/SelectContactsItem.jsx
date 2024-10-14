@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import ContactCard from "../../Contacts/ContactCard";
-import { MdCheck } from "react-icons/md"; // MaterialCommunityIcons check icon for web
+import { MdCheck } from "react-icons/md";
 
-const SelectContactItem = ({ item, chosenUserIds, setChosenUserIds }) => {
+const SelectContactsItem = ({ item, chosenUserIds, setChosenUserIds }) => {
   const [isChosen, setIsChosen] = useState(false);
 
   useEffect(() => {
@@ -38,4 +38,4 @@ const SelectContactItem = ({ item, chosenUserIds, setChosenUserIds }) => {
   );
 };
 
-export default SelectContactItem;
+export default SelectContactsItem;
