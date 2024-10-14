@@ -1,4 +1,4 @@
-import { CHAT_DETAILS } from "./queries";
+import { CHAT_DETAILS, USER_DETAILS } from "./queries";
 
 import { gql } from "@apollo/client";
 
@@ -67,12 +67,11 @@ export const LEFT_GROUP_CHATS = gql`
 export const CONTACTS_ADDED = gql`
   subscription ContactsAdded {
     contactsAdded {
-      id
-      username
-      name
-      about
+      ...UserDetails
     }
   }
+
+  ${USER_DETAILS}
 `;
 
 export const CONTACT_BLOCKED = gql`
