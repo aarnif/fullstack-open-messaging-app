@@ -25,6 +25,7 @@ import Settings from "./components/Settings/Settings";
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
 import NewIndividualChatModal from "./components/Modals/NewIndividualChatModal/NewIndividualChatModal";
 import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupChatModal";
+import NewContactModal from "./components/Modals/NewContactModal";
 
 const App = () => {
   const [activePath, setActivePath] = useState("chats");
@@ -33,6 +34,7 @@ const App = () => {
   const [showNewIndividualChatModal, setShowNewIndividualChatModal] =
     useState(false);
   const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
+  const [showNewContactModal, setShowNewContactModal] = useState(false);
 
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   console.log("Current user:", data);
@@ -40,6 +42,11 @@ const App = () => {
   const handleClickNewChat = () => {
     console.log("Clicked new chat");
     setShowNewChatDropdownBox(true);
+  };
+
+  const handleClickNewContact = () => {
+    console.log("Clicked new contact");
+    setShowNewContactModal(true);
   };
 
   if (loading) {
@@ -119,15 +126,28 @@ const App = () => {
               path="/contacts"
               element={
                 <Contacts
-                  user={data?.me}
-                  menuComponent={<ContactsMenu user={data?.me} />}
+                  menuComponent={
+                    <ContactsMenu
+                      user={data?.me}
+                      handleClickNewContact={handleClickNewContact}
+                    />
+                  }
                 />
               }
             />
             <Route
               path="/contacts/:id"
               element={
-                <Contact user={data?.me} setActivePath={setActivePath} />
+                <Contact
+                  user={data?.me}
+                  setActivePath={setActivePath}
+                  menuComponent={
+                    <ContactsMenu
+                      user={data?.me}
+                      handleClickNewContact={handleClickNewContact}
+                    />
+                  }
+                />
               }
             />
             <Route
@@ -142,7 +162,10 @@ const App = () => {
                         handleClickNewChat={handleClickNewChat}
                       />
                     ) : (
-                      <ContactsMenu user={data?.me} />
+                      <ContactsMenu
+                        user={data?.me}
+                        handleClickNewContact={handleClickNewContact}
+                      />
                     )
                   }
                 />
@@ -160,7 +183,10 @@ const App = () => {
                         handleClickNewChat={handleClickNewChat}
                       />
                     ) : (
-                      <ContactsMenu user={data?.me} />
+                      <ContactsMenu
+                        user={data?.me}
+                        handleClickNewContact={handleClickNewContact}
+                      />
                     )
                   }
                 />
@@ -188,6 +214,12 @@ const App = () => {
           <NewGroupChatModal
             user={data?.me}
             setShowNewGroupChatModal={setShowNewGroupChatModal}
+          />
+        )}
+        {showNewContactModal && (
+          <NewContactModal
+            user={data?.me}
+            setShowNewContactModal={setShowNewContactModal}
           />
         )}
       </AnimatePresence>

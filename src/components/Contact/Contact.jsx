@@ -3,11 +3,10 @@ import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
 import { GET_USER_BY_ID } from "../../../graphql/queries";
-import ContactsMenu from "../ContactsMenu";
 import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
 import IndividualContactOptions from "../IndividualContactCard/IndividualContactCardOptions";
 
-const Contact = ({ user, setActivePath }) => {
+const Contact = ({ user, setActivePath, menuComponent }) => {
   const [isBlocked, setIsBlocked] = useState(false);
   const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(null);
 
@@ -36,7 +35,7 @@ const Contact = ({ user, setActivePath }) => {
 
   return (
     <div className="flex-grow flex">
-      <ContactsMenu user={user} />
+      {menuComponent}
       <div className="flex-grow flex justify-center items-start">
         <div className="flex-grow h-full p-8 flex flex-col justify-start items-center">
           {loading ? (

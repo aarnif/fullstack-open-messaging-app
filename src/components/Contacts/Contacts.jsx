@@ -1,9 +1,7 @@
-import ContactsMenu from "../ContactsMenu";
-
-const Contacts = ({ user }) => {
+const Contacts = ({ menuComponent }) => {
   return (
     <div className="flex-grow flex">
-      <ContactsMenu user={user} />
+      {menuComponent}
       <div className="flex-grow flex justify-center items-center">
         <div>Select a contact for further information.</div>
       </div>
