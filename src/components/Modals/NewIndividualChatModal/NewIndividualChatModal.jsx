@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
@@ -9,7 +9,6 @@ import {
   GET_CONTACTS_BY_USER,
   GET_CHAT_BY_PARTICIPANTS,
 } from "../../../../graphql/queries";
-import { CREATE_CHAT } from "../../../../graphql/mutations";
 import useField from "../../../../hooks/useField";
 
 import Loading from "../../Loading";
@@ -37,14 +36,6 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
     },
   });
 
-  const [mutate] = useMutation(CREATE_CHAT, {
-    onError: (error) => {
-      console.log("Error creating chat mutation:");
-      console.log(error.graphQLErrors[0].message);
-      notifyMessage.show(error.graphQLErrors[0].message);
-    },
-  });
-
   const handleCreateIndividualChat = async () => {
     console.log("Press create a individual new chat!");
     console.log("Chosen user id:", chosenUserId);
@@ -62,25 +53,20 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
       return;
     }
 
-    try {
-      const { data, error } = await mutate({
-        variables: {
-          title: "",
-          description: "",
-          participants: [user.id, chosenUserId],
-        },
-      });
-      console.log("Data:", data);
+    const chosenContact = res1.data.allContactsByUser.contacts.find(
+      (contact) => contact.id === chosenUserId
+    );
 
-      if (data) {
-        console.log("Created chat:", data);
-        navigate(`/chats/${data.createChat.id}`);
-        setShowNewIndividualChatModal(false);
-      }
-    } catch (error) {
-      console.log("Error creating chat:", error);
-      console.log(error.message);
-    }
+    const newPrivateChatInfo = {
+      title: chosenContact.name,
+      description: "",
+      participants: [user, chosenContact],
+      image: chosenContact.image.thumbnail,
+    };
+
+    localStorage.setItem("new-chat-info", JSON.stringify(newPrivateChatInfo));
+    navigate("/chats/new");
+    setShowNewIndividualChatModal(false);
   };
 
   console.log("Selected user:", chosenUserId);

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
@@ -9,7 +9,6 @@ import {
   GET_CONTACTS_BY_USER,
   GET_CHAT_BY_PARTICIPANTS,
 } from "../../../../graphql/queries";
-import { CREATE_CHAT } from "../../../../graphql/mutations";
 import useField from "../../../../hooks/useField";
 
 import Loading from "../../Loading";
@@ -42,14 +41,6 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
     },
   });
 
-  const [mutate] = useMutation(CREATE_CHAT, {
-    onError: (error) => {
-      console.log("Error creating chat mutation:");
-      console.log(error.graphQLErrors[0].message);
-      notifyMessage.show(error.graphQLErrors[0].message);
-    },
-  });
-
   const handleCreateGroupChat = async () => {
     console.log("Press create a new group chat!");
     console.log("Chosen user ids:", chosenUserIds);
@@ -69,28 +60,23 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
       return;
     }
 
-    try {
-      const { data, error } = await mutate({
-        variables: {
-          title: groupChatTitle.value,
-          description: groupChatDescription.value,
-          participants: [user.id, ...chosenUserIds],
-        },
-      });
-      console.log("Data:", data);
+    const chosenContacts = res1.data.allContactsByUser.contacts.filter(
+      (contact) => chosenUserIds.includes(contact.id)
+    );
 
-      if (data) {
-        console.log("Created chat:", data);
-        navigate(`/chats/${data.createChat.id}`);
-        setShowNewGroupChatModal(false);
-      }
-    } catch (error) {
-      console.log("Error creating chat:", error);
-      console.log(error.message);
-    }
+    console.log("Chosen contacts:", chosenContacts);
+
+    const newGroupChatInfo = {
+      title: groupChatTitle.value,
+      description: groupChatDescription.value,
+      participants: [user, ...chosenContacts],
+      image: "https://i.ibb.co/bRb0SYw/chat-placeholder.png", // Placeholder image for grop chats
+    };
+
+    localStorage.setItem("new-chat-info", JSON.stringify(newGroupChatInfo));
+    navigate("/chats/new");
+    setShowNewGroupChatModal(false);
   };
-
-  console.log("Selected users:", chosenUserIds);
 
   return (
     <motion.div

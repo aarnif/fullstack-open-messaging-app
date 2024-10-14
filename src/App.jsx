@@ -16,6 +16,7 @@ import ContactsMenu from "./components/ContactsMenu";
 
 import Chats from "./components/Chats/Chats";
 import Chat from "./components/Chat/Chat";
+import NewChat from "./components/NewChat/NewChat";
 import Contacts from "./components/Contacts/Contacts";
 import Contact from "./components/Contact/Contact";
 import Profile from "./components/Profile/Profile";
@@ -88,6 +89,21 @@ const App = () => {
               path="/chats/:id"
               element={
                 <Chat
+                  user={data?.me}
+                  setActivePath={setActivePath}
+                  menuComponent={
+                    <ChatsMenu
+                      user={data?.me}
+                      handleClickNewChat={handleClickNewChat}
+                    />
+                  }
+                />
+              }
+            />
+            <Route
+              path="/chats/new"
+              element={
+                <NewChat
                   user={data?.me}
                   setActivePath={setActivePath}
                   menuComponent={

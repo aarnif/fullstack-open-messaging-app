@@ -25,7 +25,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("messaging-app-user-token");
+    localStorage.clear();
     client.resetStore();
     navigate("/signin");
   };
