@@ -35,10 +35,13 @@ const Messages = ({ user, messages }) => {
 
   console.log("New messages count:", newMessagesCount);
   return (
-    <div className="flex-grow flex flex-col">
+    <div className="h-full flex-grow flex flex-col">
       {!messages.length ? (
-        <div className="w-full" key={"Empty item"}>
-          <div>No messages</div>
+        <div
+          className="w-full flex-grow flex justify-center items-center"
+          key={"Empty item"}
+        >
+          <div>Send a message to start the chat.</div>
         </div>
       ) : (
         <div className="w-full flex-grow py-8 px-16">
