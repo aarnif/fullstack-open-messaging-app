@@ -46,6 +46,7 @@ const typeDefs = `
     findChatById(chatId: ID!): Chat
     findChatByParticipants(participants: [ID!]!): Chat
     allChatsByUser(searchByTitle: String): [Chat!]!
+    checkIfGroupChatExists(title: String!): Boolean!
   }
 `;
 
@@ -125,6 +126,10 @@ const resolvers = {
           populate: { path: "isReadBy.member" },
         })
         .sort({ "messages.0.createdAt": "desc" });
+    },
+    checkIfGroupChatExists: async (root, args) => {
+      const chatExist = Chat.findOne({ title: args.title });
+      return chatExist ? true : false;
     },
   },
   Chat: {
