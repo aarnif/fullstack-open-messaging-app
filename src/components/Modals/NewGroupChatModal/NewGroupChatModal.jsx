@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
 
 import {
   GET_CONTACTS_BY_USER,
-  GET_CHAT_BY_PARTICIPANTS,
+  CHECK_IF_GROUP_CHAT_EXISTS,
 } from "../../../../graphql/queries";
 import useField from "../../../../hooks/useField";
 
@@ -35,28 +35,34 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
     },
   });
 
-  const res2 = useQuery(GET_CHAT_BY_PARTICIPANTS, {
-    variables: {
-      participants: [user.id, ...chosenUserIds],
-    },
-  });
+  const [checkIfGroupChatExists, res2] = useLazyQuery(
+    CHECK_IF_GROUP_CHAT_EXISTS
+  );
 
   const handleCreateGroupChat = async () => {
     console.log("Press create a new group chat!");
     console.log("Chosen user ids:", chosenUserIds);
 
+    if (!groupChatTitle.value.trim().length) {
+      notifyMessage.show("Please enter a group chat title!");
+      return;
+    }
+
+    await checkIfGroupChatExists({
+      variables: {
+        title: groupChatTitle.value.trim(),
+      },
+    });
+
+    if (!res2.data) {
+      notifyMessage.show("Group chat with the same title already exists!");
+      return;
+    }
+
     if (chosenUserIds.length < 2) {
       notifyMessage.show(
         "Please select at least 2 contacts to create a group chat with!"
       );
-      return;
-    }
-
-    // Check if user already has a chat with this contact and navigate to it
-    if (res2.data?.findChatByParticipants) {
-      console.log("Chat exists:", res2.data.findChatByParticipants);
-      navigate(`/chats/${res2.data.findChatByParticipants.id}`);
-      setShowNewGroupChatModal(false);
       return;
     }
 
@@ -67,8 +73,8 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
     console.log("Chosen contacts:", chosenContacts);
 
     const newGroupChatInfo = {
-      title: groupChatTitle.value,
-      description: groupChatDescription.value,
+      title: groupChatTitle.value.trim(),
+      description: groupChatDescription.value.trim(),
       participants: [user, ...chosenContacts],
       image: "https://i.ibb.co/bRb0SYw/chat-placeholder.png", // Placeholder image for grop chats
     };
