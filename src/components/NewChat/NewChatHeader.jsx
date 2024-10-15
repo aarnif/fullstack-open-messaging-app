@@ -1,6 +1,17 @@
+import { useNavigate } from "react-router-dom";
+
 const NewChatHeader = ({ user, chat }) => {
+  const navigate = useNavigate();
   const getInfo = () => {
-    console.log("Clicked chat info!");
+    if (chat.isGroupChat) {
+      console.log("Clicked group chat info!");
+    } else {
+      console.log("Clicked private chat info!");
+      const anotherChatParticipant = chat.participants.find(
+        (participant) => participant.username !== user.username
+      );
+      navigate(`/contacts/${anotherChatParticipant.id}`);
+    }
   };
 
   const chatParticipantsString = chat.participants
@@ -8,8 +19,6 @@ const NewChatHeader = ({ user, chat }) => {
       participant.username === user.username ? "You" : participant.name
     )
     .join(", ");
-
-  console.log("Chat participants string:", chatParticipantsString);
 
   return (
     <div className="w-full flex justify-center items-center py-2 bg-white shadow-lg">
