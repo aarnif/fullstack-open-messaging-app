@@ -63,6 +63,7 @@ const Contact = ({ user, setActivePath, menuComponent }) => {
                 )}
               </div>
               <IndividualContactOptions
+                user={user}
                 contact={data.findUserById}
                 isBlocked={isBlocked}
                 setIsBlocked={setIsBlocked}
