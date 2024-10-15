@@ -34,6 +34,7 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
     variables: {
       participants: [user.id, chosenUserId],
     },
+    fetchPolicy: "network-only",
   });
 
   const handleCreateIndividualChat = async () => {
