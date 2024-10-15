@@ -148,3 +148,9 @@ export const GET_CHAT_BY_PARTICIPANTS = gql`
 
   ${CHAT_DETAILS}
 `;
+
+export const CHECK_IF_GROUP_CHAT_EXISTS = gql`
+  query CheckIfGroupChatExists($title: String!) {
+    checkIfGroupChatExists(title: $title)
+  }
+`;
