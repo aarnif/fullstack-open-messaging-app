@@ -2,9 +2,9 @@ import helpers from "../../utils/helpers";
 
 const NotificationMessage = ({ message }) => {
   return (
-    <div className="my-2">
-      <div className="min-w-[80px] max-w-[300px] self-center flex flex-row pt-2 px-2 pb-1 bg-slate-300 rounded-lg">
-        <div className="text-slate-800 text-sm">{`${message.content}`}</div>
+    <div className="mr-2 my-2 flex flex-col items-center">
+      <div className="min-w-[100px] max-w-[300px] flex justify-center items-center pt-2 px-2 pb-1 bg-slate-300 rounded-lg">
+        <div className="text-slate-800 text-sm text-center">{`${message.content}`}</div>
       </div>
     </div>
   );
