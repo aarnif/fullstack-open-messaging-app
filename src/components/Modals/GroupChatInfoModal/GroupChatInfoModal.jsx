@@ -1,9 +1,36 @@
+import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 import { IoChevronBack } from "react-icons/io5";
 
+import { LEAVE_GROUP_CHATS } from "../../../../graphql/mutations";
 import ChatMembersList from "./ChatMembersList";
 
 const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
+  const navigate = useNavigate();
   const chatAdmin = chat.admin;
+
+  const [mutate] = useMutation(LEAVE_GROUP_CHATS, {
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
+
+  const handleLeaveChat = async () => {
+    console.log("Leave group chat:", chat.title);
+    try {
+      await mutate({
+        variables: {
+          chatIds: [chat.id],
+        },
+      });
+      console.log("Left group chat:", chat.title);
+      navigate("/chats");
+    } catch (error) {
+      console.log("Error leaving chat:", error);
+      console.log(error);
+    }
+  };
+
   return (
     <div className="absolute top-0 left-0 w-full h-full flex flex-col bg-white">
       <div className="m-4">
@@ -26,12 +53,12 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
           {!chat.description.length ? "No description" : chat.description}
         </div>
       </div>
-      <div className="w-full flex-grow flex justify-center bg-white">
+      <div className="w-full flex-grow flex flex-col justify-center items-center bg-white">
         <ChatMembersList user={user} chat={chat} admin={chatAdmin} />
         {user.id !== chatAdmin.id && (
           <div className="w-full p-4 flex flex-col justify-center items-start bg-white">
             <button
-              onClick={() => console.log("Leave Chat clicked")}
+              onClick={handleLeaveChat}
               className="mb-2 w-full flex-grow max-h-[60px] p-2 flex justify-center items-center border-2 border-slate-200 bg-slate-200 rounded-xl"
             >
               <p className="text-lg font-bold text-slate-700">Leave Chat</p>

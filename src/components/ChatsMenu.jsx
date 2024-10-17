@@ -16,6 +16,7 @@ const ChatsList = ({ user, searchWord }) => {
     variables: {
       searchByTitle: searchWord.value,
     },
+    fetchPolicy: "network-only",
   });
 
   useSubscription(NEW_MESSAGE_ADDED, {
