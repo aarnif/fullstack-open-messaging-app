@@ -154,3 +154,9 @@ export const CHECK_IF_GROUP_CHAT_EXISTS = gql`
     checkIfGroupChatExists(title: $title)
   }
 `;
+
+export const CHECK_IF_USER_HAS_BLOCKED_YOU = gql`
+  query CheckIfUserHasBlockedYou($userId: ID!) {
+    checkIfUserHasBlockedYou(userId: $userId)
+  }
+`;
