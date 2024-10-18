@@ -586,8 +586,24 @@ const resolvers = {
           { new: true }
         );
 
-        pubsub.publish("LEFT_GROUP_CHATS", {
-          leftGroupChats: args.chatIds,
+        const getUpdatedChats = await Chat.find({
+          _id: { $in: args.chatIds },
+        })
+          .populate("admin")
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
+          });
+
+        getUpdatedChats.forEach((chat) => {
+          pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
+            messageToChatAdded: chat,
+          });
         });
 
         return args.chatIds;
