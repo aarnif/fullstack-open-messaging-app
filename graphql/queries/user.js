@@ -34,6 +34,7 @@ const typeDefs = `
     findUserById(id: ID!): User
     allContactsByUser(searchByName: String): User
     allContactsExceptByUser(searchByName: String): [User!]!
+    checkIfUserHasBlockedYou(userId: ID!): Boolean
     me: User
   }
 `;
@@ -125,6 +126,10 @@ const resolvers = {
           },
         ],
       }),
+    checkIfUserHasBlockedYou: async (root, args, context) => {
+      const user = await User.findById(args.userId).populate("blockedContacts");
+      return user.blockedContacts.includes(context.currentUser.id);
+    },
     me: async (root, args, context) => context.currentUser,
   },
 };
