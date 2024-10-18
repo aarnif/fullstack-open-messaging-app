@@ -14,7 +14,7 @@ const ContactCard = ({ user, item, admin }) => {
             <div className="flex justify-between items-start">
               <div className="text-md text-slate-700 font-bold">
                 You{" "}
-                {admin.id === item.id && (
+                {admin?.id === item.id && (
                   <span className="text-md text-slate-500 font-semibold">
                     Admin
                   </span>
