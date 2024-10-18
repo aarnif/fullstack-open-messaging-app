@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { MdSend } from "react-icons/md";
 
 import { CREATE_CHAT, ADD_MESSAGE_TO_CHAT } from "../../../graphql/mutations";
+import { GET_CHAT_BY_PARTICIPANTS } from "../../../graphql/queries";
 
 const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
   const navigate = useNavigate();
@@ -49,6 +50,16 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
             content: message,
             senderId: user.id,
           },
+          refetchQueries: [
+            {
+              query: GET_CHAT_BY_PARTICIPANTS,
+              variables: {
+                participants: newChatInfo.participants.map(
+                  (participant) => participant.id
+                ),
+              },
+            },
+          ],
         });
         navigate(`/chats/${data.createChat.id}`);
       }
