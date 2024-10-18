@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { IoChevronBack } from "react-icons/io5";
-import { IoChevronForward } from "react-icons/io5";
 
 import { EDIT_CHAT } from "../../../../graphql/mutations";
+import imageService from "../../../services/imageService";
 import ChangeImage from "./ChangeImage";
 import useField from "../../../../hooks/useField";
 
 const EditGroupChatModal = ({ chat, showEditGroupChatModal }) => {
+  const [base64Image, setBase64Image] = useState(null);
   const title = useField("text", "Enter chat title here...", chat.title);
   const description = useField(
     "text",
@@ -25,24 +27,40 @@ const EditGroupChatModal = ({ chat, showEditGroupChatModal }) => {
     showEditGroupChatModal(false);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     console.log("Handle submit edit chat...");
 
-    const newChatData = {
-      chatId: chat.id,
-      title: title.value,
-      description: description.value,
-      imageInput: {
-        thumbnail: chat.image.thumbnail,
-        original: chat.image.original,
-      },
-    };
-
-    console.log("New chat data:", newChatData);
-
     try {
+      let result;
+
+      if (base64Image) {
+        console.log("Uploading chat picture...");
+        result = await imageService.uploadImage(chat.id, base64Image);
+      }
+
+      console.log("Result:", result);
+
+      const newChatImage = base64Image
+        ? {
+            thumbnail: result.data.thumb.url,
+            original: result.data.image.url,
+          }
+        : {
+            thumbnail: chat.image.thumbnail,
+            original: chat.image.original,
+          };
+
+      const newChatData = {
+        chatId: chat.id,
+        title: title.value,
+        description: description.value,
+        input: newChatImage,
+      };
+
+      console.log("New chat data:", newChatData);
+
       mutate({
         variables: newChatData,
       });
@@ -84,7 +102,7 @@ const EditGroupChatModal = ({ chat, showEditGroupChatModal }) => {
                 <ChangeImage
                   currentImage={chat.image.thumbnail}
                   imageType={"chat"}
-                  onClick={() => console.log("Handle change chat image.")}
+                  setBase64Image={setBase64Image}
                 />
                 <ul className="flex-grow flex flex-col">
                   <li className="w-full flex flex-col">

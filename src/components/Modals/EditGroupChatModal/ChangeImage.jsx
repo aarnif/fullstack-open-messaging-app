@@ -1,17 +1,52 @@
-const ChangeImage = ({ currentImage, imageType, onClick }) => {
+import { useState, useRef } from "react";
+
+const ChangeImage = ({ currentImage, imageType, setBase64Image }) => {
+  const [imagePreview, setImagePreview] = useState(currentImage);
+  const fileInputRef = useRef(null);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result.split(",")[1];
+        setBase64Image(base64String);
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleClick = () => {
+    console.log("Handle change chat image.");
+    fileInputRef.current.click();
+  };
+
   return (
-    <button className="mb-5" type="button" onClick={onClick}>
-      <div className="w-full p-4 flex flex-col justify-center items-center rounded-lg bg-slate-200">
+    <div className="mb-5 bg-slate-200 flex justify-center items-center">
+      <button
+        type="button"
+        onClick={handleClick}
+        className="p-4 flex flex-col justify-center items-center rounded-lg"
+      >
         <img
-          src={currentImage}
+          src={imagePreview}
           alt={`${imageType} image`}
           className="w-32 h-32 rounded-full"
         />
-        <p className="my-2 text-md font-semibold text-slate-700">
+        <div className="my-2 text-md font-semibold text-slate-700">
           Change {imageType} image
-        </p>
-      </div>
-    </button>
+        </div>
+        <input
+          ref={fileInputRef}
+          hidden={true}
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="mt-2"
+        />
+      </button>
+    </div>
   );
 };
 
