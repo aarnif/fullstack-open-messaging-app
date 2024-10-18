@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useQuery } from "@apollo/client";
+import { useQuery, useLazyQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
@@ -8,6 +8,7 @@ import { IoChevronForward } from "react-icons/io5";
 import {
   GET_CONTACTS_BY_USER,
   GET_CHAT_BY_PARTICIPANTS,
+  CHECK_IF_USER_HAS_BLOCKED_YOU,
 } from "../../../../graphql/queries";
 import useField from "../../../../hooks/useField";
 
@@ -24,18 +25,17 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
   const [chosenUserId, setChosenUserId] = useState(null);
 
-  const res1 = useQuery(GET_CONTACTS_BY_USER, {
+  const result = useQuery(GET_CONTACTS_BY_USER, {
     variables: {
       searchByName: searchWord.value,
     },
   });
 
-  const res2 = useQuery(GET_CHAT_BY_PARTICIPANTS, {
-    variables: {
-      participants: [user.id, chosenUserId],
-    },
-    fetchPolicy: "network-only",
-  });
+  const [getChatByParticipants] = useLazyQuery(GET_CHAT_BY_PARTICIPANTS);
+
+  const [checkIfUserHasBlockedYou] = useLazyQuery(
+    CHECK_IF_USER_HAS_BLOCKED_YOU
+  );
 
   const handleCreateIndividualChat = async () => {
     console.log("Press create a individual new chat!");
@@ -46,15 +46,30 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
       return;
     }
 
-    // Check if user already has a chat with this contact and navigate to it
-    if (res2.data?.findChatByParticipants) {
-      console.log("Chat exists:", res2.data.findChatByParticipants);
-      navigate(`/chats/${res2.data.findChatByParticipants.id}`);
+    const checkIfChatExists = await getChatByParticipants({
+      variables: {
+        participants: [user.id, chosenUserId],
+      },
+    });
+
+    if (checkIfChatExists.data?.findChatByParticipants) {
+      navigate(`/chats/${checkIfChatExists.data.findChatByParticipants.id}`);
       setShowNewIndividualChatModal(false);
       return;
     }
 
-    const chosenContact = res1.data.allContactsByUser.contacts.find(
+    const checkIfContactHasBlockedYou = await checkIfUserHasBlockedYou({
+      variables: {
+        userId: chosenUserId,
+      },
+    });
+
+    if (checkIfContactHasBlockedYou.data?.checkIfUserHasBlockedYou) {
+      notifyMessage.show("This user has blocked you!");
+      return;
+    }
+
+    const chosenContact = result.data.allContactsByUser.contacts.find(
       (contact) => contact.id === chosenUserId
     );
 
@@ -111,14 +126,14 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
           <>
             <Notify notifyMessage={notifyMessage} />
             <SearchBar searchWord={searchWord} />
-            {res1.loading ? (
+            {result.loading ? (
               <Loading />
             ) : (
               <>
                 <div className="flex-grow w-full overflow-y-auto h-0">
                   <SelectContactList
                     user={user}
-                    data={res1.data.allContactsByUser.contacts}
+                    data={result.data.allContactsByUser.contacts}
                     chosenUserId={chosenUserId}
                     setChosenUserId={setChosenUserId}
                   />

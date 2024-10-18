@@ -29,15 +29,13 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
   const [chosenUserIds, setChosenUserIds] = useState([]);
 
-  const res1 = useQuery(GET_CONTACTS_BY_USER, {
+  const result = useQuery(GET_CONTACTS_BY_USER, {
     variables: {
       searchByName: searchWord.value,
     },
   });
 
-  const [checkIfGroupChatExists, res2] = useLazyQuery(
-    CHECK_IF_GROUP_CHAT_EXISTS
-  );
+  const [checkIfGroupChatExists] = useLazyQuery(CHECK_IF_GROUP_CHAT_EXISTS);
 
   const handleCreateGroupChat = async () => {
     console.log("Press create a new group chat!");
@@ -48,13 +46,13 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
       return;
     }
 
-    await checkIfGroupChatExists({
+    const checkIfGroupChatAlreadyExists = await checkIfGroupChatExists({
       variables: {
         title: groupChatTitle.value.trim(),
       },
     });
 
-    if (!res2.data) {
+    if (checkIfGroupChatAlreadyExists.data?.checkIfGroupChatExists) {
       notifyMessage.show("Group chat with the same title already exists!");
       return;
     }
@@ -66,7 +64,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
       return;
     }
 
-    const chosenContacts = res1.data.allContactsByUser.contacts.filter(
+    const chosenContacts = result.data.allContactsByUser.contacts.filter(
       (contact) => chosenUserIds.includes(contact.id)
     );
 
@@ -123,14 +121,14 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
           <>
             <Notify notifyMessage={notifyMessage} />
             <SearchBar searchWord={searchWord} />
-            {res1.loading ? (
+            {result.loading ? (
               <Loading />
             ) : (
               <>
                 <div className="flex-grow w-full overflow-y-auto h-0">
                   <SelectContactsList
                     user={user}
-                    data={res1.data.allContactsByUser.contacts}
+                    data={result.data.allContactsByUser.contacts}
                     chosenUserIds={chosenUserIds}
                     setChosenUserIds={setChosenUserIds}
                   />

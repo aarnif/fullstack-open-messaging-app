@@ -1,7 +1,10 @@
-import { useQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
-import { GET_CHAT_BY_PARTICIPANTS } from "../../../graphql/queries";
+import {
+  GET_CHAT_BY_PARTICIPANTS,
+  CHECK_IF_USER_HAS_BLOCKED_YOU,
+} from "../../../graphql/queries";
 import { BLOCK_OR_UNBLOCK_CONTACT } from "../../../graphql/mutations";
 
 const IndividualContactOptions = ({
@@ -11,33 +14,44 @@ const IndividualContactOptions = ({
   setIsBlocked,
 }) => {
   const navigate = useNavigate();
-  const result = useQuery(GET_CHAT_BY_PARTICIPANTS, {
-    variables: {
-      participants: [user.id, contact.id],
-    },
-    fetchPolicy: "network-only",
-  });
 
-  const [blockOrUnBlockContact] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
+  const [getChatByParticipants] = useLazyQuery(GET_CHAT_BY_PARTICIPANTS);
+
+  const [checkIfUserHasBlockedYou] = useLazyQuery(
+    CHECK_IF_USER_HAS_BLOCKED_YOU
+  );
+
+  const [mutate] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
     onError: (error) => {
       console.log("Error blocking contact mutation:");
       console.log(error.graphQLErrors[0].message);
     },
   });
 
-  const handleChatWithContact = () => {
+  const handleChatWithContact = async () => {
     console.log("Press chat with contact button!");
-    console.log("Press create a individual new chat!");
 
-    console.log(
-      "result.data?.findChatByParticipants:",
-      result.data?.findChatByParticipants
-    );
+    const checkIfChatExists = await getChatByParticipants({
+      variables: {
+        participants: [user.id, contact.id],
+      },
+    });
 
-    // Check if user already has a chat with this contact and navigate to it
-    if (result.data?.findChatByParticipants) {
-      console.log("Chat exists:", result.data.findChatByParticipants);
-      navigate(`/chats/${result.data.findChatByParticipants.id}`);
+    console.log("Check if chat exists:", checkIfChatExists);
+
+    if (checkIfChatExists.data?.findChatByParticipants) {
+      navigate(`/chats/${checkIfChatExists.data.findChatByParticipants.id}`);
+      return;
+    }
+
+    const checkIfContactHasBlockedYou = await checkIfUserHasBlockedYou({
+      variables: {
+        userId: contact.id,
+      },
+    });
+
+    if (checkIfContactHasBlockedYou.data?.checkIfUserHasBlockedYou) {
+      console.log("This user has blocked you!");
       return;
     }
 
@@ -56,7 +70,7 @@ const IndividualContactOptions = ({
     console.log("Press block/unblock contact button!");
 
     try {
-      const { data } = await blockOrUnBlockContact({
+      const { data } = await mutate({
         variables: {
           contactId: contact.id,
         },
