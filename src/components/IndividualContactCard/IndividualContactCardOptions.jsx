@@ -4,8 +4,12 @@ import { useNavigate } from "react-router-dom";
 import {
   GET_CHAT_BY_PARTICIPANTS,
   CHECK_IF_USER_HAS_BLOCKED_YOU,
+  GET_CONTACTS_BY_USER,
 } from "../../../graphql/queries";
-import { BLOCK_OR_UNBLOCK_CONTACT } from "../../../graphql/mutations";
+import {
+  BLOCK_OR_UNBLOCK_CONTACT,
+  REMOVE_CONTACT,
+} from "../../../graphql/mutations";
 
 const IndividualContactOptions = ({
   user,
@@ -21,9 +25,16 @@ const IndividualContactOptions = ({
     CHECK_IF_USER_HAS_BLOCKED_YOU
   );
 
-  const [mutate] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
+  const [blockOrUnblockContact] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
     onError: (error) => {
       console.log("Error blocking contact mutation:");
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
+
+  const [removeContact] = useMutation(REMOVE_CONTACT, {
+    onError: (error) => {
+      console.log("Error removing contact mutation:");
       console.log(error.graphQLErrors[0].message);
     },
   });
@@ -70,7 +81,7 @@ const IndividualContactOptions = ({
     console.log("Press block/unblock contact button!");
 
     try {
-      const { data } = await mutate({
+      const { data } = await blockOrUnblockContact({
         variables: {
           contactId: contact.id,
         },
@@ -90,6 +101,31 @@ const IndividualContactOptions = ({
     }
   };
 
+  const handleRemoveContact = async () => {
+    console.log("Press remove contact button!");
+    try {
+      const { data } = await removeContact({
+        variables: {
+          contactId: contact.id,
+        },
+        refetchQueries: [
+          {
+            query: GET_CONTACTS_BY_USER,
+            variables: {
+              searchByName: "",
+            },
+          },
+        ],
+      });
+
+      console.log("Removed contact:", data);
+      navigate("/contacts");
+    } catch (error) {
+      console.log("Error removing contact:", error);
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="w-full p-4 flex flex-col justify-end items-start">
       <button
@@ -105,6 +141,12 @@ const IndividualContactOptions = ({
         <div className="text-lg font-bold text-slate-700">
           {isBlocked ? "Unblock Contact" : "Block Contact"}
         </div>
+      </button>
+      <button
+        onClick={handleRemoveContact}
+        className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 border-slate-200 bg-slate-200 rounded-xl"
+      >
+        <div className="text-lg font-bold text-slate-700">Remove Contact</div>
       </button>
     </div>
   );
