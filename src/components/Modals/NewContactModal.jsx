@@ -5,7 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
 
-import { GET_ALL_CONTACTS_EXCEPT_BY_USER } from "../../../graphql/queries";
+import {
+  GET_ALL_CONTACTS_EXCEPT_BY_USER,
+  GET_CONTACTS_BY_USER,
+} from "../../../graphql/queries";
 import { ADD_CONTACTS } from "../../../graphql/mutations";
 import useField from "../../../hooks/useField";
 
@@ -50,6 +53,20 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
         variables: {
           contacts: chosenUserIds,
         },
+        refetchQueries: [
+          {
+            query: GET_CONTACTS_BY_USER,
+            variables: {
+              searchByName: "",
+            },
+          },
+          {
+            query: GET_ALL_CONTACTS_EXCEPT_BY_USER,
+            variables: {
+              searchByName: "",
+            },
+          },
+        ],
       });
     } catch (error) {
       console.log("Error creating chat:", error);

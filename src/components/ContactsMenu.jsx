@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
+import { useQuery, useApolloClient } from "@apollo/client";
 
 import { GET_CONTACTS_BY_USER } from "../../graphql/queries";
-import { CONTACTS_ADDED } from "../../graphql/subscriptions";
 import useField from "../../hooks/useField";
 import Loading from "./Loading";
 import ContactItem from "./Contacts/ContactItem";
@@ -14,29 +13,6 @@ const ContactsList = ({ user, searchWord }) => {
   const { data, loading } = useQuery(GET_CONTACTS_BY_USER, {
     variables: {
       searchByName: searchWord.value,
-    },
-  });
-
-  useSubscription(CONTACTS_ADDED, {
-    onData: ({ data }) => {
-      console.log("Use CONTACTS_ADDED-subscription:");
-      const addedContacts = data.data.contactsAdded;
-      console.log("Added contacts:", addedContacts);
-      client.cache.updateQuery(
-        {
-          query: GET_CONTACTS_BY_USER,
-          variables: { searchByName: "" },
-        },
-        ({ allContactsByUser }) => {
-          console.log("All contacts by user:", allContactsByUser);
-          return {
-            allContactsByUser: {
-              ...allContactsByUser,
-              contacts: allContactsByUser.contacts.concat(addedContacts),
-            },
-          };
-        }
-      );
     },
   });
 
