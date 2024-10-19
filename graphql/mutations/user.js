@@ -38,9 +38,14 @@ const typeDefs = `
       contactId: ID!
     ): Boolean
   }
+  type blockedOrUnBlocked {
+    isBlocked: Boolean
+    actor: String
+    target: String
+  }
   type Subscription {
     contactsAdded: [User]
-    contactBlocked: String
+    contactBlockedOrUnBlocked: blockedOrUnBlocked
     contactRemoved: String
   }   
 `;
@@ -244,9 +249,15 @@ const resolvers = {
         });
         result = true;
       }
-      pubsub.publish("CONTACT_BLOCKED", {
-        contactBlocked: args.contactId,
+
+      pubsub.publish("CONTACT_BLOCKED_OR_UNBLOCKED", {
+        contactBlockedOrUnBlocked: {
+          isBlocked: result,
+          actor: context.currentUser.id,
+          target: args.contactId,
+        },
       });
+
       return result;
     },
   },
@@ -254,8 +265,8 @@ const resolvers = {
     contactsAdded: {
       subscribe: () => pubsub.asyncIterator("CONTACTS_ADDED"),
     },
-    contactBlocked: {
-      subscribe: () => pubsub.asyncIterator("CONTACT_BLOCKED"),
+    contactBlockedOrUnBlocked: {
+      subscribe: () => pubsub.asyncIterator("CONTACT_BLOCKED_OR_UNBLOCKED"),
     },
     contactRemoved: {
       subscribe: () => pubsub.asyncIterator("CONTACT_REMOVED"),
