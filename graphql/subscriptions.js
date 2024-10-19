@@ -74,9 +74,13 @@ export const CONTACTS_ADDED = gql`
   ${USER_DETAILS}
 `;
 
-export const CONTACT_BLOCKED = gql`
-  subscription ContactBlocked {
-    contactBlocked
+export const CONTACT_BLOCKED_OR_UNBLOCKED = gql`
+  subscription ContactBlockedOrUnBlocked {
+    contactBlockedOrUnBlocked {
+      isBlocked
+      actor
+      target
+    }
   }
 `;
 
