@@ -9,14 +9,14 @@ import {
   GET_CONTACTS_BY_USER,
   GET_CHAT_BY_PARTICIPANTS,
   CHECK_IF_USER_HAS_BLOCKED_YOU,
-} from "../../../../graphql/queries";
-import useField from "../../../../hooks/useField";
+} from "../../../graphql/queries";
+import useField from "../../../hooks/useField";
 
 import Loading from "../../Loading";
 import SearchBar from "../../SearchBar";
 import SelectContactList from "./SelectContactList";
 
-import useNotifyMessage from "../../../../hooks/useNotifyMessage";
+import useNotifyMessage from "../../../hooks/useNotifyMessage";
 import Notify from "../../Notify";
 
 const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 
-import { EDIT_SETTINGS } from "../../../graphql/mutations";
+import { EDIT_SETTINGS } from "../../graphql/mutations";
 
 const EnableDarkMode = ({ theme, setTheme }) => {
   const handleToggleColorScheme = () => {

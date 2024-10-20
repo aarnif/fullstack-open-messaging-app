@@ -1,9 +1,9 @@
-import useField from "../../hooks/useField";
+import useField from "../hooks/useField";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useApolloClient } from "@apollo/client";
 
-import { LOGIN } from "../../graphql/mutations";
-import useNotifyMessage from "../../hooks/useNotifyMessage";
+import { LOGIN } from "../graphql/mutations";
+import useNotifyMessage from "../hooks/useNotifyMessage";
 import Notify from "./Notify";
 
 const SignIn = () => {

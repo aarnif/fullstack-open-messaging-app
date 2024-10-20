@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 
-import { GET_CHATS_BY_USER } from "../../graphql/queries";
+import { GET_CHATS_BY_USER } from "../graphql/queries";
 import {
   NEW_MESSAGE_ADDED,
   NEW_CHAT_ADDED,
   CHAT_EDITED,
-} from "../../graphql/subscriptions";
-import useField from "../../hooks/useField";
+} from "../graphql/subscriptions";
+import useField from "../hooks/useField";
 import Loading from "./Loading";
 import ChatItem from "./Chats/ChatItem";
 import helpers from "../utils/helpers";

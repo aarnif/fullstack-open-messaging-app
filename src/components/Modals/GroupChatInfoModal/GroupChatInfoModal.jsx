@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { IoChevronBack } from "react-icons/io5";
 import { FiEdit } from "react-icons/fi";
 
-import { LEAVE_GROUP_CHATS } from "../../../../graphql/mutations";
+import { LEAVE_GROUP_CHATS } from "../../../graphql/mutations";
 import ChatMembersList from "./ChatMembersList";
 import EditGroupChatModal from "../EditGroupChatModal/EditGroupChatModal";
 

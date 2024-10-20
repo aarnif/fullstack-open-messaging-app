@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import {
   GET_CHAT_BY_PARTICIPANTS,
   GET_CONTACTS_BY_USER,
-} from "../../../graphql/queries";
+} from "../../graphql/queries";
 import {
   BLOCK_OR_UNBLOCK_CONTACT,
   REMOVE_CONTACT,
-} from "../../../graphql/mutations";
+} from "../../graphql/mutations";
 
 const IndividualContactOptions = ({
   user,

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
-import { MARK_MESSAGES_IN_CHAT_READ } from "../../../graphql/mutations";
+import { MARK_MESSAGES_IN_CHAT_READ } from "../../graphql/mutations";
 
 const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
   const navigate = useNavigate();

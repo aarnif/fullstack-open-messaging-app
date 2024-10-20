@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { AnimatePresence } from "framer-motion";
 
-import { GET_CURRENT_USER } from "../graphql/queries";
+import { GET_CURRENT_USER } from "./graphql/queries";
 import Loading from "./components/Loading";
 import Header from "./components/Header";
 import Home from "./components/Home";

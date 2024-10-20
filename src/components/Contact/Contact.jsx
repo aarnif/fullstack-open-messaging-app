@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
-import { GET_USER_BY_ID } from "../../../graphql/queries";
+import { GET_USER_BY_ID } from "../../graphql/queries";
 import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
 import IndividualContactOptions from "../IndividualContactCard/IndividualContactCardOptions";
 

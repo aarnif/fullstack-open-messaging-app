@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
-import { GET_CHAT_BY_ID } from "../../../graphql/queries";
+import { GET_CHAT_BY_ID } from "../../graphql/queries";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";

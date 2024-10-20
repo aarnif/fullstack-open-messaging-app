@@ -1,8 +1,8 @@
 import { useSubscription, useApolloClient } from "@apollo/client";
 import { Outlet } from "react-router-dom";
 
-import { GET_CONTACTS_BY_USER } from "../../graphql/queries";
-import { CONTACT_BLOCKED_OR_UNBLOCKED } from "../../graphql/subscriptions";
+import { GET_CONTACTS_BY_USER } from "../graphql/queries";
+import { CONTACT_BLOCKED_OR_UNBLOCKED } from "../graphql/subscriptions";
 import Menu from "./Menu";
 
 const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {

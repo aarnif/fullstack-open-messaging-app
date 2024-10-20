@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { MdSend } from "react-icons/md";
 
-import { ADD_MESSAGE_TO_CHAT } from "../../../graphql/mutations";
+import { ADD_MESSAGE_TO_CHAT } from "../../graphql/mutations";
 
 const NewMessage = ({ chatId }) => {
   const [message, setMessage] = useState("");

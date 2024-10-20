@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 
-import { GET_CONTACTS_BY_USER } from "../../graphql/queries";
-import useField from "../../hooks/useField";
+import { GET_CONTACTS_BY_USER } from "../graphql/queries";
+import useField from "../hooks/useField";
 import Loading from "./Loading";
 import ContactItem from "./Contacts/ContactItem";
 import MenuHeader from "./MenuHeader";

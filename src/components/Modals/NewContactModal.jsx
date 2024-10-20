@@ -8,15 +8,15 @@ import { IoChevronForward } from "react-icons/io5";
 import {
   GET_ALL_CONTACTS_EXCEPT_BY_USER,
   GET_CONTACTS_BY_USER,
-} from "../../../graphql/queries";
-import { ADD_CONTACTS } from "../../../graphql/mutations";
-import useField from "../../../hooks/useField";
+} from "../../graphql/queries";
+import { ADD_CONTACTS } from "../../graphql/mutations";
+import useField from "../../hooks/useField";
 
 import Loading from "../Loading";
 import SearchBar from "../SearchBar";
 import SelectContactsList from "./NewGroupChatModal/SelectContactsList";
 
-import useNotifyMessage from "../../../hooks/useNotifyMessage";
+import useNotifyMessage from "../../hooks/useNotifyMessage";
 import Notify from "../Notify";
 
 const NewContactModal = ({ user, setShowNewContactModal }) => {

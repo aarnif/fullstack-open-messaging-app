@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { IoChevronBack } from "react-icons/io5";
 
-import { EDIT_CHAT } from "../../../../graphql/mutations";
+import { EDIT_CHAT } from "../../../graphql/mutations";
 import imageService from "../../../services/imageService";
 import ChangeImage from "./ChangeImage";
-import useField from "../../../../hooks/useField";
+import useField from "../../../hooks/useField";
 
 const EditGroupChatModal = ({ chat, showEditGroupChatModal }) => {
   const [base64Image, setBase64Image] = useState(null);
