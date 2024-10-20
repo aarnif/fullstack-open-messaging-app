@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useQuery, useSubscription, useApolloClient } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { AnimatePresence } from "framer-motion";
 
-import { GET_CURRENT_USER, GET_CONTACTS_BY_USER } from "../graphql/queries";
-import { CONTACT_BLOCKED_OR_UNBLOCKED } from "../graphql/subscriptions";
+import { GET_CURRENT_USER } from "../graphql/queries";
 import Loading from "./components/Loading";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -29,7 +28,6 @@ import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupCha
 import NewContactModal from "./components/Modals/NewContactModal";
 
 const App = () => {
-  const client = useApolloClient();
   const [activePath, setActivePath] = useState("chats");
   const [activeMenuComponent, setActiveMenuComponent] = useState("chats");
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
@@ -40,50 +38,6 @@ const App = () => {
 
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   console.log("Current user:", data);
-
-  useSubscription(CONTACT_BLOCKED_OR_UNBLOCKED, {
-    onData: ({ data }) => {
-      console.log("Use CONTACT_BLOCKED_OR_UNBLOCKED-subscription:");
-      const blockingData = data.data.contactBlockedOrUnBlocked;
-      client.cache.updateQuery(
-        {
-          query: GET_CONTACTS_BY_USER,
-          variables: {
-            searchByName: "",
-          },
-        },
-        ({ allContactsByUser }) => {
-          const updatedContacts = allContactsByUser.contacts.map((contact) => {
-            if (contact.id === blockingData.actor) {
-              const updatedBlockedContacts = blockingData.isBlocked
-                ? [
-                    ...new Set([
-                      ...contact.blockedContacts,
-                      blockingData.target,
-                    ]),
-                  ]
-                : contact.blockedContacts.filter(
-                    (id) => id !== blockingData.target
-                  );
-
-              return {
-                ...contact,
-                blockedContacts: updatedBlockedContacts,
-              };
-            }
-            return contact;
-          });
-
-          return {
-            allContactsByUser: {
-              ...allContactsByUser,
-              contacts: updatedContacts,
-            },
-          };
-        }
-      );
-    },
-  });
 
   const handleClickNewChat = () => {
     console.log("Clicked new chat");
