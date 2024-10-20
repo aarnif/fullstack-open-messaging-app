@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import {
   GET_CHAT_BY_PARTICIPANTS,
-  CHECK_IF_USER_HAS_BLOCKED_YOU,
   GET_CONTACTS_BY_USER,
 } from "../../../graphql/queries";
 import {
@@ -16,14 +15,11 @@ const IndividualContactOptions = ({
   contact,
   isBlocked,
   setIsBlocked,
+  haveContactBlockedYou,
 }) => {
   const navigate = useNavigate();
 
   const [getChatByParticipants] = useLazyQuery(GET_CHAT_BY_PARTICIPANTS);
-
-  const [checkIfUserHasBlockedYou] = useLazyQuery(
-    CHECK_IF_USER_HAS_BLOCKED_YOU
-  );
 
   const [blockOrUnblockContact] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
     onError: (error) => {
@@ -52,17 +48,6 @@ const IndividualContactOptions = ({
 
     if (checkIfChatExists.data?.findChatByParticipants) {
       navigate(`/chats/${checkIfChatExists.data.findChatByParticipants.id}`);
-      return;
-    }
-
-    const checkIfContactHasBlockedYou = await checkIfUserHasBlockedYou({
-      variables: {
-        userId: contact.id,
-      },
-    });
-
-    if (checkIfContactHasBlockedYou.data?.checkIfUserHasBlockedYou) {
-      console.log("This user has blocked you!");
       return;
     }
 
@@ -129,10 +114,19 @@ const IndividualContactOptions = ({
   return (
     <div className="w-full p-4 flex flex-col justify-end items-start">
       <button
+        disabled={haveContactBlockedYou}
         onClick={handleChatWithContact}
         className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 border-slate-200 bg-slate-200 rounded-xl"
       >
-        <div className="text-lg font-bold text-slate-700">Chat</div>
+        <div
+          className={
+            haveContactBlockedYou
+              ? "text-lg font-bold text-slate-400"
+              : "text-lg font-bold text-slate-700"
+          }
+        >
+          Chat
+        </div>
       </button>
       <button
         onClick={handleBlockContact}

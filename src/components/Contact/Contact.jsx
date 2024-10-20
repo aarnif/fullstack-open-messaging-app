@@ -67,6 +67,7 @@ const Contact = ({ user, setActivePath, menuComponent }) => {
                 contact={data.findUserById}
                 isBlocked={isBlocked}
                 setIsBlocked={setIsBlocked}
+                haveContactBlockedYou={haveContactBlockedYou}
               />
             </>
           )}
