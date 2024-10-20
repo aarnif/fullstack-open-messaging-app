@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useApolloClient } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
 import { GET_CONTACTS_BY_USER } from "../../graphql/queries";
 import useField from "../../hooks/useField";
@@ -8,7 +8,6 @@ import ContactItem from "./Contacts/ContactItem";
 import MenuHeader from "./MenuHeader";
 
 const ContactsList = ({ user, searchWord }) => {
-  const client = useApolloClient();
   const [activePath, setActivePath] = useState(null);
   const { data, loading } = useQuery(GET_CONTACTS_BY_USER, {
     variables: {
