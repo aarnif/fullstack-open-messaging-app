@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { AnimatePresence } from "framer-motion";
 
+import ConfirmModalProvider from "./components/ConfirmModalProvider";
 import { GET_CURRENT_USER } from "./graphql/queries";
 import Loading from "./components/Loading";
 import Header from "./components/Header";
@@ -54,8 +55,8 @@ const App = () => {
   }
 
   return (
-    <>
-      <Header user={data?.me} />
+    <ConfirmModalProvider>
+      <Header />
       <Routes>
         <Route path="/" element={<Navigate to="/chats" replace />} />
         <Route
@@ -224,7 +225,7 @@ const App = () => {
         )}
       </AnimatePresence>
       <Footer />
-    </>
+    </ConfirmModalProvider>
   );
 };
 

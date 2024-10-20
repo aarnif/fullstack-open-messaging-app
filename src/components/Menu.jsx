@@ -8,9 +8,12 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 
+import useConfirmModal from "../hooks/useConfirmModal";
+
 const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
   const navigate = useNavigate();
   const client = useApolloClient();
+  const { confirmModal } = useConfirmModal();
 
   const handleNavigation = (event, path) => {
     setActivePath(event.target.closest("li").id);
@@ -25,6 +28,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
   };
 
   const handleLogout = () => {
+    console.log("Logging out...");
     localStorage.clear();
     client.resetStore();
     navigate("/signin");
@@ -59,7 +63,8 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       id: "logout",
       icon: <FaSignOutAlt className="w-8 h-8 text-green-500 fill-current" />,
       path: "/logout",
-      onClick: handleLogout,
+      onClick: () =>
+        confirmModal("Are you sure you want to logout?", handleLogout),
     },
   ];
 

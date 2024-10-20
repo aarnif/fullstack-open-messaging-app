@@ -9,6 +9,7 @@ import {
   BLOCK_OR_UNBLOCK_CONTACT,
   REMOVE_CONTACT,
 } from "../../graphql/mutations";
+import useConfirmModal from "../../hooks/useConfirmModal";
 
 const IndividualContactOptions = ({
   user,
@@ -17,6 +18,7 @@ const IndividualContactOptions = ({
   setIsBlocked,
   haveContactBlockedYou,
 }) => {
+  const { confirmModal } = useConfirmModal();
   const navigate = useNavigate();
 
   const [getChatByParticipants] = useLazyQuery(GET_CHAT_BY_PARTICIPANTS);
@@ -129,7 +131,14 @@ const IndividualContactOptions = ({
         </div>
       </button>
       <button
-        onClick={handleBlockContact}
+        onClick={() =>
+          confirmModal(
+            `Are you sure you want to ${isBlocked ? "unblock" : "block"} ${
+              contact.name
+            }?`,
+            handleBlockContact
+          )
+        }
         className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 border-slate-200 bg-slate-200 rounded-xl"
       >
         <div className="text-lg font-bold text-slate-700">
@@ -137,7 +146,12 @@ const IndividualContactOptions = ({
         </div>
       </button>
       <button
-        onClick={handleRemoveContact}
+        onClick={() =>
+          confirmModal(
+            `Are you sure you want to remove ${contact.name} from your contacts?`,
+            handleRemoveContact
+          )
+        }
         className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 border-slate-200 bg-slate-200 rounded-xl"
       >
         <div className="text-lg font-bold text-slate-700">Remove Contact</div>

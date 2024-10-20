@@ -38,7 +38,7 @@ const ConfirmModalProvider = ({ children }) => {
             exit={{ width: "0vw", opacity: 0, transition: { delay: 1.0 } }}
           >
             <motion.div
-              key={"newChatModal"}
+              key={"confirmModal"}
               className="bg-white rounded-lg shadow-lg p-6 max-w-sm text-center"
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1, duration: 0.4 }}
