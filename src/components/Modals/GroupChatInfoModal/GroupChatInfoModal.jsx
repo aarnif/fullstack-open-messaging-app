@@ -67,7 +67,11 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         </div>
       </div>
       <div className="w-full flex-grow flex flex-col justify-center items-center bg-white">
-        <ChatMembersList user={user} chat={chat} admin={chatAdmin} />
+        <ChatMembersList
+          user={user}
+          chatParticipants={chat.participants}
+          admin={chatAdmin}
+        />
         {user.id !== chatAdmin.id && (
           <div className="w-full p-4 flex flex-col justify-center items-start bg-white">
             <button
@@ -81,7 +85,9 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
       </div>
       {showEditGroupChatModal && (
         <EditGroupChatModal
+          user={user}
           chat={chat}
+          chatAdmin={chatAdmin}
           showEditGroupChatModal={setShowEditGroupChatModal}
         />
       )}
