@@ -29,6 +29,10 @@ const EditGroupChatModal = ({
     ...chat.participants.map((participant) => participant.id),
   ]);
 
+  const [newMemberIds, setNewMemberIds] = useState([
+    ...chat.participants.map((participant) => participant.id),
+  ]);
+
   const result = useQuery(GET_ALL_USERS);
 
   const [editChat] = useMutation(EDIT_CHAT, {
@@ -191,7 +195,7 @@ const EditGroupChatModal = ({
                       result.loading
                         ? chat.participants
                         : result.data.allUsers.filter((user) =>
-                            chosenUserIds.includes(user.id)
+                            newMemberIds.includes(user.id)
                           )
                     }
                     admin={chatAdmin}
@@ -219,6 +223,7 @@ const EditGroupChatModal = ({
             chat={chat}
             chosenUserIds={chosenUserIds}
             setChosenUserIds={setChosenUserIds}
+            setNewMemberIds={setNewMemberIds}
             setShowUpdateMembersModal={setShowUpdateMembersModal}
           />
         )}

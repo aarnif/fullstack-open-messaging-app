@@ -14,6 +14,7 @@ const UpdateMembersModal = ({
   chat,
   chosenUserIds,
   setChosenUserIds,
+  setNewMemberIds,
   setShowUpdateMembersModal,
 }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
@@ -30,6 +31,12 @@ const UpdateMembersModal = ({
     setChosenUserIds([
       ...chat.participants.map((participant) => participant.id),
     ]);
+  };
+
+  const handleUpdateMembers = () => {
+    console.log("Update members:", chosenUserIds);
+    setShowUpdateMembersModal(false);
+    setNewMemberIds(chosenUserIds);
   };
 
   return (
@@ -60,7 +67,7 @@ const UpdateMembersModal = ({
             </h2>
             <button
               className="text-2xl text-slate-700"
-              onClick={() => setShowUpdateMembersModal(false)}
+              onClick={handleUpdateMembers}
             >
               <IoChevronForward className="w-7 h-7 text-slate-700 fill-current" />
             </button>
