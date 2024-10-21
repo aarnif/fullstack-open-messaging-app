@@ -44,9 +44,18 @@ const typeDefs = `
       chatId: ID!
       participants: [ID!]!
     ): Chat
+    updateGroupChatParticipants(
+      chatId: ID!
+      participants: [ID!]!
+    ): Chat
     leaveGroupChats(
       chatIds: [ID!]!
     ): [String!]!
+  }
+  type newGroupChatParticipants {
+    updatedChat: Chat
+    removedParticipants: [ID]
+    addedParticipants: [ID]
   }
   type Subscription {
     chatAdded: Chat!
@@ -56,6 +65,7 @@ const typeDefs = `
     messagesInChatRead: Chat!
     participantsAddedToGroupChat: Chat!
     participantsRemovedFromGroupChat: Chat!
+    groupChatParticipantsUpdated: newGroupChatParticipants
     leftGroupChats: [String!]!
   }   
 `;
@@ -393,7 +403,6 @@ const resolvers = {
         });
       }
     },
-
     addParticipantsToGroupChat: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
@@ -465,7 +474,6 @@ const resolvers = {
         });
       }
     },
-
     removeParticipantsFromGroupChat: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
@@ -534,6 +542,113 @@ const resolvers = {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             invalidArgs: args,
+            error,
+          },
+        });
+      }
+    },
+    updateGroupChatParticipants: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const findChat = await Chat.findById(args.chatId);
+
+      const oldParticipants = findChat.participants.map((participant) =>
+        participant._id.toString()
+      );
+      const newParticipants = args.participants;
+      const notificationMessages = [];
+
+      try {
+        const removedParticipants = [...oldParticipants].filter(
+          (participant) => !newParticipants.includes(participant)
+        );
+        const addedParticipants = [...newParticipants].filter(
+          (participant) => !oldParticipants.includes(participant)
+        );
+
+        const allParticipantsToFetch = [
+          ...removedParticipants,
+          ...addedParticipants,
+        ];
+
+        const users = await User.find({ _id: { $in: allParticipantsToFetch } });
+
+        const usersToRemove = users.filter((user) =>
+          removedParticipants.includes(user._id.toString())
+        );
+        if (usersToRemove.length > 0) {
+          await User.updateMany(
+            { _id: { $in: removedParticipants } },
+            { $pull: { chats: args.chatId } }
+          );
+
+          usersToRemove.forEach((user) => {
+            notificationMessages.push({
+              type: "notification",
+              sender: context.currentUser.id,
+              content: `${user.name} was removed`,
+            });
+          });
+        }
+
+        const usersToAdd = users.filter((user) =>
+          addedParticipants.includes(user._id.toString())
+        );
+        if (usersToAdd.length > 0) {
+          await User.updateMany(
+            { _id: { $in: addedParticipants } },
+            { $addToSet: { chats: args.chatId } }
+          );
+
+          usersToAdd.forEach((user) => {
+            notificationMessages.push({
+              type: "notification",
+              sender: context.currentUser.id,
+              content: `${user.name} joined`,
+            });
+          });
+        }
+
+        const updatedChat = await Chat.findByIdAndUpdate(
+          args.chatId,
+          {
+            $set: { participants: args.participants },
+            $push: { messages: { $each: notificationMessages, $position: 0 } },
+          },
+          { new: true }
+        )
+          .populate("admin")
+          .populate("participants")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
+          });
+
+        pubsub.publish("GROUP_CHAT_PARTICIPANTS_UPDATED", {
+          groupChatParticipantsUpdated: {
+            updatedChat: updatedChat,
+            removedParticipants:
+              usersToRemove.map((user) => user._id.toString()) || [],
+            addedParticipants:
+              usersToAdd.map((user) => user._id.toString()) || [],
+          },
+        });
+
+        return updatedChat;
+      } catch (error) {
+        throw new GraphQLError("Updating chat participants failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
             error,
           },
         });
@@ -641,6 +756,9 @@ const resolvers = {
     participantsRemovedFromGroupChat: {
       subscribe: () =>
         pubsub.asyncIterator("PARTICIPANTS_REMOVED_FROM_GROUP_CHAT"),
+    },
+    groupChatParticipantsUpdated: {
+      subscribe: () => pubsub.asyncIterator("GROUP_CHAT_PARTICIPANTS_UPDATED"),
     },
     leftGroupChats: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHATS"),
