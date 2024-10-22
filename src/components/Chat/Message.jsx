@@ -55,6 +55,7 @@ const MessageByCurrentUser = ({ message, handlePressImage }) => {
   return (
     <div className="mr-2 my-2 flex flex-col items-end">
       <div className="min-w-[100px] max-w-[600px] mr-8 pt-2 px-2 flex flex-col bg-green-300 rounded-lg">
+        <div className="text-slate-800 font-bold">You</div>
         {message.image.thumbnail && (
           <div>
             <button onClick={handlePressImage}>
