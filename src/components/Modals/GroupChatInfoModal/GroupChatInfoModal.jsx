@@ -8,6 +8,7 @@ import { FiEdit } from "react-icons/fi";
 import { LEAVE_GROUP_CHATS } from "../../../graphql/mutations";
 import ChatMembersList from "./ChatMembersList";
 import EditGroupChatModal from "../EditGroupChatModal/EditGroupChatModal";
+import ClickableImage from "../../ClickableImage";
 
 const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   const [showEditGroupChatModal, setShowEditGroupChatModal] = useState(false);
@@ -52,13 +53,11 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         </button>
       </div>
       <div className="w-full py-4 flex flex-col justify-center items-center bg-white">
-        <button onClick={() => console.log("Show group chat image")}>
-          <img
-            src={chat.image.thumbnail}
-            alt="Chat Thumbnail"
-            className="w-32 h-32 rounded-full"
-          />
-        </button>
+        <ClickableImage
+          imageUri={chat.image.thumbnail}
+          imageAlt={`${chat.title} image`}
+          fullScreenImageUri={chat.image.original}
+        />
         <div className="pt-4 text-xl text-slate-800 font-bold">
           {chat.title}
         </div>
