@@ -10,6 +10,7 @@ import ChangeImage from "./ChangeImage";
 import useField from "../../../hooks/useField";
 import ChatMembersList from "../GroupChatInfoModal/ChatMembersList";
 import UpdateMembersModal from "./UpdateMembersModal";
+import useConfirmModal from "../../../hooks/useConfirmModal";
 
 const EditGroupChatModal = ({
   user,
@@ -17,6 +18,7 @@ const EditGroupChatModal = ({
   chatAdmin,
   showEditGroupChatModal,
 }) => {
+  const { confirmModal } = useConfirmModal();
   const [base64Image, setBase64Image] = useState(null);
   const [showUpdateMembersModal, setShowUpdateMembersModal] = useState(false);
   const title = useField("text", "Enter chat title here...", chat.title);
@@ -53,8 +55,6 @@ const EditGroupChatModal = ({
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-
     console.log("Handle submit edit chat...");
     console.log("Chosen user ids:", chosenUserIds);
 
@@ -108,14 +108,22 @@ const EditGroupChatModal = ({
     showEditGroupChatModal(false);
   };
 
+  const handleClickSubmit = (event) => {
+    event.preventDefault();
+    confirmModal(
+      "Are you sure you want to update the chat information?",
+      handleSubmit
+    );
+  };
+
   return (
     <>
       <div className="absolute top-0 left-0 w-full h-full flex flex-col bg-white">
         <div className="w-full flex-grow p-8 flex flex-col">
           <div className="w-full flex-grow flex flex-col justify-center items-center bg-white">
             <form
-              onSubmit={handleSubmit}
               className="w-full flex-grow flex flex-col"
+              onSubmit={handleClickSubmit}
             >
               <div className="w-full flex justify-center items-center pb-4">
                 <div className="w-[70px] flex justify-start items-center">
