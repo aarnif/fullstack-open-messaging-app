@@ -12,28 +12,29 @@ const FullScreenView = ({
       className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 transition"
       onClick={() => setShowImageView(false)}
     >
-      <div className="p-8 flex flex-col justify-center items-center">
+      <div className="p-16 w-full h-full flex justify-center items-center">
         <img
           src={fullScreenImageUri}
           alt="Full screen image"
-          className="rounded-full"
+          className="max-h-full max-w-full object-contain"
         />
       </div>
     </div>
   );
 };
 
-const ClickableImage = ({ imageUri, imageAlt, fullScreenImageUri }) => {
+const ClickableImage = ({
+  imageUri,
+  imageAlt,
+  fullScreenImageUri,
+  className = "w-[120px] h-[120px] rounded-full",
+}) => {
   const [showImageView, setShowImageView] = useState(false);
 
   return (
     <>
       <button onClick={() => setShowImageView(true)}>
-        <img
-          src={imageUri}
-          alt={imageAlt}
-          className="w-[120px] h-[120px] rounded-full"
-        />
+        <img src={imageUri} alt={imageAlt} className={className} />
       </button>
       <FullScreenView
         fullScreenImageUri={fullScreenImageUri}
