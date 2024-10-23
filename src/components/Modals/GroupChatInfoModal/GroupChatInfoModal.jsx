@@ -43,7 +43,7 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   };
 
   return (
-    <div className="absolute top-0 left-0 w-full h-full flex flex-col bg-white">
+    <div className="z-10 absolute top-0 left-0 w-full h-full flex flex-col bg-white">
       <div className="m-4 flex justify-between">
         <button onClick={() => setShowChatInfoModal(false)}>
           <IoChevronBack className="w-7 h-7 text-slate-700 fill-current" />
