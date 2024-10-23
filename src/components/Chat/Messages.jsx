@@ -1,5 +1,4 @@
 import { useRef, useEffect, Fragment } from "react";
-
 import Message from "./Message";
 import helpers from "../../utils/helpers";
 
@@ -28,11 +27,6 @@ const Messages = ({ user, messages }) => {
 
   const newMessagesCount = helpers.newMessagesCount(user, messages);
 
-  const handlePressImage = (message) => {
-    console.log("Message image pressed:");
-    console.log(message);
-  };
-
   console.log("New messages count:", newMessagesCount);
   return (
     <div className="h-full flex-grow flex flex-col">
@@ -55,12 +49,7 @@ const Messages = ({ user, messages }) => {
                   senderIsCurrentUser && (
                     <NewMessages newMessagesCount={newMessagesCount} />
                   )}
-                <Message
-                  user={user}
-                  message={item}
-                  index={index}
-                  handlePressImage={handlePressImage}
-                />
+                <Message user={user} message={item} index={index} />
                 <div ref={messagesEndRef} />
               </Fragment>
             );

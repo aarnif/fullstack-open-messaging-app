@@ -1,4 +1,5 @@
 import helpers from "../../utils/helpers";
+import ClickableImage from "../ClickableImage";
 
 const NotificationMessage = ({ message }) => {
   return (
@@ -10,21 +11,18 @@ const NotificationMessage = ({ message }) => {
   );
 };
 
-const MessageByAnotherUser = ({ message, handlePressImage }) => {
+const MessageByAnotherUser = ({ message }) => {
   return (
     <div className="mr-2 my-2 flex flex-col items-start">
       <div className="min-w-[100px] max-w-[600px] ml-8 pt-2 px-2 flex flex-col bg-slate-300 rounded-lg relative">
         <div className="text-slate-800 font-bold">{message.sender.name}</div>
         {message.image.thumbnail && (
-          <div>
-            <button onClick={handlePressImage}>
-              <img
-                src={message.image.thumbnail}
-                alt="message-thumbnail"
-                style={{ width: 100, height: 100 }}
-              />
-            </button>
-          </div>
+          <ClickableImage
+            fullScreenImageUri={message.image.original}
+            imageAlt="message-image"
+            imageUri={message.image.thumbnail}
+            className="w-[120px] h-[120px]"
+          />
         )}
         {message.content && (
           <div
@@ -52,21 +50,18 @@ const MessageByAnotherUser = ({ message, handlePressImage }) => {
   );
 };
 
-const MessageByCurrentUser = ({ message, handlePressImage }) => {
+const MessageByCurrentUser = ({ message }) => {
   return (
     <div className="mr-2 my-2 flex flex-col items-end">
       <div className="min-w-[100px] max-w-[600px] mr-8 pt-2 px-2 flex flex-col bg-green-300 rounded-lg relative">
         <div className="text-slate-800 font-bold">You</div>
         {message.image.thumbnail && (
-          <div>
-            <button onClick={handlePressImage}>
-              <img
-                src={message.image.thumbnail}
-                alt="message-thumbnail"
-                style={{ width: 100, height: 100 }}
-              />
-            </button>
-          </div>
+          <ClickableImage
+            fullScreenImageUri={message.image.original}
+            imageAlt="message-image"
+            imageUri={message.image.thumbnail}
+            className="w-[120px] h-[120px]"
+          />
         )}
         {message.content && (
           <div
@@ -89,7 +84,7 @@ const MessageByCurrentUser = ({ message, handlePressImage }) => {
   );
 };
 
-const Message = ({ user, message, handlePressImage }) => {
+const Message = ({ user, message }) => {
   if (message.type === "notification") {
     return <NotificationMessage message={message} />;
   }
@@ -97,15 +92,9 @@ const Message = ({ user, message, handlePressImage }) => {
   return (
     <>
       {message.sender.id === user.id ? (
-        <MessageByCurrentUser
-          message={message}
-          handlePressImage={handlePressImage}
-        />
+        <MessageByCurrentUser message={message} />
       ) : (
-        <MessageByAnotherUser
-          message={message}
-          handlePressImage={handlePressImage}
-        />
+        <MessageByAnotherUser message={message} />
       )}
     </>
   );
