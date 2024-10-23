@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
-import { MdSend } from "react-icons/md";
 
 import { CREATE_CHAT, ADD_MESSAGE_TO_CHAT } from "../../graphql/mutations";
 import { GET_CHAT_BY_PARTICIPANTS } from "../../graphql/queries";
+import NewMessageBox from "../NewMessageBox";
 
 const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
   const navigate = useNavigate();
@@ -70,19 +70,11 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
   };
 
   return (
-    <div className="w-full h-[50px] p-2 flex bg-white text-slate-800">
-      <input
-        className="w-full p-2 bg-slate-100 rounded-xl"
-        placeholder="New Message..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-      <div className="mx-2 flex justify-center items-center">
-        <button onClick={handleSendMessageAndCreateChat}>
-          <MdSend size={26} color="#16a34a" />
-        </button>
-      </div>
-    </div>
+    <NewMessageBox
+      message={message}
+      setMessage={setMessage}
+      handleSubmit={handleSendMessageAndCreateChat}
+    />
   );
 };
 
