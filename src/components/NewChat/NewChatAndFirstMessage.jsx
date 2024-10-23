@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 import { CREATE_CHAT, ADD_MESSAGE_TO_CHAT } from "../../graphql/mutations";
 import { GET_CHAT_BY_PARTICIPANTS } from "../../graphql/queries";
+import imageService from "../../services/imageService";
 import NewMessageBox from "../NewMessageBox";
 
 const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
+  const [image, setImage] = useState(null);
+  const [base64Image, setBase64Image] = useState(null);
 
   const [createChat] = useMutation(CREATE_CHAT, {
     onError: (error) => {
@@ -26,10 +29,11 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
   const handleSendMessageAndCreateChat = async () => {
     console.log("Send message:", message);
 
-    if (!message) {
+    if (!message && !base64Image) {
       console.log("Do not send empty message!");
       return;
     }
+
     try {
       const { data, error } = await createChat({
         variables: {
@@ -44,11 +48,25 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
 
       if (data) {
         console.log("Created chat:", data);
+        let result;
+
+        if (base64Image) {
+          console.log("Uploading chat picture...");
+          result = await imageService.uploadImage(
+            data.createChat.id,
+            base64Image
+          );
+        }
+
         addMessageToChat({
           variables: {
             chatId: data.createChat.id,
             content: message,
             senderId: user.id,
+            input: {
+              thumbnail: base64Image ? result.data.thumb.url : null,
+              original: base64Image ? result.data.image.url : null,
+            },
           },
           refetchQueries: [
             {
@@ -73,6 +91,9 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
     <NewMessageBox
       message={message}
       setMessage={setMessage}
+      image={image}
+      setImage={setImage}
+      setBase64Image={setBase64Image}
       handleSubmit={handleSendMessageAndCreateChat}
     />
   );
