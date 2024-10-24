@@ -3,10 +3,12 @@ import { motion } from "framer-motion";
 
 const Footer = () => {
   return (
-    <footer className="w-full flex flex-col justify-around items-center bg-green-600 p-2">
+    <footer className="w-full flex flex-col justify-around items-center bg-slate-200 dark:bg-slate-800 p-2">
       <ul className="flex justify-center items-center">
         <li className="px-1">
-          <h3 className="text-lg text-white font-bold">Created By aarnif</h3>
+          <h3 className="text-lg text-slate-800 dark:text-slate-100 font-bold">
+            Created By aarnif
+          </h3>
         </li>
         <li className="px-1">
           <motion.div
@@ -21,7 +23,7 @@ const Footer = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <FaGithub className="w-6 h-6 text-white fill-current" />
+              <FaGithub className="w-6 h-6 text-slate-800 dark:text-slate-100 fill-current" />
             </a>
           </motion.div>
         </li>
