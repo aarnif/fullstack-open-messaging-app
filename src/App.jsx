@@ -42,7 +42,7 @@ const App = () => {
 
   useEffect(() => {
     const toggleDarkMode = () => {
-      if (data?.me.settings.theme === "dark") {
+      if (data?.me?.settings.theme === "dark") {
         document.documentElement.classList.add("dark");
       }
     };
