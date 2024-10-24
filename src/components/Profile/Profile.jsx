@@ -2,7 +2,7 @@ import IndividualContactCard from "../IndividualContactCard/IndividualContactCar
 
 const Profile = ({ user, menuComponent }) => {
   return (
-    <div className="flex-grow flex">
+    <div className="flex-grow flex bg-slate-50 dark:bg-slate-700">
       {menuComponent}
       <div className="flex-grow flex justify-center items-start">
         <div className="flex-grow p-8 flex flex-col justify-start items-center">
