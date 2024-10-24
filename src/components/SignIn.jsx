@@ -48,53 +48,54 @@ const SignIn = () => {
     <div className="flex-grow w-full flex justify-center items-center">
       <div
         className="flex-grow max-w-[500px] max-h-[600px] p-8 flex justify-center items-center
-         bg-white bg-opacity-90 rounded-xl text-black shadow-xl"
+         bg-white dark:bg-slate-800 bg-opacity-90 rounded-xl text-black shadow-xl"
       >
         <form
           onSubmit={handleSubmit}
           className="flex-grow h-full flex flex-col"
         >
-          <h1
-            className="text-2xl font-bold text-green-600"
-            data-testid="sign-in-header"
-          >
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
             Sign In
           </h1>
           <ul>
             <li className="my-4 w-full flex-grow flex flex-col">
               <Notify notifyMessage={showNotifyMessage} />
             </li>
+
             <li className="w-full flex-grow flex flex-col">
-              <label className="text-md font-medium text-gray-700">
+              <label className="text-md font-medium text-slate-700 dark:text-slate-200">
                 USERNAME:
               </label>
             </li>
-            <li className="mb-4 w-full flex-grow flex flex-col">
+            <li className="w-full flex-grow flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
               <input
-                className="w-full flex-grow p-2 rounded-lg bg-gray-200
-                  focus:outline-none focus:ring-2 focus:ring-green-400 placeholder:text-gray-400 transition"
+                className="w-full text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                 {...username}
               />
+            </li>
+            <li>
               {username.value.length === 0 && (
-                <span className="text-md text-red-500">
+                <span className="pl-[10px] text-md text-red-500">
                   Please enter your username
                 </span>
               )}
             </li>
 
             <li className="w-full flex-grow flex flex-col">
-              <label className="text-md font-medium text-gray-700">
+              <label className="text-md font-medium text-slate-700 dark:text-slate-200">
                 PASSWORD:
               </label>
             </li>
-            <li className="mb-4 w-full flex-grow flex flex-col">
+
+            <li className="w-full flex-grow flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
               <input
-                className="w-full flex-grow p-2 rounded-lg bg-gray-200
-                  focus:outline-none focus:ring-2 focus:ring-green-400 placeholder:text-gray-400 transition"
+                className="w-full text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                 {...password}
               />
+            </li>
+            <li>
               {password.value.length === 0 && (
-                <span className="text-md text-red-500">
+                <span className="pl-[10px] text-md text-red-500">
                   Please enter your password
                 </span>
               )}
@@ -103,21 +104,25 @@ const SignIn = () => {
             <li className="my-4 w-full flex-grow flex flex-col">
               <button
                 type="submit"
-                className="flex-grow h-[70px] bg-green-500 border-2 border-green-500 rounded-xl text-xl font-bold text-white
-                hover:bg-green-600 focus:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 active:scale-95 transition"
+                className="flex-grow h-[70px] bg-green-500 border-2 border-green-500 rounded-xl
+                hover:bg-green-600 focus:bg-green-600 active:scale-95 transition"
               >
-                Sign In
+                <div className="text-xl font-bold text-white">Sign In</div>
               </button>
             </li>
-            <li className="my-4 w-full flex-grow flex flex-col">
-              <span>Don't have an account?</span>
+            <li className="my-4 w-full flex-grow flex flex-col ">
+              <span className="text-slate-700 dark:text-slate-200">
+                Don't have an account?
+              </span>
               <button
                 onClick={handleClickSignUp}
                 type="button"
-                className="w-full flex-grow h-[70px] border-2 border-gray-400 rounded-xl text-xl font-bold text-gray-600
-hover:bg-gray-300 focus:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 active:scale-95 transition"
+                className="w-full flex-grow h-[70px] border-2 border-slate-400 rounded-xl
+hover:bg-slate-300 dark:hover:bg-slate-900 focus:bg-slate-300 active:scale-95 transition"
               >
-                Sign Up Here
+                <div className="text-xl font-bold text-slate-700 dark:text-slate-300">
+                  Sign Up Here
+                </div>
               </button>
             </li>
           </ul>
