@@ -128,7 +128,7 @@ const ChatsMenu = ({ user, handleClickNewChat }) => {
   const searchWord = useField("text", "Search chats by title...");
 
   return (
-    <div className="flex-grow max-w-[450px] flex flex-col bg-slate-100 dark:bg-slate-700">
+    <div className="flex-grow max-w-[450px] flex flex-col bg-white dark:bg-slate-600">
       <div className="flex-grow flex flex-col overflow-y-auto h-0">
         <MenuHeader
           title={"Chats"}

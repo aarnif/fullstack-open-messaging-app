@@ -51,12 +51,14 @@ const ContactsMenu = ({ user, handleClickNewContact }) => {
 
   return (
     <div className="flex-grow max-w-[450px] flex flex-col bg-white dark:bg-slate-600">
-      <MenuHeader
-        title={"Contacts"}
-        handleCallBack={handleClickNewContact}
-        searchWord={searchWord}
-      />
-      <ContactsList user={user} searchWord={searchWord} />
+      <div className="flex-grow flex flex-col overflow-y-auto h-0">
+        <MenuHeader
+          title={"Contacts"}
+          handleCallBack={handleClickNewContact}
+          searchWord={searchWord}
+        />
+        <ContactsList user={user} searchWord={searchWord} />
+      </div>
     </div>
   );
 };
