@@ -11,8 +11,8 @@ const EnableDarkMode = ({ theme, setTheme }) => {
   };
 
   return (
-    <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 ">
-      <div className="text-md font-semibold text-slate-700">
+    <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 dark:bg-slate-800">
+      <div className="text-md font-semibold text-slate-800 dark:text-slate-100">
         {theme === "dark" ? "Light Mode" : "Dark Mode"}
       </div>
       <button onClick={handleToggleColorScheme}>
@@ -21,7 +21,7 @@ const EnableDarkMode = ({ theme, setTheme }) => {
             backgroundColor: theme === "dark" ? "#22c55e" : "#94a3b8",
             justifyContent: theme === "dark" ? "flex-end" : "flex-start",
           }}
-          className="w-16 h-8 flex justify-center rounded-full bg-slate-400"
+          className="w-16 h-8 flex justify-center rounded-full"
         >
           <div className="m-1 w-6 h-6 rounded-full bg-slate-100"></div>
         </div>
@@ -32,8 +32,10 @@ const EnableDarkMode = ({ theme, setTheme }) => {
 
 const ChangeClockFormat = ({ time, setTime }) => {
   return (
-    <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 ">
-      <div className="text-md font-semibold text-slate-700">24-Hour Clock</div>
+    <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 dark:bg-slate-800">
+      <div className="text-md font-semibold text-slate-800 dark:text-slate-100">
+        24-Hour Clock
+      </div>
       <button
         onClick={() =>
           setTime((prevState) => (prevState === "12h" ? "24h" : "12h"))
@@ -44,7 +46,7 @@ const ChangeClockFormat = ({ time, setTime }) => {
             backgroundColor: time === "12h" ? "#94a3b8" : "#22c55e",
             justifyContent: time === "12h" ? "flex-start" : "flex-end",
           }}
-          className="w-16 h-8 flex justify-center rounded-full bg-slate-400"
+          className="w-16 h-8 flex justify-center rounded-full"
         >
           <div className="m-1 w-6 h-6 rounded-full bg-slate-100"></div>
         </div>
@@ -79,7 +81,9 @@ const SettingsCard = ({ user }) => {
 
   return (
     <>
-      <h2 className="text-2xl font-bold mt-4 mx-4 mb-2">Settings</h2>{" "}
+      <h2 className="mt-4 mx-4 mb-2 text-2xl font-bold text-slate-800 dark:text-slate-100">
+        Settings
+      </h2>
       <EnableDarkMode theme={theme} setTheme={setTheme} />
       <ChangeClockFormat time={time} setTime={setTime} />
     </>
