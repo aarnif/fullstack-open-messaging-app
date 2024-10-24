@@ -18,12 +18,12 @@ const MenuTitle = ({ title }) => {
     <motion.div
       initial={{ x: -20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      className="absolute left-[80px] h-10 w-28 flex justify-center items-center bg-slate-800 rounded-lg"
+      className="absolute left-[80px] h-10 w-28 flex justify-center items-center bg-slate-200 rounded-lg dark:bg-slate-800"
     >
-      <div className="text-white font-bold">
+      <div className="text-slate-800 dark:text-white font-bold">
         {helpers.capitalizeString(title)}
       </div>
-      <div className="absolute left-[-8px] border-t-[10px] border-t-transparent border-r-[10px] border-r-slate-800 border-b-[10px] border-b-transparent"></div>
+      <div className="absolute left-[-8px] border-t-[10px] border-t-transparent border-r-[10px] border-r-slate-200 dark:border-r-slate-800 border-b-[10px] border-b-transparent"></div>
     </motion.div>
   );
 };
@@ -39,7 +39,7 @@ const MenuItem = ({ item, onClick, activePath }) => {
         className={
           item.id === activePath
             ? "relative group w-14 h-14 rounded-lg bg-violet-500 flex justify-center items-center active:scale-95 transition"
-            : "relative group w-14 h-14 rounded-full bg-slate-500 flex justify-center items-center hover:rounded-lg hover:bg-violet-500 active:scale-95 transition"
+            : "relative group w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-500 flex justify-center items-center hover:rounded-lg hover:bg-violet-500 active:scale-95 transition"
         }
       >
         {item.icon}
@@ -81,7 +81,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
           className={
             activePath === "chats"
               ? "w-9 h-9 text-white fill-current"
-              : "w-9 h-9 text-slate-700 group-hover:text-white fill-current"
+              : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
           }
         />
       ),
@@ -95,7 +95,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
           className={
             activePath === "contacts"
               ? "w-9 h-9 text-white fill-current"
-              : "w-9 h-9 text-slate-700 group-hover:text-white fill-current"
+              : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
           }
         />
       ),
@@ -109,7 +109,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
           className={
             activePath === "profile"
               ? "w-9 h-9 text-white fill-current"
-              : "w-9 h-9 text-slate-700 group-hover:text-white fill-current"
+              : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
           }
         />
       ),
@@ -123,7 +123,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
           className={
             activePath === "settings"
               ? "w-9 h-9 text-white fill-current"
-              : "w-9 h-9 text-slate-700 group-hover:text-white fill-current"
+              : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
           }
         />
       ),
@@ -142,7 +142,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
   ];
 
   return (
-    <div className="bg-slate-700">
+    <div className="bg-slate-100 dark:bg-slate-700">
       <ul className="flex flex-col my-2">
         {menuItems.map((item, index) => (
           <li key={index} id={item.id} className="m-2">
