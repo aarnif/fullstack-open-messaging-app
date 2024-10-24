@@ -133,7 +133,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
     {
       id: "logout",
       icon: (
-        <FaSignOutAlt className="w-9 h-9 text-slate-700 group-hover:text-white fill-current" />
+        <FaSignOutAlt className="w-9 h-9 text-slate-800 group-hover:text-white fill-current" />
       ),
       path: "/logout",
       onClick: () =>
