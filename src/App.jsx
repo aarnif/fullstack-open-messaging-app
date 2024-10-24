@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { AnimatePresence } from "framer-motion";
@@ -39,6 +39,15 @@ const App = () => {
 
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   console.log("Current user:", data);
+
+  useEffect(() => {
+    const toggleDarkMode = () => {
+      if (data?.me.settings.theme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    };
+    toggleDarkMode();
+  }, [data]);
 
   const handleClickNewChat = () => {
     console.log("Clicked new chat");

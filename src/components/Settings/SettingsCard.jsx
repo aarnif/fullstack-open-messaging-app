@@ -4,10 +4,11 @@ import { useMutation } from "@apollo/client";
 import { EDIT_SETTINGS } from "../../graphql/mutations";
 
 const EnableDarkMode = ({ theme, setTheme }) => {
-  const handleToggleColorScheme = () => {
+  const handleToggleDarkMode = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     console.log("Setting theme to:", newTheme);
     setTheme(newTheme);
+    document.documentElement.classList.toggle("dark");
   };
 
   return (
@@ -15,7 +16,7 @@ const EnableDarkMode = ({ theme, setTheme }) => {
       <div className="text-md font-semibold text-slate-800 dark:text-slate-100">
         {theme === "dark" ? "Light Mode" : "Dark Mode"}
       </div>
-      <button onClick={handleToggleColorScheme}>
+      <button onClick={handleToggleDarkMode}>
         <div
           style={{
             backgroundColor: theme === "dark" ? "#22c55e" : "#94a3b8",
