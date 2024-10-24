@@ -4,7 +4,7 @@ import ContactCard from "./ContactCard";
 const ContactItem = ({ user, item, activePath, setActivePath }) => {
   const navigate = useNavigate();
 
-  const handlePress = () => {
+  const handleClick = () => {
     console.log("Pressed contact named:", item.name);
     navigate(`/contacts/${item.id}`);
     setActivePath(item.id);
@@ -12,11 +12,11 @@ const ContactItem = ({ user, item, activePath, setActivePath }) => {
 
   const classStyles =
     activePath === item.id
-      ? "w-full flex items-start py-2 px-4 border-b bg-gray-200 hover:bg-gray-200 transition"
-      : "w-full flex items-start py-2 px-4 border-b hover:bg-gray-200 transition";
+      ? "w-full flex items-start py-2 px-4 border-b bg-slate-200 dark:bg-slate-700 transition"
+      : "w-full flex items-start py-2 px-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
 
   return (
-    <button className={classStyles} onClick={handlePress}>
+    <button className={classStyles} onClick={handleClick}>
       <ContactCard user={user} item={item} />
     </button>
   );

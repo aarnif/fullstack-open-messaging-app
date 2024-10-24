@@ -24,7 +24,7 @@ const ContactsList = ({ user, searchWord }) => {
   if (!data.allContactsByUser.contacts.length) {
     return (
       <div className="flex justify-start items-center">
-        <div className="m-4 text-2xl font-bold text-slate-700">
+        <div className="mx-4 text-2xl font-bold text-slate-800 dark:text-white">
           No contacts found
         </div>
       </div>
@@ -50,7 +50,7 @@ const ContactsMenu = ({ user, handleClickNewContact }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
 
   return (
-    <div className="flex-grow max-w-[450px] flex flex-col bg-white">
+    <div className="flex-grow max-w-[450px] flex flex-col bg-white dark:bg-slate-600">
       <MenuHeader
         title={"Contacts"}
         handleCallBack={handleClickNewContact}

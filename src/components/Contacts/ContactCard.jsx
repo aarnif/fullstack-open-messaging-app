@@ -12,36 +12,40 @@ const ContactCard = ({ user, item, admin }) => {
         {user?.id === item.id ? (
           <>
             <div className="flex justify-between items-start">
-              <div className="text-md text-slate-700 font-bold">
+              <div className="text-md text-slate-800 dark:text-slate-100 font-bold">
                 You{" "}
                 {admin?.id === item.id && (
-                  <span className="text-md text-slate-500 font-semibold">
+                  <span className="text-md text-slate-700 dark:text-slate-200 font-semibold">
                     Admin
                   </span>
                 )}
               </div>
-              <div className="text-md text-slate-500 font-bold">
+              <div className="text-md text-slate-600 dark:text-slate-200 font-bold">
                 @{item.username}
               </div>
             </div>
-            <div className="text-sm text-slate-700 text-left">{item.about}</div>
+            <div className="text-sm text-slate-600 dark:text-slate-200 text-left">
+              {item.about}
+            </div>
           </>
         ) : (
           <>
             <div className="flex justify-between items-start">
-              <div className="text-md text-slate-700 font-bold">
+              <div className="text-md text-slate-800 dark:text-slate-100 font-bold">
                 {item.name}{" "}
                 {admin?.id === item.id && (
-                  <span className="text-md text-slate-700 font-semibold">
+                  <span className="text-md text-slate-700 dark:text-slate-200 font-semibold">
                     Admin
                   </span>
                 )}
               </div>
-              <div className="text-md text-slate-500 font-bold">
+              <div className="text-md text-slate-600 dark:text-slate-200 font-bold">
                 @{item.username}
               </div>
             </div>
-            <div className="text-sm text-slate-700 text-left">{item.about}</div>
+            <div className="text-sm ttext-slate-600 dark:text-slate-200 text-left">
+              {item.about}
+            </div>
           </>
         )}
       </div>
