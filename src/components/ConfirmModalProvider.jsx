@@ -31,7 +31,7 @@ const ConfirmModalProvider = ({ children }) => {
         {isOpen && (
           <motion.div
             key={"Overlay"}
-            className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60"
             onClick={closeModal}
             initial={{ width: "0vw", opacity: 0 }}
             animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
@@ -39,26 +39,39 @@ const ConfirmModalProvider = ({ children }) => {
           >
             <motion.div
               key={"confirmModal"}
-              className="bg-white rounded-lg shadow-lg p-6 max-w-sm text-center"
+              className="bg-slate-100 dark:bg-slate-700 rounded-lg shadow-lg p-6 max-w-sm text-center"
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1, duration: 0.4 }}
               exit={{ y: -50, opacity: 0 }}
               transition={{ delay: 0.4, type: "tween" }}
             >
-              <h2 className="text-xl font-semibold">Confirmation</h2>
-              <div className="my-4">{message}</div>
-              <div className="flex justify-center">
+              <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                Confirmation
+              </h2>
+              <div className="my-4 text-slate-800 dark:text-slate-100">
+                {message}
+              </div>
+              <div className="flex justify-center space-x-2">
                 <button
                   onClick={onConfirm}
-                  className="px-4 py-2 mr-2 bg-red-600 text-white rounded hover:bg-red-700"
+                  className="w-full max-w-[100px] p-2 flex justify-center items-center border-2 
+                  border-red-600 bg-red-600 hover:bg-red-700 hover:border-red-700 
+                  active:scale-95 rounded-lg transition"
                 >
-                  Confirm
+                  <div className="text-slate-800 dark:text-slate-100 font-bold">
+                    Confirm
+                  </div>
                 </button>
                 <button
                   onClick={closeModal}
-                  className="px-4 py-2 ml-2 bg-slate-300 text-slate-700 rounded hover:bg-slate-400"
+                  className="w-full max-w-[100px] p-2 flex justify-center items-center border-2 
+                  border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 
+                  hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900
+                  active:scale-95 rounded-lg transition"
                 >
-                  Cancel
+                  <div className="text-slate-800 dark:text-slate-100 font-bold">
+                    Cancel
+                  </div>
                 </button>
               </div>
             </motion.div>
