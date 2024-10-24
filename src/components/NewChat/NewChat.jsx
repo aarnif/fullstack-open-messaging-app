@@ -17,7 +17,7 @@ const NewChat = ({ user, setActivePath, menuComponent }) => {
   return (
     <div className="flex-grow flex">
       {menuComponent}
-      <div className="flex-grow flex flex-col justify-start items-start">
+      <div className="flex-grow flex flex-col justify-start items-start bg-slate-50 dark:bg-slate-800">
         {!newChatInfo ? (
           <div>Loading...</div>
         ) : (
