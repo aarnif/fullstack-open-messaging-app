@@ -25,7 +25,7 @@ const ChatItem = ({ user, item, activePath, setActivePath }) => {
         </div>
         <div className="flex-1">
           <div className="text-md font-bold">{item.displayChatTitle}</div>
-          <div className="text-slate-700">No messages</div>
+          <div className="text-slate-800 dark:text-slate-100">No messages</div>
         </div>
       </div>
     );
@@ -33,8 +33,8 @@ const ChatItem = ({ user, item, activePath, setActivePath }) => {
 
   const classStyles =
     activePath === item.id
-      ? "w-full flex items-start py-2 px-4 border-b bg-gray-200 hover:bg-gray-200 transition"
-      : "w-full flex items-start py-2 px-4 border-b hover:bg-gray-200 transition";
+      ? "w-full flex items-start py-2 px-4 border-b bg-slate-200 dark:bg-slate-700 transition"
+      : "w-full flex items-start py-2 px-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
 
   return (
     <button className={classStyles} onClick={handlePress}>
