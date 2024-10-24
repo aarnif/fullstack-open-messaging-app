@@ -7,10 +7,10 @@ import EmojiPicker from "emoji-picker-react";
 
 const ImagePreview = ({ image, handleCancelImage }) => {
   return (
-    <div className="p-4 w-full bg-slate-100 flex flex-col justify-center items-center">
+    <div className="p-4 w-full bg-slate-100 dark:bg-slate-900 flex flex-col justify-center items-center">
       <div className="w-full flex justify-end items-center">
         <button onClick={handleCancelImage}>
-          <MdClose className="w-7 h-7 text-slate-700 fill-current" />
+          <MdClose className="w-7 h-7 text-slate-700 dark:text-slate-200 fill-current" />
         </button>
       </div>
       <img
@@ -71,7 +71,7 @@ const NewMessageBox = ({
           }}
         />
       </div>
-      <div className="w-full h-[50px] p-2 flex bg-white text-slate-800">
+      <div className="w-full h-[50px] p-2 flex bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 shadow-lg">
         <div className="mx-2 flex justify-center items-center space-x-2">
           <button onClick={handleClickAddImage}>
             <FaImage size={26} color="#16a34a" />
@@ -85,12 +85,15 @@ const NewMessageBox = ({
             />
           </button>
         </div>
-        <input
-          className="w-full p-2 bg-slate-100 rounded-xl"
-          placeholder="New Message..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
+
+        <div className="w-full flex justify-center items-center border-2 rounded-full border-slate-200 dark:border-slate-500 bg-slate-200 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
+          <input
+            className="w-full pl-3 rounded-full text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-200 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
+            placeholder="New Message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </div>
         <div className="mx-2 flex justify-center items-center space-x-2">
           <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
             <FaRegSmile size={26} color="#16a34a" />

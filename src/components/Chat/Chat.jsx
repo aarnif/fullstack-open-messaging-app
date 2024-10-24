@@ -24,7 +24,7 @@ const Chat = ({ user, setActivePath, menuComponent }) => {
   return (
     <div className="flex-grow flex">
       {menuComponent}
-      <div className="relative flex-grow flex flex-col justify-start items-start">
+      <div className="relative flex-grow flex flex-col justify-start items-start bg-slate-50 dark:bg-slate-800">
         {loading ? (
           <div>Loading...</div>
         ) : (

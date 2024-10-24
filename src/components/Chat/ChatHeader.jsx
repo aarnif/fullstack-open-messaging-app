@@ -41,7 +41,7 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
     .join(", ");
 
   return (
-    <div className="w-full flex justify-center items-center py-2 bg-white shadow-lg">
+    <div className="w-full flex justify-center items-center py-2 bg-white dark:bg-slate-800 shadow-lg">
       <div className="flex">
         <button onClick={getInfo} className="flex-grow">
           <div className="flex justify-center items-center">
@@ -53,10 +53,10 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
               />
             </div>
             <div>
-              <div className="text-base text-slate-700 font-bold text-left">
+              <div className="text-base text-slate-800 dark:text-slate-100 font-bold text-left">
                 {chat.displayChatTitle}
               </div>
-              <div className="text-sm text-slate-700">
+              <div className="text-sm text-slate-800 dark:text-slate-100">
                 {chatParticipantsString}
               </div>
             </div>
