@@ -142,7 +142,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
   ];
 
   return (
-    <div className="bg-slate-100 dark:bg-slate-700">
+    <div className="bg-slate-200 dark:bg-slate-800">
       <ul className="flex flex-col my-2">
         {menuItems.map((item, index) => (
           <li key={index} id={item.id} className="m-2">
