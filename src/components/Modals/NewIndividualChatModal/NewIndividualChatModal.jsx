@@ -90,7 +90,7 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
   return (
     <motion.div
       key={"Overlay"}
-      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 transition"
+      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-60 z-10 transition"
       onClick={() => setShowNewIndividualChatModal(false)}
       initial={{ width: "0vw", opacity: 0 }}
       animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
@@ -98,7 +98,7 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
     >
       <motion.div
         key={"newChatModal"}
-        className="w-[500px] h-[600px] bg-white rounded-xl text-slate-700 z-100"
+        className="w-[500px] h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-800 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
@@ -107,20 +107,14 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
       >
         <div className="h-full flex-grow flex flex-col py-4 px-4">
           <div className="w-full flex justify-center items-center pb-2">
-            <button
-              className="text-2xl text-slate-700"
-              onClick={() => setShowNewIndividualChatModal(false)}
-            >
-              <MdClose className="w-7 h-7 text-slate-700 fill-current" />
+            <button onClick={() => setShowNewIndividualChatModal(false)}>
+              <MdClose className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
-            <h2 className="flex-grow text-2xl font-bold text-slate-700 text-center">
+            <h2 className="flex-grow text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
               {"New Individual Chat"}
             </h2>
-            <button
-              className="text-2xl text-slate-700"
-              onClick={handleCreateIndividualChat}
-            >
-              <IoChevronForward className="w-7 h-7 text-slate-700 fill-current" />
+            <button onClick={handleCreateIndividualChat}>
+              <IoChevronForward className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
           </div>
           <>

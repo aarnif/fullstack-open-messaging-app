@@ -93,7 +93,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
     >
       <motion.div
         key={"newChatModal"}
-        className="w-[500px] h-[600px] bg-white rounded-xl text-slate-700 z-100"
+        className="w-[500px] h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-800 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
@@ -102,20 +102,14 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
       >
         <div className="h-full flex-grow flex flex-col pt-4 px-4">
           <div className="w-full flex justify-center items-center">
-            <button
-              className="text-2xl text-slate-700"
-              onClick={() => setShowNewGroupChatModal(false)}
-            >
-              <MdClose className="w-7 h-7 text-slate-700 fill-current" />
+            <button onClick={() => setShowNewGroupChatModal(false)}>
+              <MdClose className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
-            <h2 className="flex-grow text-2xl font-bold text-slate-700 text-center">
+            <h2 className="flex-grow text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
               New Group Chat
             </h2>
-            <button
-              className="text-2xl text-slate-700"
-              onClick={handleCreateGroupChat}
-            >
-              <IoChevronForward className="w-7 h-7 text-slate-700 fill-current" />
+            <button onClick={handleCreateGroupChat}>
+              <IoChevronForward className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
           </div>
           <>
@@ -133,20 +127,20 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
                     setChosenUserIds={setChosenUserIds}
                   />
                 </div>
-                <div className="flex justify-center items-center my-2 p-2 border-2 border-white rounded-lg bg-slate-100 hover:border-green-600 focus-within:border-green-600 transition">
+                <div className="flex justify-center items-center my-2 p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
-                    className="w-full pl-2 text-slate-700 bg-slate-100 focus:outline-none focus:bg-opacity-0"
+                    className="w-full pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...groupChatTitle}
                   />
                 </div>
 
-                <div className="flex justify-center items-center my-2 p-2 border-2 border-white rounded-lg bg-slate-100 hover:border-green-600 focus-within:border-green-600 transition">
+                <div className="flex justify-center items-center my-2 p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
-                    className="w-full pl-2 text-slate-700 bg-slate-100 focus:outline-none focus:bg-opacity-0"
+                    className="w-full pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...groupChatDescription}
                   />
                 </div>
-                <div className="w-full h-[40px] flex justify-center items-center bg-white font-bold">
+                <div className="w-full h-[40px] flex justify-center items-center bg-white dark:bg-slate-800 font-bold">
                   {chosenUserIds.length} contacts selected
                 </div>
               </>
