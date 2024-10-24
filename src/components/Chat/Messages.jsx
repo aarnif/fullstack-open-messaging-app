@@ -35,7 +35,9 @@ const Messages = ({ user, messages }) => {
           className="w-full flex-grow flex justify-center items-center"
           key={"Empty item"}
         >
-          <div>Send a message to start the chat.</div>
+          <div className="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold">
+            Send a message to start the chat.
+          </div>
         </div>
       ) : (
         <div className="w-full flex-grow py-8 px-16">
