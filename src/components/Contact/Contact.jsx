@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
 import { GET_USER_BY_ID } from "../../graphql/queries";
+import Loading from "../Loading";
 import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
 import IndividualContactOptions from "../IndividualContactCard/IndividualContactCardOptions";
 
@@ -39,7 +40,7 @@ const Contact = ({ user, setActivePath, menuComponent }) => {
       <div className="flex-grow flex justify-center items-start">
         <div className="flex-grow h-full p-8 flex flex-col justify-start items-center">
           {loading ? (
-            <div>Loading...</div>
+            <Loading />
           ) : (
             <>
               <div className="flex-grow">

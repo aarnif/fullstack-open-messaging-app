@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
 import { GET_CHAT_BY_ID } from "../../graphql/queries";
+import Loading from "../Loading";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";
@@ -26,7 +27,7 @@ const Chat = ({ user, setActivePath, menuComponent }) => {
       {menuComponent}
       <div className="relative flex-grow flex flex-col justify-start items-start bg-slate-50 dark:bg-slate-800">
         {loading ? (
-          <div>Loading...</div>
+          <Loading />
         ) : (
           <>
             {showChatInfoModal && (
