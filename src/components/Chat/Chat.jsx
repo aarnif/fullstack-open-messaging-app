@@ -47,7 +47,7 @@ const Chat = ({ user, setActivePath, menuComponent }) => {
                 messages={[...data?.findChatById.messages].reverse()}
               />
             </div>
-            <NewMessage chatId={match.chatId} />
+            <NewMessage user={user} chatId={match.chatId} />
           </>
         )}
       </div>

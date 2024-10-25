@@ -5,7 +5,7 @@ import imageService from "../../services/imageService";
 import { ADD_MESSAGE_TO_CHAT } from "../../graphql/mutations";
 import NewMessageBox from "../NewMessageBox";
 
-const NewMessage = ({ chatId }) => {
+const NewMessage = ({ user, chatId }) => {
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
   const [base64Image, setBase64Image] = useState(null);
@@ -52,6 +52,7 @@ const NewMessage = ({ chatId }) => {
 
   return (
     <NewMessageBox
+      user={user}
       message={message}
       setMessage={setMessage}
       image={image}

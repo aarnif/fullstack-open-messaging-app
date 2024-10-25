@@ -23,6 +23,7 @@ const ImagePreview = ({ image, handleCancelImage }) => {
 };
 
 const NewMessageBox = ({
+  user,
   message,
   setMessage,
   image,
@@ -67,7 +68,8 @@ const NewMessageBox = ({
           open={showEmojiPicker}
           onEmojiClick={(emoji) => setMessage((prev) => prev + emoji.emoji)}
           style={{
-            backgroundColor: "#f1f5f9",
+            backgroundColor:
+              user.settings.theme === "dark" ? "#1e293b" : "#f1f5f9",
           }}
         />
       </div>
