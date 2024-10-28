@@ -11,7 +11,7 @@ const NotificationMessage = ({ message }) => {
   );
 };
 
-const MessageByAnotherUser = ({ message }) => {
+const MessageByAnotherUser = ({ user, message }) => {
   return (
     <div className="mr-2 my-2 flex flex-col items-start">
       <div className="min-w-[100px] max-w-[600px] ml-8 pt-2 px-2 flex flex-col bg-slate-300 dark:bg-slate-500 rounded-lg relative">
@@ -39,7 +39,10 @@ const MessageByAnotherUser = ({ message }) => {
           </div>
         )}
         <div className="my-1 text-end text-xs text-slate-800 dark:text-slate-100">
-          {helpers.formatMessageTime(message.createdAt)}
+          {helpers.formatMessageTime(
+            message.createdAt,
+            user.settings.time === "24h"
+          )}
         </div>
         <div className="absolute bottom-0 -left-2 border-t-[16px] border-t-transparent border-r-[16px] border-r-slate-300 dark:border-r-slate-500"></div>
       </div>
@@ -52,7 +55,7 @@ const MessageByAnotherUser = ({ message }) => {
   );
 };
 
-const MessageByCurrentUser = ({ message }) => {
+const MessageByCurrentUser = ({ user, message }) => {
   return (
     <div className="mr-2 my-2 flex flex-col items-end">
       <div className="min-w-[100px] max-w-[600px] mr-8 pt-2 px-2 flex flex-col bg-green-300 rounded-lg relative">
@@ -78,7 +81,10 @@ const MessageByCurrentUser = ({ message }) => {
           </div>
         )}
         <div className="my-1 text-xs text-slate-800 text-end">
-          {helpers.formatMessageTime(message.createdAt)}
+          {helpers.formatMessageTime(
+            message.createdAt,
+            user.settings.time === "24h"
+          )}
         </div>
         <div className="absolute bottom-0 -right-2 border-t-[16px] border-t-transparent border-l-[16px] border-l-green-300"></div>
       </div>
@@ -94,9 +100,9 @@ const Message = ({ user, message }) => {
   return (
     <>
       {message.sender.id === user.id ? (
-        <MessageByCurrentUser message={message} />
+        <MessageByCurrentUser user={user} message={message} />
       ) : (
-        <MessageByAnotherUser message={message} />
+        <MessageByAnotherUser user={user} message={message} />
       )}
     </>
   );
