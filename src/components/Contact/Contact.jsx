@@ -38,7 +38,7 @@ const Contact = ({ user, setActivePath, menuComponent }) => {
     <div className="flex-grow flex bg-slate-50 dark:bg-slate-700">
       {menuComponent}
       <div className="flex-grow flex justify-center items-start">
-        <div className="flex-grow h-full p-8 flex flex-col justify-start items-center">
+        <div className="flex-grow max-w-[1000px] h-full p-8 flex flex-col justify-start items-center">
           {loading ? (
             <Loading />
           ) : (
