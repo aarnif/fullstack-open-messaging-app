@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { IoChevronBack } from "react-icons/io5";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { GET_ALL_USERS } from "../../../graphql/queries";
 import { EDIT_CHAT, UPDATE_CHAT_MEMBERS } from "../../../graphql/mutations";
@@ -49,7 +49,8 @@ const EditGroupChatModal = ({
     },
   });
 
-  const goBack = () => {
+  const goBack = (event) => {
+    event.preventDefault();
     console.log("Go back to chat page!");
     showEditGroupChatModal(false);
   };
@@ -118,30 +119,35 @@ const EditGroupChatModal = ({
 
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700">
+      <motion.div
+        className="absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700"
+        initial={{ width: "0%", opacity: 0 }}
+        animate={{ width: "100%", opacity: 1, duration: 0.2 }}
+        exit={{ width: "0%", opacity: 0 }}
+      >
         <div className="w-full flex-grow p-8 flex flex-col">
           <div className="w-full flex-grow flex flex-col justify-center items-center">
-            <form
-              className="w-full flex-grow flex flex-col"
-              onSubmit={handleClickSubmit}
-            >
-              <div className="w-full flex justify-center items-center pb-4">
-                <div className="w-[70px] flex justify-start items-center">
-                  <div className="w-8 h-8 rounded-full flex justify-center items-center">
-                    <button onClick={goBack}>
-                      <IoChevronBack className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
-                    </button>
-                  </div>
-                </div>
-                <div className="flex-grow flex justify-center items-center">
-                  <h2 className="text-xl text-slate-800 dark:text-slate-100 font-bold">
-                    Edit Chat
-                  </h2>
-                </div>
-                <div className="w-[70px] flex justify-end items-center">
-                  <div className="w-8 h-8 rounded-full flex justify-center items-center"></div>
+            <div className="w-full flex justify-center items-center pb-4">
+              <div className="w-[70px] flex justify-start items-center">
+                <div className="w-8 h-8 rounded-full flex justify-center items-center">
+                  <button onClick={goBack}>
+                    <IoChevronBack className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
+                  </button>
                 </div>
               </div>
+              <div className="flex-grow flex justify-center items-center">
+                <h2 className="text-xl text-slate-800 dark:text-slate-100 font-bold">
+                  Edit Chat
+                </h2>
+              </div>
+              <div className="w-[70px] flex justify-end items-center">
+                <div className="w-8 h-8 rounded-full flex justify-center items-center"></div>
+              </div>
+            </div>
+            <form
+              className="w-full flex-grow max-w-[1000px] flex flex-col"
+              onSubmit={handleClickSubmit}
+            >
               <ChangeImage
                 currentImage={chat.image.thumbnail}
                 imageType={"chat"}
@@ -231,7 +237,7 @@ const EditGroupChatModal = ({
             </form>
           </div>
         </div>
-      </div>
+      </motion.div>
       <AnimatePresence>
         {showUpdateMembersModal && (
           <UpdateMembersModal
