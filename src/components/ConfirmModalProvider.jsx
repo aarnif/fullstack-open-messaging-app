@@ -31,7 +31,7 @@ const ConfirmModalProvider = ({ children }) => {
         {isOpen && (
           <motion.div
             key={"Overlay"}
-            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60"
+            className="z-10 fixed inset-0 flex items-center justify-center bg-black bg-opacity-60"
             onClick={closeModal}
             initial={{ width: "0vw", opacity: 0 }}
             animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
@@ -39,7 +39,7 @@ const ConfirmModalProvider = ({ children }) => {
           >
             <motion.div
               key={"confirmModal"}
-              className="bg-slate-100 dark:bg-slate-700 rounded-lg shadow-lg p-6 max-w-sm text-center"
+              className="z-10 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-lg p-6 max-w-sm text-center"
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1, duration: 0.4 }}
               exit={{ y: -50, opacity: 0 }}
