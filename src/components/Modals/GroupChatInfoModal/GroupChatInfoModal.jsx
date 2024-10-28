@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { IoChevronBack } from "react-icons/io5";
 import { FiEdit } from "react-icons/fi";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { LEAVE_GROUP_CHATS } from "../../../graphql/mutations";
 import ChatMembersList from "./ChatMembersList";
@@ -43,7 +44,12 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   };
 
   return (
-    <div className="z-10 absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700">
+    <motion.div
+      className="z-10 absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700"
+      initial={{ width: "0%", opacity: 0 }}
+      animate={{ width: "100%", opacity: 1, duration: 0.2 }}
+      exit={{ width: "0%", opacity: 0 }}
+    >
       <div className="m-4 flex justify-between">
         <button onClick={() => setShowChatInfoModal(false)}>
           <IoChevronBack className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
@@ -82,15 +88,17 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
           </div>
         )}
       </div>
-      {showEditGroupChatModal && (
-        <EditGroupChatModal
-          user={user}
-          chat={chat}
-          chatAdmin={chatAdmin}
-          showEditGroupChatModal={setShowEditGroupChatModal}
-        />
-      )}
-    </div>
+      <AnimatePresence>
+        {showEditGroupChatModal && (
+          <EditGroupChatModal
+            user={user}
+            chat={chat}
+            chatAdmin={chatAdmin}
+            showEditGroupChatModal={setShowEditGroupChatModal}
+          />
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

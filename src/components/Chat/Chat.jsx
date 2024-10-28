@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 import { GET_CHAT_BY_ID } from "../../graphql/queries";
 import Loading from "../Loading";
@@ -30,13 +31,15 @@ const Chat = ({ user, setActivePath, menuComponent }) => {
           <Loading />
         ) : (
           <>
-            {showChatInfoModal && (
-              <GroupChatInfoModal
-                user={user}
-                chat={data.findChatById}
-                setShowChatInfoModal={setShowChatInfoModal}
-              />
-            )}
+            <AnimatePresence>
+              {showChatInfoModal && (
+                <GroupChatInfoModal
+                  user={user}
+                  chat={data.findChatById}
+                  setShowChatInfoModal={setShowChatInfoModal}
+                />
+              )}
+            </AnimatePresence>
             <ChatHeader
               user={user}
               chat={data.findChatById}
