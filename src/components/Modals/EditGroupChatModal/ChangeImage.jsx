@@ -23,7 +23,7 @@ const ChangeImage = ({ currentImage, imageType, setBase64Image }) => {
   };
 
   return (
-    <div className="mb-5 bg-slate-200 flex justify-center items-center">
+    <div className="mb-5 flex justify-center items-center bg-slate-200 dark:bg-slate-800 rounded-lg">
       <button
         type="button"
         onClick={handleClick}
@@ -34,7 +34,7 @@ const ChangeImage = ({ currentImage, imageType, setBase64Image }) => {
           alt={`${imageType} image`}
           className="w-32 h-32 rounded-full"
         />
-        <div className="my-2 text-md font-semibold text-slate-700">
+        <div className="my-2 text-md font-semibold text-slate-800 dark:text-slate-100">
           Change {imageType} image
         </div>
         <input
