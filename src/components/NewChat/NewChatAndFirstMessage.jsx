@@ -89,6 +89,7 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
 
   return (
     <NewMessageBox
+      user={user}
       message={message}
       setMessage={setMessage}
       image={image}
