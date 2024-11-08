@@ -9,6 +9,7 @@ import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";
 import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal";
+import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal/PrivateChatInfoModal";
 
 const Chat = ({ user, setActivePath, menuComponent }) => {
   const [showChatInfoModal, setShowChatInfoModal] = useState(false);
@@ -32,13 +33,20 @@ const Chat = ({ user, setActivePath, menuComponent }) => {
         ) : (
           <>
             <AnimatePresence>
-              {showChatInfoModal && (
-                <GroupChatInfoModal
-                  user={user}
-                  chat={data.findChatById}
-                  setShowChatInfoModal={setShowChatInfoModal}
-                />
-              )}
+              {showChatInfoModal &&
+                (data.findChatById.isGroupChat ? (
+                  <GroupChatInfoModal
+                    user={user}
+                    chat={data.findChatById}
+                    setShowChatInfoModal={setShowChatInfoModal}
+                  />
+                ) : (
+                  <PrivateChatInfoModal
+                    user={user}
+                    chat={data.findChatById}
+                    setShowChatInfoModal={setShowChatInfoModal}
+                  />
+                ))}
             </AnimatePresence>
             <ChatHeader
               user={user}

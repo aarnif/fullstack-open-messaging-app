@@ -1,11 +1,9 @@
 import { useEffect } from "react";
 import { useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
 
 import { MARK_MESSAGES_IN_CHAT_READ } from "../../graphql/mutations";
 
 const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
-  const navigate = useNavigate();
   const [mutateMarkMessagesInChatRead] = useMutation(
     MARK_MESSAGES_IN_CHAT_READ,
     {
@@ -24,14 +22,10 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
   const getInfo = () => {
     if (chat.isGroupChat) {
       console.log("Clicked group chat info!");
-      setShowChatInfoModal(true);
     } else {
       console.log("Clicked private chat info!");
-      const anotherChatParticipant = chat.participants.find(
-        (participant) => participant.username !== user.username
-      );
-      navigate(`/contacts/${anotherChatParticipant.id}`);
     }
+    setShowChatInfoModal(true);
   };
 
   const chatParticipantsString = chat.participants
