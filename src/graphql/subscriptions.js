@@ -74,7 +74,10 @@ export const GROUP_CHAT_PARTICIPANTS_UPDATED = gql`
 
 export const LEFT_GROUP_CHATS = gql`
   subscription LeftChats {
-    leftGroupChats
+    leftGroupChats {
+      participant
+      chatIds
+    }
   }
 `;
 
