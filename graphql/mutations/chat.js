@@ -57,6 +57,10 @@ const typeDefs = `
     removedParticipants: [ID]
     addedParticipants: [ID]
   }
+  type leftGroupChats {
+    participant: ID
+    chatIds: [ID]
+  }
   type Subscription {
     chatAdded: Chat!
     messageToChatAdded: Chat!
@@ -66,7 +70,7 @@ const typeDefs = `
     participantsAddedToGroupChat: Chat!
     participantsRemovedFromGroupChat: Chat!
     groupChatParticipantsUpdated: newGroupChatParticipants
-    leftGroupChats: [String!]!
+    leftGroupChats: leftGroupChats
   }   
 `;
 
@@ -719,6 +723,13 @@ const resolvers = {
           pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
             messageToChatAdded: chat,
           });
+        });
+
+        pubsub.publish("LEFT_GROUP_CHATS", {
+          leftGroupChats: {
+            participant: context.currentUser.id,
+            chatIds: args.chatIds,
+          },
         });
 
         return args.chatIds;
