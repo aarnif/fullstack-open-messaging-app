@@ -5,7 +5,7 @@ import { IoChevronBack } from "react-icons/io5";
 import { motion } from "framer-motion";
 
 import {
-  LEAVE_GROUP_CHATS,
+  DELETE_CHAT,
   BLOCK_OR_UNBLOCK_CONTACT,
 } from "../../../graphql/mutations";
 import IndividualContactCard from "../../IndividualContactCard/IndividualContactCard";
@@ -17,7 +17,7 @@ const PrivateChatModal = ({ user, chat, setShowChatInfoModal }) => {
   const [isBlocked, setIsBlocked] = useState(false);
   const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(null);
 
-  const [leaveChat] = useMutation(LEAVE_GROUP_CHATS, {
+  const [deleteChat] = useMutation(DELETE_CHAT, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
@@ -54,18 +54,18 @@ const PrivateChatModal = ({ user, chat, setShowChatInfoModal }) => {
     }
   };
 
-  const handleLeaveChat = async () => {
-    console.log("Leave private chat:", chat.title);
+  const handleDeleteChat = async () => {
+    console.log(`Try to delete private chat with contact ${contact.name}`);
     try {
-      await leaveChat({
+      await deleteChat({
         variables: {
-          chatIds: [chat.id],
+          chatId: chat.id,
         },
       });
-      console.log("Left private chat:", chat.title);
+      console.log(`Deleted private chat with contact ${contact.name}`);
       navigate("/chats");
     } catch (error) {
-      console.log("Error leaving chat:", error);
+      console.log("Error deleting private chat:", error);
       console.log(error);
     }
   };
@@ -124,8 +124,8 @@ const PrivateChatModal = ({ user, chat, setShowChatInfoModal }) => {
         <button
           onClick={() =>
             confirmModal(
-              `Are you sure you want to leave the chat?`,
-              handleLeaveChat
+              `Are you sure you want to delete the chat? This removes the chat from both of you!`,
+              handleDeleteChat
             )
           }
           className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 
@@ -133,7 +133,7 @@ const PrivateChatModal = ({ user, chat, setShowChatInfoModal }) => {
         active:scale-95 rounded-xl transition"
         >
           <div className="text-lg font-bold text-slate-800 dark:text-slate-100">
-            Leave Chat
+            Delete Chat
           </div>
         </button>
       </div>

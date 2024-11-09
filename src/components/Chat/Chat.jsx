@@ -24,44 +24,56 @@ const Chat = ({ user, setActivePath, menuComponent }) => {
     setActivePath("chats");
   }, []);
 
+  let renderComponent = (
+    <div className="flex-grow w-full overflow-y-auto h-0 flex justify-center items-center">
+      <div className="text-xl text-red-600 font-bold">Chat not found!</div>
+    </div>
+  );
+
+  if (loading) {
+    renderComponent = <Loading />;
+  }
+
+  if (data?.findChatById) {
+    renderComponent = (
+      <>
+        <AnimatePresence>
+          {showChatInfoModal &&
+            (data.findChatById.isGroupChat ? (
+              <GroupChatInfoModal
+                user={user}
+                chat={data.findChatById}
+                setShowChatInfoModal={setShowChatInfoModal}
+              />
+            ) : (
+              <PrivateChatInfoModal
+                user={user}
+                chat={data.findChatById}
+                setShowChatInfoModal={setShowChatInfoModal}
+              />
+            ))}
+        </AnimatePresence>
+        <ChatHeader
+          user={user}
+          chat={data.findChatById}
+          setShowChatInfoModal={setShowChatInfoModal}
+        />
+        <div className="flex-grow w-full overflow-y-auto h-0">
+          <Messages
+            user={user}
+            messages={[...data?.findChatById.messages].reverse()}
+          />
+        </div>
+        <NewMessage user={user} chatId={match.chatId} />
+      </>
+    );
+  }
+
   return (
     <div className="flex-grow flex">
       {menuComponent}
       <div className="relative flex-grow flex flex-col justify-start items-start bg-slate-50 dark:bg-slate-800">
-        {loading ? (
-          <Loading />
-        ) : (
-          <>
-            <AnimatePresence>
-              {showChatInfoModal &&
-                (data.findChatById.isGroupChat ? (
-                  <GroupChatInfoModal
-                    user={user}
-                    chat={data.findChatById}
-                    setShowChatInfoModal={setShowChatInfoModal}
-                  />
-                ) : (
-                  <PrivateChatInfoModal
-                    user={user}
-                    chat={data.findChatById}
-                    setShowChatInfoModal={setShowChatInfoModal}
-                  />
-                ))}
-            </AnimatePresence>
-            <ChatHeader
-              user={user}
-              chat={data.findChatById}
-              setShowChatInfoModal={setShowChatInfoModal}
-            />
-            <div className="flex-grow w-full overflow-y-auto h-0">
-              <Messages
-                user={user}
-                messages={[...data?.findChatById.messages].reverse()}
-              />
-            </div>
-            <NewMessage user={user} chatId={match.chatId} />
-          </>
-        )}
+        {renderComponent}
       </div>
     </div>
   );
