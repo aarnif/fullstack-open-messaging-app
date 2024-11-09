@@ -159,6 +159,15 @@ const resolvers = {
         .populate("admin")
         .populate("participants");
 
+      if (!chatToBeUpdated) {
+        throw new GraphQLError("Chat not found!", {
+          extensions: {
+            code: "NOT_FOUND",
+            invalidArgs: args.chatId,
+          },
+        });
+      }
+
       if (chatToBeUpdated.title === "Private chat") {
         const checkIfAnotherUserHasBlockedYou =
           chatToBeUpdated.participants.find((participant) => {
