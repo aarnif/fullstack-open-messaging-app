@@ -6,6 +6,8 @@ import {
   NEW_MESSAGE_ADDED,
   NEW_CHAT_ADDED,
   CHAT_EDITED,
+  CHAT_DELETED,
+  LEFT_GROUP_CHATS,
 } from "../graphql/subscriptions";
 import useField from "../hooks/useField";
 import Loading from "./Loading";
@@ -89,6 +91,63 @@ const ChatsList = ({ user, searchWord }) => {
           );
           return {
             allChatsByUser: sortedChats,
+          };
+        }
+      );
+    },
+  });
+
+  useSubscription(CHAT_DELETED, {
+    onData: ({ data }) => {
+      console.log("Use CHAT_DELETED-subscription:");
+      const deletedChatId = data.data.chatDeleted;
+
+      client.cache.evict({
+        id: client.cache.identify({ __typename: "Chat", id: deletedChatId }),
+      });
+
+      client.cache.updateQuery(
+        {
+          query: GET_CHATS_BY_USER,
+          variables: {
+            searchByTitle: "",
+          },
+        },
+        ({ allChatsByUser }) => {
+          return {
+            allChatsByUser: allChatsByUser.filter(
+              (chat) => chat.id !== deletedChatId
+            ),
+          };
+        }
+      );
+    },
+  });
+
+  useSubscription(LEFT_GROUP_CHATS, {
+    onData: ({ data }) => {
+      console.log("Use LEFT_GROUP_CHATS-subscription:");
+      const leftGroupChatData = data.data.leftGroupChats;
+      console.log("Left group chats:", leftGroupChatData);
+      client.cache.updateQuery(
+        {
+          query: GET_CHATS_BY_USER,
+          variables: {
+            searchByTitle: "",
+          },
+        },
+        ({ allChatsByUser }) => {
+          if (leftGroupChatData.participant === user.id) {
+            return {
+              allChatsByUser: helpers.sortChatsByDate(
+                allChatsByUser.filter(
+                  (chat) => !leftGroupChatData.chatIds.includes(chat.id)
+                )
+              ),
+            };
+          }
+          return {
+            allChatsByUser: allChatsByUser,
           };
         }
       );
