@@ -14,10 +14,15 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
   );
 
   useEffect(() => {
-    mutateMarkMessagesInChatRead({
-      variables: { chatId: chat.id },
-    });
-  });
+    const markMessagesInChatRead = async () => {
+      console.log("Marking messages in chat as read, when leaving chat...");
+      mutateMarkMessagesInChatRead({
+        variables: { chatId: chat.id },
+      });
+    };
+    markMessagesInChatRead();
+    return () => markMessagesInChatRead();
+  }, [mutateMarkMessagesInChatRead, chat.id]);
 
   const getInfo = () => {
     if (chat.isGroupChat) {
