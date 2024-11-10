@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 
 const FullScreenView = ({
   fullScreenImageUri,
@@ -7,7 +8,7 @@ const FullScreenView = ({
 }) => {
   if (!showImageView) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 transition"
       onClick={() => setShowImageView(false)}
@@ -19,7 +20,8 @@ const FullScreenView = ({
           className="max-h-full max-w-full object-contain"
         />
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
