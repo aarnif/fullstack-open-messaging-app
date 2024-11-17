@@ -1,4 +1,4 @@
-import config from "./config.js";
+import config from "../config.js";
 import schema from "./graphql/schema.js";
 import User from "./models/user.js";
 

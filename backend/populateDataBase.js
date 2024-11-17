@@ -1,4 +1,4 @@
-import config from "./config.js";
+import config from "../config.js";
 import User from "./models/user.js";
 import Chat from "./models/chat.js";
 import users from "./dummyData/users.js";
