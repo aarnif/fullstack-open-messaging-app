@@ -18,6 +18,8 @@ jobs:
           node-version: "21"
       - name: Install dependencies
         run: npm install
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
       - name: Run server tests
         run: npm run test:server
         env:
@@ -25,6 +27,16 @@ jobs:
           PORT: ${{ secrets.PORT }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+      - name: Run e2e tests
+        run: |
+          npm run dev:server &
+          npm run dev:ui &
+          npm run test:e2e
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          PORT: ${{ secrets.PORT }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          VITE_IMGBB_API_KEY: ${{ secrets.VITE_IMGBB_API_KEY }}
 
   deploy:
     needs: [deployment_pipeline]
