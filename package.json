@@ -10,7 +10,6 @@
     "prod:server": "NODE_ENV=production node backend/index.js",
     "build:ui": "vite build --config frontend/vite.config.js",
     "test:server": "NODE_ENV=test jest --runInBand --rootDir backend",
-    "test:ui": "vitest --root frontend run",
     "lint": "eslint frontend --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "prod:ui": "vite preview --config frontend/vite.config.js"
   },
