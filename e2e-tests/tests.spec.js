@@ -6,7 +6,7 @@ test.describe("Messaging app", () => {
     await page.goto("http://localhost:5173");
   });
 
-  test("has title", async ({ page }) => {
+  test("Page has title", async ({ page }) => {
     await expect(page).toHaveTitle(/Messaging App/);
   });
 });
