@@ -1,16 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import config from "../backend/config.js";
+import config from "../config.js";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   define: {
-    "process.env": {
-      VITE_APOLLO_URI: config.VITE_APOLLO_URI,
-      VITE_APOLLO_WS_URI: config.VITE_APOLLO_WS_URI,
-      VITE_IMGBB_API_KEY: config.VITE_IMGBB_API_KEY,
-    },
+    "import.meta.env.VITE_APOLLO_URI": JSON.stringify(config.VITE_APOLLO_URI),
+    "import.meta.env.VITE_APOLLO_WS_URI": JSON.stringify(
+      config.VITE_APOLLO_WS_URI
+    ),
+    "import.meta.env.VITE_IMGBB_API_KEY": JSON.stringify(
+      config.VITE_IMGBB_API_KEY
+    ),
   },
   base: "/",
   root: "frontend",

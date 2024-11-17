@@ -1,14 +1,22 @@
 import "dotenv/config";
 
-const PORT = process.env.NODE_ENV === "test" ? 4001 : process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET;
 const MONGODB_URI =
   process.env.NODE_ENV === "test"
     ? process.env.TEST_MONGODB_URI
     : process.env.MONGODB_URI;
 
-const VITE_APOLLO_URI = process.env.VITE_APOLLO_URI;
-const VITE_APOLLO_WS_URI = process.env.VITE_APOLLO_WS_URI;
+const VITE_APOLLO_URI =
+  process.env.NODE_ENV === "test"
+    ? `http://localhost:${PORT}`
+    : "https://fullstack-open-messaging-app-api.onrender.com/";
+
+const VITE_APOLLO_WS_URI =
+  process.env.NODE_ENV === "test"
+    ? `ws://localhost:${PORT}`
+    : "wss://fullstack-open-messaging-app-api.onrender.com/";
+
 const VITE_IMGBB_API_KEY = process.env.VITE_IMGBB_API_KEY;
 
 export default {
