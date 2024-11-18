@@ -6,7 +6,9 @@ import {
   addChats,
   addChatsToUsers,
 } from "../populateDataBase.js";
-import start from "../index.js";
+import User from "../models/user.js";
+import Chat from "../models/chat.js";
+import server from "../server.js";
 
 import mongoose from "mongoose";
 
@@ -14,19 +16,21 @@ import assert from "node:assert";
 
 const timeOut = 60000;
 
-describe("Server e2e tests chats", () => {
-  let server;
+describe("Server tests for chats", () => {
+  let testServer;
 
   beforeAll(async () => {
     await emptyDataBase();
     await addUsers();
     await addChats();
     await addChatsToUsers();
-    server = await start();
+    testServer = await server.start();
   }, timeOut);
 
   afterAll(async () => {
-    await server?.stop();
+    await User.deleteMany({});
+    await Chat.deleteMany({});
+    await testServer.stop();
     await mongoose.connection.close();
   }, timeOut);
 

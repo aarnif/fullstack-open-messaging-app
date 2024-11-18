@@ -1,5 +1,6 @@
 import { emptyDataBase, addUsers } from "../populateDataBase.js";
-import start from "../index.js";
+import User from "../models/user.js";
+import server from "../server.js";
 import helpers from "../utils/helpers.js";
 
 import mongoose from "mongoose";
@@ -35,17 +36,18 @@ const groupChatDetails = {
   description: "Chat for gamers",
 };
 
-describe("Server e2e tests users", () => {
-  let server;
+describe("Server tests for users", () => {
+  let testServer;
 
   beforeAll(async () => {
     await emptyDataBase();
     await addUsers();
-    server = await start();
+    testServer = await server.start();
   }, timeOut);
 
   afterAll(async () => {
-    await server?.stop();
+    await User.deleteMany({});
+    await testServer.stop();
     await mongoose.connection.close();
   }, timeOut);
 
