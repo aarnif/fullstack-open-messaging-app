@@ -54,6 +54,7 @@ const ConfirmModalProvider = ({ children }) => {
               <div className="flex justify-center space-x-2">
                 <button
                   onClick={onConfirm}
+                  data-testid="confirm-button"
                   className="w-full max-w-[100px] p-2 flex justify-center items-center border-2 
                   border-red-600 bg-red-600 hover:bg-red-700 hover:border-red-700 
                   active:scale-95 rounded-lg transition"
@@ -64,6 +65,7 @@ const ConfirmModalProvider = ({ children }) => {
                 </button>
                 <button
                   onClick={closeModal}
+                  data-testid="cancel-button"
                   className="w-full max-w-[100px] p-2 flex justify-center items-center border-2 
                   border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 
                   hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900

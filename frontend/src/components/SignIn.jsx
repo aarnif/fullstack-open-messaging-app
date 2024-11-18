@@ -54,7 +54,10 @@ const SignIn = () => {
           onSubmit={handleSubmit}
           className="flex-grow h-full flex flex-col"
         >
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+          <h1
+            data-testid="sign-in-title"
+            className="text-2xl font-bold text-slate-800 dark:text-slate-100"
+          >
             Sign In
           </h1>
           <ul>

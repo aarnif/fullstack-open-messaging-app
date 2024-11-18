@@ -36,6 +36,7 @@ const MenuItem = ({ item, onClick, activePath }) => {
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onClick={onClick}
+        data-testid={item["data-testid"]}
         className={
           item.id === activePath
             ? "relative group w-14 h-14 rounded-lg bg-violet-500 flex justify-center items-center active:scale-95 transition"
@@ -87,6 +88,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       ),
       path: "/chats",
       onClick: (e) => handleNavigation(e, "/chats"),
+      "data-testid": "chats-button",
     },
     {
       id: "contacts",
@@ -101,6 +103,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       ),
       path: "/contacts",
       onClick: (e) => handleNavigation(e, "/contacts"),
+      "data-testid": "contacts-button",
     },
     {
       id: "profile",
@@ -115,6 +118,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       ),
       path: "/profile",
       onClick: (e) => handleNavigation(e, "/profile"),
+      "data-testid": "profile-button",
     },
     {
       id: "settings",
@@ -129,6 +133,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       ),
       path: "/settings",
       onClick: (e) => handleNavigation(e, "/settings"),
+      "data-testid": "settings-button",
     },
     {
       id: "logout",
@@ -138,6 +143,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       path: "/logout",
       onClick: () =>
         confirmModal("Are you sure you want to logout?", handleLogout),
+      "data-testid": "logout-button",
     },
   ];
 
