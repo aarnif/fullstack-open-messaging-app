@@ -51,6 +51,11 @@ test.describe("Messaging app", () => {
     const signUpSubmitButton = await page.getByTestId("sign-up-submit-button");
     await signUpSubmitButton.click();
 
-    // await expect(page.getByText("Chats")).toBeVisible();
+    await page.goto("http://localhost:5173/profile");
+
+    const profileUsername = await page.getByTestId("profile-username");
+
+    await expect(profileUsername).toBeVisible();
+    await expect(profileUsername).toHaveText(`@${userCredentials.username}`);
   });
 });

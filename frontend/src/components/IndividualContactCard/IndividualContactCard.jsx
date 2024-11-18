@@ -16,7 +16,10 @@ const IndividualContactCard = ({ user, contact }) => {
           <div className="mt-4 text-xl text-slate-800 dark:text-slate-100 font-bold ">
             {contact.name}
           </div>
-          <div className="text-md text-slate-500 dark:text-slate-300 font-bold ">
+          <div
+            data-testid="profile-username"
+            className="text-md text-slate-500 dark:text-slate-300 font-bold "
+          >
             @{contact.username}
           </div>
           <div className="mt-4 mx-8 text-base text-slate-800 dark:text-slate-100 text-center ">
