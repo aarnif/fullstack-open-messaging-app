@@ -46,8 +46,8 @@ test.describe("Messaging app", () => {
         `,
       },
     });
-    const signUpButton = await page.getByTestId("sign-up-button");
-    await signUpButton.click();
+
+    await page.getByTestId("sign-up-button").click();
 
     await typeCredentials(
       page,
@@ -56,26 +56,54 @@ test.describe("Messaging app", () => {
       userCredentials.confirmPassword
     );
 
-    const signUpSubmitButton = await page.getByTestId("sign-up-submit-button");
-    await signUpSubmitButton.click();
+    await page.getByTestId("sign-up-submit-button").click();
 
     await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
       { timeout: 10000 }
     );
   });
 
-  test("Sign in a with new user", async ({ page }) => {
+  test("Sign in success with a new user", async ({ page }) => {
     await typeCredentials(
       page,
       userCredentials.username,
       userCredentials.password
     );
 
-    const signInButton = await page.getByTestId("sign-in-button");
-    await signInButton.click();
+    await page.getByTestId("sign-in-button").click();
 
     await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
       { timeout: 10000 }
     );
+  });
+
+  test("Sign in fails with wrong credentials", async ({ page }) => {
+    await typeCredentials(page, userCredentials.username, "wrongpassword");
+
+    await page.getByTestId("sign-in-button").click();
+
+    await expect(page.getByText("invalid username or password!")).toBeVisible({
+      timeout: 10000,
+    });
+  });
+
+  test("Sign out works", async ({ page }) => {
+    await typeCredentials(
+      page,
+      userCredentials.username,
+      userCredentials.password
+    );
+
+    await page.getByTestId("sign-in-button").click();
+
+    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
+      { timeout: 10000 }
+    );
+
+    await page.getByTestId("logout-button").click();
+    await page.getByTestId("confirm-button").click();
+    await expect(page.getByTestId("sign-in-title")).toBeVisible({
+      timeout: 10000,
+    });
   });
 });
