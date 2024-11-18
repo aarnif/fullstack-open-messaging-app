@@ -32,7 +32,11 @@ test.describe("Messaging app", () => {
     await page.goto("http://localhost:5173");
   });
 
-  test.afterAll(async ({ request }) => {
+  test("Page has title", async ({ page }) => {
+    await expect(page).toHaveTitle(/Messaging App/);
+  });
+
+  test("Sign up with a new user", async ({ page, request }) => {
     await request.post("http://localhost:4000/", {
       data: {
         query: `
@@ -42,13 +46,6 @@ test.describe("Messaging app", () => {
         `,
       },
     });
-  });
-
-  test("Page has title", async ({ page }) => {
-    await expect(page).toHaveTitle(/Messaging App/);
-  });
-
-  test("Sign up with a new user", async ({ page }) => {
     const signUpButton = await page.getByTestId("sign-up-button");
     await signUpButton.click();
 
@@ -62,8 +59,23 @@ test.describe("Messaging app", () => {
     const signUpSubmitButton = await page.getByTestId("sign-up-submit-button");
     await signUpSubmitButton.click();
 
-    await expect(
-      page.getByText("Select Chat to Start Messaging.")
-    ).toBeVisible();
+    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
+      { timeout: 10000 }
+    );
+  });
+
+  test("Sign in a with new user", async ({ page }) => {
+    await typeCredentials(
+      page,
+      userCredentials.username,
+      userCredentials.password
+    );
+
+    const signInButton = await page.getByTestId("sign-in-button");
+    await signInButton.click();
+
+    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
+      { timeout: 10000 }
+    );
   });
 });
