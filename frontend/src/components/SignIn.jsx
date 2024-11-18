@@ -117,6 +117,7 @@ const SignIn = () => {
               <button
                 onClick={handleClickSignUp}
                 type="button"
+                data-testid="sign-up-button"
                 className="w-full flex-grow h-[70px] border-2 border-slate-400 rounded-xl
 hover:bg-slate-300 dark:hover:bg-slate-900 focus:bg-slate-300 active:scale-95 transition"
               >
