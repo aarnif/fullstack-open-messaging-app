@@ -3,6 +3,7 @@ import chatQueries from "./queries/chat.js";
 
 import userMutations from "./mutations/user.js";
 import chatMutations from "./mutations/chat.js";
+import testingMutations from "./mutations/testing.js";
 
 import pkg from "lodash";
 const { merge } = pkg;
@@ -31,13 +32,15 @@ const schema = makeExecutableSchema({
     chatQueries.typeDefs,
     userMutations.typeDefs,
     chatMutations.typeDefs,
+    process.env.NODE_ENV === "test" && testingMutations.typeDefs,
   ],
   resolvers: merge(
     resolvers,
     userQueries.resolvers,
     chatQueries.resolvers,
     userMutations.resolvers,
-    chatMutations.resolvers
+    chatMutations.resolvers,
+    process.env.NODE_ENV === "test" && testingMutations.resolvers
   ),
 });
 
