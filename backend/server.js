@@ -85,6 +85,10 @@ const start = async () => {
     })
   );
 
+  if (process.env.NODE_ENV === "test") {
+    console.log("Running server in test mode...");
+  }
+
   const PORT = config.PORT;
   httpServer.listen(PORT, () =>
     console.log(`Server is now running on port ${PORT}`)
