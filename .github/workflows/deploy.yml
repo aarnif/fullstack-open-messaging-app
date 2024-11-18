@@ -29,11 +29,12 @@ jobs:
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
       - name: Run e2e tests
         run: |
-          npm run dev:server &
-          npm run dev:ui &
+          npm run start:test:server &
+          npm run start:test:ui &
           npm run test:e2e
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
           PORT: ${{ secrets.PORT }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           VITE_IMGBB_API_KEY: ${{ secrets.VITE_IMGBB_API_KEY }}
