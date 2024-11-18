@@ -36,7 +36,66 @@ test.describe("Messaging app", () => {
     await expect(page).toHaveTitle(/Messaging App/);
   });
 
-  test("Sign up with a new user", async ({ page, request }) => {
+  test("Try to create user with invalid username", async ({
+    page,
+    request,
+  }) => {
+    await request.post("http://localhost:4000/", {
+      data: {
+        query: `
+        mutation Mutation {
+          resetDatabase
+        }
+        `,
+      },
+    });
+
+    await page.getByTestId("sign-up-button").click();
+
+    await typeCredentials(
+      page,
+      "a",
+      userCredentials.password,
+      userCredentials.confirmPassword
+    );
+
+    await page.getByTestId("sign-up-submit-button").click();
+
+    await expect(
+      page.getByText("Username must be at least 4 characters long!")
+    ).toBeVisible({
+      timeout: 10000,
+    });
+  });
+
+  test("Try to create user with invalid password", async ({
+    page,
+    request,
+  }) => {
+    await request.post("http://localhost:4000/", {
+      data: {
+        query: `
+        mutation Mutation {
+          resetDatabase
+        }
+        `,
+      },
+    });
+
+    await page.getByTestId("sign-up-button").click();
+
+    await typeCredentials(page, "test", "pass", "pass");
+
+    await page.getByTestId("sign-up-submit-button").click();
+
+    await expect(
+      page.getByText("Password must be at least 6 characters long!")
+    ).toBeVisible({
+      timeout: 10000,
+    });
+  });
+
+  test("Create a new user", async ({ page, request }) => {
     await request.post("http://localhost:4000/", {
       data: {
         query: `
@@ -61,6 +120,23 @@ test.describe("Messaging app", () => {
     await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
       { timeout: 10000 }
     );
+  });
+
+  test("Try to create same user twice", async ({ page, request }) => {
+    await page.getByTestId("sign-up-button").click();
+
+    await typeCredentials(
+      page,
+      userCredentials.username,
+      userCredentials.password,
+      userCredentials.confirmPassword
+    );
+
+    await page.getByTestId("sign-up-submit-button").click();
+
+    await expect(page.getByText("Username already exists!")).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("Sign in success with a new user", async ({ page }) => {
