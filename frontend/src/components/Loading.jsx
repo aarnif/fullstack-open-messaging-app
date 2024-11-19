@@ -2,14 +2,17 @@ import Icon from "@mdi/react";
 import { mdiCircleOutline, mdiLoading } from "@mdi/js";
 import { motion } from "framer-motion";
 
-const Loading = () => {
+const Loading = ({ maxHeight = null, loadingText = "" }) => {
   const iconSize = 2.5;
   return (
-    <div className="w-full h-full flex justify-center items-center">
+    <div
+      className="w-full h-full flex flex-col justify-center items-center"
+      style={{ maxHeight: maxHeight }}
+    >
       <motion.div
         animate={{ rotate: [0, 90, 180, 270, 360] }}
         transition={{ repeat: Infinity }}
-        className="relative flex justify-center items-center"
+        className="relative mb-12 flex justify-center items-center"
       >
         <Icon
           path={mdiCircleOutline}
@@ -22,6 +25,7 @@ const Loading = () => {
           className="absolute fill-current text-slate-300"
         />
       </motion.div>
+      <div className="text-slate-500">{loadingText}</div>
     </div>
   );
 };
