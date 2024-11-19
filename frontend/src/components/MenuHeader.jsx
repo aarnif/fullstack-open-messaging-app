@@ -8,7 +8,12 @@ const MenuHeader = ({ title, handleCallBack, searchWord }) => {
         <h1 className="text-2xl text-slate-800 dark:text-slate-100 font-bold">
           {title}
         </h1>
-        <button onClick={handleCallBack}>
+        <button
+          onClick={handleCallBack}
+          data-testid={
+            title === "Chats" ? "new-chat-button" : "new-contact-button"
+          }
+        >
           <MdOpenInNew className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
         </button>
       </div>
