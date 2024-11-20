@@ -18,7 +18,7 @@ const ChangeImage = ({ currentImage, imageType, setBase64Image }) => {
   };
 
   const handleClick = () => {
-    console.log("Handle change chat image.");
+    console.log("Handle change image.");
     fileInputRef.current.click();
   };
 

@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { GET_ALL_USERS } from "../../../graphql/queries";
 import { EDIT_CHAT, UPDATE_CHAT_MEMBERS } from "../../../graphql/mutations";
 import imageService from "../../../services/imageService";
-import ChangeImage from "./ChangeImage";
+import ChangeImage from "../../ChangeImage";
 import useField from "../../../hooks/useField";
 import ChatMembersList from "../GroupChatInfoModal/ChatMembersList";
 import UpdateMembersModal from "./UpdateMembersModal";
