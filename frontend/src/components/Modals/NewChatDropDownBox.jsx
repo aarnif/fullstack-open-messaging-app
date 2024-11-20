@@ -3,6 +3,7 @@ const DropDownMenuItem = ({ menuItem }) => {
     <li className="w-full my-2">
       <button
         onClick={menuItem.handleClick}
+        data-testid={menuItem["data-testid"]}
         className="w-full p-2 flex justify-start items-center rounded-xl text-md text-slate-800 dark:text-slate-100 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition"
       >
         {menuItem.title}
@@ -13,17 +14,18 @@ const DropDownMenuItem = ({ menuItem }) => {
 
 const NewChatDropDownBox = ({
   setShowNewChatDropdownBox,
-  setShowNewIndividualChatModal,
+  setShowNewPrivateChatModal,
   setShowNewGroupChatModal,
 }) => {
   const menuItems = [
     {
       id: 1,
-      title: "New Individual Chat",
+      title: "New Private Chat",
       handleClick: () => {
         setShowNewChatDropdownBox(false);
-        setShowNewIndividualChatModal(true);
+        setShowNewPrivateChatModal(true);
       },
+      "data-testid": "new-private-chat-button",
     },
     {
       id: 2,
@@ -32,6 +34,7 @@ const NewChatDropDownBox = ({
         setShowNewChatDropdownBox(false);
         setShowNewGroupChatModal(true);
       },
+      "data-testid": "new-group-chat-button",
     },
   ];
 

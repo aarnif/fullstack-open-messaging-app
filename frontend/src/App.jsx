@@ -24,7 +24,7 @@ import Profile from "./components/Profile/Profile";
 import Settings from "./components/Settings/Settings";
 
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
-import NewIndividualChatModal from "./components/Modals/NewIndividualChatModal/NewIndividualChatModal";
+import NewPrivateChatModal from "./components/Modals/NewIndividualChatModal/NewPrivateChatModal";
 import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupChatModal";
 import NewContactModal from "./components/Modals/NewContactModal";
 
@@ -32,8 +32,7 @@ const App = () => {
   const [activePath, setActivePath] = useState("chats");
   const [activeMenuComponent, setActiveMenuComponent] = useState("chats");
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
-  const [showNewIndividualChatModal, setShowNewIndividualChatModal] =
-    useState(false);
+  const [showNewPrivateChatModal, setShowNewPrivateChatModal] = useState(false);
   const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
   const [showNewContactModal, setShowNewContactModal] = useState(false);
 
@@ -219,14 +218,14 @@ const App = () => {
             {showNewChatDropdownBox && (
               <NewChatDropDownBox
                 setShowNewChatDropdownBox={setShowNewChatDropdownBox}
-                setShowNewIndividualChatModal={setShowNewIndividualChatModal}
+                setShowNewPrivateChatModal={setShowNewPrivateChatModal}
                 setShowNewGroupChatModal={setShowNewGroupChatModal}
               />
             )}
-            {showNewIndividualChatModal && (
-              <NewIndividualChatModal
+            {showNewPrivateChatModal && (
+              <NewPrivateChatModal
                 user={data?.me}
-                setShowNewIndividualChatModal={setShowNewIndividualChatModal}
+                setShowNewPrivateChatModal={setShowNewPrivateChatModal}
               />
             )}
             {showNewGroupChatModal && (

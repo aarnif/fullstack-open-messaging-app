@@ -2,7 +2,13 @@
 import { test, expect } from "@playwright/test";
 
 const userCredentials = {
-  username: "test",
+  username: "user1",
+  password: "password",
+  confirmPassword: "password",
+};
+
+const anotherUserCredentials = {
+  username: "user2",
   password: "password",
   confirmPassword: "password",
 };
@@ -179,6 +185,47 @@ test.describe("Messaging app", () => {
     await page.getByTestId("logout-button").click();
     await page.getByTestId("confirm-button").click();
     await expect(page.getByTestId("sign-in-title")).toBeVisible({
+      timeout: 10000,
+    });
+  });
+
+  test("Add a new contact", async ({ page, request }) => {
+    await request.post("http://localhost:4000/", {
+      data: {
+        query: `
+        mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
+          createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
+            username
+          }
+        }
+        `,
+        variables: anotherUserCredentials,
+      },
+    });
+
+    await typeCredentials(
+      page,
+      userCredentials.username,
+      userCredentials.password
+    );
+
+    await page.getByTestId("sign-in-button").click();
+
+    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
+      { timeout: 10000 }
+    );
+
+    await page.getByTestId("contacts-button").click();
+
+    await page.getByTestId("new-contact-button").click();
+
+    await page
+      .getByTestId(`contact-${anotherUserCredentials.username}`)
+      .click();
+
+    await page.getByTestId("add-new-contacts-button").click();
+
+    await expect(page.getByText(anotherUserCredentials.username)).toBeVisible({
       timeout: 10000,
     });
   });

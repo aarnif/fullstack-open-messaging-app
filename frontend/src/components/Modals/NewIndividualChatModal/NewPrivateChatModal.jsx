@@ -19,7 +19,7 @@ import SelectContactList from "./SelectContactList";
 import useNotifyMessage from "../../../hooks/useNotifyMessage";
 import Notify from "../../Notify";
 
-const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
+const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
   const notifyMessage = useNotifyMessage();
   const navigate = useNavigate();
   const searchWord = useField("text", "Search contacts by name or username...");
@@ -54,7 +54,7 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
 
     if (checkIfChatExists.data?.findChatByParticipants) {
       navigate(`/chats/${checkIfChatExists.data.findChatByParticipants.id}`);
-      setShowNewIndividualChatModal(false);
+      setShowNewPrivateChatModal(false);
       return;
     }
 
@@ -82,7 +82,7 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
 
     localStorage.setItem("new-chat-info", JSON.stringify(newPrivateChatInfo));
     navigate("/chats/new");
-    setShowNewIndividualChatModal(false);
+    setShowNewPrivateChatModal(false);
   };
 
   console.log("Selected user:", chosenUserId);
@@ -91,7 +91,7 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
     <motion.div
       key={"Overlay"}
       className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-60 z-10 transition"
-      onClick={() => setShowNewIndividualChatModal(false)}
+      onClick={() => setShowNewPrivateChatModal(false)}
       initial={{ width: "0vw", opacity: 0 }}
       animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
       exit={{ width: "0vw", opacity: 0, transition: { delay: 1.0 } }}
@@ -107,13 +107,16 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
       >
         <div className="h-full flex-grow flex flex-col py-4 px-4">
           <div className="w-full flex justify-center items-center pb-2">
-            <button onClick={() => setShowNewIndividualChatModal(false)}>
+            <button onClick={() => setShowNewPrivateChatModal(false)}>
               <MdClose className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
             <h2 className="flex-grow text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
-              {"New Individual Chat"}
+              {"New Private Chat"}
             </h2>
-            <button onClick={handleCreateIndividualChat}>
+            <button
+              onClick={handleCreateIndividualChat}
+              data-testid="start-new-private-chat-button"
+            >
               <IoChevronForward className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
           </div>
@@ -141,4 +144,4 @@ const NewIndividualChatModal = ({ user, setShowNewIndividualChatModal }) => {
   );
 };
 
-export default NewIndividualChatModal;
+export default NewPrivateChatModal;

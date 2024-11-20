@@ -110,6 +110,7 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
               Add New Contacts
             </h2>
             <button
+              data-testid="add-new-contacts-button"
               className="text-2xl text-slate-700"
               onClick={handleAddNewContacts}
             >
