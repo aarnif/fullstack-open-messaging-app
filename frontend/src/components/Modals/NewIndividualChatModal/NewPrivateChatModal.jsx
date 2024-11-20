@@ -113,7 +113,10 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
             <h2 className="flex-grow text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
               {"New Private Chat"}
             </h2>
-            <button onClick={handleCreateIndividualChat}>
+            <button
+              onClick={handleCreateIndividualChat}
+              data-testid="start-new-private-chat-button"
+            >
               <IoChevronForward className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
           </div>
