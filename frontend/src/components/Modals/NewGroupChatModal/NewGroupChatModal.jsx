@@ -108,7 +108,10 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
             <h2 className="flex-grow text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
               New Group Chat
             </h2>
-            <button onClick={handleCreateGroupChat}>
+            <button
+              data-testid="start-new-group-chat-button"
+              onClick={handleCreateGroupChat}
+            >
               <IoChevronForward className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
           </div>
@@ -129,6 +132,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
                 </div>
                 <div className="flex justify-center items-center my-2 p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
+                    data-testid="group-chat-title-input"
                     className="w-full pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...groupChatTitle}
                   />
@@ -136,6 +140,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
 
                 <div className="flex justify-center items-center my-2 p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
+                    data-testid="group-chat-description-input"
                     className="w-full pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...groupChatDescription}
                   />

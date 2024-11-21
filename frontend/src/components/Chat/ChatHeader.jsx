@@ -52,7 +52,10 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
               />
             </div>
             <div>
-              <div className="text-base text-slate-800 dark:text-slate-100 font-bold text-left">
+              <div
+                data-testid="chat-title"
+                className="text-base text-slate-800 dark:text-slate-100 font-bold text-left"
+              >
                 {chat.displayChatTitle}
               </div>
               <div className="text-sm text-slate-800 dark:text-slate-100">

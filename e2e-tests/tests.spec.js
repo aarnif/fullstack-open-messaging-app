@@ -243,4 +243,74 @@ test.describe("Messaging app", () => {
       timeout: 10000,
     }); // Check if message shows in chats list
   });
+
+  test("Start a group chat", async ({ page, request }) => {
+    userCredentials.forEach(
+      async (credential) =>
+        await request.post("http://localhost:4000/", {
+          data: {
+            query: `
+          mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
+            createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
+              username
+            }
+          }
+          `,
+            variables: credential,
+          },
+        })
+    );
+
+    await page.pause();
+
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+
+    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
+      { timeout: 10000 }
+    );
+
+    await page.getByTestId("contacts-button").click();
+    await page.getByTestId("new-contact-button").click();
+    await page.getByTestId(`contact-${user2Credentials.username}`).click();
+    await page.getByTestId(`contact-${user3Credentials.username}`).click();
+    await page.getByTestId("add-new-contacts-button").click();
+
+    await page.getByTestId("chats-button").click();
+    await page.getByTestId("new-chat-button").click();
+    await page.getByTestId("new-group-chat-button").click();
+
+    await page.getByTestId("group-chat-title-input").fill("Test chat");
+
+    await page
+      .getByTestId("group-chat-description-input")
+      .fill("This is a test chat.");
+
+    await page.getByTestId(`contact-${user2Credentials.username}`).click();
+    await page.getByTestId(`contact-${user3Credentials.username}`).click();
+
+    await page.getByTestId("start-new-group-chat-button").click();
+
+    const chatTitle = await page.getByTestId("new-chat-title");
+
+    await expect(chatTitle).toBeVisible({ timeout: 10000 });
+    await expect(chatTitle).toHaveText("Test chat");
+
+    const newMessageInput = await page
+      .getByTestId("new-message-input")
+      .fill("Hello everybody!");
+
+    await page.getByTestId("send-new-message-button").click();
+
+    await expect(
+      page.getByText("Hello everybody!", { exact: true })
+    ).toBeVisible({
+      timeout: 10000,
+    }); // Check if message shows in chat window
+
+    await expect(
+      page.getByText("You: Hello everybody!", { exact: true })
+    ).toBeVisible({
+      timeout: 10000,
+    }); // Check if message shows in chats list
+  });
 });
