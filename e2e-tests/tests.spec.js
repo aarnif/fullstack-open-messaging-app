@@ -1,19 +1,20 @@
 // @ts-check
 import { test, expect } from "@playwright/test";
 
-const userCredentials = {
-  username: "user1",
-  name: "User1",
-  password: "password",
-  confirmPassword: "password",
-};
+const userCredentials = [];
 
-const anotherUserCredentials = {
-  username: "user2",
-  name: "User2",
-  password: "password",
-  confirmPassword: "password",
-};
+for (let i = 1; i <= 3; i++) {
+  userCredentials.push({
+    username: `user${i}`,
+    name: `User${i}`,
+    password: "password",
+    confirmPassword: "password",
+  });
+}
+
+const user1Credentials = userCredentials[0];
+const user2Credentials = userCredentials[1];
+const user3Credentials = userCredentials[2];
 
 const typeCredentials = async (
   page,
@@ -35,8 +36,33 @@ const typeCredentials = async (
   }
 };
 
+const signUp = async (page, username, password, confirmPassword) => {
+  await page.getByTestId("sign-up-button").click();
+  await typeCredentials(page, username, password, confirmPassword);
+  await page.getByTestId("sign-up-submit-button").click();
+};
+
+const signIn = async (page, username, password) => {
+  await typeCredentials(page, username, password);
+  await page.getByTestId("sign-in-button").click();
+};
+
+const signOut = async (page) => {
+  await page.getByTestId("logout-button").click();
+  await page.getByTestId("confirm-button").click();
+};
+
 test.describe("Messaging app", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, request }) => {
+    await request.post("http://localhost:4000/", {
+      data: {
+        query: `
+        mutation Mutation {
+          resetDatabase
+        }
+        `,
+      },
+    });
     await page.goto("http://localhost:5173");
   });
 
@@ -44,31 +70,13 @@ test.describe("Messaging app", () => {
     await expect(page).toHaveTitle(/Messaging App/);
   });
 
-  test("Try to create user with invalid username", async ({
-    page,
-    request,
-  }) => {
-    await request.post("http://localhost:4000/", {
-      data: {
-        query: `
-        mutation Mutation {
-          resetDatabase
-        }
-        `,
-      },
-    });
-
-    await page.getByTestId("sign-up-button").click();
-
-    await typeCredentials(
+  test("Try to create user with invalid username", async ({ page }) => {
+    await signUp(
       page,
       "a",
-      userCredentials.password,
-      userCredentials.confirmPassword
+      user1Credentials.password,
+      user1Credentials.confirmPassword
     );
-
-    await page.getByTestId("sign-up-submit-button").click();
-
     await expect(
       page.getByText("Username must be at least 4 characters long!")
     ).toBeVisible({
@@ -76,26 +84,8 @@ test.describe("Messaging app", () => {
     });
   });
 
-  test("Try to create user with invalid password", async ({
-    page,
-    request,
-  }) => {
-    await request.post("http://localhost:4000/", {
-      data: {
-        query: `
-        mutation Mutation {
-          resetDatabase
-        }
-        `,
-      },
-    });
-
-    await page.getByTestId("sign-up-button").click();
-
-    await typeCredentials(page, "test", "pass", "pass");
-
-    await page.getByTestId("sign-up-submit-button").click();
-
+  test("Try to create user with invalid password", async ({ page }) => {
+    await signUp(page, user1Credentials.username, "pass", "pass");
     await expect(
       page.getByText("Password must be at least 6 characters long!")
     ).toBeVisible({
@@ -103,90 +93,77 @@ test.describe("Messaging app", () => {
     });
   });
 
-  test("Create a new user", async ({ page, request }) => {
-    await request.post("http://localhost:4000/", {
-      data: {
-        query: `
-        mutation Mutation {
-          resetDatabase
-        }
-        `,
-      },
-    });
-
-    await page.getByTestId("sign-up-button").click();
-
-    await typeCredentials(
+  test("Try to create user with passwords not matching", async ({ page }) => {
+    await signUp(
       page,
-      userCredentials.username,
-      userCredentials.password,
-      userCredentials.confirmPassword
+      user1Credentials.username,
+      user1Credentials.password,
+      user1Credentials.password + "1"
     );
+    await expect(page.getByText("Passwords do not match!")).toBeVisible({
+      timeout: 10000,
+    });
+  });
 
-    await page.getByTestId("sign-up-submit-button").click();
-
+  test("Create a new user", async ({ page, request }) => {
+    await signUp(
+      page,
+      user1Credentials.username,
+      user1Credentials.password,
+      user1Credentials.confirmPassword
+    );
     await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
       { timeout: 10000 }
     );
   });
 
   test("Try to create same user twice", async ({ page, request }) => {
-    await page.getByTestId("sign-up-button").click();
-
-    await typeCredentials(
+    await signUp(
       page,
-      userCredentials.username,
-      userCredentials.password,
-      userCredentials.confirmPassword
+      user1Credentials.username,
+      user1Credentials.password,
+      user1Credentials.confirmPassword
     );
-
-    await page.getByTestId("sign-up-submit-button").click();
-
+    await signOut(page);
+    await signUp(
+      page,
+      user1Credentials.username,
+      user1Credentials.password,
+      user1Credentials.confirmPassword
+    );
     await expect(page.getByText("Username already exists!")).toBeVisible({
       timeout: 10000,
     });
   });
 
   test("Sign in success with a new user", async ({ page }) => {
-    await typeCredentials(
+    await signUp(
       page,
-      userCredentials.username,
-      userCredentials.password
+      user1Credentials.username,
+      user1Credentials.password,
+      user1Credentials.confirmPassword
     );
-
-    await page.getByTestId("sign-in-button").click();
-
+    await signOut(page);
+    await signIn(page, user1Credentials.username, user1Credentials.password);
     await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
       { timeout: 10000 }
     );
   });
 
   test("Sign in fails with wrong credentials", async ({ page }) => {
-    await typeCredentials(page, userCredentials.username, "wrongpassword");
-
-    await page.getByTestId("sign-in-button").click();
-
-    await expect(page.getByText("invalid username or password!")).toBeVisible({
-      timeout: 10000,
-    });
-  });
-
-  test("Sign out works", async ({ page }) => {
-    await typeCredentials(
+    await signUp(
       page,
-      userCredentials.username,
-      userCredentials.password
+      user1Credentials.username,
+      user1Credentials.password,
+      user1Credentials.confirmPassword
     );
-
-    await page.getByTestId("sign-in-button").click();
-
-    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 10000 }
+    await signOut(page);
+    await signIn(
+      page,
+      user1Credentials.username,
+      user1Credentials.password + "1"
     );
-
-    await page.getByTestId("logout-button").click();
-    await page.getByTestId("confirm-button").click();
-    await expect(page.getByTestId("sign-in-title")).toBeVisible({
+    await expect(page.getByText("invalid username or password!")).toBeVisible({
       timeout: 10000,
     });
   });
@@ -201,34 +178,21 @@ test.describe("Messaging app", () => {
           }
         }
         `,
-        variables: anotherUserCredentials,
+        variables: user2Credentials,
       },
     });
-
-    await typeCredentials(
+    await signUp(
       page,
-      userCredentials.username,
-      userCredentials.password
+      user1Credentials.username,
+      user1Credentials.password,
+      user1Credentials.confirmPassword
     );
-
-    await page.getByTestId("sign-in-button").click();
-
-    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 10000 }
-    );
-
     await page.getByTestId("contacts-button").click();
-
     await page.getByTestId("new-contact-button").click();
-
-    await page
-      .getByTestId(`contact-${anotherUserCredentials.username}`)
-      .click();
-
+    await page.getByTestId(`contact-${user2Credentials.username}`).click();
     await page.getByTestId("add-new-contacts-button").click();
-
     await expect(
-      page.getByText(anotherUserCredentials.name, { exact: true })
+      page.getByText(user2Credentials.name, { exact: true })
     ).toBeVisible({
       timeout: 10000,
     });
@@ -244,43 +208,31 @@ test.describe("Messaging app", () => {
           }
         }
         `,
-        variables: anotherUserCredentials,
+        variables: user2Credentials,
       },
     });
-
-    await page.pause();
-
-    await typeCredentials(
+    await signUp(
       page,
-      userCredentials.username,
-      userCredentials.password
+      user1Credentials.username,
+      user1Credentials.password,
+      user1Credentials.confirmPassword
     );
-
-    await page.getByTestId("sign-in-button").click();
-
-    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 10000 }
-    );
-
+    await page.getByTestId("contacts-button").click();
+    await page.getByTestId("new-contact-button").click();
+    await page.getByTestId(`contact-${user2Credentials.username}`).click();
+    await page.getByTestId("add-new-contacts-button").click();
+    await page.getByTestId("chats-button").click();
     await page.getByTestId("new-chat-button").click();
 
     await page.getByTestId("new-private-chat-button").click();
-
-    await page
-      .getByTestId(`contact-${anotherUserCredentials.username}`)
-      .click();
-
+    await page.getByTestId(`contact-${user2Credentials.username}`).click();
     await page.getByTestId("start-new-private-chat-button").click();
 
-    await expect(
-      page.getByText(`You, ${anotherUserCredentials.name}`)
-    ).toBeVisible({
+    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible({
       timeout: 10000,
     });
 
-    const newMessageInput = await page.getByTestId("new-message-input");
-    await newMessageInput.fill("Hello!");
-
+    await page.getByTestId("new-message-input").fill("Hello!");
     await page.getByTestId("send-new-message-button").click();
 
     await expect(page.getByText("Hello!", { exact: true })).toBeVisible({
