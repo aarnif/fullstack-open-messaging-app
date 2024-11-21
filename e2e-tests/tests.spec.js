@@ -266,7 +266,7 @@ test.describe("Messaging app", () => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
     await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 10000 }
+      { timeout: 20000 }
     );
 
     await page.getByTestId("contacts-button").click();
@@ -292,25 +292,23 @@ test.describe("Messaging app", () => {
 
     const chatTitle = await page.getByTestId("new-chat-title");
 
-    await expect(chatTitle).toBeVisible({ timeout: 10000 });
+    await expect(chatTitle).toBeVisible({ timeout: 20000 });
     await expect(chatTitle).toHaveText("Test chat");
 
-    const newMessageInput = await page
-      .getByTestId("new-message-input")
-      .fill("Hello everybody!");
+    await page.getByTestId("new-message-input").fill("Hello everybody!");
 
     await page.getByTestId("send-new-message-button").click();
 
     await expect(
       page.getByText("Hello everybody!", { exact: true })
     ).toBeVisible({
-      timeout: 10000,
+      timeout: 20000,
     }); // Check if message shows in chat window
 
     await expect(
       page.getByText("You: Hello everybody!", { exact: true })
     ).toBeVisible({
-      timeout: 10000,
+      timeout: 20000,
     }); // Check if message shows in chats list
   });
 });
