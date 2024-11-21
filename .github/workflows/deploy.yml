@@ -30,7 +30,7 @@ jobs:
       - name: Run e2e tests
         run: |
           npm run start:test:server &
-          npm run start:test:ui &
+          npm run dev:ui &
           npm run test:e2e
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}

@@ -33,7 +33,10 @@ const NewChatHeader = ({ user, chat }) => {
               />
             </div>
             <div>
-              <div className="text-base text-slate-800 dark:text-slate-100 font-bold text-left">
+              <div
+                data-testid="new-chat-title"
+                className="text-base text-slate-800 dark:text-slate-100 font-bold text-left"
+              >
                 {chat.title}
               </div>
               <div className="text-sm text-slate-800 dark:text-slate-100">

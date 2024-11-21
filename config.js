@@ -8,12 +8,12 @@ const MONGODB_URI =
     : process.env.MONGODB_URI;
 
 const VITE_APOLLO_URI =
-  process.env.NODE_ENV === "test"
+  process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development"
     ? `http://localhost:${PORT}`
     : "https://fullstack-open-messaging-app-api.onrender.com/";
 
 const VITE_APOLLO_WS_URI =
-  process.env.NODE_ENV === "test"
+  process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development"
     ? `ws://localhost:${PORT}`
     : "wss://fullstack-open-messaging-app-api.onrender.com/";
 

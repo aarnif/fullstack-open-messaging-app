@@ -88,6 +88,7 @@ const resolvers = {
       const user = new User({
         username: args.username,
         passwordHash: passwordHash,
+        name: args.username[0].toUpperCase() + args.username.slice(1), // Use capitalized username as default name
       });
 
       try {

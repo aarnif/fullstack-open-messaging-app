@@ -128,7 +128,7 @@ const resolvers = {
         .sort({ "messages.0.createdAt": "desc" });
     },
     checkIfGroupChatExists: async (root, args) => {
-      const chatExist = Chat.findOne({ title: args.title });
+      const chatExist = await Chat.findOne({ title: args.title });
       return chatExist ? true : false;
     },
   },
