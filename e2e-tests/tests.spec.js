@@ -232,6 +232,28 @@ test.describe("Messaging app", () => {
         }
       );
     });
+
+    test("Edit user profile", async ({ page }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await page.getByTestId("profile-button").click();
+      await page.getByTestId("edit-profile-button").click();
+      await page.getByTestId("profile-name-input").fill("John Doe");
+      await page.getByTestId("profile-about-input").fill("I am John Doe.");
+      await page.getByTestId("submit-edit-profile-button").click();
+      await page.getByTestId("confirm-button").click();
+
+      await expect(page.getByText("John Doe", { exact: true })).toBeVisible({
+        timeout: 10000,
+      });
+      await expect(page.getByText("I am John Doe.")).toBeVisible({
+        timeout: 10000,
+      });
+    });
   });
 
   test.describe("Contacts", () => {
