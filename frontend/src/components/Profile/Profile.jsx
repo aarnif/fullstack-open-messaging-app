@@ -14,7 +14,10 @@ const Profile = ({ user, menuComponent }) => {
       <div className="relative flex-grow flex justify-center items-start">
         <div className="flex-grow p-8 flex flex-col justify-start items-center">
           <div className="m-4 w-full flex justify-end">
-            <button onClick={() => setShowEditProfileModal(true)}>
+            <button
+              data-testid="edit-profile-button"
+              onClick={() => setShowEditProfileModal(true)}
+            >
               <FiEdit className="w-7 h-7 text-slate-700 dark:text-slate-100" />
             </button>
           </div>

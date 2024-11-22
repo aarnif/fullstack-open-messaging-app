@@ -16,7 +16,11 @@ const ContactItem = ({ user, item, activePath, setActivePath }) => {
       : "w-full flex items-start py-2 px-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
 
   return (
-    <button className={classStyles} onClick={handleClick}>
+    <button
+      data-testid={item.username}
+      className={classStyles}
+      onClick={handleClick}
+    >
       <ContactCard user={user} item={item} />
     </button>
   );
