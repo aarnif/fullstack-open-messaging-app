@@ -295,7 +295,7 @@ test.describe("Messaging app", () => {
       });
     });
 
-    test.only("Block and unblock contact", async ({ page }) => {
+    test("Block and unblock contact", async ({ page }) => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await addContacts(page, [user2Credentials]);
       await page.getByTestId("contacts-button").click();
@@ -314,6 +314,18 @@ test.describe("Messaging app", () => {
       await expect(
         page.getByText("You have blocked this contact!")
       ).not.toBeVisible({
+        timeout: 10000,
+      });
+    });
+
+    test.only("Remove contact", async ({ page }) => {
+      await signIn(page, user1Credentials.username, user1Credentials.password);
+      await addContacts(page, [user2Credentials]);
+      await page.getByTestId("contacts-button").click();
+      await page.getByTestId(user2Credentials.username).click();
+      await page.getByTestId("remove-contact-button").click();
+      await page.getByTestId("confirm-button").click();
+      await expect(page.getByText("No contacts found")).not.toBeVisible({
         timeout: 10000,
       });
     });
