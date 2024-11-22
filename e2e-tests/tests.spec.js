@@ -85,359 +85,370 @@ const updateGroupChatMembers = async (page, contacts) => {
 };
 
 test.describe("Messaging app", () => {
-  test.beforeEach(async ({ page, request }) => {
-    await request.post("http://localhost:4000/", {
-      data: {
-        query: `
+  test.describe("Users", () => {
+    test.beforeEach(async ({ page, request }) => {
+      await request.post("http://localhost:4000/", {
+        data: {
+          query: `
         mutation Mutation {
           resetDatabase
         }
         `,
-      },
+        },
+      });
+      await page.goto("http://localhost:5173");
     });
-    await page.goto("http://localhost:5173");
-  });
 
-  test("Page has title", async ({ page }) => {
-    await expect(page).toHaveTitle(/Messaging App/);
-  });
-
-  test("Try to create user with invalid username", async ({ page }) => {
-    await signUp(
-      page,
-      "a",
-      user1Credentials.password,
-      user1Credentials.confirmPassword
-    );
-    await expect(
-      page.getByText("Username must be at least 4 characters long!")
-    ).toBeVisible({
-      timeout: 10000,
+    test("Page has title", async ({ page }) => {
+      await expect(page).toHaveTitle(/Messaging App/);
     });
-  });
 
-  test("Try to create user with invalid password", async ({ page }) => {
-    await signUp(page, user1Credentials.username, "pass", "pass");
-    await expect(
-      page.getByText("Password must be at least 6 characters long!")
-    ).toBeVisible({
-      timeout: 10000,
+    test("Try to create user with invalid username", async ({ page }) => {
+      await signUp(
+        page,
+        "a",
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await expect(
+        page.getByText("Username must be at least 4 characters long!")
+      ).toBeVisible({
+        timeout: 10000,
+      });
     });
-  });
 
-  test("Try to create user with passwords not matching", async ({ page }) => {
-    await signUp(
+    test("Try to create user with invalid password", async ({
       page,
-      user1Credentials.username,
-      user1Credentials.password,
-      user1Credentials.password + "1"
-    );
-    await expect(page.getByText("Passwords do not match!")).toBeVisible({
-      timeout: 10000,
+      request,
+    }) => {
+      await signUp(page, user1Credentials.username, "pass", "pass");
+      await expect(
+        page.getByText("Password must be at least 6 characters long!")
+      ).toBeVisible({
+        timeout: 10000,
+      });
     });
-  });
 
-  test("Create a new user", async ({ page, request }) => {
-    await signUp(
-      page,
-      user1Credentials.username,
-      user1Credentials.password,
-      user1Credentials.confirmPassword
-    );
-    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 10000 }
-    );
-  });
-
-  test("Try to create same user twice", async ({ page, request }) => {
-    await signUp(
-      page,
-      user1Credentials.username,
-      user1Credentials.password,
-      user1Credentials.confirmPassword
-    );
-    await signOut(page);
-    await signUp(
-      page,
-      user1Credentials.username,
-      user1Credentials.password,
-      user1Credentials.confirmPassword
-    );
-    await expect(page.getByText("Username already exists!")).toBeVisible({
-      timeout: 10000,
+    test("Try to create user with passwords not matching", async ({ page }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.password + "1"
+      );
+      await expect(page.getByText("Passwords do not match!")).toBeVisible({
+        timeout: 10000,
+      });
     });
-  });
 
-  test("Sign in success with a new user", async ({ page }) => {
-    await signUp(
-      page,
-      user1Credentials.username,
-      user1Credentials.password,
-      user1Credentials.confirmPassword
-    );
-    await signOut(page);
-    await signIn(page, user1Credentials.username, user1Credentials.password);
-    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 10000 }
-    );
-  });
-
-  test("Sign in fails with wrong credentials", async ({ page }) => {
-    await signUp(
-      page,
-      user1Credentials.username,
-      user1Credentials.password,
-      user1Credentials.confirmPassword
-    );
-    await signOut(page);
-    await signIn(
-      page,
-      user1Credentials.username,
-      user1Credentials.password + "1"
-    );
-    await expect(page.getByText("invalid username or password!")).toBeVisible({
-      timeout: 10000,
-    });
-  });
-
-  test("Add a new contact", async ({ page, request }) => {
-    await request.post("http://localhost:4000/", {
-      data: {
-        query: `
-        mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
-          createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
-            username
+    test("Create a new user", async ({ page, request }) => {
+      await request.post("http://localhost:4000/", {
+        data: {
+          query: `
+          mutation Mutation {
+            resetDatabase
           }
+          `,
+        },
+      });
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await expect(
+        page.getByText("Select Chat to Start Messaging.")
+      ).toBeVisible({ timeout: 10000 });
+    });
+
+    test("Try to create same user twice", async ({ page, request }) => {
+      await request.post("http://localhost:4000/", {
+        data: {
+          query: `
+          mutation Mutation {
+            resetDatabase
+          }
+          `,
+        },
+      });
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await signOut(page);
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await expect(page.getByText("Username already exists!")).toBeVisible({
+        timeout: 10000,
+      });
+    });
+
+    test("Sign in success with a new user", async ({ page, request }) => {
+      await request.post("http://localhost:4000/", {
+        data: {
+          query: `
+          mutation Mutation {
+            resetDatabase
+          }
+          `,
+        },
+      });
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await signOut(page);
+      await signIn(page, user1Credentials.username, user1Credentials.password);
+      await expect(
+        page.getByText("Select Chat to Start Messaging.")
+      ).toBeVisible({ timeout: 10000 });
+    });
+
+    test("Sign in fails with wrong credentials", async ({ page }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await signOut(page);
+      await signIn(
+        page,
+        user1Credentials.username,
+        user1Credentials.password + "1"
+      );
+      await expect(page.getByText("invalid username or password!")).toBeVisible(
+        {
+          timeout: 10000,
+        }
+      );
+    });
+  });
+
+  test.describe("Contacts", () => {
+    test.beforeEach(async ({ page, request }) => {
+      await request.post("http://localhost:4000/", {
+        data: {
+          query: `
+          mutation Mutation {
+            resetDatabase
+          }
+        `,
+        },
+      });
+      userCredentials.forEach(
+        async (credential) =>
+          await request.post("http://localhost:4000/", {
+            data: {
+              query: `
+          mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
+            createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
+              username
+            }
+          }
+          `,
+              variables: credential,
+            },
+          })
+      );
+      await page.goto("http://localhost:5173");
+    });
+
+    test("Add new contacts", async ({ page, request }) => {
+      await signIn(page, user1Credentials.username, user1Credentials.password);
+      await addContacts(page, [user2Credentials]);
+      await expect(
+        page.getByText(user2Credentials.name, { exact: true })
+      ).toBeVisible({
+        timeout: 10000,
+      });
+    });
+  });
+
+  test.describe("Chats", () => {
+    test.beforeEach(async ({ page, request }) => {
+      await request.post("http://localhost:4000/", {
+        data: {
+          query: `
+        mutation Mutation {
+          resetDatabase
         }
         `,
-        variables: user2Credentials,
-      },
-    });
-    await signUp(
-      page,
-      user1Credentials.username,
-      user1Credentials.password,
-      user1Credentials.confirmPassword
-    );
-    await page.getByTestId("contacts-button").click();
-    await page.getByTestId("new-contact-button").click();
-    await page.getByTestId(`contact-${user2Credentials.username}`).click();
-    await page.getByTestId("add-new-contacts-button").click();
-    await expect(
-      page.getByText(user2Credentials.name, { exact: true })
-    ).toBeVisible({
-      timeout: 10000,
-    });
-  });
-
-  test("Start a private chat", async ({ page, request }) => {
-    await request.post("http://localhost:4000/", {
-      data: {
-        query: `
-        mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
-          createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
-            username
+        },
+      });
+      userCredentials.forEach(
+        async (credential) =>
+          await request.post("http://localhost:4000/", {
+            data: {
+              query: `
+          mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
+            createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
+              username
+            }
           }
+          `,
+              variables: credential,
+            },
+          })
+      );
+      await page.goto("http://localhost:5173");
+    });
+
+    test("Start a private chat", async ({ page, request }) => {
+      await signIn(page, user1Credentials.username, user1Credentials.password);
+
+      await addContacts(page, [user2Credentials]);
+
+      await page.getByTestId("chats-button").click();
+      await page.getByTestId("new-chat-button").click();
+
+      await page.getByTestId("new-private-chat-button").click();
+      await page.getByTestId(`contact-${user2Credentials.username}`).click();
+      await page.getByTestId("start-new-private-chat-button").click();
+
+      await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible(
+        {
+          timeout: 10000,
         }
-        `,
-        variables: user2Credentials,
-      },
-    });
-    await signUp(
-      page,
-      user1Credentials.username,
-      user1Credentials.password,
-      user1Credentials.confirmPassword
-    );
+      );
 
-    await addContacts(page, [user2Credentials]);
+      await page.getByTestId("new-message-input").fill("Hello!");
+      await page.getByTestId("send-new-message-button").click();
 
-    await page.getByTestId("chats-button").click();
-    await page.getByTestId("new-chat-button").click();
+      await expect(page.getByText("Hello!", { exact: true })).toBeVisible({
+        timeout: 10000,
+      }); // Check if message shows in chat window
 
-    await page.getByTestId("new-private-chat-button").click();
-    await page.getByTestId(`contact-${user2Credentials.username}`).click();
-    await page.getByTestId("start-new-private-chat-button").click();
-
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible({
-      timeout: 10000,
+      await expect(page.getByText("You: Hello!", { exact: true })).toBeVisible({
+        timeout: 10000,
+      }); // Check if message shows in chats list
     });
 
-    await page.getByTestId("new-message-input").fill("Hello!");
-    await page.getByTestId("send-new-message-button").click();
+    test("Start a group chat", async ({ page }) => {
+      await signIn(page, user1Credentials.username, user1Credentials.password);
 
-    await expect(page.getByText("Hello!", { exact: true })).toBeVisible({
-      timeout: 10000,
-    }); // Check if message shows in chat window
+      await expect(
+        page.getByText("Select Chat to Start Messaging.")
+      ).toBeVisible({ timeout: 20000 });
 
-    await expect(page.getByText("You: Hello!", { exact: true })).toBeVisible({
-      timeout: 10000,
-    }); // Check if message shows in chats list
-  });
+      await addContacts(page, [user2Credentials, user3Credentials]);
 
-  test("Start a group chat", async ({ page, request }) => {
-    userCredentials.forEach(
-      async (credential) =>
-        await request.post("http://localhost:4000/", {
-          data: {
-            query: `
-          mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
-            createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
-              username
-            }
-          }
-          `,
-            variables: credential,
-          },
-        })
-    );
+      await createGroupChat(page, "Test chat", "This is a test chat.", [
+        user2Credentials,
+        user3Credentials,
+      ]);
 
-    await signIn(page, user1Credentials.username, user1Credentials.password);
+      const chatTitle = await page.getByTestId("new-chat-title");
 
-    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 20000 }
-    );
+      await expect(chatTitle).toBeVisible({ timeout: 20000 });
+      await expect(chatTitle).toHaveText("Test chat");
 
-    await addContacts(page, [user2Credentials, user3Credentials]);
+      await page.getByTestId("new-message-input").fill("Hello everybody!");
 
-    await createGroupChat(page, "Test chat", "This is a test chat.", [
-      user2Credentials,
-      user3Credentials,
-    ]);
+      await page.getByTestId("send-new-message-button").click();
 
-    const chatTitle = await page.getByTestId("new-chat-title");
+      await expect(
+        page.getByText("Hello everybody!", { exact: true })
+      ).toBeVisible({
+        timeout: 20000,
+      }); // Check if message shows in chat window
 
-    await expect(chatTitle).toBeVisible({ timeout: 20000 });
-    await expect(chatTitle).toHaveText("Test chat");
-
-    await page.getByTestId("new-message-input").fill("Hello everybody!");
-
-    await page.getByTestId("send-new-message-button").click();
-
-    await expect(
-      page.getByText("Hello everybody!", { exact: true })
-    ).toBeVisible({
-      timeout: 20000,
-    }); // Check if message shows in chat window
-
-    await expect(
-      page.getByText("You: Hello everybody!", { exact: true })
-    ).toBeVisible({
-      timeout: 20000,
-    }); // Check if message shows in chats list
-  });
-
-  test("Add new members to group chat", async ({ page, request }) => {
-    userCredentials.forEach(
-      async (credential) =>
-        await request.post("http://localhost:4000/", {
-          data: {
-            query: `
-          mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
-            createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
-              username
-            }
-          }
-          `,
-            variables: credential,
-          },
-        })
-    );
-
-    await signIn(page, user1Credentials.username, user1Credentials.password);
-
-    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 20000 }
-    );
-
-    await addContacts(page, [
-      user2Credentials,
-      user3Credentials,
-      user4Credentials,
-      user5Credentials,
-    ]);
-
-    await createGroupChat(page, "Test chat", "This is a test chat.", [
-      user2Credentials,
-      user3Credentials,
-    ]);
-
-    const chatTitle = await page.getByTestId("new-chat-title");
-
-    await expect(chatTitle).toBeVisible({ timeout: 20000 });
-    await expect(chatTitle).toHaveText("Test chat");
-
-    await page.getByTestId("new-message-input").fill("Hello everybody!");
-
-    await page.getByTestId("send-new-message-button").click();
-    await page.getByTestId("chat-info-button").click();
-
-    await expect(page.getByText("3 members", { exact: true })).toBeVisible({
-      timeout: 20000,
+      await expect(
+        page.getByText("You: Hello everybody!", { exact: true })
+      ).toBeVisible({
+        timeout: 20000,
+      }); // Check if message shows in chats list
     });
 
-    await page.getByTestId("edit-group-chat-button").click();
-    await updateGroupChatMembers(page, [user4Credentials, user5Credentials]);
-    await expect(page.getByText("5 members", { exact: true })).toBeVisible({
-      timeout: 20000,
-    });
-  });
+    test("Add new members to group chat", async ({ page, request }) => {
+      await signIn(page, user1Credentials.username, user1Credentials.password);
 
-  test("Remove members from group chat", async ({ page, request }) => {
-    userCredentials.forEach(
-      async (credential) =>
-        await request.post("http://localhost:4000/", {
-          data: {
-            query: `
-          mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
-            createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
-              username
-            }
-          }
-          `,
-            variables: credential,
-          },
-        })
-    );
+      await expect(
+        page.getByText("Select Chat to Start Messaging.")
+      ).toBeVisible({ timeout: 20000 });
 
-    await signIn(page, user1Credentials.username, user1Credentials.password);
+      await addContacts(page, [
+        user2Credentials,
+        user3Credentials,
+        user4Credentials,
+        user5Credentials,
+      ]);
 
-    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
-      { timeout: 20000 }
-    );
+      await createGroupChat(page, "Test chat", "This is a test chat.", [
+        user2Credentials,
+        user3Credentials,
+      ]);
 
-    await addContacts(page, [
-      user2Credentials,
-      user3Credentials,
-      user4Credentials,
-      user5Credentials,
-    ]);
+      const chatTitle = await page.getByTestId("new-chat-title");
 
-    await createGroupChat(page, "Test chat", "This is a test chat.", [
-      user2Credentials,
-      user3Credentials,
-      user4Credentials,
-      user5Credentials,
-    ]);
+      await expect(chatTitle).toBeVisible({ timeout: 20000 });
+      await expect(chatTitle).toHaveText("Test chat");
 
-    const chatTitle = await page.getByTestId("new-chat-title");
+      await page.getByTestId("new-message-input").fill("Hello everybody!");
 
-    await expect(chatTitle).toBeVisible({ timeout: 20000 });
-    await expect(chatTitle).toHaveText("Test chat");
+      await page.getByTestId("send-new-message-button").click();
+      await page.getByTestId("chat-info-button").click();
 
-    await page.getByTestId("new-message-input").fill("Hello everybody!");
+      await expect(page.getByText("3 members", { exact: true })).toBeVisible({
+        timeout: 20000,
+      });
 
-    await page.getByTestId("send-new-message-button").click();
-    await page.getByTestId("chat-info-button").click();
-
-    await expect(page.getByText("5 members", { exact: true })).toBeVisible({
-      timeout: 20000,
+      await page.getByTestId("edit-group-chat-button").click();
+      await updateGroupChatMembers(page, [user4Credentials, user5Credentials]);
+      await expect(page.getByText("5 members", { exact: true })).toBeVisible({
+        timeout: 20000,
+      });
     });
 
-    await page.getByTestId("edit-group-chat-button").click();
-    await updateGroupChatMembers(page, [user2Credentials, user3Credentials]);
-    await expect(page.getByText("3 members", { exact: true })).toBeVisible({
-      timeout: 20000,
+    test("Remove members from group chat", async ({ page, request }) => {
+      await signIn(page, user1Credentials.username, user1Credentials.password);
+
+      await expect(
+        page.getByText("Select Chat to Start Messaging.")
+      ).toBeVisible({ timeout: 20000 });
+
+      await addContacts(page, [
+        user2Credentials,
+        user3Credentials,
+        user4Credentials,
+        user5Credentials,
+      ]);
+
+      await createGroupChat(page, "Test chat", "This is a test chat.", [
+        user2Credentials,
+        user3Credentials,
+        user4Credentials,
+        user5Credentials,
+      ]);
+
+      const chatTitle = await page.getByTestId("new-chat-title");
+
+      await expect(chatTitle).toBeVisible({ timeout: 20000 });
+      await expect(chatTitle).toHaveText("Test chat");
+
+      await page.getByTestId("new-message-input").fill("Hello everybody!");
+
+      await page.getByTestId("send-new-message-button").click();
+      await page.getByTestId("chat-info-button").click();
+
+      await expect(page.getByText("5 members", { exact: true })).toBeVisible({
+        timeout: 20000,
+      });
+
+      await page.getByTestId("edit-group-chat-button").click();
+      await updateGroupChatMembers(page, [user2Credentials, user3Credentials]);
+      await expect(page.getByText("3 members", { exact: true })).toBeVisible({
+        timeout: 20000,
+      });
     });
   });
 });
