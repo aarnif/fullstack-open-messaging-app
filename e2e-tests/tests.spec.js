@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 
 const userCredentials = [];
 
-for (let i = 1; i <= 3; i++) {
+for (let i = 1; i <= 5; i++) {
   userCredentials.push({
     username: `user${i}`,
     name: `User${i}`,
@@ -15,6 +15,8 @@ for (let i = 1; i <= 3; i++) {
 const user1Credentials = userCredentials[0];
 const user2Credentials = userCredentials[1];
 const user3Credentials = userCredentials[2];
+const user4Credentials = userCredentials[3];
+const user5Credentials = userCredentials[4];
 
 const typeCredentials = async (
   page,
@@ -50,6 +52,36 @@ const signIn = async (page, username, password) => {
 const signOut = async (page) => {
   await page.getByTestId("logout-button").click();
   await page.getByTestId("confirm-button").click();
+};
+
+const addContacts = async (page, contacts) => {
+  await page.getByTestId("contacts-button").click();
+  await page.getByTestId("new-contact-button").click();
+  for (const contact of contacts) {
+    await page.getByTestId(`contact-${contact.username}`).click();
+  }
+  await page.getByTestId("add-new-contacts-button").click();
+};
+
+const createGroupChat = async (page, title, description, contacts) => {
+  await page.getByTestId("chats-button").click();
+  await page.getByTestId("new-chat-button").click();
+  await page.getByTestId("new-group-chat-button").click();
+  await page.getByTestId("group-chat-title-input").fill(title);
+  await page.getByTestId("group-chat-description-input").fill(description);
+  for (const contact of contacts) {
+    await page.getByTestId(`contact-${contact.username}`).click();
+  }
+  await page.getByTestId("start-new-group-chat-button").click();
+};
+
+const updateGroupChatMembers = async (page, contacts) => {
+  await page.getByTestId("edit-group-chat-button").click();
+  await page.getByTestId("update-group-chat-members-button").click();
+  for (const contact of contacts) {
+    await page.getByTestId(`contact-${contact.username}`).click();
+  }
+  await page.getByTestId("submit-update-group-chat-members-button").click();
 };
 
 test.describe("Messaging app", () => {
@@ -217,10 +249,9 @@ test.describe("Messaging app", () => {
       user1Credentials.password,
       user1Credentials.confirmPassword
     );
-    await page.getByTestId("contacts-button").click();
-    await page.getByTestId("new-contact-button").click();
-    await page.getByTestId(`contact-${user2Credentials.username}`).click();
-    await page.getByTestId("add-new-contacts-button").click();
+
+    await addContacts(page, [user2Credentials]);
+
     await page.getByTestId("chats-button").click();
     await page.getByTestId("new-chat-button").click();
 
@@ -261,34 +292,18 @@ test.describe("Messaging app", () => {
         })
     );
 
-    await page.pause();
-
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
     await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
       { timeout: 20000 }
     );
 
-    await page.getByTestId("contacts-button").click();
-    await page.getByTestId("new-contact-button").click();
-    await page.getByTestId(`contact-${user2Credentials.username}`).click();
-    await page.getByTestId(`contact-${user3Credentials.username}`).click();
-    await page.getByTestId("add-new-contacts-button").click();
+    await addContacts(page, [user2Credentials, user3Credentials]);
 
-    await page.getByTestId("chats-button").click();
-    await page.getByTestId("new-chat-button").click();
-    await page.getByTestId("new-group-chat-button").click();
-
-    await page.getByTestId("group-chat-title-input").fill("Test chat");
-
-    await page
-      .getByTestId("group-chat-description-input")
-      .fill("This is a test chat.");
-
-    await page.getByTestId(`contact-${user2Credentials.username}`).click();
-    await page.getByTestId(`contact-${user3Credentials.username}`).click();
-
-    await page.getByTestId("start-new-group-chat-button").click();
+    await createGroupChat(page, "Test chat", "This is a test chat.", [
+      user2Credentials,
+      user3Credentials,
+    ]);
 
     const chatTitle = await page.getByTestId("new-chat-title");
 
@@ -310,5 +325,119 @@ test.describe("Messaging app", () => {
     ).toBeVisible({
       timeout: 20000,
     }); // Check if message shows in chats list
+  });
+
+  test("Add new members to group chat", async ({ page, request }) => {
+    userCredentials.forEach(
+      async (credential) =>
+        await request.post("http://localhost:4000/", {
+          data: {
+            query: `
+          mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
+            createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
+              username
+            }
+          }
+          `,
+            variables: credential,
+          },
+        })
+    );
+
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+
+    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
+      { timeout: 20000 }
+    );
+
+    await addContacts(page, [
+      user2Credentials,
+      user3Credentials,
+      user4Credentials,
+      user5Credentials,
+    ]);
+
+    await createGroupChat(page, "Test chat", "This is a test chat.", [
+      user2Credentials,
+      user3Credentials,
+    ]);
+
+    const chatTitle = await page.getByTestId("new-chat-title");
+
+    await expect(chatTitle).toBeVisible({ timeout: 20000 });
+    await expect(chatTitle).toHaveText("Test chat");
+
+    await page.getByTestId("new-message-input").fill("Hello everybody!");
+
+    await page.getByTestId("send-new-message-button").click();
+    await page.getByTestId("chat-info-button").click();
+
+    await expect(page.getByText("3 members", { exact: true })).toBeVisible({
+      timeout: 20000,
+    });
+
+    await page.getByTestId("edit-group-chat-button").click();
+    await updateGroupChatMembers(page, [user4Credentials, user5Credentials]);
+    await expect(page.getByText("5 members", { exact: true })).toBeVisible({
+      timeout: 20000,
+    });
+  });
+
+  test("Remove members from group chat", async ({ page, request }) => {
+    userCredentials.forEach(
+      async (credential) =>
+        await request.post("http://localhost:4000/", {
+          data: {
+            query: `
+          mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
+            createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
+              username
+            }
+          }
+          `,
+            variables: credential,
+          },
+        })
+    );
+
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+
+    await expect(page.getByText("Select Chat to Start Messaging.")).toBeVisible(
+      { timeout: 20000 }
+    );
+
+    await addContacts(page, [
+      user2Credentials,
+      user3Credentials,
+      user4Credentials,
+      user5Credentials,
+    ]);
+
+    await createGroupChat(page, "Test chat", "This is a test chat.", [
+      user2Credentials,
+      user3Credentials,
+      user4Credentials,
+      user5Credentials,
+    ]);
+
+    const chatTitle = await page.getByTestId("new-chat-title");
+
+    await expect(chatTitle).toBeVisible({ timeout: 20000 });
+    await expect(chatTitle).toHaveText("Test chat");
+
+    await page.getByTestId("new-message-input").fill("Hello everybody!");
+
+    await page.getByTestId("send-new-message-button").click();
+    await page.getByTestId("chat-info-button").click();
+
+    await expect(page.getByText("5 members", { exact: true })).toBeVisible({
+      timeout: 20000,
+    });
+
+    await page.getByTestId("edit-group-chat-button").click();
+    await updateGroupChatMembers(page, [user2Credentials, user3Credentials]);
+    await expect(page.getByText("3 members", { exact: true })).toBeVisible({
+      timeout: 20000,
+    });
   });
 });

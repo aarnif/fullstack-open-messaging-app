@@ -66,6 +66,7 @@ const UpdateMembersModal = ({
               Update Members
             </h2>
             <button
+              data-testid="submit-update-group-chat-members-button"
               className="text-2xl text-slate-700"
               onClick={handleUpdateMembers}
             >

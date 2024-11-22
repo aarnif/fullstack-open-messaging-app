@@ -56,7 +56,7 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         <button onClick={() => setShowChatInfoModal(false)}>
           <IoChevronBack className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
         </button>
-        <button onClick={handleEditChat}>
+        <button data-testid="edit-group-chat-button" onClick={handleEditChat}>
           <FiEdit className="w-7 h-7 text-slate-700 dark:text-slate-100" />
         </button>
       </div>

@@ -196,6 +196,7 @@ const EditGroupChatModal = ({
                 <li className="my-4 w-full flex justify-center items-end">
                   <button
                     type="button"
+                    data-testid="update-group-chat-members-button"
                     className="w-full max-h-[60px] p-2 flex justify-center items-center border-2 
                     border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
                     active:scale-95 rounded-xl transition"
