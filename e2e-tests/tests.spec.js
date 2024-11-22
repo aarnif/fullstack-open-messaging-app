@@ -294,6 +294,29 @@ test.describe("Messaging app", () => {
         timeout: 10000,
       });
     });
+
+    test.only("Block and unblock contact", async ({ page }) => {
+      await signIn(page, user1Credentials.username, user1Credentials.password);
+      await addContacts(page, [user2Credentials]);
+      await page.getByTestId("contacts-button").click();
+      await page.getByTestId(user2Credentials.username).click();
+      await page.getByTestId("block-or-unblock-contact-button").click();
+      await page.getByTestId("confirm-button").click();
+      await expect(
+        page.getByText("You have blocked this contact!")
+      ).toBeVisible({
+        timeout: 10000,
+      });
+
+      await page.getByTestId("block-or-unblock-contact-button").click();
+      await page.getByTestId("confirm-button").click();
+
+      await expect(
+        page.getByText("You have blocked this contact!")
+      ).not.toBeVisible({
+        timeout: 10000,
+      });
+    });
   });
 
   test.describe("Chats", () => {

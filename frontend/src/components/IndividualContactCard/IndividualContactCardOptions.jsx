@@ -133,6 +133,7 @@ const IndividualContactOptions = ({
         </div>
       </button>
       <button
+        data-testid="block-or-unblock-contact-button"
         onClick={() =>
           confirmModal(
             `Are you sure you want to ${isBlocked ? "unblock" : "block"} ${
