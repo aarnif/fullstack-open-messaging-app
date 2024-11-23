@@ -197,6 +197,94 @@ describe("Server e2e tests users", () => {
     );
   });
 
+  it("Block contact", async () => {
+    const blockContact = await helpers.requestData(
+      {
+        query: `mutation BlockOrUnBlockContact($contactId: ID!) {
+          blockOrUnBlockContact(contactId: $contactId)
+        }`,
+        variables: {
+          contactId: "6690caa54dc3eac2b83517d0",
+        },
+      },
+      credentials.token
+    );
+
+    const findUserById = await helpers.requestData(
+      {
+        query: `query FindUserById($id: ID!) {
+          findUserById(id: $id) {
+            blockedContacts
+          }
+        }`,
+        variables: {
+          id: credentials.id,
+        },
+      },
+      credentials.token
+    );
+
+    expect(JSON.parse(blockContact.text).errors).toBeUndefined();
+    expect(blockContact.body.data.blockOrUnBlockContact).toBe(true);
+    expect(JSON.parse(findUserById.text).errors).toBeUndefined();
+    expect(findUserById.body.data.findUserById.blockedContacts.length).toBe(1);
+    expect(findUserById.body.data.findUserById.blockedContacts[0]).toBe(
+      "6690caa54dc3eac2b83517d0"
+    );
+  });
+
+  it("Unblock contact", async () => {
+    const unBlockContact = await helpers.requestData(
+      {
+        query: `mutation BlockOrUnBlockContact($contactId: ID!) {
+          blockOrUnBlockContact(contactId: $contactId)
+        }`,
+        variables: {
+          contactId: "6690caa54dc3eac2b83517d0",
+        },
+      },
+      credentials.token
+    );
+
+    const findUserById = await helpers.requestData(
+      {
+        query: `query FindUserById($id: ID!) {
+          findUserById(id: $id) {
+            blockedContacts
+          }
+        }`,
+        variables: {
+          id: credentials.id,
+        },
+      },
+      credentials.token
+    );
+
+    expect(JSON.parse(unBlockContact.text).errors).toBeUndefined();
+    expect(unBlockContact.body.data.blockOrUnBlockContact).toBe(false);
+    expect(JSON.parse(findUserById.text).errors).toBeUndefined();
+    expect(findUserById.body.data.findUserById.blockedContacts.length).toBe(0);
+  });
+
+  it("Remove contact", async () => {
+    let response;
+
+    response = await helpers.requestData(
+      {
+        query: `mutation RemoveContact($contactId: ID!) {
+          removeContact(contactId: $contactId)
+        }`,
+        variables: {
+          contactId: contactDetails[1].id,
+        },
+      },
+      credentials.token
+    );
+
+    expect(JSON.parse(response.text).errors).toBeUndefined();
+    expect(response.body.data.removeContact).toBe(contactDetails[1].id);
+  });
+
   it("Start chat with contact", async () => {
     let response;
 
@@ -244,7 +332,7 @@ describe("Server e2e tests users", () => {
             description
             isGroupChat
             admin {
-              id 
+              id
               username
             }
             participants {
@@ -327,42 +415,6 @@ describe("Server e2e tests users", () => {
     ).toBe(credentials.username);
     expect(response.body.data.addMessageToChat.messages[0].content).toBe(
       "Hello gamers!"
-    );
-  });
-
-  it("Block contact", async () => {
-    const blockContact = await helpers.requestData(
-      {
-        query: `mutation BlockOrUnBlockContact($contactId: ID!) {
-          blockOrUnBlockContact(contactId: $contactId)
-        }`,
-        variables: {
-          contactId: "6690caa54dc3eac2b83517d0",
-        },
-      },
-      credentials.token
-    );
-
-    const findUserById = await helpers.requestData(
-      {
-        query: `query FindUserById($id: ID!) {
-          findUserById(id: $id) {
-            blockedContacts
-          }
-        }`,
-        variables: {
-          id: credentials.id,
-        },
-      },
-      credentials.token
-    );
-
-    expect(JSON.parse(blockContact.text).errors).toBeUndefined();
-    expect(blockContact.body.data.blockOrUnBlockContact).toBe(true);
-    expect(JSON.parse(findUserById.text).errors).toBeUndefined();
-    expect(findUserById.body.data.findUserById.blockedContacts.length).toBe(1);
-    expect(findUserById.body.data.findUserById.blockedContacts[0]).toBe(
-      "6690caa54dc3eac2b83517d0"
     );
   });
 });
