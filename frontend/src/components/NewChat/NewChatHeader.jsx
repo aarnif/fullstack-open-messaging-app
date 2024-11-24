@@ -7,17 +7,15 @@ const NewChatHeader = ({ user, chat }) => {
       console.log("Clicked group chat info!");
     } else {
       console.log("Clicked private chat info!");
-      const anotherChatParticipant = chat.participants.find(
-        (participant) => participant.username !== user.username
+      const anotherChatMember = chat.members.find(
+        (member) => member.username !== user.username
       );
-      navigate(`/contacts/${anotherChatParticipant.id}`);
+      navigate(`/contacts/${anotherChatMember.id}`);
     }
   };
 
-  const chatParticipantsString = chat.participants
-    .map((participant) =>
-      participant.username === user.username ? "You" : participant.name
-    )
+  const chatMembersString = chat.members
+    .map((member) => (member.username === user.username ? "You" : member.name))
     .join(", ");
 
   return (
@@ -40,7 +38,7 @@ const NewChatHeader = ({ user, chat }) => {
                 {chat.title}
               </div>
               <div className="text-sm text-slate-800 dark:text-slate-100">
-                {chatParticipantsString}
+                {chatMembersString}
               </div>
             </div>
           </div>

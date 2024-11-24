@@ -12,7 +12,7 @@ const NewChat = ({ user, setActivePath, menuComponent }) => {
     setNewChatInfo(JSON.parse(localStorage.getItem("new-chat-info")));
   }, []);
 
-  console.log("New chat info:", newChatInfo);
+  console.log("New chat info2:", newChatInfo);
 
   return (
     <div className="flex-grow flex">

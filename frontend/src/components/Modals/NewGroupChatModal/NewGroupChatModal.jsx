@@ -73,7 +73,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
     const newGroupChatInfo = {
       title: groupChatTitle.value.trim(),
       description: groupChatDescription.value.trim(),
-      participants: [user, ...chosenContacts],
+      members: [user, ...chosenContacts],
       image: "https://i.ibb.co/bRb0SYw/chat-placeholder.png", // Placeholder image for grop chats
     };
 

@@ -7,7 +7,7 @@ import { IoChevronForward } from "react-icons/io5";
 
 import {
   GET_CONTACTS_BY_USER,
-  GET_CHAT_BY_PARTICIPANTS,
+  GET_CHAT_BY_MEMBERS,
   CHECK_IF_USER_HAS_BLOCKED_YOU,
 } from "../../../graphql/queries";
 import useField from "../../../hooks/useField";
@@ -31,7 +31,7 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
     },
   });
 
-  const [getChatByParticipants] = useLazyQuery(GET_CHAT_BY_PARTICIPANTS);
+  const [getChatByMembers] = useLazyQuery(GET_CHAT_BY_MEMBERS);
 
   const [checkIfUserHasBlockedYou] = useLazyQuery(
     CHECK_IF_USER_HAS_BLOCKED_YOU
@@ -46,14 +46,14 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
       return;
     }
 
-    const checkIfChatExists = await getChatByParticipants({
+    const checkIfChatExists = await getChatByMembers({
       variables: {
-        participants: [user.id, chosenUserId],
+        members: [user.id, chosenUserId],
       },
     });
 
-    if (checkIfChatExists.data?.findChatByParticipants) {
-      navigate(`/chats/${checkIfChatExists.data.findChatByParticipants.id}`);
+    if (checkIfChatExists.data?.findChatByMembers) {
+      navigate(`/chats/${checkIfChatExists.data.findChatByMembers.id}`);
       setShowNewPrivateChatModal(false);
       return;
     }
@@ -76,7 +76,7 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
     const newPrivateChatInfo = {
       title: chosenContact.name,
       description: "",
-      participants: [user, chosenContact],
+      members: [user, chosenContact],
       image: chosenContact.image.thumbnail,
     };
 

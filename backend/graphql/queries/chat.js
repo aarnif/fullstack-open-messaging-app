@@ -32,7 +32,7 @@ const typeDefs = `
     description: String
     isGroupChat: Boolean
     admin: User
-    participants: [User!]!
+    members: [User!]!
     messages: [Message!]!
     latestMessage: Message
     createdAt: Date
@@ -44,7 +44,7 @@ const typeDefs = `
     countChats: Int!
     allChats: [Chat!]!
     findChatById(chatId: ID!): Chat
-    findChatByParticipants(participants: [ID!]!): Chat
+    findChatByMembers(members: [ID!]!): Chat
     allChatsByUser(searchByTitle: String): [Chat!]!
     checkIfGroupChatExists(title: String!): Boolean!
   }
@@ -56,7 +56,7 @@ const resolvers = {
     allChats: async () => {
       const chats = await Chat.find({})
         .populate("admin")
-        .populate("participants")
+        .populate("members")
         .populate({
           path: "messages",
           populate: { path: "sender" },
@@ -70,7 +70,7 @@ const resolvers = {
     findChatById: async (root, args) =>
       Chat.findById(args.chatId)
         .populate("admin")
-        .populate("participants")
+        .populate("members")
         .populate({
           path: "messages",
           populate: { path: "sender" },
@@ -88,10 +88,10 @@ const resolvers = {
             },
           });
         }),
-    findChatByParticipants: async (root, args) =>
-      Chat.findOne({ participants: args.participants })
+    findChatByMembers: async (root, args) =>
+      Chat.findOne({ members: args.members })
         .populate("admin")
-        .populate("participants")
+        .populate("members")
         .populate({
           path: "messages",
           populate: { path: "sender" },
@@ -110,13 +110,13 @@ const resolvers = {
       }
 
       return Chat.find({
-        participants: { $in: context.currentUser.id },
+        members: { $in: context.currentUser.id },
         title: {
           $regex: `(?i)${args.searchByTitle ? args.searchByTitle : ""}(?-i)`,
         },
       })
         .populate("admin")
-        .populate("participants")
+        .populate("members")
         .populate({
           path: "messages",
           populate: { path: "sender" },

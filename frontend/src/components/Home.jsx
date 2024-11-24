@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import { GET_CONTACTS_BY_USER, GET_CHATS_BY_USER } from "../graphql/queries";
 import {
   CONTACT_BLOCKED_OR_UNBLOCKED,
-  GROUP_CHAT_PARTICIPANTS_UPDATED,
+  GROUP_CHAT_MEMBERS_UPDATED,
 } from "../graphql/subscriptions";
 import Menu from "./Menu";
 import helpers from "../utils/helpers";
@@ -56,11 +56,11 @@ const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
     },
   });
 
-  useSubscription(GROUP_CHAT_PARTICIPANTS_UPDATED, {
+  useSubscription(GROUP_CHAT_MEMBERS_UPDATED, {
     onData: ({ data }) => {
-      console.log("Use GROUP_CHAT_PARTICIPANTS_UPDATED-subscription:");
-      const { updatedChat, removedParticipants, addedParticipants } =
-        data.data.groupChatParticipantsUpdated;
+      console.log("Use GROUP_CHAT_MEMBERS_UPDATED-subscription:");
+      const { updatedChat, removedmembers, addedmembers } =
+        data.data.groupChatMembersUpdated;
       client.cache.updateQuery(
         {
           query: GET_CHATS_BY_USER,
@@ -69,13 +69,13 @@ const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
           },
         },
         ({ allChatsByUser }) => {
-          if (removedParticipants.includes(user.id)) {
+          if (removedmembers.includes(user.id)) {
             return {
               allChatsByUser: helpers.sortChatsByDate(
                 allChatsByUser.filter((chat) => chat.id !== updatedChat.id)
               ),
             };
-          } else if (addedParticipants.includes(user.id)) {
+          } else if (addedmembers.includes(user.id)) {
             return {
               allChatsByUser: helpers.sortChatsByDate(
                 allChatsByUser.concat(updatedChat)

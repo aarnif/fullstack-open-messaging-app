@@ -28,11 +28,11 @@ const EditGroupChatModal = ({
     chat.description
   );
   const [chosenUserIds, setChosenUserIds] = useState([
-    ...chat.participants.map((participant) => participant.id),
+    ...chat.members.map((member) => member.id),
   ]);
 
   const [newMemberIds, setNewMemberIds] = useState([
-    ...chat.participants.map((participant) => participant.id),
+    ...chat.members.map((member) => member.id),
   ]);
 
   const result = useQuery(GET_ALL_USERS);
@@ -95,7 +95,7 @@ const EditGroupChatModal = ({
       await editChatMembers({
         variables: {
           chatId: chat.id,
-          participants: chosenUserIds,
+          members: chosenUserIds,
         },
       });
 
@@ -211,9 +211,9 @@ const EditGroupChatModal = ({
                 <li className="w-full flex-grow flex flex-col justify-center items-center">
                   <ChatMembersList
                     user={user}
-                    chatParticipants={
+                    chatMembers={
                       result.loading
-                        ? chat.participants
+                        ? chat.members
                         : result.data.allUsers.filter((user) =>
                             newMemberIds.includes(user.id)
                           )

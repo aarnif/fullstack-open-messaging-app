@@ -137,7 +137,7 @@ const ChatsList = ({ user, searchWord }) => {
           },
         },
         ({ allChatsByUser }) => {
-          if (leftGroupChatData.participant === user.id) {
+          if (leftGroupChatData.member === user.id) {
             return {
               allChatsByUser: helpers.sortChatsByDate(
                 allChatsByUser.filter(
