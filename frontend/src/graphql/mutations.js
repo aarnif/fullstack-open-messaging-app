@@ -79,32 +79,6 @@ export const MARK_MESSAGES_IN_CHAT_READ = gql`
   ${CHAT_DETAILS}
 `;
 
-export const ADD_NEW_CHAT_MEMBERS = gql`
-  mutation AddParticipantsToGroupChat($chatId: ID!, $participants: [ID!]!) {
-    addParticipantsToGroupChat(chatId: $chatId, participants: $participants) {
-      ...ChatDetails
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
-export const REMOVE_CHAT_MEMBERS = gql`
-  mutation RemoveParticipantsFromGroupChat(
-    $chatId: ID!
-    $participants: [ID!]!
-  ) {
-    removeParticipantsFromGroupChat(
-      chatId: $chatId
-      participants: $participants
-    ) {
-      ...ChatDetails
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
 export const UPDATE_CHAT_MEMBERS = gql`
   mutation UpdateGroupChatParticipants($chatId: ID!, $participants: [ID!]!) {
     updateGroupChatParticipants(chatId: $chatId, participants: $participants) {
