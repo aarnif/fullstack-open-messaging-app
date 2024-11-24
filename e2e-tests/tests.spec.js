@@ -318,7 +318,7 @@ test.describe("Messaging app", () => {
       });
     });
 
-    test.only("Remove contact", async ({ page }) => {
+    test("Remove contact", async ({ page }) => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await addContacts(page, [user2Credentials]);
       await page.getByTestId("contacts-button").click();
