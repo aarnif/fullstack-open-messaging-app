@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 import { CREATE_CHAT, ADD_MESSAGE_TO_CHAT } from "../../graphql/mutations";
-import { GET_CHAT_BY_PARTICIPANTS } from "../../graphql/queries";
+import { GET_CHAT_BY_MEMBERS } from "../../graphql/queries";
 import imageService from "../../services/imageService";
 import NewMessageBox from "../NewMessageBox";
 
@@ -39,9 +39,7 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
         variables: {
           title: newChatInfo.title ? newChatInfo.title : "",
           description: newChatInfo.description ? newChatInfo.description : "",
-          participants: newChatInfo.participants.map(
-            (participant) => participant.id
-          ),
+          members: newChatInfo.members.map((member) => member.id),
         },
       });
       console.log("Data:", data);
@@ -70,11 +68,9 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
           },
           refetchQueries: [
             {
-              query: GET_CHAT_BY_PARTICIPANTS,
+              query: GET_CHAT_BY_MEMBERS,
               variables: {
-                participants: newChatInfo.participants.map(
-                  (participant) => participant.id
-                ),
+                members: newChatInfo.members.map((member) => member.id),
               },
             },
           ],

@@ -24,7 +24,7 @@ import Profile from "./components/Profile/Profile";
 import Settings from "./components/Settings/Settings";
 
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
-import NewPrivateChatModal from "./components/Modals/NewIndividualChatModal/NewPrivateChatModal";
+import NewPrivateChatModal from "./components/Modals/NewPrivateChatModal/NewPrivateChatModal";
 import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupChatModal";
 import NewContactModal from "./components/Modals/NewContactModal";
 

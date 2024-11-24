@@ -39,7 +39,7 @@ export const CHAT_DETAILS = gql`
       name
       about
     }
-    participants {
+    members {
       ...UserDetails
     }
     messages {
@@ -139,9 +139,9 @@ export const GET_CHAT_BY_ID = gql`
   ${CHAT_DETAILS}
 `;
 
-export const GET_CHAT_BY_PARTICIPANTS = gql`
-  query FindChatByParticipants($participants: [ID!]!) {
-    findChatByParticipants(participants: $participants) {
+export const GET_CHAT_BY_MEMBERS = gql`
+  query FindChatByMembers($members: [ID!]!) {
+    findChatByMembers(members: $members) {
       ...ChatDetails
     }
   }

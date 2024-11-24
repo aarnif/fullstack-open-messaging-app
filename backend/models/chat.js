@@ -30,7 +30,7 @@ const chatSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  participants: [
+  members: [
     {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -90,20 +90,20 @@ chatSchema.methods.displayChatTitle = function (currentUserId) {
   if (this.isGroupChat) {
     return this.title;
   }
-  const findTheOthersParticipantsName = this.participants.find(
-    (participant) => participant.id !== currentUserId
+  const findTheOtherMemberName = this.members.find(
+    (member) => member.id !== currentUserId
   ).name;
-  return findTheOthersParticipantsName;
+  return findTheOtherMemberName;
 };
 
 chatSchema.methods.displayChatImage = function (currentUserId) {
   if (this.isGroupChat) {
     return this.image;
   }
-  const findTheOthersParticipantsProfileImage = this.participants.find(
-    (participant) => participant.id !== currentUserId
+  const findTheOtherMemberProfileImage = this.members.find(
+    (member) => member.id !== currentUserId
   ).image;
-  return findTheOthersParticipantsProfileImage;
+  return findTheOtherMemberProfileImage;
 };
 
 const Chat = mongoose.model("Chat", chatSchema);
