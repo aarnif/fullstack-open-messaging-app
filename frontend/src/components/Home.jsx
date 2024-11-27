@@ -1,7 +1,7 @@
 import { useSubscription, useApolloClient } from "@apollo/client";
 import { Outlet } from "react-router-dom";
 
-import { GET_CONTACTS_BY_USER, GET_CHATS_BY_USER } from "../graphql/queries";
+import { ALL_CONTACTS_BY_USER, ALL_CHATS_BY_USER } from "../graphql/queries";
 import {
   CONTACT_BLOCKED_OR_UNBLOCKED,
   GROUP_CHAT_MEMBERS_UPDATED,
@@ -18,7 +18,7 @@ const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
       const blockingData = data.data.contactBlockedOrUnBlocked;
       client.cache.updateQuery(
         {
-          query: GET_CONTACTS_BY_USER,
+          query: ALL_CONTACTS_BY_USER,
           variables: {
             searchByName: "",
           },
@@ -63,7 +63,7 @@ const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
         data.data.groupChatMembersUpdated;
       client.cache.updateQuery(
         {
-          query: GET_CHATS_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: {
             searchByTitle: "",
           },

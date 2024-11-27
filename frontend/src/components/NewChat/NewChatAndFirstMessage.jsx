@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 import { CREATE_CHAT, ADD_MESSAGE_TO_CHAT } from "../../graphql/mutations";
-import { GET_CHAT_BY_MEMBERS } from "../../graphql/queries";
+import { FIND_CHAT_BY_MEMBERS } from "../../graphql/queries";
 import imageService from "../../services/imageService";
 import NewMessageBox from "../NewMessageBox";
 
@@ -68,7 +68,7 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
           },
           refetchQueries: [
             {
-              query: GET_CHAT_BY_MEMBERS,
+              query: FIND_CHAT_BY_MEMBERS,
               variables: {
                 members: newChatInfo.members.map((member) => member.id),
               },

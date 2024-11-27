@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { IoChevronBack } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { GET_ALL_USERS } from "../../../graphql/queries";
+import { ALL_USERS } from "../../../graphql/queries";
 import { EDIT_CHAT, UPDATE_CHAT_MEMBERS } from "../../../graphql/mutations";
 import imageService from "../../../services/imageService";
 import ChangeImage from "../../ChangeImage";
@@ -35,7 +35,7 @@ const EditGroupChatModal = ({
     ...chat.members.map((member) => member.id),
   ]);
 
-  const result = useQuery(GET_ALL_USERS);
+  const result = useQuery(ALL_USERS);
 
   const [editChat] = useMutation(EDIT_CHAT, {
     onError: (error) => {

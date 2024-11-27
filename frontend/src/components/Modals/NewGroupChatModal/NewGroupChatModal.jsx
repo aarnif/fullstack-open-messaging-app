@@ -6,7 +6,7 @@ import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
 
 import {
-  GET_CONTACTS_BY_USER,
+  ALL_CONTACTS_BY_USER,
   CHECK_IF_GROUP_CHAT_EXISTS,
 } from "../../../graphql/queries";
 import useField from "../../../hooks/useField";
@@ -29,7 +29,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
   const [chosenUserIds, setChosenUserIds] = useState([]);
 
-  const result = useQuery(GET_CONTACTS_BY_USER, {
+  const result = useQuery(ALL_CONTACTS_BY_USER, {
     variables: {
       searchByName: searchWord.value,
     },

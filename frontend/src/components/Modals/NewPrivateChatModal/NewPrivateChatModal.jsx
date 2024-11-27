@@ -6,8 +6,8 @@ import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
 
 import {
-  GET_CONTACTS_BY_USER,
-  GET_CHAT_BY_MEMBERS,
+  ALL_CONTACTS_BY_USER,
+  FIND_CHAT_BY_MEMBERS,
   CHECK_IF_USER_HAS_BLOCKED_YOU,
 } from "../../../graphql/queries";
 import useField from "../../../hooks/useField";
@@ -25,13 +25,13 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
   const [chosenUserId, setChosenUserId] = useState(null);
 
-  const result = useQuery(GET_CONTACTS_BY_USER, {
+  const result = useQuery(ALL_CONTACTS_BY_USER, {
     variables: {
       searchByName: searchWord.value,
     },
   });
 
-  const [getChatByMembers] = useLazyQuery(GET_CHAT_BY_MEMBERS);
+  const [getChatByMembers] = useLazyQuery(FIND_CHAT_BY_MEMBERS);
 
   const [checkIfUserHasBlockedYou] = useLazyQuery(
     CHECK_IF_USER_HAS_BLOCKED_YOU

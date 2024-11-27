@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 
-import { GET_CHATS_BY_USER } from "../graphql/queries";
+import { ALL_CHATS_BY_USER } from "../graphql/queries";
 import {
   NEW_MESSAGE_ADDED,
   NEW_CHAT_ADDED,
@@ -18,7 +18,7 @@ import MenuHeader from "./MenuHeader";
 const ChatsList = ({ user, searchWord }) => {
   const client = useApolloClient();
   const [activePath, setActivePath] = useState(null);
-  const { data, loading } = useQuery(GET_CHATS_BY_USER, {
+  const { data, loading } = useQuery(ALL_CHATS_BY_USER, {
     variables: {
       searchByTitle: searchWord.value,
     },
@@ -30,7 +30,7 @@ const ChatsList = ({ user, searchWord }) => {
       const updatedChat = data.data.messageToChatAdded;
       client.cache.updateQuery(
         {
-          query: GET_CHATS_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: {
             searchByTitle: "",
           },
@@ -55,7 +55,7 @@ const ChatsList = ({ user, searchWord }) => {
       const newChat = data.data.chatAdded;
       client.cache.updateQuery(
         {
-          query: GET_CHATS_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: {
             searchByTitle: "",
           },
@@ -78,7 +78,7 @@ const ChatsList = ({ user, searchWord }) => {
       const updatedChat = data.data.groupChatUpdated;
       client.cache.updateQuery(
         {
-          query: GET_CHATS_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: {
             searchByTitle: "",
           },
@@ -108,7 +108,7 @@ const ChatsList = ({ user, searchWord }) => {
 
       client.cache.updateQuery(
         {
-          query: GET_CHATS_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: {
             searchByTitle: "",
           },
@@ -131,7 +131,7 @@ const ChatsList = ({ user, searchWord }) => {
       console.log("Left group chats:", leftGroupChatData);
       client.cache.updateQuery(
         {
-          query: GET_CHATS_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: {
             searchByTitle: "",
           },

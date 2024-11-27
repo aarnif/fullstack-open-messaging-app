@@ -2,8 +2,8 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 import {
-  GET_CHAT_BY_MEMBERS,
-  GET_CONTACTS_BY_USER,
+  FIND_CHAT_BY_MEMBERS,
+  ALL_CONTACTS_BY_USER,
 } from "../../graphql/queries";
 import {
   BLOCK_OR_UNBLOCK_CONTACT,
@@ -21,7 +21,7 @@ const IndividualContactOptions = ({
   const { confirmModal } = useConfirmModal();
   const navigate = useNavigate();
 
-  const [getChatByMembers] = useLazyQuery(GET_CHAT_BY_MEMBERS);
+  const [getChatByMembers] = useLazyQuery(FIND_CHAT_BY_MEMBERS);
 
   const [blockOrUnblockContact] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
     onError: (error) => {
@@ -97,7 +97,7 @@ const IndividualContactOptions = ({
         },
         refetchQueries: [
           {
-            query: GET_CONTACTS_BY_USER,
+            query: ALL_CONTACTS_BY_USER,
             variables: {
               searchByName: "",
             },
