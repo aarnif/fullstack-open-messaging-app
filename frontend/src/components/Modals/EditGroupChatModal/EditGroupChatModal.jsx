@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { IoChevronBack } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { GET_ALL_USERS } from "../../../graphql/queries";
+import { ALL_USERS } from "../../../graphql/queries";
 import { EDIT_CHAT, UPDATE_CHAT_MEMBERS } from "../../../graphql/mutations";
 import imageService from "../../../services/imageService";
 import ChangeImage from "../../ChangeImage";
@@ -28,14 +28,14 @@ const EditGroupChatModal = ({
     chat.description
   );
   const [chosenUserIds, setChosenUserIds] = useState([
-    ...chat.participants.map((participant) => participant.id),
+    ...chat.members.map((member) => member.id),
   ]);
 
   const [newMemberIds, setNewMemberIds] = useState([
-    ...chat.participants.map((participant) => participant.id),
+    ...chat.members.map((member) => member.id),
   ]);
 
-  const result = useQuery(GET_ALL_USERS);
+  const result = useQuery(ALL_USERS);
 
   const [editChat] = useMutation(EDIT_CHAT, {
     onError: (error) => {
@@ -95,7 +95,7 @@ const EditGroupChatModal = ({
       await editChatMembers({
         variables: {
           chatId: chat.id,
-          participants: chosenUserIds,
+          members: chosenUserIds,
         },
       });
 
@@ -211,9 +211,9 @@ const EditGroupChatModal = ({
                 <li className="w-full flex-grow flex flex-col justify-center items-center">
                   <ChatMembersList
                     user={user}
-                    chatParticipants={
+                    chatMembers={
                       result.loading
-                        ? chat.participants
+                        ? chat.members
                         : result.data.allUsers.filter((user) =>
                             newMemberIds.includes(user.id)
                           )

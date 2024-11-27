@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 
-import { GET_USER_BY_ID } from "../../graphql/queries";
+import { FIND_USER_BY_ID } from "../../graphql/queries";
 import Loading from "../Loading";
 import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
 import IndividualContactOptions from "../IndividualContactCard/IndividualContactCardOptions";
@@ -12,7 +12,7 @@ const Contact = ({ user, setActivePath, menuComponent }) => {
   const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(null);
 
   const match = useMatch("/contacts/:contactId").params;
-  const { data, loading } = useQuery(GET_USER_BY_ID, {
+  const { data, loading } = useQuery(FIND_USER_BY_ID, {
     variables: {
       id: match.contactId,
     },

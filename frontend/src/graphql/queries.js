@@ -39,7 +39,7 @@ export const CHAT_DETAILS = gql`
       name
       about
     }
-    participants {
+    members {
       ...UserDetails
     }
     messages {
@@ -67,7 +67,7 @@ export const CHAT_DETAILS = gql`
   ${USER_DETAILS}
 `;
 
-export const GET_ALL_USERS = gql`
+export const ALL_USERS = gql`
   query AllUsers($searchByName: String) {
     allUsers(searchByName: $searchByName) {
       ...UserDetails
@@ -77,7 +77,7 @@ export const GET_ALL_USERS = gql`
   ${USER_DETAILS}
 `;
 
-export const GET_CURRENT_USER = gql`
+export const CURRENT_USER = gql`
   query {
     me {
       ...UserDetails
@@ -87,7 +87,7 @@ export const GET_CURRENT_USER = gql`
   ${USER_DETAILS}
 `;
 
-export const GET_USER_BY_ID = gql`
+export const FIND_USER_BY_ID = gql`
   query FindUserById($id: ID!) {
     findUserById(id: $id) {
       ...UserDetails
@@ -97,7 +97,7 @@ export const GET_USER_BY_ID = gql`
   ${USER_DETAILS}
 `;
 
-export const GET_CHATS_BY_USER = gql`
+export const ALL_CHATS_BY_USER = gql`
   query AllChatsByUser($searchByTitle: String) {
     allChatsByUser(searchByTitle: $searchByTitle) {
       ...ChatDetails
@@ -107,7 +107,7 @@ export const GET_CHATS_BY_USER = gql`
   ${CHAT_DETAILS}
 `;
 
-export const GET_CONTACTS_BY_USER = gql`
+export const ALL_CONTACTS_BY_USER = gql`
   query AllContactsByUser($searchByName: String) {
     allContactsByUser(searchByName: $searchByName) {
       contacts {
@@ -119,7 +119,7 @@ export const GET_CONTACTS_BY_USER = gql`
   ${USER_DETAILS}
 `;
 
-export const GET_ALL_CONTACTS_EXCEPT_BY_USER = gql`
+export const ALL_CONTACTS_EXCEPT_BY_USER = gql`
   query AllContactsExceptByUser($searchByName: String) {
     allContactsExceptByUser(searchByName: $searchByName) {
       ...UserDetails
@@ -129,7 +129,7 @@ export const GET_ALL_CONTACTS_EXCEPT_BY_USER = gql`
   ${USER_DETAILS}
 `;
 
-export const GET_CHAT_BY_ID = gql`
+export const FIND_CHAT_BY_ID = gql`
   query FindChatById($chatId: ID!) {
     findChatById(chatId: $chatId) {
       ...ChatDetails
@@ -139,9 +139,9 @@ export const GET_CHAT_BY_ID = gql`
   ${CHAT_DETAILS}
 `;
 
-export const GET_CHAT_BY_PARTICIPANTS = gql`
-  query FindChatByParticipants($participants: [ID!]!) {
-    findChatByParticipants(participants: $participants) {
+export const FIND_CHAT_BY_MEMBERS = gql`
+  query FindChatByMembers($members: [ID!]!) {
+    findChatByMembers(members: $members) {
       ...ChatDetails
     }
   }

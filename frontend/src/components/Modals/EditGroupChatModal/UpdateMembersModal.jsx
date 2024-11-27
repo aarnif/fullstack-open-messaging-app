@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
 
-import { GET_CONTACTS_BY_USER } from "../../../graphql/queries";
+import { ALL_CONTACTS_BY_USER } from "../../../graphql/queries";
 
 import Loading from "../../Loading";
 import SearchBar from "../../SearchBar";
@@ -19,7 +19,7 @@ const UpdateMembersModal = ({
 }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
 
-  const result = useQuery(GET_CONTACTS_BY_USER, {
+  const result = useQuery(ALL_CONTACTS_BY_USER, {
     variables: {
       searchByName: searchWord.value,
     },

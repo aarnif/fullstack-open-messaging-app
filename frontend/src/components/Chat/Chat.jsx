@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 
-import { GET_CHAT_BY_ID } from "../../graphql/queries";
+import { FIND_CHAT_BY_ID } from "../../graphql/queries";
 import Loading from "../Loading";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
@@ -14,7 +14,7 @@ import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal/PrivateChatInfo
 const Chat = ({ user, setActivePath, menuComponent }) => {
   const [showChatInfoModal, setShowChatInfoModal] = useState(false);
   const match = useMatch("/chats/:chatId").params;
-  const { data, loading } = useQuery(GET_CHAT_BY_ID, {
+  const { data, loading } = useQuery(FIND_CHAT_BY_ID, {
     variables: {
       chatId: match.chatId,
     },

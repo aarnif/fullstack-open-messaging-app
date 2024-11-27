@@ -33,10 +33,8 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
     setShowChatInfoModal(true);
   };
 
-  const chatParticipantsString = chat.participants
-    .map((participant) =>
-      participant.username === user.username ? "You" : participant.name
-    )
+  const chatMembersString = chat.members
+    .map((member) => (member.username === user.username ? "You" : member.name))
     .join(", ");
 
   return (
@@ -63,7 +61,7 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
                 {chat.displayChatTitle}
               </div>
               <div className="text-sm text-slate-800 dark:text-slate-100">
-                {chatParticipantsString}
+                {chatMembersString}
               </div>
             </div>
           </div>
