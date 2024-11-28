@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 
-import { GET_CONTACTS_BY_USER } from "../graphql/queries";
+import { ALL_CONTACTS_BY_USER } from "../graphql/queries";
 import useField from "../hooks/useField";
 import Loading from "./Loading";
 import ContactItem from "./Contacts/ContactItem";
@@ -9,7 +9,7 @@ import MenuHeader from "./MenuHeader";
 
 const ContactsList = ({ user, searchWord }) => {
   const [activePath, setActivePath] = useState(null);
-  const { data, loading } = useQuery(GET_CONTACTS_BY_USER, {
+  const { data, loading } = useQuery(ALL_CONTACTS_BY_USER, {
     variables: {
       searchByName: searchWord.value,
     },

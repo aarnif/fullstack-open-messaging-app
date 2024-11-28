@@ -70,13 +70,13 @@ describe("Server e2e tests chats", () => {
     expect(response.body.data.findChatById.title).toBe("Weekend Hikers");
   });
 
-  it("Get one chat by participants", async () => {
-    const chatByIdWithParticipants = await helpers.requestData({
+  it("Get one chat by members", async () => {
+    const chatByIdWithMembers = await helpers.requestData({
       query: `query FindChatById($chatId: ID!) {
         findChatById(chatId: $chatId) {
           id
           title
-          participants {
+          members {
             id
           }
         }
@@ -84,23 +84,22 @@ describe("Server e2e tests chats", () => {
       variables: { chatId: "6690cc6331f8d4e66b57ae22" },
     });
 
-    const chatByParticipants = await helpers.requestData({
-      query: `query FindChatByParticipants($participants: [ID!]!) {
-        findChatByParticipants(participants: $participants) {
+    const chatByMembers = await helpers.requestData({
+      query: `query FindChatByMembers($members: [ID!]!) {
+        findChatByMembers(members: $members) {
           id
           title
         }
       }`,
       variables: {
-        participants:
-          chatByIdWithParticipants.body.data.findChatById.participants.map(
-            (participant) => participant.id
-          ),
+        members: chatByIdWithMembers.body.data.findChatById.members.map(
+          (member) => member.id
+        ),
       },
     });
 
-    expect(chatByParticipants.errors).toBeUndefined();
-    expect(chatByParticipants.body.data.findChatByParticipants.title).toBe(
+    expect(chatByMembers.errors).toBeUndefined();
+    expect(chatByMembers.body.data.findChatByMembers.title).toBe(
       "Weekend Hikers"
     );
   });

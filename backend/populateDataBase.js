@@ -16,10 +16,10 @@ const usersInDataBase = [];
 const findUserFromUsersDataBase = (username) =>
   usersInDataBase.find((user) => user.username === username);
 
-const selectRandomChatParticipant = (participants) =>
-  participants[Math.floor(Math.random() * participants.length)];
+const selectRandomChatMember = (members) =>
+  members[Math.floor(Math.random() * members.length)];
 
-const addChatParticipantsRandomly = (users) => {
+const addChatMembersRandomly = (users) => {
   const numItems = Math.floor(Math.random() * 3) + 3;
   const shuffledUsers = users.sort(() => 0.5 - Math.random());
   return shuffledUsers.slice(0, numItems);
@@ -58,17 +58,15 @@ export const addChats = async () => {
   console.log("adding chats...");
   for (let i = 0; i < chats.length; ++i) {
     const chat = chats[i];
-    chat.participants = addChatParticipantsRandomly(usersInDataBase);
+    chat.members = addChatMembersRandomly(usersInDataBase);
 
     const testUser = findUserFromUsersDataBase("test");
 
-    const chatParticipantNames = chat.participants.map(
-      (participant) => participant.username
-    );
+    const chatMemberNames = chat.members.map((member) => member.username);
 
     // Add the test user to every chat
-    if (!chatParticipantNames.includes(testUser.username)) {
-      chat.participants.push(findUserFromUsersDataBase("test"));
+    if (!chatMemberNames.includes(testUser.username)) {
+      chat.members.push(findUserFromUsersDataBase("test"));
     }
 
     // Make test user admin of every chat
@@ -77,9 +75,9 @@ export const addChats = async () => {
     chat.messages = chat.messages.map((message) => {
       return {
         ...message,
-        sender: selectRandomChatParticipant(chat.participants),
-        isReadBy: chat.participants.map((participant) => {
-          return { member: participant._id, isRead: true };
+        sender: selectRandomChatMember(chat.members),
+        isReadBy: chat.members.map((member) => {
+          return { member: member._id, isRead: true };
         }),
       };
     });
@@ -96,9 +94,9 @@ export const addChatsToUsers = async () => {
   const allChats = await Chat.find({});
   for (let i = 0; i < allChats.length; ++i) {
     const chat = allChats[i];
-    for (let j = 0; j < chat.participants.length; ++j) {
-      const participant = chat.participants[j];
-      const user = await User.findById(participant);
+    for (let j = 0; j < chat.members.length; ++j) {
+      const member = chat.members[j];
+      const user = await User.findById(member);
       user.chats = user.chats.concat(chat._id);
       await user.save();
     }

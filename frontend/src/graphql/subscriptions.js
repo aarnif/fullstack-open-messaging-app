@@ -38,9 +38,9 @@ export const MESSAGES_IN_CHAT_READ = gql`
   ${CHAT_DETAILS}
 `;
 
-export const PARTICIPANTS_ADDED_TO_GROUP_CHAT = gql`
-  subscription ParticipantsAddedToGroupChat {
-    participantsAddedToGroupChat {
+export const MEMBERS_ADDED_TO_GROUP_CHAT = gql`
+  subscription MembersAddedToGroupChat {
+    membersAddedToGroupChat {
       ...ChatDetails
     }
   }
@@ -48,9 +48,9 @@ export const PARTICIPANTS_ADDED_TO_GROUP_CHAT = gql`
   ${CHAT_DETAILS}
 `;
 
-export const PARTICIPANTS_REMOVED_FROM_GROUP_CHAT = gql`
-  subscription ParticipantsRemovedFromGroupChat {
-    participantsRemovedFromGroupChat {
+export const MEMBERS_REMOVED_FROM_GROUP_CHAT = gql`
+  subscription MembersRemovedFromGroupChat {
+    membersRemovedFromGroupChat {
       ...ChatDetails
     }
   }
@@ -58,14 +58,14 @@ export const PARTICIPANTS_REMOVED_FROM_GROUP_CHAT = gql`
   ${CHAT_DETAILS}
 `;
 
-export const GROUP_CHAT_PARTICIPANTS_UPDATED = gql`
-  subscription GroupChatParticipantsUpdated {
-    groupChatParticipantsUpdated {
+export const GROUP_CHAT_MEMBERS_UPDATED = gql`
+  subscription GroupChatMembersUpdated {
+    groupChatmembersUpdated {
       updatedChat {
         ...ChatDetails
       }
-      removedParticipants
-      addedParticipants
+      removedmembers
+      addedmembers
     }
   }
 

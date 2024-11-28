@@ -76,7 +76,7 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
       <div className="w-full flex-grow flex flex-col justify-center items-center">
         <ChatMembersList
           user={user}
-          chatParticipants={chat.participants}
+          chatMembers={chat.members}
           admin={chatAdmin}
         />
         {user.id !== chatAdmin.id && (

@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { AnimatePresence, motion } from "framer-motion";
 
 import ConfirmModalProvider from "./components/ConfirmModalProvider";
-import { GET_CURRENT_USER } from "./graphql/queries";
+import { CURRENT_USER } from "./graphql/queries";
 import LoadingPage from "./components/LoadingPage";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -24,7 +24,7 @@ import Profile from "./components/Profile/Profile";
 import Settings from "./components/Settings/Settings";
 
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
-import NewPrivateChatModal from "./components/Modals/NewIndividualChatModal/NewPrivateChatModal";
+import NewPrivateChatModal from "./components/Modals/NewPrivateChatModal/NewPrivateChatModal";
 import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupChatModal";
 import NewContactModal from "./components/Modals/NewContactModal";
 
@@ -36,7 +36,7 @@ const App = () => {
   const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
   const [showNewContactModal, setShowNewContactModal] = useState(false);
 
-  const { data, error, loading } = useQuery(GET_CURRENT_USER);
+  const { data, error, loading } = useQuery(CURRENT_USER);
   console.log("Current user:", data);
 
   useEffect(() => {

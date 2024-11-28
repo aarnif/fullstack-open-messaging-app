@@ -290,19 +290,19 @@ describe("Server e2e tests users", () => {
 
     response = await helpers.requestData(
       {
-        query: `mutation CreateChat($participants: [ID!]!) {
-          createChat(participants: $participants) {
+        query: `mutation CreateChat($members: [ID!]!) {
+          createChat(members: $members) {
             id
             title
             isGroupChat
-            participants {
+            members {
               id
               username
             }
           }
         }`,
         variables: {
-          participants: [credentials.id, "6690caa54dc3eac2b83517d0"],
+          members: [credentials.id, "6690caa54dc3eac2b83517d0"],
         },
       },
       credentials.token
@@ -311,11 +311,11 @@ describe("Server e2e tests users", () => {
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.createChat.title).toBe("Private chat");
     expect(response.body.data.createChat.isGroupChat).toBe(false);
-    expect(response.body.data.createChat.participants.length).toBe(2);
-    expect(response.body.data.createChat.participants[0].username).toBe(
+    expect(response.body.data.createChat.members.length).toBe(2);
+    expect(response.body.data.createChat.members[0].username).toBe(
       credentials.username
     );
-    expect(response.body.data.createChat.participants[1].username).toBe(
+    expect(response.body.data.createChat.members[1].username).toBe(
       contactDetails[1].username
     );
   });
@@ -325,8 +325,8 @@ describe("Server e2e tests users", () => {
 
     response = await helpers.requestData(
       {
-        query: `mutation CreateChat($title: String, $description: String, $participants: [ID!]!) {
-          createChat(title: $title, description: $description, participants: $participants) {
+        query: `mutation CreateChat($title: String, $description: String, $members: [ID!]!) {
+          createChat(title: $title, description: $description, members: $members) {
             id
             title
             description
@@ -335,7 +335,7 @@ describe("Server e2e tests users", () => {
               id
               username
             }
-            participants {
+            members {
               id
               username
             }
@@ -345,7 +345,7 @@ describe("Server e2e tests users", () => {
           title: "Gamers",
 
           description: "Chat for gamers",
-          participants: [
+          members: [
             credentials.id,
             "6690caa54dc3eac2b83517d0",
             "6690caa54dc3eac2b83517d8",
@@ -363,17 +363,17 @@ describe("Server e2e tests users", () => {
       groupChatDetails.description
     );
     expect(response.body.data.createChat.isGroupChat).toBe(true);
-    expect(response.body.data.createChat.participants.length).toBe(3);
+    expect(response.body.data.createChat.members.length).toBe(3);
     expect(response.body.data.createChat.admin.username).toBe(
       credentials.username
     );
-    expect(response.body.data.createChat.participants[0].username).toBe(
+    expect(response.body.data.createChat.members[0].username).toBe(
       credentials.username
     );
-    expect(response.body.data.createChat.participants[1].username).toBe(
+    expect(response.body.data.createChat.members[1].username).toBe(
       contactDetails[1].username
     );
-    expect(response.body.data.createChat.participants[2].username).toBe(
+    expect(response.body.data.createChat.members[2].username).toBe(
       contactDetails[2].username
     );
   });

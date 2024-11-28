@@ -6,8 +6,8 @@ import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
 
 import {
-  GET_ALL_CONTACTS_EXCEPT_BY_USER,
-  GET_CONTACTS_BY_USER,
+  ALL_CONTACTS_EXCEPT_BY_USER,
+  ALL_CONTACTS_BY_USER,
 } from "../../graphql/queries";
 import { ADD_CONTACTS } from "../../graphql/mutations";
 import useField from "../../hooks/useField";
@@ -26,7 +26,7 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
   const [chosenUserIds, setChosenUserIds] = useState([]);
 
-  const res1 = useQuery(GET_ALL_CONTACTS_EXCEPT_BY_USER, {
+  const result = useQuery(ALL_CONTACTS_EXCEPT_BY_USER, {
     variables: {
       searchByName: searchWord.value,
     },
@@ -55,13 +55,13 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
         },
         refetchQueries: [
           {
-            query: GET_CONTACTS_BY_USER,
+            query: ALL_CONTACTS_BY_USER,
             variables: {
               searchByName: "",
             },
           },
           {
-            query: GET_ALL_CONTACTS_EXCEPT_BY_USER,
+            query: ALL_CONTACTS_EXCEPT_BY_USER,
             variables: {
               searchByName: "",
             },
@@ -77,7 +77,7 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
     navigate("/contacts");
   };
 
-  console.log("res1.data:", res1.data?.allContactsExceptByUser);
+  console.log("res1.data:", result.data?.allContactsExceptByUser);
   console.log("chosenUserIds:", chosenUserIds);
 
   return (
@@ -120,14 +120,14 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
           <>
             <Notify notifyMessage={notifyMessage} />
             <SearchBar searchWord={searchWord} />
-            {res1.loading ? (
+            {result.loading ? (
               <Loading />
             ) : (
               <>
                 <div className="flex-grow w-full overflow-y-auto h-0">
                   <SelectContactsList
                     user={user}
-                    data={res1.data.allContactsExceptByUser}
+                    data={result.data.allContactsExceptByUser}
                     chosenUserIds={chosenUserIds}
                     setChosenUserIds={setChosenUserIds}
                   />

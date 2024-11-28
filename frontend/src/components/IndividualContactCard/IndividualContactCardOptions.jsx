@@ -2,8 +2,8 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 import {
-  GET_CHAT_BY_PARTICIPANTS,
-  GET_CONTACTS_BY_USER,
+  FIND_CHAT_BY_MEMBERS,
+  ALL_CONTACTS_BY_USER,
 } from "../../graphql/queries";
 import {
   BLOCK_OR_UNBLOCK_CONTACT,
@@ -21,7 +21,7 @@ const IndividualContactOptions = ({
   const { confirmModal } = useConfirmModal();
   const navigate = useNavigate();
 
-  const [getChatByParticipants] = useLazyQuery(GET_CHAT_BY_PARTICIPANTS);
+  const [getChatByMembers] = useLazyQuery(FIND_CHAT_BY_MEMBERS);
 
   const [blockOrUnblockContact] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
     onError: (error) => {
@@ -40,23 +40,23 @@ const IndividualContactOptions = ({
   const handleChatWithContact = async () => {
     console.log("Press chat with contact button!");
 
-    const checkIfChatExists = await getChatByParticipants({
+    const checkIfChatExists = await getChatByMembers({
       variables: {
-        participants: [user.id, contact.id],
+        members: [user.id, contact.id],
       },
     });
 
     console.log("Check if chat exists:", checkIfChatExists);
 
-    if (checkIfChatExists.data?.findChatByParticipants) {
-      navigate(`/chats/${checkIfChatExists.data.findChatByParticipants.id}`);
+    if (checkIfChatExists.data?.findChatByMembers) {
+      navigate(`/chats/${checkIfChatExists.data.findChatByMembers.id}`);
       return;
     }
 
     const newPrivateChatInfo = {
       title: contact.name,
       description: "",
-      participants: [user, contact],
+      members: [user, contact],
       image: contact.image.thumbnail,
     };
 
@@ -97,7 +97,7 @@ const IndividualContactOptions = ({
         },
         refetchQueries: [
           {
-            query: GET_CONTACTS_BY_USER,
+            query: ALL_CONTACTS_BY_USER,
             variables: {
               searchByName: "",
             },

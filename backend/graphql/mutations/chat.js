@@ -16,7 +16,7 @@ const typeDefs = `
     createChat(
       title: String
       description: String
-      participants: [ID!]!
+      members: [ID!]!
     ): Chat
     addMessageToChat(
       chatId: ID!
@@ -36,29 +36,21 @@ const typeDefs = `
     markAllMessagesInChatRead(
       chatId: ID!
     ): Chat
-    addParticipantsToGroupChat(
+    updateGroupChatMembers(
       chatId: ID!
-      participants: [ID!]!
-    ): Chat
-    removeParticipantsFromGroupChat(
-      chatId: ID!
-      participants: [ID!]!
-    ): Chat
-    updateGroupChatParticipants(
-      chatId: ID!
-      participants: [ID!]!
+      members: [ID!]!
     ): Chat
     leaveGroupChats(
       chatIds: [ID!]!
     ): [String!]!
   }
-  type newGroupChatParticipants {
+  type newGroupChatMembers {
     updatedChat: Chat
-    removedParticipants: [ID]
-    addedParticipants: [ID]
+    removedMembers: [ID]
+    addedMembers: [ID]
   }
   type leftGroupChats {
-    participant: ID
+    member: ID
     chatIds: [ID]
   }
   type Subscription {
@@ -67,9 +59,7 @@ const typeDefs = `
     chatDeleted: String!
     groupChatUpdated: Chat!
     messagesInChatRead: Chat!
-    participantsAddedToGroupChat: Chat!
-    participantsRemovedFromGroupChat: Chat!
-    groupChatParticipantsUpdated: newGroupChatParticipants
+    groupChatMembersUpdated: newGroupChatMembers
     leftGroupChats: leftGroupChats
   }   
 `;
@@ -92,13 +82,13 @@ const resolvers = {
             code: "NOT_AUTHENTICATED",
           },
         });
-      } else if (args.participants.length < 2) {
-        userInputError.message = "At least two participants are required!";
+      } else if (args.members.length < 2) {
+        userInputError.message = "At least two members are required!";
         throw userInputError;
-      } else if (args.participants.length === 2) {
-        console.log("Creating private chat with two participants");
+      } else if (args.members.length === 2) {
+        console.log("Creating private chat with two members");
         chatTitle = "Private chat";
-      } else if (args.participants.length > 2 && !args.title) {
+      } else if (args.members.length > 2 && !args.title) {
         userInputError.message = "Chat title is required for group chats!";
         throw userInputError;
       } else {
@@ -113,7 +103,7 @@ const resolvers = {
         description: args.description,
         isGroupChat: isGroupChat,
         admin: context.currentUser,
-        participants: args.participants,
+        members: args.members,
         latestMessage: {
           sender: context.currentUser,
           content: "Chat created",
@@ -122,9 +112,9 @@ const resolvers = {
 
       try {
         newChat.save();
-        const addChatToParticipatingUsersChats = args.participants.map(
-          async (participant) => {
-            await User.findByIdAndUpdate(participant, {
+        const addChatToParticipatingUsersChats = args.members.map(
+          async (member) => {
+            await User.findByIdAndUpdate(member, {
               $push: { chats: newChat },
             });
           }
@@ -139,7 +129,7 @@ const resolvers = {
         });
       }
 
-      const addedChat = newChat.populate("participants");
+      const addedChat = newChat.populate("members");
 
       pubsub.publish("CHAT_ADDED", { chatAdded: addedChat });
 
@@ -157,7 +147,7 @@ const resolvers = {
 
       const chatToBeUpdated = await Chat.findById(args.chatId)
         .populate("admin")
-        .populate("participants");
+        .populate("members");
 
       if (!chatToBeUpdated) {
         throw new GraphQLError("Chat not found!", {
@@ -169,13 +159,14 @@ const resolvers = {
       }
 
       if (chatToBeUpdated.title === "Private chat") {
-        const checkIfAnotherUserHasBlockedYou =
-          chatToBeUpdated.participants.find((participant) => {
+        const checkIfAnotherUserHasBlockedYou = chatToBeUpdated.members.find(
+          (member) => {
             return (
-              participant._id !== context.currentUser.id &&
-              participant.blockedContacts.includes(context.currentUser.id)
+              member._id !== context.currentUser.id &&
+              member.blockedContacts.includes(context.currentUser.id)
             );
-          });
+          }
+        );
 
         if (checkIfAnotherUserHasBlockedYou) {
           throw new GraphQLError(
@@ -197,10 +188,10 @@ const resolvers = {
         sender: context.currentUser.id,
         content: args.content.trim(),
         image: args.input,
-        isReadBy: chatToBeUpdated.participants.map((participant) => {
-          return context.currentUser._id.equals(participant._id)
-            ? { member: participant._id, isRead: true }
-            : { member: participant._id, isRead: false };
+        isReadBy: chatToBeUpdated.members.map((member) => {
+          return context.currentUser._id.equals(member._id)
+            ? { member: member._id, isRead: true }
+            : { member: member._id, isRead: false };
         }),
       };
 
@@ -213,7 +204,7 @@ const resolvers = {
           { new: true }
         )
           .populate("admin")
-          .populate("participants")
+          .populate("members")
           .populate({
             path: "messages",
             populate: { path: "sender" },
@@ -248,7 +239,7 @@ const resolvers = {
       }
 
       const chatToBeDeleted = await Chat.findById(args.chatId).populate(
-        "participants"
+        "members"
       );
 
       if (!chatToBeDeleted) {
@@ -264,8 +255,8 @@ const resolvers = {
         const removeChat = await Chat.findByIdAndDelete(args.chatId);
         console.log("removeChat", removeChat);
         const removeChatFromParticipatingUsersChats =
-          chatToBeDeleted.participants.map(async (participant) => {
-            const user = await User.findByIdAndUpdate(participant, {
+          chatToBeDeleted.members.map(async (member) => {
+            const user = await User.findByIdAndUpdate(member, {
               $pull: { chats: args.chatId },
             });
           });
@@ -292,7 +283,7 @@ const resolvers = {
       }
 
       const chatToBeUpdated = await Chat.findById(args.chatId).populate(
-        "participants"
+        "members"
       );
 
       if (!chatToBeUpdated) {
@@ -342,7 +333,7 @@ const resolvers = {
           { new: true }
         )
           .populate("admin")
-          .populate("participants")
+          .populate("members")
           .populate({
             path: "messages",
             populate: { path: "sender" },
@@ -392,7 +383,7 @@ const resolvers = {
           }
         )
           .populate("admin")
-          .populate("participants")
+          .populate("members")
           .populate({
             path: "messages",
             populate: { path: "sender" },
@@ -416,151 +407,7 @@ const resolvers = {
         });
       }
     },
-    addParticipantsToGroupChat: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
-      }
-
-      const newParticipants = await User.find({
-        _id: { $in: args.participants },
-      });
-
-      const notificationMessages = [];
-
-      newParticipants.forEach((participant) => {
-        notificationMessages.push({
-          type: "notification",
-          sender: context.currentUser.id,
-          content: `${participant.name} joined`,
-        });
-      });
-
-      try {
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $push: {
-              participants: { $each: args.participants },
-              messages: { $each: notificationMessages, $position: 0 },
-            },
-          },
-          { new: true }
-        )
-          .populate("admin")
-          .populate("participants")
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-
-        const addChatToNewParticipants = await User.updateMany(
-          { _id: { $in: args.participants } },
-          {
-            $push: { chats: args.chatId },
-          }
-        );
-
-        pubsub.publish("PARTICIPANTS_ADDED_TO_GROUP_CHAT", {
-          participantsAddedToGroupChat: updatedChat,
-        });
-
-        pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
-          messageToChatAdded: updatedChat,
-        });
-
-        return updatedChat;
-      } catch (error) {
-        throw new GraphQLError("Adding chat participants failed", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
-          },
-        });
-      }
-    },
-    removeParticipantsFromGroupChat: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
-      }
-
-      const newParticipants = await User.find({
-        _id: { $in: args.participants },
-      });
-
-      const notificationMessages = [];
-
-      newParticipants.forEach((participant) => {
-        notificationMessages.push({
-          type: "notification",
-          sender: context.currentUser.id,
-          content: `${participant.name} was removed`,
-        });
-      });
-
-      try {
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $pull: {
-              participants: { $in: args.participants },
-            },
-            $push: {
-              messages: { $each: notificationMessages, $position: 0 },
-            },
-          },
-          { new: true }
-        )
-          .populate("admin")
-          .populate("participants")
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-
-        const removeChatFromRemovedParticipants = await User.updateMany(
-          { _id: { $in: args.participants } },
-          {
-            $pull: { chats: args.chatId },
-          }
-        );
-
-        pubsub.publish("PARTICIPANTS_REMOVED_FROM_GROUP_CHAT", {
-          participantsRemovedFromGroupChat: updatedChat,
-        });
-
-        pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
-          messageToChatAdded: updatedChat,
-        });
-
-        return updatedChat;
-      } catch (error) {
-        throw new GraphQLError("Removing chat participants failed", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
-          },
-        });
-      }
-    },
-    updateGroupChatParticipants: async (root, args, context) => {
+    updateGroupChatMembers: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
           extensions: {
@@ -571,33 +418,30 @@ const resolvers = {
 
       const findChat = await Chat.findById(args.chatId);
 
-      const oldParticipants = findChat.participants.map((participant) =>
-        participant._id.toString()
+      const oldMembers = findChat.members.map((member) =>
+        member._id.toString()
       );
-      const newParticipants = args.participants;
+      const newMembers = args.members;
       const notificationMessages = [];
 
       try {
-        const removedParticipants = [...oldParticipants].filter(
-          (participant) => !newParticipants.includes(participant)
+        const removedMembers = [...oldMembers].filter(
+          (member) => !newMembers.includes(member)
         );
-        const addedParticipants = [...newParticipants].filter(
-          (participant) => !oldParticipants.includes(participant)
+        const addedMembers = [...newMembers].filter(
+          (member) => !oldMembers.includes(member)
         );
 
-        const allParticipantsToFetch = [
-          ...removedParticipants,
-          ...addedParticipants,
-        ];
+        const allMembersToFetch = [...removedMembers, ...addedMembers];
 
-        const users = await User.find({ _id: { $in: allParticipantsToFetch } });
+        const users = await User.find({ _id: { $in: allMembersToFetch } });
 
         const usersToRemove = users.filter((user) =>
-          removedParticipants.includes(user._id.toString())
+          removedMembers.includes(user._id.toString())
         );
         if (usersToRemove.length > 0) {
           await User.updateMany(
-            { _id: { $in: removedParticipants } },
+            { _id: { $in: removedMembers } },
             { $pull: { chats: args.chatId } }
           );
 
@@ -611,11 +455,11 @@ const resolvers = {
         }
 
         const usersToAdd = users.filter((user) =>
-          addedParticipants.includes(user._id.toString())
+          addedMembers.includes(user._id.toString())
         );
         if (usersToAdd.length > 0) {
           await User.updateMany(
-            { _id: { $in: addedParticipants } },
+            { _id: { $in: addedMembers } },
             { $addToSet: { chats: args.chatId } }
           );
 
@@ -631,13 +475,13 @@ const resolvers = {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $set: { participants: args.participants },
+            $set: { members: args.members },
             $push: { messages: { $each: notificationMessages, $position: 0 } },
           },
           { new: true }
         )
           .populate("admin")
-          .populate("participants")
+          .populate("members")
           .populate({
             path: "messages",
             populate: { path: "sender" },
@@ -647,19 +491,18 @@ const resolvers = {
             populate: { path: "isReadBy.member" },
           });
 
-        pubsub.publish("GROUP_CHAT_PARTICIPANTS_UPDATED", {
-          groupChatParticipantsUpdated: {
+        pubsub.publish("GROUP_CHAT_MEMBERS_UPDATED", {
+          groupChatMembersUpdated: {
             updatedChat: updatedChat,
-            removedParticipants:
+            removedMembers:
               usersToRemove.map((user) => user._id.toString()) || [],
-            addedParticipants:
-              usersToAdd.map((user) => user._id.toString()) || [],
+            addedMembers: usersToAdd.map((user) => user._id.toString()) || [],
           },
         });
 
         return updatedChat;
       } catch (error) {
-        throw new GraphQLError("Updating chat participants failed", {
+        throw new GraphQLError("Updating chat members failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             error,
@@ -691,12 +534,12 @@ const resolvers = {
             $push: {
               messages: { $each: [message], $position: 0 },
             },
-            $pull: { participants: context.currentUser.id },
+            $pull: { members: context.currentUser.id },
           },
           { new: true }
         )
           .populate("admin")
-          .populate("participants")
+          .populate("members")
           .populate({
             path: "messages",
             populate: { path: "sender" },
@@ -718,7 +561,7 @@ const resolvers = {
           _id: { $in: args.chatIds },
         })
           .populate("admin")
-          .populate("participants")
+          .populate("members")
           .populate({
             path: "messages",
             populate: { path: "sender" },
@@ -736,14 +579,14 @@ const resolvers = {
 
         pubsub.publish("LEFT_GROUP_CHATS", {
           leftGroupChats: {
-            participant: context.currentUser.id,
+            member: context.currentUser.id,
             chatIds: args.chatIds,
           },
         });
 
         return args.chatIds;
       } catch (error) {
-        throw new GraphQLError("Removing chat participants failed", {
+        throw new GraphQLError("Removing chat members failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             invalidArgs: args,
@@ -770,15 +613,8 @@ const resolvers = {
     messagesInChatRead: {
       subscribe: () => pubsub.asyncIterator("MESSAGES_IN_CHAT_READ"),
     },
-    participantsAddedToGroupChat: {
-      subscribe: () => pubsub.asyncIterator("PARTICIPANTS_ADDED_TO_GROUP_CHAT"),
-    },
-    participantsRemovedFromGroupChat: {
-      subscribe: () =>
-        pubsub.asyncIterator("PARTICIPANTS_REMOVED_FROM_GROUP_CHAT"),
-    },
-    groupChatParticipantsUpdated: {
-      subscribe: () => pubsub.asyncIterator("GROUP_CHAT_PARTICIPANTS_UPDATED"),
+    groupChatMembersUpdated: {
+      subscribe: () => pubsub.asyncIterator("GROUP_CHAT_MEMBERS_UPDATED"),
     },
     leftGroupChats: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHATS"),
