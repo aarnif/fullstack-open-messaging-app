@@ -27,6 +27,14 @@ const contactDetails = [
     id: "6690caa54dc3eac2b83517d8",
     username: "history_frank",
   },
+  {
+    id: "6690caa54dc3eac2b83517cc",
+    username: "bookworm_jane",
+  },
+  {
+    id: "6690caa54dc3eac2b83517ce",
+    username: "techie_alice",
+  },
 ];
 
 const groupChatDetails = [
@@ -209,7 +217,10 @@ describe("Server tests", () => {
     it("Add three new contacts", async () => {
       await createUser(credentials);
       await loginUser(credentials);
-      const response = await addContacts(credentials, contactDetails);
+      const response = await addContacts(
+        credentials,
+        contactDetails.slice(0, 3)
+      );
 
       expect(JSON.parse(response.text).errors).toBeUndefined();
       assert.strictEqual(response.body.data.addContacts.contacts.length, 3);
@@ -584,6 +595,108 @@ describe("Server tests", () => {
       expect(response.body.data.findChatByMembers.title).toBe(
         groupChatDetails[0].title
       );
+    });
+
+    it("Add members to chat", async () => {
+      await createUser(credentials);
+      await loginUser(credentials);
+      await addContacts(credentials, [contactDetails[0]]);
+      const createdChat = await createChat(
+        credentials,
+        [credentials.id, contactDetails[0].id, contactDetails[1].id],
+        groupChatDetails[0].title,
+        groupChatDetails[0].description
+      );
+
+      groupChatDetails[0].id = createdChat.body.data.createChat.id;
+
+      const response = await helpers.requestData(
+        {
+          query: `mutation UpdateGroupChatMembers($chatId: ID!, $members: [ID!]!) {
+          updateGroupChatMembers(chatId: $chatId, members: $members) {
+            id
+            title
+            members {
+              id
+              username
+            }
+          }
+        }`,
+          variables: {
+            chatId: groupChatDetails[0].id,
+            members: [credentials.id].concat(
+              contactDetails.map((contact) => contact.id)
+            ),
+          },
+        },
+        credentials.token
+      );
+
+      expect(response.errors).toBeUndefined();
+      expect(response.body.data.updateGroupChatMembers.title).toBe(
+        groupChatDetails[0].title
+      );
+      expect(response.body.data.updateGroupChatMembers.members.length).toBe(6);
+      expect(
+        response.body.data.updateGroupChatMembers.members[0].username
+      ).toBe(credentials.username);
+      for (let i = 1; i < 6; ++i) {
+        expect(
+          response.body.data.updateGroupChatMembers.members[i].username
+        ).toBe(contactDetails[i - 1].username);
+      }
+    });
+
+    it("Remove members from chat", async () => {
+      await createUser(credentials);
+      await loginUser(credentials);
+      await addContacts(credentials, [contactDetails[0]]);
+      const createdChat = await createChat(
+        credentials,
+        contactDetails.map((contact) => contact.id),
+        groupChatDetails[0].title,
+        groupChatDetails[0].description
+      );
+
+      groupChatDetails[0].id = createdChat.body.data.createChat.id;
+
+      const response = await helpers.requestData(
+        {
+          query: `mutation UpdateGroupChatMembers($chatId: ID!, $members: [ID!]!) {
+          updateGroupChatMembers(chatId: $chatId, members: $members) {
+            id
+            title
+            members {
+              id
+              username
+            }
+          }
+        }`,
+          variables: {
+            chatId: groupChatDetails[0].id,
+            members: [
+              credentials.id,
+              contactDetails[0].id,
+              contactDetails[1].id,
+            ],
+          },
+        },
+        credentials.token
+      );
+
+      expect(response.errors).toBeUndefined();
+      expect(response.body.data.updateGroupChatMembers.title).toBe(
+        groupChatDetails[0].title
+      );
+      expect(response.body.data.updateGroupChatMembers.members.length).toBe(3);
+      expect(
+        response.body.data.updateGroupChatMembers.members[0].username
+      ).toBe(credentials.username);
+      for (let i = 1; i < 2; ++i) {
+        expect(
+          response.body.data.updateGroupChatMembers.members[i].username
+        ).toBe(contactDetails[i - 1].username);
+      }
     });
   });
 });
