@@ -29,11 +29,18 @@ const contactDetails = [
   },
 ];
 
-const groupChatDetails = {
-  id: "",
-  title: "Gamers",
-  description: "Chat for gamers",
-};
+const groupChatDetails = [
+  {
+    id: "",
+    title: "Gamers",
+    description: "Chat for gamers",
+  },
+  {
+    id: "",
+    title: "OffTopic",
+    description: "Chat for off topic",
+  },
+];
 
 const createUser = async (credentials) => {
   const response = await helpers.requestData({
@@ -369,16 +376,18 @@ describe("Server tests", () => {
           "6690caa54dc3eac2b83517d0",
           "6690caa54dc3eac2b83517d8",
         ],
-        "Gamers",
-        "Chat for gamers"
+        groupChatDetails[0].title,
+        groupChatDetails[0].description
       );
 
       groupChatDetails.id = response.body.data.createChat.id;
 
       expect(JSON.parse(response.text).errors).toBeUndefined();
-      expect(response.body.data.createChat.title).toBe(groupChatDetails.title);
+      expect(response.body.data.createChat.title).toBe(
+        groupChatDetails[0].title
+      );
       expect(response.body.data.createChat.description).toBe(
-        groupChatDetails.description
+        groupChatDetails[0].description
       );
       expect(response.body.data.createChat.isGroupChat).toBe(true);
       expect(response.body.data.createChat.members.length).toBe(3);
@@ -408,11 +417,11 @@ describe("Server tests", () => {
           "6690caa54dc3eac2b83517d0",
           "6690caa54dc3eac2b83517d8",
         ],
-        "Gamers",
-        "Chat for gamers"
+        groupChatDetails[0].title,
+        groupChatDetails[0].description
       );
 
-      groupChatDetails.id = createdChat.body.data.createChat.id;
+      groupChatDetails[0].id = createdChat.body.data.createChat.id;
       const response = await helpers.requestData(
         {
           query: `mutation AddMessageToChat($chatId: ID!, $type: String, $content: String) {
@@ -429,7 +438,7 @@ describe("Server tests", () => {
           }
         }`,
           variables: {
-            chatId: groupChatDetails.id,
+            chatId: groupChatDetails[0].id,
             type: "message",
             content: "Hello gamers!",
           },
@@ -439,7 +448,7 @@ describe("Server tests", () => {
 
       expect(JSON.parse(response.text).errors).toBeUndefined();
       expect(response.body.data.addMessageToChat.title).toBe(
-        groupChatDetails.title
+        groupChatDetails[0].title
       );
       expect(response.body.data.addMessageToChat.messages.length).toBe(1);
       expect(
@@ -448,6 +457,62 @@ describe("Server tests", () => {
       expect(response.body.data.addMessageToChat.messages[0].content).toBe(
         "Hello gamers!"
       );
+    });
+
+    it("Count all chats", async () => {
+      await createUser(credentials);
+      await loginUser(credentials);
+      await addContacts(credentials, [contactDetails[0]]);
+
+      for (const groupChatDetail of groupChatDetails) {
+        await createChat(
+          credentials,
+          [
+            credentials.id,
+            "6690caa54dc3eac2b83517d0",
+            "6690caa54dc3eac2b83517d8",
+          ],
+          groupChatDetail.title,
+          groupChatDetail.description
+        );
+      }
+
+      const response = await helpers.requestData({
+        query: `query CountChats {
+         countChats
+        }`,
+      });
+
+      expect(response.errors).toBeUndefined();
+      expect(response.body.data.countChats).toBe(2);
+    });
+
+    it("Get all chats", async () => {
+      await createUser(credentials);
+      await loginUser(credentials);
+      await addContacts(credentials, [contactDetails[0]]);
+      await createChat(
+        credentials,
+        [
+          credentials.id,
+          "6690caa54dc3eac2b83517d0",
+          "6690caa54dc3eac2b83517d8",
+        ],
+        groupChatDetails[0].title,
+        groupChatDetails[0].description
+      );
+
+      const response = await helpers.requestData({
+        query: `query AllChats {
+            allChats {
+              id
+              title
+            }
+          }`,
+      });
+
+      expect(response.errors).toBeUndefined();
+      assert.strictEqual(response.body.data.allChats.length, 1);
     });
 
     it("Find chat by id", async () => {
@@ -462,8 +527,8 @@ describe("Server tests", () => {
           "6690caa54dc3eac2b83517d0",
           "6690caa54dc3eac2b83517d8",
         ],
-        "Gamers",
-        "Chat for gamers"
+        groupChatDetails[0].title,
+        groupChatDetails[0].description
       );
 
       groupChatDetails.id = createdChat.body.data.createChat.id;
@@ -482,57 +547,43 @@ describe("Server tests", () => {
       expect(response.body.data.findChatById.title).toBe("Gamers");
     });
 
-    it("Count all chats", async () => {
+    it("Find chat by members", async () => {
       await createUser(credentials);
       await loginUser(credentials);
       await addContacts(credentials, [contactDetails[0]]);
-      await createChat(
+      const createdChat = await createChat(
         credentials,
         [
           credentials.id,
           "6690caa54dc3eac2b83517d0",
           "6690caa54dc3eac2b83517d8",
         ],
-        "Gamers",
-        "Chat for gamers"
+        groupChatDetails[0].title,
+        groupChatDetails[0].description
       );
 
+      groupChatDetails[0].id = createdChat.body.data.createChat.id;
+
       const response = await helpers.requestData({
-        query: `query CountChats {
-         countChats
+        query: `query FindChatByMembers($members: [ID!]!) {
+          findChatByMembers(members: $members) {
+            id
+            title
+          }
         }`,
+        variables: {
+          members: [
+            credentials.id,
+            "6690caa54dc3eac2b83517d0",
+            "6690caa54dc3eac2b83517d8",
+          ],
+        },
       });
 
       expect(response.errors).toBeUndefined();
-      expect(response.body.data.countChats).toBe(1);
-    });
-
-    it("Get all chats", async () => {
-      await createUser(credentials);
-      await loginUser(credentials);
-      await addContacts(credentials, [contactDetails[0]]);
-      await createChat(
-        credentials,
-        [
-          credentials.id,
-          "6690caa54dc3eac2b83517d0",
-          "6690caa54dc3eac2b83517d8",
-        ],
-        "Gamers",
-        "Chat for gamers"
+      expect(response.body.data.findChatByMembers.title).toBe(
+        groupChatDetails[0].title
       );
-
-      const response = await helpers.requestData({
-        query: `query AllChats {
-            allChats {
-              id
-              title
-            }
-          }`,
-      });
-
-      expect(response.errors).toBeUndefined();
-      assert.strictEqual(response.body.data.allChats.length, 1);
     });
   });
 });
