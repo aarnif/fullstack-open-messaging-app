@@ -49,7 +49,7 @@ const typeDefs = `
     removedMembers: [ID]
     addedMembers: [ID]
   }
-  type leftGroupChats {
+  type leftGroupChatsDetails {
     member: ID
     chatIds: [ID]
   }
@@ -60,7 +60,7 @@ const typeDefs = `
     groupChatUpdated: Chat!
     messagesInChatRead: Chat!
     groupChatMembersUpdated: newGroupChatMembers
-    leftGroupChats: leftGroupChats
+    leftGroupChats: leftGroupChatsDetails
   }   
 `;
 
