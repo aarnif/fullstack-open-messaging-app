@@ -155,9 +155,13 @@ const resolvers = {
 
       console.log("Adding contacts: ", args.contacts);
 
-      const user = await User.findByIdAndUpdate(context.currentUser, {
-        $addToSet: { contacts: { $each: args.contacts } },
-      }).populate("contacts");
+      const user = await User.findByIdAndUpdate(
+        context.currentUser,
+        {
+          $addToSet: { contacts: { $each: args.contacts } },
+        },
+        { new: true }
+      ).populate("contacts");
 
       const addedContacts = await User.find({ _id: { $in: args.contacts } });
 

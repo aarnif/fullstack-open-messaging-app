@@ -138,6 +138,7 @@ const ChatsList = ({ user, searchWord }) => {
         },
         ({ allChatsByUser }) => {
           if (leftGroupChatData.member === user.id) {
+            console.log("User left group chat");
             return {
               allChatsByUser: helpers.sortChatsByDate(
                 allChatsByUser.filter(
