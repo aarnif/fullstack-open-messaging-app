@@ -102,11 +102,7 @@ const resolvers = {
         }),
     allChatsByUser: async (root, args, context) => {
       if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
+        return [];
       }
 
       return Chat.find({

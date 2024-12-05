@@ -80,12 +80,9 @@ const loginUser = async (credentials) => {
 };
 
 const addContacts = async (credentials, contactDetails) => {
-  let response;
-  for (let i = 0; i < 2; ++i) {
-    // Currently needs to be run twice to work, fix the resolver in question
-    response = await helpers.requestData(
-      {
-        query: `mutation AddContacts($contacts: [ID!]) {
+  const response = await helpers.requestData(
+    {
+      query: `mutation AddContacts($contacts: [ID!]) {
         addContacts(contacts: $contacts) {
           contacts {
             id
@@ -93,13 +90,13 @@ const addContacts = async (credentials, contactDetails) => {
           }
         }
     }`,
-        variables: {
-          contacts: contactDetails.map((contact) => contact.id),
-        },
+      variables: {
+        contacts: contactDetails.map((contact) => contact.id),
       },
-      credentials.token
-    );
-  }
+    },
+    credentials.token
+  );
+
   return response;
 };
 
