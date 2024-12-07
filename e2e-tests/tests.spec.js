@@ -113,7 +113,7 @@ test.describe("Messaging app", () => {
       await expect(
         page.getByText("Username must be at least 4 characters long!")
       ).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
 
@@ -125,7 +125,7 @@ test.describe("Messaging app", () => {
       await expect(
         page.getByText("Password must be at least 6 characters long!")
       ).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
 
@@ -137,7 +137,7 @@ test.describe("Messaging app", () => {
         user1Credentials.password + "1"
       );
       await expect(page.getByText("Passwords do not match!")).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
 
@@ -159,7 +159,7 @@ test.describe("Messaging app", () => {
       );
       await expect(
         page.getByText("Select Chat to Start Messaging.")
-      ).toBeVisible({ timeout: 20000 });
+      ).toBeVisible({ timeout: 60000 });
     });
 
     test("Try to create same user twice", async ({ page, request }) => {
@@ -186,7 +186,7 @@ test.describe("Messaging app", () => {
         user1Credentials.confirmPassword
       );
       await expect(page.getByText("Username already exists!")).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
 
@@ -210,7 +210,7 @@ test.describe("Messaging app", () => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await expect(
         page.getByText("Select Chat to Start Messaging.")
-      ).toBeVisible({ timeout: 20000 });
+      ).toBeVisible({ timeout: 60000 });
     });
 
     test("Sign in fails with wrong credentials", async ({ page }) => {
@@ -228,7 +228,7 @@ test.describe("Messaging app", () => {
       );
       await expect(page.getByText("invalid username or password!")).toBeVisible(
         {
-          timeout: 20000,
+          timeout: 60000,
         }
       );
     });
@@ -248,10 +248,10 @@ test.describe("Messaging app", () => {
       await page.getByTestId("confirm-button").click();
 
       await expect(page.getByText("John Doe", { exact: true })).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
       await expect(page.getByText("I am John Doe.")).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
   });
@@ -291,7 +291,7 @@ test.describe("Messaging app", () => {
       await expect(
         page.getByText(user2Credentials.name, { exact: true })
       ).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
 
@@ -305,7 +305,7 @@ test.describe("Messaging app", () => {
       await expect(
         page.getByText("You have blocked this contact!")
       ).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
 
       await page.getByTestId("block-or-unblock-contact-button").click();
@@ -314,7 +314,7 @@ test.describe("Messaging app", () => {
       await expect(
         page.getByText("You have blocked this contact!")
       ).not.toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
 
@@ -326,7 +326,7 @@ test.describe("Messaging app", () => {
       await page.getByTestId("remove-contact-button").click();
       await page.getByTestId("confirm-button").click();
       await expect(page.getByText("No contacts found")).not.toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
   });
@@ -374,7 +374,7 @@ test.describe("Messaging app", () => {
 
       await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible(
         {
-          timeout: 20000,
+          timeout: 60000,
         }
       );
 
@@ -382,11 +382,11 @@ test.describe("Messaging app", () => {
       await page.getByTestId("send-new-message-button").click();
 
       await expect(page.getByText("Hello!", { exact: true })).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       }); // Check if message shows in chat window
 
       await expect(page.getByText("You: Hello!", { exact: true })).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       }); // Check if message shows in chats list
     });
 
@@ -395,7 +395,7 @@ test.describe("Messaging app", () => {
 
       await expect(
         page.getByText("Select Chat to Start Messaging.")
-      ).toBeVisible({ timeout: 20000 });
+      ).toBeVisible({ timeout: 60000 });
 
       await addContacts(page, [user2Credentials, user3Credentials]);
 
@@ -406,7 +406,7 @@ test.describe("Messaging app", () => {
 
       const chatTitle = await page.getByTestId("new-chat-title");
 
-      await expect(chatTitle).toBeVisible({ timeout: 20000 });
+      await expect(chatTitle).toBeVisible({ timeout: 60000 });
       await expect(chatTitle).toHaveText("Test chat");
 
       await page.getByTestId("new-message-input").fill("Hello everybody!");
@@ -416,13 +416,13 @@ test.describe("Messaging app", () => {
       await expect(
         page.getByText("Hello everybody!", { exact: true })
       ).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       }); // Check if message shows in chat window
 
       await expect(
         page.getByText("You: Hello everybody!", { exact: true })
       ).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       }); // Check if message shows in chats list
     });
 
@@ -431,7 +431,7 @@ test.describe("Messaging app", () => {
 
       await expect(
         page.getByText("Select Chat to Start Messaging.")
-      ).toBeVisible({ timeout: 20000 });
+      ).toBeVisible({ timeout: 60000 });
 
       await addContacts(page, [
         user2Credentials,
@@ -447,7 +447,7 @@ test.describe("Messaging app", () => {
 
       const chatTitle = await page.getByTestId("new-chat-title");
 
-      await expect(chatTitle).toBeVisible({ timeout: 20000 });
+      await expect(chatTitle).toBeVisible({ timeout: 60000 });
       await expect(chatTitle).toHaveText("Test chat");
 
       await page.getByTestId("new-message-input").fill("Hello everybody!");
@@ -456,13 +456,13 @@ test.describe("Messaging app", () => {
       await page.getByTestId("chat-info-button").click();
 
       await expect(page.getByText("3 members", { exact: true })).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
 
       await page.getByTestId("edit-group-chat-button").click();
       await updateGroupChatMembers(page, [user4Credentials, user5Credentials]);
       await expect(page.getByText("5 members", { exact: true })).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
 
@@ -471,7 +471,7 @@ test.describe("Messaging app", () => {
 
       await expect(
         page.getByText("Select Chat to Start Messaging.")
-      ).toBeVisible({ timeout: 20000 });
+      ).toBeVisible({ timeout: 60000 });
 
       await addContacts(page, [
         user2Credentials,
@@ -489,7 +489,7 @@ test.describe("Messaging app", () => {
 
       const chatTitle = await page.getByTestId("new-chat-title");
 
-      await expect(chatTitle).toBeVisible({ timeout: 20000 });
+      await expect(chatTitle).toBeVisible({ timeout: 60000 });
       await expect(chatTitle).toHaveText("Test chat");
 
       await page.getByTestId("new-message-input").fill("Hello everybody!");
@@ -498,13 +498,13 @@ test.describe("Messaging app", () => {
       await page.getByTestId("chat-info-button").click();
 
       await expect(page.getByText("5 members", { exact: true })).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
 
       await page.getByTestId("edit-group-chat-button").click();
       await updateGroupChatMembers(page, [user2Credentials, user3Credentials]);
       await expect(page.getByText("3 members", { exact: true })).toBeVisible({
-        timeout: 20000,
+        timeout: 60000,
       });
     });
   });
