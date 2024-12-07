@@ -2,6 +2,19 @@
 
 This is a full stack project for the Helsinki University [Full Stack Open](https://fullstackopen.com).
 
+## App features
+
+- Users can sign up and sign in.
+- Users can add, remove and block contacts.
+- Users can create one-on-one private and group chats.
+- Users can send messages to each other in chats.
+- Users can leave group chats.
+- Users can delete private chats.
+- Group chat admins (who created the chat) can add and remove members to the chat.
+- Group chat admins can edit chat information, such as the chat name, description and image.
+- Users can edit their profile.
+- Users can toggle between light and dark mode.
+
 ## Live Preview
 
 - [Messaging App UI](https://fullstack-open-messaging-app.netlify.app)
