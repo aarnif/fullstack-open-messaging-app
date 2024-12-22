@@ -1,5 +1,6 @@
 # The Full Stack Open Course Project: Messaging App
 
+Messaging app insprired by Discord, Telegram and WhatsApp.
 This is a full stack project for the Helsinki University [Full Stack Open](https://fullstackopen.com).
 
 ## App features
