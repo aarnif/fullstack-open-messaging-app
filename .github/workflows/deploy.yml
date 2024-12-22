@@ -20,6 +20,8 @@ jobs:
         run: npm install
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Run test database
+        run: docker compose -f docker-compose.dev.yml up -d
       - name: Run server tests
         run: npm run test:server
         env:
