@@ -6,7 +6,7 @@ import { LOGIN } from "../graphql/mutations";
 import useNotifyMessage from "../hooks/useNotifyMessage";
 import Notify from "./Notify";
 
-const SignIn = () => {
+const SignIn = ({ setActivePath }) => {
   const client = useApolloClient();
   const navigate = useNavigate();
   const username = useField("text", "Enter your username here...");
@@ -36,6 +36,7 @@ const SignIn = () => {
       console.log("Logged in successfully!");
       localStorage.setItem("messaging-app-user-token", data.login.value);
       client.resetStore();
+      setActivePath("chats");
       navigate("/chats");
     }
   };
