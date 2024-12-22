@@ -76,7 +76,11 @@ const App = () => {
               <Route
                 path="/signin"
                 element={
-                  data?.me ? <Navigate to="/chats" replace /> : <SignIn />
+                  data?.me ? (
+                    <Navigate to="/chats" replace />
+                  ) : (
+                    <SignIn setActivePath={setActivePath} />
+                  )
                 }
               />
               <Route

@@ -1,11 +1,25 @@
 # The Full Stack Open Course Project: Messaging App
 
+Messaging app insprired by Discord, Telegram and WhatsApp.
 This is a full stack project for the Helsinki University [Full Stack Open](https://fullstackopen.com).
+
+## App features
+
+- Users can sign up and sign in.
+- Users can add, remove and block contacts.
+- Users can create one-on-one private and group chats.
+- Users can send messages to each other in chats.
+- Users can leave group chats.
+- Users can delete private chats.
+- Group chat admins (who created the chat) can add and remove members to the chat.
+- Group chat admins can edit chat information, such as the chat name, description and image.
+- Users can edit their profile.
+- Users can toggle between light and dark mode.
 
 ## Live Preview
 
-[Messaging App UI](https://fullstack-open-messaging-app.netlify.app)
-[Messaging App API](https://fullstack-open-messaging-app-api.onrender.com)
+- [Messaging App UI](https://fullstack-open-messaging-app.netlify.app)
+- [Messaging App API](https://fullstack-open-messaging-app-api.onrender.com)
 
 ## Technologies
 
@@ -21,9 +35,22 @@ This is a full stack project for the Helsinki University [Full Stack Open](https
 - [React Icons](https://react-icons.github.io/react-icons/)
 - [Material Design Icons](https://pictogrammers.com/library/mdi/)
 
-## Instructions
+## Testing application locally
 
-Create a .env file in the root of the above directory and replace the values of the environment variables below with your own:
+First clone the repository and install the dependencies:
+
+```
+HTTPS - git clone https://github.com/aarnif/fullstack-open-messaging-app.git
+
+SSH - git clone git@github.com:aarnif/fullstack-open-messaging-app.git
+
+cd fullstack-open-messaging-app
+
+npm install
+
+```
+
+After that create a .env file in the root of the above directory and replace the values of the environment variables below with your own:
 
 ```
 PORT=Server port
@@ -35,14 +62,9 @@ TEST_MONGODB_URI=Test MongoDB URI
 VITE_IMGBB_API_KEY=https://imgbb.com/ API key
 ```
 
+Finally, here are the available npm-scripts:
+
 ```
-HTTPS - git clone https://github.com/aarnif/fullstack-open-messaging-app.git
-
-SSH - git clone git@github.com:aarnif/fullstack-open-messaging-app.git
-
-cd fullstack-open-messaging-app
-
-npm install
 
 npm run dev:server # Start the server in development mode
 
