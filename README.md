@@ -76,6 +76,8 @@ npm run build:ui # Build the ui
 
 npm run prod:ui # Start the ui in production mode
 
+npm run start:test:db # Start the test database (docker container)
+
 npm run test:server # Run the server tests
 
 npm run start:test:server # Start the server in test mode for e2e tests
