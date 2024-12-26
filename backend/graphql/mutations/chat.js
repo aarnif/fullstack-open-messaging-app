@@ -134,7 +134,7 @@ const resolvers = {
         });
       }
 
-      const addedChat = newChat.populate("members");
+      const addedChat = await newChat.populate("members");
 
       pubsub.publish("CHAT_ADDED", { chatAdded: addedChat });
 

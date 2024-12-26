@@ -88,7 +88,10 @@ const chatSchema = new Schema({
 
 chatSchema.set("toJSON", {
   transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
+    if (!returnedObject.id) {
+      returnedObject.id = returnedObject._id.toString();
+      delete returnedObject._id;
+    }
 
     returnedObject.messages = returnedObject.messages.map((message) => {
       message.id = message._id;
@@ -96,7 +99,6 @@ chatSchema.set("toJSON", {
       return message;
     });
 
-    delete returnedObject._id;
     delete returnedObject.__v;
   },
 });
