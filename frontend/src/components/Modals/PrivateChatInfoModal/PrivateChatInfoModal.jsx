@@ -70,8 +70,8 @@ const PrivateChatModal = ({ user, chat, setShowChatInfoModal }) => {
     }
   };
 
-  const contact = chat.participants.find(
-    (participant) => participant.username !== user.username
+  const contact = chat.members.find(
+    (member) => member.username !== user.username
   );
 
   return (
