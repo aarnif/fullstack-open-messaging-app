@@ -86,26 +86,6 @@ const chatSchema = new Schema({
   },
 });
 
-chatSchema.methods.displayChatTitle = function (currentUserId) {
-  if (this.isGroupChat) {
-    return this.title;
-  }
-  const findTheOtherMemberName = this.members.find(
-    (member) => member.id !== currentUserId
-  ).name;
-  return findTheOtherMemberName;
-};
-
-chatSchema.methods.displayChatImage = function (currentUserId) {
-  if (this.isGroupChat) {
-    return this.image;
-  }
-  const findTheOtherMemberProfileImage = this.members.find(
-    (member) => member.id !== currentUserId
-  ).image;
-  return findTheOtherMemberProfileImage;
-};
-
 chatSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();

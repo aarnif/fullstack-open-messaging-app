@@ -19,12 +19,12 @@ const ChatItem = ({ user, item, activePath, setActivePath }) => {
         <div className="mr-4">
           <img
             className="w-16 h-16 rounded-full"
-            src={item.displayChatImage.thumbnail}
+            src={item.image.thumbnail}
             alt="Chat Thumbnail"
           />
         </div>
         <div className="flex-1">
-          <div className="text-md font-bold">{item.displayChatTitle}</div>
+          <div className="text-md font-bold">{item.title}</div>
           <div className="text-slate-800 dark:text-slate-100">No messages</div>
         </div>
       </div>
