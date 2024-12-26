@@ -47,6 +47,9 @@ const ChatsList = ({ user, searchWord }) => {
         }
       );
     },
+    onError: (error) => {
+      console.log("New message added error:", error);
+    },
   });
 
   useSubscription(NEW_CHAT_ADDED, {
@@ -69,6 +72,9 @@ const ChatsList = ({ user, searchWord }) => {
           };
         }
       );
+    },
+    onError: (error) => {
+      console.log("New chat added error:", error);
     },
   });
 
@@ -94,6 +100,9 @@ const ChatsList = ({ user, searchWord }) => {
           };
         }
       );
+    },
+    onError: (error) => {
+      console.log("Chat edited error:", error);
     },
   });
 
@@ -121,6 +130,9 @@ const ChatsList = ({ user, searchWord }) => {
           };
         }
       );
+    },
+    onError: (error) => {
+      console.log("Chat deleted error:", error);
     },
   });
 
@@ -152,6 +164,9 @@ const ChatsList = ({ user, searchWord }) => {
           };
         }
       );
+    },
+    onError: (error) => {
+      console.log("Left group chats error:", error);
     },
   });
 
