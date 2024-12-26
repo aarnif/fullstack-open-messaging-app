@@ -106,6 +106,21 @@ chatSchema.methods.displayChatImage = function (currentUserId) {
   return findTheOtherMemberProfileImage;
 };
 
+chatSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+
+    returnedObject.messages = returnedObject.messages.map((message) => {
+      message.id = message._id;
+      delete message._id;
+      return message;
+    });
+
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
 const Chat = mongoose.model("Chat", chatSchema);
 
 export default Chat;
