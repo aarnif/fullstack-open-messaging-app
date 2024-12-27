@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import ChatCard from "./ChatCard";
 
-const ChatItem = ({ user, item, activePath, setActivePath }) => {
+const ChatItem = ({ index, user, item, activePath, setActivePath }) => {
   const navigate = useNavigate();
 
   const handlePress = () => {
@@ -19,12 +19,12 @@ const ChatItem = ({ user, item, activePath, setActivePath }) => {
         <div className="mr-4">
           <img
             className="w-16 h-16 rounded-full"
-            src={item.displayChatImage.thumbnail}
+            src={item.image.thumbnail}
             alt="Chat Thumbnail"
           />
         </div>
         <div className="flex-1">
-          <div className="text-md font-bold">{item.displayChatTitle}</div>
+          <div className="text-md font-bold">{item.title}</div>
           <div className="text-slate-800 dark:text-slate-100">No messages</div>
         </div>
       </div>
@@ -37,7 +37,11 @@ const ChatItem = ({ user, item, activePath, setActivePath }) => {
       : "w-full flex items-start py-2 px-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
 
   return (
-    <button className={classStyles} onClick={handlePress}>
+    <button
+      className={classStyles}
+      data-testid={`chat-item-${index}`}
+      onClick={handlePress}
+    >
       <ChatCard user={user} chat={item} />
     </button>
   );

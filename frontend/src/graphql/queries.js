@@ -22,12 +22,7 @@ export const CHAT_DETAILS = gql`
   fragment ChatDetails on Chat {
     id
     title
-    displayChatTitle
     image {
-      thumbnail
-      original
-    }
-    displayChatImage {
       thumbnail
       original
     }

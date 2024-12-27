@@ -20,6 +20,8 @@ jobs:
         run: npm install
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Make build
+        run: npm run build:ui
       - name: Run test database
         run: docker compose -f docker-compose.dev.yml up -d
       - name: Run server tests
@@ -35,8 +37,10 @@ jobs:
           npm run dev:ui &
           npm run test:e2e
         env:
+          NODE_ENV: test
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          REDIS_URI: ${{ secrets.REDIS_URI }}
           PORT: ${{ secrets.PORT }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           VITE_IMGBB_API_KEY: ${{ secrets.VITE_IMGBB_API_KEY }}

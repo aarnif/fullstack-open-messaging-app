@@ -86,25 +86,22 @@ const chatSchema = new Schema({
   },
 });
 
-chatSchema.methods.displayChatTitle = function (currentUserId) {
-  if (this.isGroupChat) {
-    return this.title;
-  }
-  const findTheOtherMemberName = this.members.find(
-    (member) => member.id !== currentUserId
-  ).name;
-  return findTheOtherMemberName;
-};
+chatSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    if (!returnedObject.id) {
+      returnedObject.id = returnedObject._id.toString();
+      delete returnedObject._id;
+    }
 
-chatSchema.methods.displayChatImage = function (currentUserId) {
-  if (this.isGroupChat) {
-    return this.image;
-  }
-  const findTheOtherMemberProfileImage = this.members.find(
-    (member) => member.id !== currentUserId
-  ).image;
-  return findTheOtherMemberProfileImage;
-};
+    returnedObject.messages = returnedObject.messages.map((message) => {
+      message.id = message._id;
+      delete message._id;
+      return message;
+    });
+
+    delete returnedObject.__v;
+  },
+});
 
 const Chat = mongoose.model("Chat", chatSchema);
 

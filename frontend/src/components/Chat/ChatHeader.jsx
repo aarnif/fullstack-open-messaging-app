@@ -49,7 +49,7 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
             <div className="mr-4">
               <img
                 className="w-16 h-16 rounded-full"
-                src={chat.displayChatImage.thumbnail}
+                src={chat.image.thumbnail}
                 alt="chat-thumbnail"
               />
             </div>
@@ -58,7 +58,7 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
                 data-testid="chat-title"
                 className="text-base text-slate-800 dark:text-slate-100 font-bold text-left"
               >
-                {chat.displayChatTitle}
+                {chat.title}
               </div>
               <div className="text-sm text-slate-800 dark:text-slate-100">
                 {chatMembersString}

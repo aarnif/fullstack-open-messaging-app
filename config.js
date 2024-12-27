@@ -19,6 +19,8 @@ const VITE_APOLLO_WS_URI =
 
 const VITE_IMGBB_API_KEY = process.env.VITE_IMGBB_API_KEY;
 
+const REDIS_URI = process.env.REDIS_URI;
+
 export default {
   PORT,
   JWT_SECRET,
@@ -26,4 +28,5 @@ export default {
   VITE_APOLLO_URI,
   VITE_APOLLO_WS_URI,
   VITE_IMGBB_API_KEY,
+  REDIS_URI,
 };

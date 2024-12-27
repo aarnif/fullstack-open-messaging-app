@@ -36,8 +36,6 @@ const typeDefs = `
     messages: [Message!]!
     latestMessage: Message
     createdAt: Date
-    displayChatTitle: String!
-    displayChatImage: Image
   }
 
   extend type Query {
@@ -127,12 +125,6 @@ const resolvers = {
       const chatExist = await Chat.findOne({ title: args.title });
       return chatExist ? true : false;
     },
-  },
-  Chat: {
-    displayChatTitle: (chat, args, context) =>
-      chat.displayChatTitle(context.currentUser.id),
-    displayChatImage: (chat, args, context) =>
-      chat.displayChatImage(context.currentUser.id),
   },
 };
 

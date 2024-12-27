@@ -67,7 +67,8 @@ const typeDefs = `
 const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
-      let chatTitle = null;
+      let chatTitle = args.title;
+      let chatImage = args.input;
       let isGroupChat = false;
       const userInputError = new GraphQLError({
         extensions: {
@@ -87,19 +88,23 @@ const resolvers = {
         throw userInputError;
       } else if (args.members.length === 2) {
         console.log("Creating private chat with two members");
-        chatTitle = "Private chat";
+        const findTheOtherChatMember = args.members.find(
+          (member) => member !== context.currentUser.id
+        );
+        const theOtherChatMember = await User.findById(findTheOtherChatMember);
+        chatTitle = theOtherChatMember.name;
+        chatImage = theOtherChatMember.image;
       } else if (args.members.length > 2 && !args.title) {
         userInputError.message = "Chat title is required for group chats!";
         throw userInputError;
       } else {
         console.log("Creating group chat");
-        chatTitle = args.title;
         isGroupChat = true;
       }
 
       const newChat = new Chat({
         title: chatTitle,
-        image: args.input,
+        image: chatImage,
         description: args.description,
         isGroupChat: isGroupChat,
         admin: context.currentUser,
@@ -129,7 +134,7 @@ const resolvers = {
         });
       }
 
-      const addedChat = newChat.populate("members");
+      const addedChat = await newChat.populate("members");
 
       pubsub.publish("CHAT_ADDED", { chatAdded: addedChat });
 
