@@ -53,7 +53,10 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
       exit={{ width: "0%", opacity: 0 }}
     >
       <div className="m-4 flex justify-between">
-        <button onClick={() => setShowChatInfoModal(false)}>
+        <button
+          data-testid="close-group-chat-info-button"
+          onClick={() => setShowChatInfoModal(false)}
+        >
           <IoChevronBack className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
         </button>
         <button data-testid="edit-group-chat-button" onClick={handleEditChat}>

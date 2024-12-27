@@ -186,9 +186,10 @@ const ChatsList = ({ user, searchWord }) => {
 
   return (
     <div className="w-full">
-      {data.allChatsByUser.map((item) => (
+      {data.allChatsByUser.map((item, index) => (
         <ChatItem
           key={item.id}
+          index={index}
           user={user}
           item={item}
           activePath={activePath}

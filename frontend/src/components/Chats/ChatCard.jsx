@@ -3,14 +3,20 @@ import helpers from "../../utils/helpers";
 const LatestMessage = ({ user, latestMessage }) => {
   if (latestMessage.type === "notification") {
     return (
-      <div className="w-full text-slate-600 dark:text-slate-200 text-left">
+      <div
+        data-testid="latest-chat-message"
+        className="w-full text-slate-600 dark:text-slate-200 text-left"
+      >
         {latestMessage.content}
       </div>
     );
   }
 
   return (
-    <div className="w-full text-slate-600 dark:text-slate-200 text-left">
+    <div
+      data-testid="latest-chat-message"
+      className="w-full text-slate-600 dark:text-slate-200 text-left"
+    >
       {latestMessage.sender.id === user.id
         ? "You:"
         : `${latestMessage.sender.name}:`}{" "}
