@@ -19,8 +19,7 @@ const VITE_APOLLO_WS_URI =
 
 const VITE_IMGBB_API_KEY = process.env.VITE_IMGBB_API_KEY;
 
-const REDIS_DOMAIN_NAME = process.env.REDIS_DOMAIN_NAME;
-const REDIS_PORT = process.env.REDIS_PORT;
+const REDIS_URI = process.env.REDIS_URI;
 
 export default {
   PORT,
@@ -29,6 +28,5 @@ export default {
   VITE_APOLLO_URI,
   VITE_APOLLO_WS_URI,
   VITE_IMGBB_API_KEY,
-  REDIS_DOMAIN_NAME,
-  REDIS_PORT,
+  REDIS_URI,
 };

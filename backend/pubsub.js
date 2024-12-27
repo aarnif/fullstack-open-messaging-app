@@ -6,8 +6,7 @@ import config from "../config.js";
 
 const connectToRedis = () => {
   const redisOptions = {
-    host: config.REDIS_DOMAIN_NAME,
-    port: config.REDIS_PORT,
+    url: config.REDIS_URI,
     retryStrategy: (times) => {
       return Math.min(times * 50, 2000);
     },
