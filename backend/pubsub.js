@@ -5,15 +5,15 @@ import { RedisPubSub } from "graphql-redis-subscriptions";
 import config from "../config.js";
 
 const connectToRedis = () => {
+  const redisUri = config.REDIS_URI;
   const redisOptions = {
-    url: config.REDIS_URI,
     retryStrategy: (times) => {
       return Math.min(times * 50, 2000);
     },
   };
 
-  const publisher = new Redis(redisOptions);
-  const subscriber = new Redis(redisOptions);
+  const publisher = new Redis(redisUri, redisOptions);
+  const subscriber = new Redis(redisUri, redisOptions);
 
   publisher.on("connect", () => console.log("Redis publisher connected"));
   publisher.on("error", (error) =>
