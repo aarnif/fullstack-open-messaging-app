@@ -33,6 +33,8 @@ const connectToRedis = () => {
 };
 
 const pubsub =
-  process.env.NODE_ENV === "production" ? connectToRedis() : new PubSub();
+  process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test"
+    ? connectToRedis()
+    : new PubSub();
 
 export default pubsub;
