@@ -1,6 +1,7 @@
 import { emptyDataBase, addUsers } from "../populateDataBase.js";
 import server from "../server.js";
 import helpers from "../utils/helpers.js";
+import pubsub from "../pubsub.js";
 
 import mongoose from "mongoose";
 import assert from "node:assert";
@@ -18,22 +19,27 @@ const contactDetails = [
   {
     id: "6690caa54dc3eac2b83517d2",
     username: "streamer_charlie",
+    name: "Charlie Clark",
   },
   {
     id: "6690caa54dc3eac2b83517d0",
     username: "music_bob",
+    name: "Bob Brown",
   },
   {
     id: "6690caa54dc3eac2b83517d8",
     username: "history_frank",
+    name: "Frank Miller",
   },
   {
     id: "6690caa54dc3eac2b83517cc",
     username: "bookworm_jane",
+    name: "Jane Smith",
   },
   {
     id: "6690caa54dc3eac2b83517ce",
     username: "techie_alice",
+    name: "Alice Jones",
   },
 ];
 
@@ -162,6 +168,7 @@ describe("Server tests", () => {
   afterAll(async () => {
     await testServer?.stop();
     await mongoose.connection.close();
+    pubsub.close();
   }, timeOut);
 
   describe("User tests", () => {
@@ -198,11 +205,11 @@ describe("Server tests", () => {
       const response = await helpers.requestData(
         {
           query: `query Me {
-        me {
-          id
-          username
-        }
-      }`,
+            me {
+              id
+              username
+            }
+          }`,
         },
         credentials.token
       );
@@ -361,7 +368,7 @@ describe("Server tests", () => {
       ]);
 
       expect(JSON.parse(response.text).errors).toBeUndefined();
-      expect(response.body.data.createChat.title).toBe("Private chat");
+      expect(response.body.data.createChat.title).toBe(contactDetails[0].name);
       expect(response.body.data.createChat.isGroupChat).toBe(false);
       expect(response.body.data.createChat.members.length).toBe(2);
       expect(response.body.data.createChat.members[0].username).toBe(
