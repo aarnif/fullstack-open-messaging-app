@@ -57,9 +57,15 @@ PORT=Server port
 JWT_SECRET=JWT secret
 
 MONGODB_URI=MongoDB URI
-TEST_MONGODB_URI=Test MongoDB URI
+TEST_MONGODB_URI="mongodb://root:password@localhost:5000/test_database?authSource=admin" # Docker mongo URI
 
+VITE_APOLLO_URI=GraphQL URI
+VITE_APOLLO_WS_URI=GraphQL WebSocket URI
 VITE_IMGBB_API_KEY=https://imgbb.com/ API key
+
+REDIS_URI=Redis URI
+TEST_REDIS_URI="redis://localhost:6379" # Docker redis URI
+
 ```
 
 Finally, here are the available npm-scripts:
@@ -76,7 +82,7 @@ npm run build:ui # Build the ui
 
 npm run prod:ui # Start the ui in production mode
 
-npm run start:test:db # Start the test database (docker container)
+npm run start:test:db # Start the test database (docker container with mongo and redis)
 
 npm run test:server # Run the server tests
 
