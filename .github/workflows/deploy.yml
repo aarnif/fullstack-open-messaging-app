@@ -31,6 +31,7 @@ jobs:
           PORT: ${{ secrets.PORT }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          REDIS_URI: ${{ secrets.REDIS_URI }}
       - name: Run e2e tests
         run: |
           npm run start:test:server &
@@ -38,11 +39,10 @@ jobs:
           npm run test:e2e
         env:
           NODE_ENV: test
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
-          REDIS_URI: ${{ secrets.REDIS_URI }}
           PORT: ${{ secrets.PORT }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          TEST_MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
+          REDIS_URI: ${{ secrets.REDIS_URI }}
           VITE_IMGBB_API_KEY: ${{ secrets.VITE_IMGBB_API_KEY }}
 
   deploy:
@@ -53,6 +53,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "21"
-      - name: Trigger deployment
+      - name: Trigger backend deployment
         if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message, ', '), '#skip') == false }}
         run: curl ${{ secrets.RENDER_SERVICE_URL }}
+      - name: Trigger frontend deployment
+        if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message, ', '), '#skip') == false }}
+        run: curl -X POST -d '{}' ${{ secrets.NETLIFY_SERVICE_URL }}
