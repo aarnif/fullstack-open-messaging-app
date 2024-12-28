@@ -316,7 +316,10 @@ const resolvers = {
               key[0].toUpperCase() + key.slice(1)
             } was updated to: "${value}"`,
           });
-        } else if (key === "input" && value !== chatToBeUpdated.image) {
+        } else if (
+          key === "input" &&
+          JSON.stringify(value) !== JSON.stringify(chatToBeUpdated.image)
+        ) {
           console.log(`Updated image for chat: ${chatToBeUpdated.title}`);
           notificationMessages.push({
             type: "notification",
