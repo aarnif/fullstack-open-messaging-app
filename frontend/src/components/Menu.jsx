@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
-import helpers from "../utils/helpers";
+import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import useConfirmModal from "../hooks/useConfirmModal";
 
 const MenuTitle = ({ title }) => {
@@ -21,7 +21,7 @@ const MenuTitle = ({ title }) => {
       className="absolute left-[80px] h-10 w-28 flex justify-center items-center bg-slate-200 rounded-lg dark:bg-slate-800"
     >
       <div className="text-slate-800 dark:text-white font-bold">
-        {helpers.capitalizeString(title)}
+        {chatAndMessageHelpers.capitalizeString(title)}
       </div>
       <div className="absolute left-[-8px] border-t-[10px] border-t-transparent border-r-[10px] border-r-slate-200 dark:border-r-slate-800 border-b-[10px] border-b-transparent"></div>
     </motion.div>

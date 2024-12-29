@@ -7,7 +7,7 @@ import {
   GROUP_CHAT_MEMBERS_UPDATED,
 } from "../graphql/subscriptions";
 import Menu from "./Menu";
-import helpers from "../utils/helpers";
+import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 
 const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
   const client = useApolloClient();
@@ -71,19 +71,19 @@ const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
         ({ allChatsByUser }) => {
           if (removedmembers.includes(user.id)) {
             return {
-              allChatsByUser: helpers.sortChatsByDate(
+              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.filter((chat) => chat.id !== updatedChat.id)
               ),
             };
           } else if (addedmembers.includes(user.id)) {
             return {
-              allChatsByUser: helpers.sortChatsByDate(
+              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.concat(updatedChat)
               ),
             };
           } else {
             return {
-              allChatsByUser: helpers.sortChatsByDate(
+              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.map((chat) =>
                   chat.id === updatedChat.id ? { ...updatedChat } : chat
                 )

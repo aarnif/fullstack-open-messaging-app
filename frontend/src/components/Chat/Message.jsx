@@ -1,4 +1,4 @@
-import helpers from "../../utils/helpers";
+import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 import ClickableImage from "../ClickableImage";
 
 const NotificationMessage = ({ message }) => {
@@ -39,7 +39,7 @@ const MessageByAnotherUser = ({ user, message }) => {
           </div>
         )}
         <div className="my-1 text-end text-xs text-slate-800 dark:text-slate-100">
-          {helpers.formatMessageTime(
+          {chatAndMessageHelpers.formatMessageTime(
             message.createdAt,
             user.settings.time === "24h"
           )}
@@ -81,7 +81,7 @@ const MessageByCurrentUser = ({ user, message }) => {
           </div>
         )}
         <div className="my-1 text-xs text-slate-800 text-end">
-          {helpers.formatMessageTime(
+          {chatAndMessageHelpers.formatMessageTime(
             message.createdAt,
             user.settings.time === "24h"
           )}

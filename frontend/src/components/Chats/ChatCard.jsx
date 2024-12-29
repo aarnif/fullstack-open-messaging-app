@@ -1,4 +1,4 @@
-import helpers from "../../utils/helpers";
+import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const LatestMessage = ({ user, latestMessage }) => {
   if (latestMessage.type === "notification") {
@@ -20,14 +20,17 @@ const LatestMessage = ({ user, latestMessage }) => {
       {latestMessage.sender.id === user.id
         ? "You:"
         : `${latestMessage.sender.name}:`}{" "}
-      {helpers.sliceLatestMessage(latestMessage.content)}
+      {chatAndMessageHelpers.sliceLatestMessage(latestMessage.content)}
     </div>
   );
 };
 
 const ChatCard = ({ user, chat }) => {
   const latestMessage = chat.messages[0];
-  const newMessagesCount = helpers.newMessagesCount(user, chat.messages);
+  const newMessagesCount = chatAndMessageHelpers.newMessagesCount(
+    user,
+    chat.messages
+  );
 
   return (
     <>
@@ -45,7 +48,7 @@ const ChatCard = ({ user, chat }) => {
           </div>
 
           <div className="flex justify-center items-center text-slate-600 dark:text-slate-200">
-            {helpers.formatMessageTime(
+            {chatAndMessageHelpers.formatMessageTime(
               latestMessage?.createdAt,
               user.settings.time === "24h"
             )}
