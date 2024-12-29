@@ -1,10 +1,11 @@
-import { emptyDataBase, addUsers } from "../populateDataBase.js";
-import server from "../server.js";
-import helpers from "../utils/helpers.js";
-import pubsub from "../pubsub.js";
-
 import mongoose from "mongoose";
 import assert from "node:assert";
+import request from "supertest";
+
+import config from "../../config.js";
+import { emptyDataBase, addUsers } from "../populateDataBase.js";
+import server from "../server.js";
+import pubsub from "../pubsub.js";
 
 const timeOut = 60000;
 const credentials = {
@@ -56,8 +57,14 @@ const groupChatDetails = [
   },
 ];
 
+const requestData = async (queryData, token = "") =>
+  await request(`http://localhost:${config.PORT}`)
+    .post("/")
+    .set("Authorization", token)
+    .send(queryData);
+
 const createUser = async (credentials) => {
-  const response = await helpers.requestData({
+  const response = await requestData({
     query: `mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
       createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
           id
@@ -72,7 +79,7 @@ const createUser = async (credentials) => {
 };
 
 const loginUser = async (credentials) => {
-  const response = await helpers.requestData({
+  const response = await requestData({
     query: `mutation Login($username: String!, $password: String!) {
       login(username: $username, password: $password) {
           value
@@ -86,7 +93,7 @@ const loginUser = async (credentials) => {
 };
 
 const addContacts = async (credentials, contactDetails) => {
-  const response = await helpers.requestData(
+  const response = await requestData(
     {
       query: `mutation AddContacts($contacts: [ID!]) {
         addContacts(contacts: $contacts) {
@@ -107,7 +114,7 @@ const addContacts = async (credentials, contactDetails) => {
 };
 
 const blockOrUnBlockContact = async (credentials, contactId) => {
-  const response = await helpers.requestData(
+  const response = await requestData(
     {
       query: `mutation BlockOrUnBlockContact($contactId: ID!) {
         blockOrUnBlockContact(contactId: $contactId)
@@ -128,7 +135,7 @@ const createChat = async (
   title = "",
   description = ""
 ) => {
-  const response = await helpers.requestData(
+  const response = await requestData(
     {
       query: `mutation CreateChat($title: String, $description: String, $members: [ID!]!) {
       createChat(title: $title, description: $description, members: $members) {
@@ -202,7 +209,7 @@ describe("Server tests", () => {
     it("User is logged in", async () => {
       await createUser(credentials);
       await loginUser(credentials);
-      const response = await helpers.requestData(
+      const response = await requestData(
         {
           query: `query Me {
             me {
@@ -244,7 +251,7 @@ describe("Server tests", () => {
       await loginUser(credentials);
       await addContacts(credentials, contactDetails);
 
-      const response = await helpers.requestData(
+      const response = await requestData(
         {
           query: `mutation RemoveContact($contactId: ID!) {
           removeContact(contactId: $contactId)
@@ -270,7 +277,7 @@ describe("Server tests", () => {
         "6690caa54dc3eac2b83517d0"
       );
 
-      const findUserById = await helpers.requestData(
+      const findUserById = await requestData(
         {
           query: `query FindUserById($id: ID!) {
           findUserById(id: $id) {
@@ -306,7 +313,7 @@ describe("Server tests", () => {
         "6690caa54dc3eac2b83517d0"
       );
 
-      const findUserById = await helpers.requestData(
+      const findUserById = await requestData(
         {
           query: `query FindUserById($id: ID!) {
           findUserById(id: $id) {
@@ -334,7 +341,7 @@ describe("Server tests", () => {
       await addContacts(credentials, contactDetails);
       let response;
 
-      response = await helpers.requestData(
+      response = await requestData(
         {
           query: `mutation RemoveContact($contactId: ID!) {
           removeContact(contactId: $contactId)
@@ -437,7 +444,7 @@ describe("Server tests", () => {
       );
 
       groupChatDetails[0].id = createdChat.body.data.createChat.id;
-      const response = await helpers.requestData(
+      const response = await requestData(
         {
           query: `mutation AddMessageToChat($chatId: ID!, $type: String, $content: String) {
           addMessageToChat(chatId: $chatId, type: $type, content: $content) {
@@ -492,7 +499,7 @@ describe("Server tests", () => {
         );
       }
 
-      const response = await helpers.requestData({
+      const response = await requestData({
         query: `query CountChats {
          countChats
         }`,
@@ -517,7 +524,7 @@ describe("Server tests", () => {
         groupChatDetails[0].description
       );
 
-      const response = await helpers.requestData({
+      const response = await requestData({
         query: `query AllChats {
             allChats {
               id
@@ -548,7 +555,7 @@ describe("Server tests", () => {
 
       groupChatDetails.id = createdChat.body.data.createChat.id;
 
-      const response = await helpers.requestData({
+      const response = await requestData({
         query: `query FindChatById($chatId: ID!) {
           findChatById(chatId: $chatId) {
             id
@@ -579,7 +586,7 @@ describe("Server tests", () => {
 
       groupChatDetails[0].id = createdChat.body.data.createChat.id;
 
-      const response = await helpers.requestData({
+      const response = await requestData({
         query: `query FindChatByMembers($members: [ID!]!) {
           findChatByMembers(members: $members) {
             id
@@ -614,7 +621,7 @@ describe("Server tests", () => {
 
       groupChatDetails[0].id = createdChat.body.data.createChat.id;
 
-      const response = await helpers.requestData(
+      const response = await requestData(
         {
           query: `mutation UpdateGroupChatMembers($chatId: ID!, $members: [ID!]!) {
           updateGroupChatMembers(chatId: $chatId, members: $members) {
@@ -664,7 +671,7 @@ describe("Server tests", () => {
 
       groupChatDetails[0].id = createdChat.body.data.createChat.id;
 
-      const response = await helpers.requestData(
+      const response = await requestData(
         {
           query: `mutation UpdateGroupChatMembers($chatId: ID!, $members: [ID!]!) {
           updateGroupChatMembers(chatId: $chatId, members: $members) {

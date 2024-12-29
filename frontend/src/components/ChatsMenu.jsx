@@ -12,7 +12,7 @@ import {
 import useField from "../hooks/useField";
 import Loading from "./Loading";
 import ChatItem from "./Chats/ChatItem";
-import helpers from "../utils/helpers";
+import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import MenuHeader from "./MenuHeader";
 
 const ChatsList = ({ user, searchWord }) => {
@@ -36,7 +36,7 @@ const ChatsList = ({ user, searchWord }) => {
           },
         },
         ({ allChatsByUser }) => {
-          const sortedChats = helpers.sortChatsByDate(
+          const sortedChats = chatAndMessageHelpers.sortChatsByDate(
             allChatsByUser.map((chat) => {
               return chat.id === updatedChat.id ? { ...updatedChat } : chat;
             })
@@ -64,7 +64,7 @@ const ChatsList = ({ user, searchWord }) => {
           },
         },
         ({ allChatsByUser }) => {
-          const sortedChats = helpers.sortChatsByDate(
+          const sortedChats = chatAndMessageHelpers.sortChatsByDate(
             allChatsByUser.concat(newChat)
           );
           return {
@@ -90,7 +90,7 @@ const ChatsList = ({ user, searchWord }) => {
           },
         },
         ({ allChatsByUser }) => {
-          const sortedChats = helpers.sortChatsByDate(
+          const sortedChats = chatAndMessageHelpers.sortChatsByDate(
             allChatsByUser.map((chat) => {
               return chat.id === updatedChat.id ? { ...updatedChat } : chat;
             })
@@ -152,7 +152,7 @@ const ChatsList = ({ user, searchWord }) => {
           if (leftGroupChatData.member === user.id) {
             console.log("User left group chat");
             return {
-              allChatsByUser: helpers.sortChatsByDate(
+              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.filter(
                   (chat) => !leftGroupChatData.chatIds.includes(chat.id)
                 )

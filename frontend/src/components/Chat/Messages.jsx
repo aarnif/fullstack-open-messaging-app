@@ -1,6 +1,6 @@
 import { useRef, useEffect, Fragment } from "react";
 import Message from "./Message";
-import helpers from "../../utils/helpers";
+import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const Messages = ({ user, messages }) => {
   const messagesEndRef = useRef(null);
@@ -13,7 +13,10 @@ const Messages = ({ user, messages }) => {
     scrollToBottom();
   }, [messages]);
 
-  const newMessagesCount = helpers.newMessagesCount(user, messages);
+  const newMessagesCount = chatAndMessageHelpers.newMessagesCount(
+    user,
+    messages
+  );
 
   console.log("New messages count:", newMessagesCount);
   return (
