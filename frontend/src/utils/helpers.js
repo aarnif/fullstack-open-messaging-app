@@ -11,7 +11,7 @@ const formatMessageTime = (latestMessageTime, is24HourClock = true) => {
   } else if (isThisWeek(new Date(latestMessageTime))) {
     return format(new Date(latestMessageTime), "EEEE");
   } else {
-    return format(new Date(latestMessageTime), "MM.dd.yyyy");
+    return format(new Date(latestMessageTime), "dd.MM.yyyy");
   }
 };
 
