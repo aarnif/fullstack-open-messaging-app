@@ -1,10 +1,10 @@
+import { GraphQLError } from "graphql";
+import emojiRegex from "emoji-regex";
+
 import Chat from "../../models/chat.js";
 import User from "../../models/user.js";
 
-import helpers from "../../utils/helpers.js";
 import pubsub from "../../pubsub.js";
-
-import { GraphQLError } from "graphql";
 
 const typeDefs = `
   input ImageInput {
@@ -63,6 +63,21 @@ const typeDefs = `
     leftGroupChats: leftGroupChatsDetails
   }   
 `;
+
+const checkIfMessageIsSingleEmoji = (messageContent) => {
+  const regex = emojiRegex();
+  let numberOfEmojis = 0;
+  let numberofEmojiCharacters = 0;
+  for (const match of messageContent.matchAll(regex)) {
+    const emoji = match[0];
+    numberOfEmojis += 1;
+    numberofEmojiCharacters += emoji.length;
+  }
+
+  return (
+    numberofEmojiCharacters === messageContent.length && numberOfEmojis === 1
+  );
+};
 
 const resolvers = {
   Mutation: {
@@ -184,7 +199,7 @@ const resolvers = {
           );
         }
       }
-      const messageIsSingleEmoji = helpers.checkIfMessageIsSingleEmoji(
+      const messageIsSingleEmoji = checkIfMessageIsSingleEmoji(
         args.content.trim()
       );
 
