@@ -7,7 +7,7 @@ import Loading from "../Loading";
 import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
 import IndividualContactOptions from "../IndividualContactCard/IndividualContactCardOptions";
 
-const Contact = ({ user, setActivePath, menuComponent }) => {
+const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
   const [isBlocked, setIsBlocked] = useState(false);
   const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(null);
 
@@ -19,7 +19,7 @@ const Contact = ({ user, setActivePath, menuComponent }) => {
   });
 
   useEffect(() => {
-    setActivePath("contacts");
+    setActiveMenuItem("contacts");
   }, []);
 
   useEffect(() => {

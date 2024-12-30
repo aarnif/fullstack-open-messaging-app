@@ -28,7 +28,7 @@ const MenuTitle = ({ title }) => {
   );
 };
 
-const MenuItem = ({ item, onClick, activePath }) => {
+const MenuItem = ({ item, onClick, activeMenuItem }) => {
   const [hovered, setHovered] = useState(false);
   return (
     <div className="flex justify-between items-center">
@@ -38,7 +38,7 @@ const MenuItem = ({ item, onClick, activePath }) => {
         onClick={onClick}
         data-testid={item["data-testid"]}
         className={
-          item.id === activePath
+          item.id === activeMenuItem
             ? "relative group w-14 h-14 rounded-lg bg-violet-500 flex justify-center items-center active:scale-95 transition"
             : "relative group w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-500 flex justify-center items-center hover:rounded-lg hover:bg-violet-500 active:scale-95 transition"
         }
@@ -50,13 +50,17 @@ const MenuItem = ({ item, onClick, activePath }) => {
   );
 };
 
-const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
+const Menu = ({
+  activeMenuItem,
+  setActiveMenuItem,
+  setActiveMenuComponent,
+}) => {
   const navigate = useNavigate();
   const client = useApolloClient();
   const { confirmModal } = useConfirmModal();
 
   const handleNavigation = (event, path) => {
-    setActivePath(event.target.closest("li").id);
+    setActiveMenuItem(event.target.closest("li").id);
     console.log("Navigating to:", path);
 
     if (path === "/chats") {
@@ -80,7 +84,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       icon: (
         <FaComments
           className={
-            activePath === "chats"
+            activeMenuItem === "chats"
               ? "w-9 h-9 text-white fill-current"
               : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
           }
@@ -95,7 +99,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       icon: (
         <FaAddressBook
           className={
-            activePath === "contacts"
+            activeMenuItem === "contacts"
               ? "w-9 h-9 text-white fill-current"
               : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
           }
@@ -110,7 +114,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       icon: (
         <FaUserCircle
           className={
-            activePath === "profile"
+            activeMenuItem === "profile"
               ? "w-9 h-9 text-white fill-current"
               : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
           }
@@ -125,7 +129,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
       icon: (
         <FaCog
           className={
-            activePath === "settings"
+            activeMenuItem === "settings"
               ? "w-9 h-9 text-white fill-current"
               : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
           }
@@ -155,7 +159,7 @@ const Menu = ({ activePath, setActivePath, setActiveMenuComponent }) => {
             <MenuItem
               item={item}
               onClick={item.onClick}
-              activePath={activePath}
+              activeMenuItem={activeMenuItem}
             />
           </li>
         ))}

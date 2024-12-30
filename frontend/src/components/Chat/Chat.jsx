@@ -11,7 +11,7 @@ import NewMessage from "./NewMessage";
 import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal";
 import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal/PrivateChatInfoModal";
 
-const Chat = ({ user, setActivePath, menuComponent }) => {
+const Chat = ({ user, setActiveMenuItem, menuComponent }) => {
   const [showChatInfoModal, setShowChatInfoModal] = useState(false);
   const match = useMatch("/chats/:chatId").params;
   const { data, loading } = useQuery(FIND_CHAT_BY_ID, {
@@ -21,7 +21,7 @@ const Chat = ({ user, setActivePath, menuComponent }) => {
   });
 
   useEffect(() => {
-    setActivePath("chats");
+    setActiveMenuItem("chats");
   }, []);
 
   let renderComponent = (

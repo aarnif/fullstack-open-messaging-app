@@ -29,7 +29,7 @@ import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupCha
 import NewContactModal from "./components/Modals/NewContactModal";
 
 const App = () => {
-  const [activePath, setActivePath] = useState("chats");
+  const [activeMenuItem, setActiveMenuItem] = useState("chats");
   const [activeMenuComponent, setActiveMenuComponent] = useState("chats");
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
   const [showNewPrivateChatModal, setShowNewPrivateChatModal] = useState(false);
@@ -79,7 +79,7 @@ const App = () => {
                   data?.me ? (
                     <Navigate to="/chats" replace />
                   ) : (
-                    <SignIn setActivePath={setActivePath} />
+                    <SignIn setActiveMenuItem={setActiveMenuItem} />
                   )
                 }
               />
@@ -95,8 +95,8 @@ const App = () => {
                   element={
                     <Home
                       user={data?.me}
-                      activePath={activePath}
-                      setActivePath={setActivePath}
+                      activeMenuItem={activeMenuItem}
+                      setActiveMenuItem={setActiveMenuItem}
                       setActiveMenuComponent={setActiveMenuComponent}
                     />
                   }
@@ -120,7 +120,7 @@ const App = () => {
                     element={
                       <Chat
                         user={data?.me}
-                        setActivePath={setActivePath}
+                        setActiveMenuItem={setActiveMenuItem}
                         menuComponent={
                           <ChatsMenu
                             user={data?.me}
@@ -135,7 +135,7 @@ const App = () => {
                     element={
                       <NewChat
                         user={data?.me}
-                        setActivePath={setActivePath}
+                        setActiveMenuItem={setActiveMenuItem}
                         menuComponent={
                           <ChatsMenu
                             user={data?.me}
@@ -163,7 +163,7 @@ const App = () => {
                     element={
                       <Contact
                         user={data?.me}
-                        setActivePath={setActivePath}
+                        setActiveMenuItem={setActiveMenuItem}
                         menuComponent={
                           <ContactsMenu
                             user={data?.me}
