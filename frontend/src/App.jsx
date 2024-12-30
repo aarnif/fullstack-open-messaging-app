@@ -32,6 +32,7 @@ const App = () => {
   const [activeMenuItem, setActiveMenuItem] = useState("chats");
   const [activeListMenuComponent, setActiveListMenuComponent] =
     useState("chats");
+  const [activeChatOrContact, setActiveChatOrContact] = useState(null);
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
   const [showNewPrivateChatModal, setShowNewPrivateChatModal] = useState(false);
   const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
@@ -111,6 +112,8 @@ const App = () => {
                           <ChatsMenu
                             user={data?.me}
                             handleClickNewChat={handleClickNewChat}
+                            activeChatOrContact={activeChatOrContact}
+                            setActiveChatOrContact={setActiveChatOrContact}
                           />
                         }
                       />
@@ -126,6 +129,8 @@ const App = () => {
                           <ChatsMenu
                             user={data?.me}
                             handleClickNewChat={handleClickNewChat}
+                            activeChatOrContact={activeChatOrContact}
+                            setActiveChatOrContact={setActiveChatOrContact}
                           />
                         }
                       />
@@ -141,6 +146,8 @@ const App = () => {
                           <ChatsMenu
                             user={data?.me}
                             handleClickNewChat={handleClickNewChat}
+                            activeChatOrContact={activeChatOrContact}
+                            setActiveChatOrContact={setActiveChatOrContact}
                           />
                         }
                       />
@@ -154,6 +161,8 @@ const App = () => {
                           <ContactsMenu
                             user={data?.me}
                             handleClickNewContact={handleClickNewContact}
+                            activeChatOrContact={activeChatOrContact}
+                            setActiveChatOrContact={setActiveChatOrContact}
                           />
                         }
                       />
@@ -169,6 +178,8 @@ const App = () => {
                           <ContactsMenu
                             user={data?.me}
                             handleClickNewContact={handleClickNewContact}
+                            activeChatOrContact={activeChatOrContact}
+                            setActiveChatOrContact={setActiveChatOrContact}
                           />
                         }
                       />
@@ -184,11 +195,15 @@ const App = () => {
                             <ChatsMenu
                               user={data?.me}
                               handleClickNewChat={handleClickNewChat}
+                              activeChatOrContact={activeChatOrContact}
+                              setActiveChatOrContact={setActiveChatOrContact}
                             />
                           ) : (
                             <ContactsMenu
                               user={data?.me}
                               handleClickNewContact={handleClickNewContact}
+                              activeChatOrContact={activeChatOrContact}
+                              setActiveChatOrContact={setActiveChatOrContact}
                             />
                           )
                         }
@@ -205,11 +220,15 @@ const App = () => {
                             <ChatsMenu
                               user={data?.me}
                               handleClickNewChat={handleClickNewChat}
+                              activeChatOrContact={activeChatOrContact}
+                              setActiveChatOrContact={setActiveChatOrContact}
                             />
                           ) : (
                             <ContactsMenu
                               user={data?.me}
                               handleClickNewContact={handleClickNewContact}
+                              activeChatOrContact={activeChatOrContact}
+                              setActiveChatOrContact={setActiveChatOrContact}
                             />
                           )
                         }

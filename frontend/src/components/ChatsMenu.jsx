@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 
 import { ALL_CHATS_BY_USER } from "../graphql/queries";
@@ -15,9 +14,13 @@ import ChatItem from "./Chats/ChatItem";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import MenuHeader from "./MenuHeader";
 
-const ChatsList = ({ user, searchWord }) => {
+const ChatsList = ({
+  user,
+  searchWord,
+  activeChatOrContact,
+  setActiveChatOrContact,
+}) => {
   const client = useApolloClient();
-  const [activePath, setActivePath] = useState(null);
   const { data, loading } = useQuery(ALL_CHATS_BY_USER, {
     variables: {
       searchByTitle: searchWord.value,
@@ -192,15 +195,20 @@ const ChatsList = ({ user, searchWord }) => {
           index={index}
           user={user}
           item={item}
-          activePath={activePath}
-          setActivePath={setActivePath}
+          activeChatOrContact={activeChatOrContact}
+          setActiveChatOrContact={setActiveChatOrContact}
         />
       ))}
     </div>
   );
 };
 
-const ChatsMenu = ({ user, handleClickNewChat }) => {
+const ChatsMenu = ({
+  user,
+  handleClickNewChat,
+  activeChatOrContact,
+  setActiveChatOrContact,
+}) => {
   const searchWord = useField("text", "Search chats by title...");
 
   return (
@@ -211,7 +219,12 @@ const ChatsMenu = ({ user, handleClickNewChat }) => {
           handleCallBack={handleClickNewChat}
           searchWord={searchWord}
         />
-        <ChatsList user={user} searchWord={searchWord} />
+        <ChatsList
+          user={user}
+          searchWord={searchWord}
+          activeChatOrContact={activeChatOrContact}
+          setActiveChatOrContact={setActiveChatOrContact}
+        />
       </div>
     </div>
   );
