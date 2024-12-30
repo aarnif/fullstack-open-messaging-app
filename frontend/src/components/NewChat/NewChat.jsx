@@ -4,11 +4,11 @@ import NewChatHeader from "./NewChatHeader";
 import Messages from "../Chat/Messages";
 import NewChatAndFirstMessage from "./NewChatAndFirstMessage";
 
-const NewChat = ({ user, setActivePath, menuComponent }) => {
+const NewChat = ({ user, setActiveMenuItem, menuComponent }) => {
   const [newChatInfo, setNewChatInfo] = useState(null);
 
   useEffect(() => {
-    setActivePath("chats");
+    setActiveMenuItem("chats");
     setNewChatInfo(JSON.parse(localStorage.getItem("new-chat-info")));
   }, []);
 

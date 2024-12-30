@@ -47,8 +47,8 @@ const UpdateMembersModal = ({
       exit={{ width: "0vw", opacity: 0, transition: { delay: 1.0 } }}
     >
       <motion.div
-        key={"newChatModal"}
-        className="w-[500px] h-[600px] bg-white rounded-xl text-slate-700 z-100"
+        key={"updateMembersModal"}
+        className="w-[500px] h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-700 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
@@ -58,9 +58,9 @@ const UpdateMembersModal = ({
         <div className="h-full flex-grow flex flex-col pt-4 px-4">
           <div className="w-full flex justify-center items-center">
             <button className="text-2xl text-slate-700" onClick={handleCancel}>
-              <MdClose className="w-7 h-7 text-slate-700 fill-current" />
+              <MdClose className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
             </button>
-            <h2 className="flex-grow text-2xl font-bold text-slate-700 text-center">
+            <h2 className="flex-grow text-2xl font-bold text-slate-700 dark:text-slate-100 text-center">
               Update Members
             </h2>
             <button
@@ -68,7 +68,7 @@ const UpdateMembersModal = ({
               className="text-2xl text-slate-700"
               onClick={handleUpdateMembers}
             >
-              <IoChevronForward className="w-7 h-7 text-slate-700 fill-current" />
+              <IoChevronForward className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
             </button>
           </div>
           <>
@@ -85,7 +85,7 @@ const UpdateMembersModal = ({
                   />
                 </div>
 
-                <div className="w-full h-[40px] flex justify-center items-center bg-white font-bold">
+                <div className="w-full h-[40px] flex justify-center items-center bg-white dark:bg-slate-800 font-bold">
                   {chosenUserIds.length} contacts selected
                 </div>
               </>

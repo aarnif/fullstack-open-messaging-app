@@ -1,13 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import ChatCard from "./ChatCard";
 
-const ChatItem = ({ index, user, item, activePath, setActivePath }) => {
+const ChatItem = ({
+  index,
+  user,
+  item,
+  activeChatOrContact,
+  setActiveChatOrContact,
+}) => {
   const navigate = useNavigate();
 
   const handlePress = () => {
     console.log("Pressed chat titled:", item.title);
     navigate(`/chats/${item.id}`);
-    setActivePath(item.id);
+    setActiveChatOrContact(item.id);
   };
 
   if (!item.messages.length) {
@@ -32,7 +38,7 @@ const ChatItem = ({ index, user, item, activePath, setActivePath }) => {
   }
 
   const classStyles =
-    activePath === item.id
+    activeChatOrContact === item.id
       ? "w-full flex items-start py-2 px-4 border-b bg-slate-200 dark:bg-slate-700 transition"
       : "w-full flex items-start py-2 px-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
 

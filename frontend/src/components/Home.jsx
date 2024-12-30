@@ -9,7 +9,12 @@ import {
 import Menu from "./Menu";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 
-const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
+const Home = ({
+  user,
+  activeMenuItem,
+  setActiveMenuItem,
+  setActiveListMenuComponent,
+}) => {
   const client = useApolloClient();
 
   useSubscription(CONTACT_BLOCKED_OR_UNBLOCKED, {
@@ -99,9 +104,9 @@ const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
     <main className="flex-grow flex">
       {user && (
         <Menu
-          activePath={activePath}
-          setActivePath={setActivePath}
-          setActiveMenuComponent={setActiveMenuComponent}
+          activeMenuItem={activeMenuItem}
+          setActiveMenuItem={setActiveMenuItem}
+          setActiveListMenuComponent={setActiveListMenuComponent}
         />
       )}
       <div className="flex-grow flex">

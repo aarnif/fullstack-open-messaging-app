@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery } from "@apollo/client";
 
 import { ALL_CONTACTS_BY_USER } from "../graphql/queries";
@@ -7,15 +6,17 @@ import Loading from "./Loading";
 import ContactItem from "./Contacts/ContactItem";
 import MenuHeader from "./MenuHeader";
 
-const ContactsList = ({ user, searchWord }) => {
-  const [activePath, setActivePath] = useState(null);
+const ContactsList = ({
+  user,
+  searchWord,
+  activeChatOrContact,
+  setActiveChatOrContact,
+}) => {
   const { data, loading } = useQuery(ALL_CONTACTS_BY_USER, {
     variables: {
       searchByName: searchWord.value,
     },
   });
-
-  console.log(data?.allContactsByUser.contacts.length);
 
   if (loading) {
     return <Loading />;
@@ -38,15 +39,20 @@ const ContactsList = ({ user, searchWord }) => {
           key={item.id}
           user={user}
           item={item}
-          activePath={activePath}
-          setActivePath={setActivePath}
+          activeChatOrContact={activeChatOrContact}
+          setActiveChatOrContact={setActiveChatOrContact}
         />
       ))}
     </div>
   );
 };
 
-const ContactsMenu = ({ user, handleClickNewContact }) => {
+const ContactsMenu = ({
+  user,
+  handleClickNewContact,
+  activeChatOrContact,
+  setActiveChatOrContact,
+}) => {
   const searchWord = useField("text", "Search contacts by name or username...");
 
   return (
@@ -57,7 +63,12 @@ const ContactsMenu = ({ user, handleClickNewContact }) => {
           handleCallBack={handleClickNewContact}
           searchWord={searchWord}
         />
-        <ContactsList user={user} searchWord={searchWord} />
+        <ContactsList
+          user={user}
+          searchWord={searchWord}
+          activeChatOrContact={activeChatOrContact}
+          setActiveChatOrContact={setActiveChatOrContact}
+        />
       </div>
     </div>
   );
