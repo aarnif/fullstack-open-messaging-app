@@ -59,7 +59,7 @@ const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
   useSubscription(GROUP_CHAT_MEMBERS_UPDATED, {
     onData: ({ data }) => {
       console.log("Use GROUP_CHAT_MEMBERS_UPDATED-subscription:");
-      const { updatedChat, removedmembers, addedmembers } =
+      const { updatedChat, removedMembers, addedMembers } =
         data.data.groupChatMembersUpdated;
       client.cache.updateQuery(
         {
@@ -69,13 +69,13 @@ const Home = ({ user, activePath, setActivePath, setActiveMenuComponent }) => {
           },
         },
         ({ allChatsByUser }) => {
-          if (removedmembers.includes(user.id)) {
+          if (removedMembers.includes(user.id)) {
             return {
               allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.filter((chat) => chat.id !== updatedChat.id)
               ),
             };
-          } else if (addedmembers.includes(user.id)) {
+          } else if (addedMembers.includes(user.id)) {
             return {
               allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.concat(updatedChat)
