@@ -30,7 +30,8 @@ import NewContactModal from "./components/Modals/NewContactModal";
 
 const App = () => {
   const [activeMenuItem, setActiveMenuItem] = useState("chats");
-  const [activeMenuComponent, setActiveMenuComponent] = useState("chats");
+  const [activeListMenuComponent, setActiveListMenuComponent] =
+    useState("chats");
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
   const [showNewPrivateChatModal, setShowNewPrivateChatModal] = useState(false);
   const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
@@ -97,7 +98,7 @@ const App = () => {
                       user={data?.me}
                       activeMenuItem={activeMenuItem}
                       setActiveMenuItem={setActiveMenuItem}
-                      setActiveMenuComponent={setActiveMenuComponent}
+                      setActiveListMenuComponent={setActiveListMenuComponent}
                     />
                   }
                 >
@@ -179,7 +180,7 @@ const App = () => {
                       <Profile
                         user={data?.me}
                         menuComponent={
-                          activeMenuComponent === "chats" ? (
+                          activeListMenuComponent === "chats" ? (
                             <ChatsMenu
                               user={data?.me}
                               handleClickNewChat={handleClickNewChat}
@@ -200,7 +201,7 @@ const App = () => {
                       <Settings
                         user={data?.me}
                         menuComponent={
-                          activeMenuComponent === "chats" ? (
+                          activeListMenuComponent === "chats" ? (
                             <ChatsMenu
                               user={data?.me}
                               handleClickNewChat={handleClickNewChat}

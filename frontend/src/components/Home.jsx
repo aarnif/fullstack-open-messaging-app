@@ -13,7 +13,7 @@ const Home = ({
   user,
   activeMenuItem,
   setActiveMenuItem,
-  setActiveMenuComponent,
+  setActiveListMenuComponent,
 }) => {
   const client = useApolloClient();
 
@@ -106,7 +106,7 @@ const Home = ({
         <Menu
           activeMenuItem={activeMenuItem}
           setActiveMenuItem={setActiveMenuItem}
-          setActiveMenuComponent={setActiveMenuComponent}
+          setActiveListMenuComponent={setActiveListMenuComponent}
         />
       )}
       <div className="flex-grow flex">

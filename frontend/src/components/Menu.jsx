@@ -53,7 +53,7 @@ const MenuItem = ({ item, onClick, activeMenuItem }) => {
 const Menu = ({
   activeMenuItem,
   setActiveMenuItem,
-  setActiveMenuComponent,
+  setActiveListMenuComponent,
 }) => {
   const navigate = useNavigate();
   const client = useApolloClient();
@@ -64,9 +64,9 @@ const Menu = ({
     console.log("Navigating to:", path);
 
     if (path === "/chats") {
-      setActiveMenuComponent("chats");
+      setActiveListMenuComponent("chats");
     } else if (path === "/contacts") {
-      setActiveMenuComponent("contacts");
+      setActiveListMenuComponent("contacts");
     }
     navigate(path);
   };
