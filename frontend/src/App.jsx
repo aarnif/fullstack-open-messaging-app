@@ -26,7 +26,7 @@ import Settings from "./components/Settings/Settings";
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
 import NewPrivateChatModal from "./components/Modals/NewPrivateChatModal/NewPrivateChatModal";
 import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupChatModal";
-import NewContactModal from "./components/Modals/NewContactModal";
+import AddNewContactsModal from "./components/Modals/AddNewContactsModal";
 
 const App = () => {
   const [activeMenuItem, setActiveMenuItem] = useState("chats");
@@ -36,7 +36,7 @@ const App = () => {
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
   const [showNewPrivateChatModal, setShowNewPrivateChatModal] = useState(false);
   const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
-  const [showNewContactModal, setShowNewContactModal] = useState(false);
+  const [showAddNewContactsModal, setShowAddNewContactsModal] = useState(false);
 
   const { data, error, loading } = useQuery(CURRENT_USER);
   console.log("Current user:", data);
@@ -57,7 +57,7 @@ const App = () => {
 
   const handleClickNewContact = () => {
     console.log("Clicked new contact");
-    setShowNewContactModal(true);
+    setShowAddNewContactsModal(true);
   };
 
   return (
@@ -258,10 +258,10 @@ const App = () => {
                 setShowNewGroupChatModal={setShowNewGroupChatModal}
               />
             )}
-            {showNewContactModal && (
-              <NewContactModal
+            {showAddNewContactsModal && (
+              <AddNewContactsModal
                 user={data?.me}
-                setShowNewContactModal={setShowNewContactModal}
+                setShowAddNewContactsModal={setShowAddNewContactsModal}
               />
             )}
             <Footer />

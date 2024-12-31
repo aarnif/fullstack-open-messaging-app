@@ -19,7 +19,7 @@ import SelectContactsList from "./NewGroupChatModal/SelectContactsList";
 import useNotifyMessage from "../../hooks/useNotifyMessage";
 import Notify from "../Notify";
 
-const NewContactModal = ({ user, setShowNewContactModal }) => {
+const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
   const notifyMessage = useNotifyMessage();
   const navigate = useNavigate();
 
@@ -73,7 +73,7 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
       console.log(error.message);
     }
 
-    setShowNewContactModal(false);
+    setShowAddNewContactsModal(false);
     navigate("/contacts");
   };
 
@@ -84,14 +84,14 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
     <motion.div
       key={"Overlay"}
       className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 transition"
-      onClick={() => setShowNewContactModal(false)}
+      onClick={() => setShowAddNewContactsModal(false)}
       initial={{ width: "0vw", opacity: 0 }}
       animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
       exit={{ width: "0vw", opacity: 0, transition: { delay: 1.0 } }}
     >
       <motion.div
-        key={"newChatModal"}
-        className="w-[500px] h-[600px] bg-white rounded-xl text-slate-700 z-100"
+        key={"newContactModal"}
+        className="w-[500px] h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-700 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
@@ -102,11 +102,11 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
           <div className="w-full flex justify-center items-center">
             <button
               className="text-2xl text-slate-700"
-              onClick={() => setShowNewContactModal(false)}
+              onClick={() => setShowAddNewContactsModal(false)}
             >
-              <MdClose className="w-7 h-7 text-slate-700 fill-current" />
+              <MdClose className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
             </button>
-            <h2 className="flex-grow text-2xl font-bold text-slate-700 text-center">
+            <h2 className="flex-grow text-2xl font-bold text-slate-700 dark:text-slate-100 text-center">
               Add New Contacts
             </h2>
             <button
@@ -114,7 +114,7 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
               className="text-2xl text-slate-700"
               onClick={handleAddNewContacts}
             >
-              <IoChevronForward className="w-7 h-7 text-slate-700 fill-current" />
+              <IoChevronForward className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
             </button>
           </div>
           <>
@@ -132,7 +132,7 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
                     setChosenUserIds={setChosenUserIds}
                   />
                 </div>
-                <div className="w-full h-[40px] flex justify-center items-center bg-white font-bold">
+                <div className="w-full h-[40px] flex justify-center items-center bg-white dark:bg-slate-800 font-bold">
                   {chosenUserIds.length} contacts selected
                 </div>
               </>
@@ -144,4 +144,4 @@ const NewContactModal = ({ user, setShowNewContactModal }) => {
   );
 };
 
-export default NewContactModal;
+export default AddNewContactsModal;
