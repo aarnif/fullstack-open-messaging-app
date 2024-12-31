@@ -48,8 +48,31 @@ const splitLink = split(
   authLink.concat(httpLink)
 );
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        allChatsByUser: {
+          merge(existing = [], incoming = []) {
+            return [...incoming];
+          },
+        },
+      },
+    },
+    Chat: {
+      fields: {
+        members: {
+          merge(existing = [], incoming = []) {
+            return [...incoming];
+          },
+        },
+      },
+    },
+  },
+});
+
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: cache,
   link: splitLink,
 });
 
