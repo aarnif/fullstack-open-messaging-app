@@ -4,7 +4,8 @@ import { RedisPubSub } from "graphql-redis-subscriptions";
 
 import config from "../config.js";
 
-const connectToRedis = () => {
+const connectToRedisPubSub = () => {
+  console.log("Connecting to Redis PubSub");
   const redisUri = config.REDIS_URI;
   const redisOptions = {
     retryStrategy: (times) => {
@@ -31,9 +32,14 @@ const connectToRedis = () => {
   });
 };
 
+const connectToGraphQLPubSub = () => {
+  console.log("Connecting to GraphQL PubSub");
+  return new PubSub();
+};
+
 const pubsub =
   process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test"
-    ? connectToRedis()
-    : new PubSub();
+    ? connectToRedisPubSub()
+    : connectToGraphQLPubSub();
 
 export default pubsub;
