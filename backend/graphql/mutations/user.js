@@ -20,7 +20,7 @@ const typeDefs = `
     ): Token
     logout: User
     addContacts(
-      contacts: [ID!]
+      userIds: [ID!]
     ): User
     removeContact(
       contactId: ID!
@@ -142,28 +142,28 @@ const resolvers = {
         });
       }
 
-      const findContacts = await User.find({ _id: { $in: args.contacts } });
+      const findContacts = await User.find({ _id: { $in: args.userIds } });
 
       if (!findContacts.length) {
         throw new GraphQLError("Contacts not found!", {
           extensions: {
             code: "NOT_FOUND",
-            invalidArgs: args.contacts,
+            invalidArgs: args.userIds,
           },
         });
       }
 
-      console.log("Adding contacts: ", args.contacts);
+      console.log("Adding contacts: ", args.userIds);
 
       const user = await User.findByIdAndUpdate(
         context.currentUser,
         {
-          $addToSet: { contacts: { $each: args.contacts } },
+          $addToSet: { contacts: { $each: args.userIds } },
         },
         { new: true }
       ).populate("contacts");
 
-      const addedContacts = await User.find({ _id: { $in: args.contacts } });
+      const addedContacts = await User.find({ _id: { $in: args.userIds } });
 
       pubsub.publish("CONTACTS_ADDED", { contactsAdded: addedContacts });
 

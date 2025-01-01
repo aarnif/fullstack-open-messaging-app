@@ -51,7 +51,7 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
     try {
       const { data, error } = await mutate({
         variables: {
-          contacts: chosenUserIds,
+          userIds: chosenUserIds,
         },
         refetchQueries: [
           {

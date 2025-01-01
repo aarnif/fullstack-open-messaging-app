@@ -95,8 +95,8 @@ const loginUser = async (credentials) => {
 const addContacts = async (credentials, contactDetails) => {
   const response = await requestData(
     {
-      query: `mutation AddContacts($contacts: [ID!]) {
-        addContacts(contacts: $contacts) {
+      query: `mutation AddContacts($userIds: [ID!]) {
+        addContacts(userIds: $userIds) {
           contacts {
             id
             username
@@ -104,7 +104,7 @@ const addContacts = async (credentials, contactDetails) => {
         }
     }`,
       variables: {
-        contacts: contactDetails.map((contact) => contact.id),
+        userIds: contactDetails.map((contact) => contact.id),
       },
     },
     credentials.token

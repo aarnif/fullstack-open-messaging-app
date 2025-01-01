@@ -96,8 +96,8 @@ export const LEAVE_GROUP_CHATS = gql`
 `;
 
 export const ADD_CONTACTS = gql`
-  mutation AddContacts($contacts: [ID!]!) {
-    addContacts(contacts: $contacts) {
+  mutation AddContacts($userIds: [ID!]!) {
+    addContacts(userIds: $userIds) {
       id
       username
       name
