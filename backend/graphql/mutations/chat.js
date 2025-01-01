@@ -50,7 +50,7 @@ const typeDefs = `
     addedMemberIds: [ID]
   }
   type leftGroupChatsDetails {
-    member: ID
+    memberId: ID
     chatIds: [ID]
   }
   type Subscription {
@@ -598,7 +598,7 @@ const resolvers = {
 
         pubsub.publish("LEFT_GROUP_CHATS", {
           leftGroupChats: {
-            member: context.currentUser.id,
+            memberId: context.currentUser.id,
             chatIds: args.chatIds,
           },
         });

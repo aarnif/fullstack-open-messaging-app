@@ -152,7 +152,7 @@ const ChatsList = ({
           },
         },
         ({ allChatsByUser }) => {
-          if (leftGroupChatData.member === user.id) {
+          if (leftGroupChatData.memberId === user.id) {
             console.log("User left group chat");
             return {
               allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
