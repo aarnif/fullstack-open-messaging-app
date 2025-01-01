@@ -16,7 +16,7 @@ const typeDefs = `
     createChat(
       title: String
       description: String
-      members: [ID!]!
+      memberIds: [ID!]!
     ): Chat
     addMessageToChat(
       chatId: ID!
@@ -98,18 +98,18 @@ const resolvers = {
             code: "NOT_AUTHENTICATED",
           },
         });
-      } else if (args.members.length < 2) {
+      } else if (args.memberIds.length < 2) {
         userInputError.message = "At least two members are required!";
         throw userInputError;
-      } else if (args.members.length === 2) {
+      } else if (args.memberIds.length === 2) {
         console.log("Creating private chat with two members");
-        const findTheOtherChatMember = args.members.find(
+        const findTheOtherChatMember = args.memberIds.find(
           (member) => member !== context.currentUser.id
         );
         const theOtherChatMember = await User.findById(findTheOtherChatMember);
         chatTitle = theOtherChatMember.name;
         chatImage = theOtherChatMember.image;
-      } else if (args.members.length > 2 && !args.title) {
+      } else if (args.memberIds.length > 2 && !args.title) {
         userInputError.message = "Chat title is required for group chats!";
         throw userInputError;
       } else {
@@ -123,18 +123,14 @@ const resolvers = {
         description: args.description,
         isGroupChat: isGroupChat,
         admin: context.currentUser,
-        members: args.members,
-        latestMessage: {
-          sender: context.currentUser,
-          content: "Chat created",
-        },
+        members: args.memberIds,
       });
 
       try {
         newChat.save();
-        const addChatToParticipatingUsersChats = args.members.map(
-          async (member) => {
-            await User.findByIdAndUpdate(member, {
+        const addChatToParticipatingUsersChats = args.memberIds.map(
+          async (memberId) => {
+            await User.findByIdAndUpdate(memberId, {
               $push: { chats: newChat },
             });
           }

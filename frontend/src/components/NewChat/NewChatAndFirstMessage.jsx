@@ -39,7 +39,7 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
         variables: {
           title: newChatInfo.title ? newChatInfo.title : "",
           description: newChatInfo.description ? newChatInfo.description : "",
-          members: newChatInfo.members.map((member) => member.id),
+          memberIds: newChatInfo.members.map((member) => member.id),
         },
       });
       console.log("Data:", data);

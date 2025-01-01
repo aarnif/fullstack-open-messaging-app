@@ -131,14 +131,14 @@ const blockOrUnBlockContact = async (credentials, contactId) => {
 
 const createChat = async (
   credentials,
-  members,
+  memberIds,
   title = "",
   description = ""
 ) => {
   const response = await requestData(
     {
-      query: `mutation CreateChat($title: String, $description: String, $members: [ID!]!) {
-      createChat(title: $title, description: $description, members: $members) {
+      query: `mutation CreateChat($title: String, $description: String, $memberIds: [ID!]!) {
+      createChat(title: $title, description: $description, memberIds: $memberIds) {
         id
         title
         description
@@ -156,7 +156,7 @@ const createChat = async (
       variables: {
         title: title,
         description: description,
-        members: members,
+        memberIds: memberIds,
       },
     },
     credentials.token
