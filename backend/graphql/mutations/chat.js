@@ -16,7 +16,7 @@ const typeDefs = `
     createChat(
       title: String
       description: String
-      members: [ID!]!
+      memberIds: [ID!]!
     ): Chat
     addMessageToChat(
       chatId: ID!
@@ -38,7 +38,7 @@ const typeDefs = `
     ): Chat
     updateGroupChatMembers(
       chatId: ID!
-      members: [ID!]!
+      memberIds: [ID!]!
     ): Chat
     leaveGroupChats(
       chatIds: [ID!]!
@@ -46,11 +46,11 @@ const typeDefs = `
   }
   type newGroupChatMembers {
     updatedChat: Chat
-    removedMembers: [ID]
-    addedMembers: [ID]
+    removedMemberIds: [ID]
+    addedMemberIds: [ID]
   }
   type leftGroupChatsDetails {
-    member: ID
+    memberId: ID
     chatIds: [ID]
   }
   type Subscription {
@@ -98,18 +98,18 @@ const resolvers = {
             code: "NOT_AUTHENTICATED",
           },
         });
-      } else if (args.members.length < 2) {
+      } else if (args.memberIds.length < 2) {
         userInputError.message = "At least two members are required!";
         throw userInputError;
-      } else if (args.members.length === 2) {
+      } else if (args.memberIds.length === 2) {
         console.log("Creating private chat with two members");
-        const findTheOtherChatMember = args.members.find(
+        const findTheOtherChatMember = args.memberIds.find(
           (member) => member !== context.currentUser.id
         );
         const theOtherChatMember = await User.findById(findTheOtherChatMember);
         chatTitle = theOtherChatMember.name;
         chatImage = theOtherChatMember.image;
-      } else if (args.members.length > 2 && !args.title) {
+      } else if (args.memberIds.length > 2 && !args.title) {
         userInputError.message = "Chat title is required for group chats!";
         throw userInputError;
       } else {
@@ -123,18 +123,14 @@ const resolvers = {
         description: args.description,
         isGroupChat: isGroupChat,
         admin: context.currentUser,
-        members: args.members,
-        latestMessage: {
-          sender: context.currentUser,
-          content: "Chat created",
-        },
+        members: args.memberIds,
       });
 
       try {
         newChat.save();
-        const addChatToParticipatingUsersChats = args.members.map(
-          async (member) => {
-            await User.findByIdAndUpdate(member, {
+        const addChatToParticipatingUsersChats = args.memberIds.map(
+          async (memberId) => {
+            await User.findByIdAndUpdate(memberId, {
               $push: { chats: newChat },
             });
           }
@@ -444,7 +440,7 @@ const resolvers = {
       const oldMembers = findChat.members.map((member) =>
         member._id.toString()
       );
-      const newMembers = args.members;
+      const newMembers = args.memberIds;
       const notificationMessages = [];
 
       try {
@@ -498,7 +494,7 @@ const resolvers = {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $set: { members: args.members },
+            $set: { members: args.memberIds },
             $push: { messages: { $each: notificationMessages, $position: 0 } },
           },
           { new: true }
@@ -517,9 +513,9 @@ const resolvers = {
         pubsub.publish("GROUP_CHAT_MEMBERS_UPDATED", {
           groupChatMembersUpdated: {
             updatedChat: updatedChat,
-            removedMembers:
+            removedMemberIds:
               usersToRemove.map((user) => user._id.toString()) || [],
-            addedMembers: usersToAdd.map((user) => user._id.toString()) || [],
+            addedMemberIds: usersToAdd.map((user) => user._id.toString()) || [],
           },
         });
 
@@ -602,7 +598,7 @@ const resolvers = {
 
         pubsub.publish("LEFT_GROUP_CHATS", {
           leftGroupChats: {
-            member: context.currentUser.id,
+            memberId: context.currentUser.id,
             chatIds: args.chatIds,
           },
         });

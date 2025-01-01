@@ -26,8 +26,16 @@ export const CREATE_USER = gql`
 `;
 
 export const CREATE_CHAT = gql`
-  mutation CreateChat($title: String, $description: String, $members: [ID!]!) {
-    createChat(title: $title, description: $description, members: $members) {
+  mutation CreateChat(
+    $title: String
+    $description: String
+    $memberIds: [ID!]!
+  ) {
+    createChat(
+      title: $title
+      description: $description
+      memberIds: $memberIds
+    ) {
       ...ChatDetails
     }
   }
@@ -72,8 +80,8 @@ export const MARK_MESSAGES_IN_CHAT_READ = gql`
 `;
 
 export const UPDATE_CHAT_MEMBERS = gql`
-  mutation UpdateGroupChatMembers($chatId: ID!, $members: [ID!]!) {
-    updateGroupChatMembers(chatId: $chatId, members: $members) {
+  mutation UpdateGroupChatMembers($chatId: ID!, $memberIds: [ID!]!) {
+    updateGroupChatMembers(chatId: $chatId, memberIds: $memberIds) {
       ...ChatDetails
     }
   }
@@ -88,8 +96,8 @@ export const LEAVE_GROUP_CHATS = gql`
 `;
 
 export const ADD_CONTACTS = gql`
-  mutation AddContacts($contacts: [ID!]!) {
-    addContacts(contacts: $contacts) {
+  mutation AddContacts($userIds: [ID!]!) {
+    addContacts(userIds: $userIds) {
       id
       username
       name
