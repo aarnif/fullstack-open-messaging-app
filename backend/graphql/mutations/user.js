@@ -46,7 +46,6 @@ const typeDefs = `
   type Subscription {
     contactsAdded: [User]
     contactBlockedOrUnBlocked: blockedOrUnBlocked
-    contactRemoved: String
   }   
 `;
 
@@ -185,8 +184,6 @@ const resolvers = {
         }
       );
 
-      pubsub.publish("CONTACT_REMOVED", { contactRemoved: args.contactId });
-
       return args.contactId;
     },
     editProfile: async (root, args, context) => {
@@ -272,9 +269,6 @@ const resolvers = {
     },
     contactBlockedOrUnBlocked: {
       subscribe: () => pubsub.asyncIterator("CONTACT_BLOCKED_OR_UNBLOCKED"),
-    },
-    contactRemoved: {
-      subscribe: () => pubsub.asyncIterator("CONTACT_REMOVED"),
     },
   },
 };
