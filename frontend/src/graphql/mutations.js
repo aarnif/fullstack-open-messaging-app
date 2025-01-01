@@ -80,8 +80,8 @@ export const MARK_MESSAGES_IN_CHAT_READ = gql`
 `;
 
 export const UPDATE_CHAT_MEMBERS = gql`
-  mutation UpdateGroupChatMembers($chatId: ID!, $members: [ID!]!) {
-    updateGroupChatMembers(chatId: $chatId, members: $members) {
+  mutation UpdateGroupChatMembers($chatId: ID!, $memberIds: [ID!]!) {
+    updateGroupChatMembers(chatId: $chatId, memberIds: $memberIds) {
       ...ChatDetails
     }
   }

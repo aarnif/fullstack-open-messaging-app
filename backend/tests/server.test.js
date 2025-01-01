@@ -623,8 +623,8 @@ describe("Server tests", () => {
 
       const response = await requestData(
         {
-          query: `mutation UpdateGroupChatMembers($chatId: ID!, $members: [ID!]!) {
-          updateGroupChatMembers(chatId: $chatId, members: $members) {
+          query: `mutation UpdateGroupChatMembers($chatId: ID!, $memberIds: [ID!]!) {
+          updateGroupChatMembers(chatId: $chatId, memberIds: $memberIds) {
             id
             title
             members {
@@ -635,7 +635,7 @@ describe("Server tests", () => {
         }`,
           variables: {
             chatId: groupChatDetails[0].id,
-            members: [credentials.id].concat(
+            memberIds: [credentials.id].concat(
               contactDetails.map((contact) => contact.id)
             ),
           },
@@ -673,8 +673,8 @@ describe("Server tests", () => {
 
       const response = await requestData(
         {
-          query: `mutation UpdateGroupChatMembers($chatId: ID!, $members: [ID!]!) {
-          updateGroupChatMembers(chatId: $chatId, members: $members) {
+          query: `mutation UpdateGroupChatMembers($chatId: ID!, $memberIds: [ID!]!) {
+          updateGroupChatMembers(chatId: $chatId, memberIds: $memberIds) {
             id
             title
             members {
@@ -685,7 +685,7 @@ describe("Server tests", () => {
         }`,
           variables: {
             chatId: groupChatDetails[0].id,
-            members: [
+            memberIds: [
               credentials.id,
               contactDetails[0].id,
               contactDetails[1].id,

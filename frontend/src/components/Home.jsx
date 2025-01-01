@@ -64,7 +64,7 @@ const Home = ({
   useSubscription(GROUP_CHAT_MEMBERS_UPDATED, {
     onData: ({ data }) => {
       console.log("Use GROUP_CHAT_MEMBERS_UPDATED-subscription:");
-      const { updatedChat, removedMembers, addedMembers } =
+      const { updatedChat, removedMemberIds, addedMemberIds } =
         data.data.groupChatMembersUpdated;
       client.cache.updateQuery(
         {
@@ -74,13 +74,13 @@ const Home = ({
           },
         },
         ({ allChatsByUser }) => {
-          if (removedMembers.includes(user.id)) {
+          if (removedMemberIds.includes(user.id)) {
             return {
               allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.filter((chat) => chat.id !== updatedChat.id)
               ),
             };
-          } else if (addedMembers.includes(user.id)) {
+          } else if (addedMemberIds.includes(user.id)) {
             return {
               allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.concat(updatedChat)

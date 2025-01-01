@@ -38,7 +38,7 @@ const typeDefs = `
     ): Chat
     updateGroupChatMembers(
       chatId: ID!
-      members: [ID!]!
+      memberIds: [ID!]!
     ): Chat
     leaveGroupChats(
       chatIds: [ID!]!
@@ -46,8 +46,8 @@ const typeDefs = `
   }
   type newGroupChatMembers {
     updatedChat: Chat
-    removedMembers: [ID]
-    addedMembers: [ID]
+    removedMemberIds: [ID]
+    addedMemberIds: [ID]
   }
   type leftGroupChatsDetails {
     member: ID
@@ -440,7 +440,7 @@ const resolvers = {
       const oldMembers = findChat.members.map((member) =>
         member._id.toString()
       );
-      const newMembers = args.members;
+      const newMembers = args.memberIds;
       const notificationMessages = [];
 
       try {
@@ -494,7 +494,7 @@ const resolvers = {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $set: { members: args.members },
+            $set: { members: args.memberIds },
             $push: { messages: { $each: notificationMessages, $position: 0 } },
           },
           { new: true }
@@ -513,9 +513,9 @@ const resolvers = {
         pubsub.publish("GROUP_CHAT_MEMBERS_UPDATED", {
           groupChatMembersUpdated: {
             updatedChat: updatedChat,
-            removedMembers:
+            removedMemberIds:
               usersToRemove.map((user) => user._id.toString()) || [],
-            addedMembers: usersToAdd.map((user) => user._id.toString()) || [],
+            addedMemberIds: usersToAdd.map((user) => user._id.toString()) || [],
           },
         });
 

@@ -95,7 +95,7 @@ const EditGroupChatModal = ({
       await editChatMembers({
         variables: {
           chatId: chat.id,
-          members: chosenUserIds,
+          memberIds: chosenUserIds,
         },
       });
 

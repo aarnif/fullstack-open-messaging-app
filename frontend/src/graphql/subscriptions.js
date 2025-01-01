@@ -64,8 +64,8 @@ export const GROUP_CHAT_MEMBERS_UPDATED = gql`
       updatedChat {
         ...ChatDetails
       }
-      removedMembers
-      addedMembers
+      removedMemberIds
+      addedMemberIds
     }
   }
 
