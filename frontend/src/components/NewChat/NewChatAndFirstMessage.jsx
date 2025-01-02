@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { CREATE_CHAT, ADD_MESSAGE_TO_CHAT } from "../../graphql/mutations";
 import { FIND_CHAT_BY_MEMBERS } from "../../graphql/queries";

@@ -1,5 +1,5 @@
 import { useSubscription, useApolloClient } from "@apollo/client";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 
 import { ALL_CONTACTS_BY_USER, ALL_CHATS_BY_USER } from "../graphql/queries";
 import {

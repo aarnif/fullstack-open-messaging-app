@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router";
 import { useQuery } from "@apollo/client";
 import { AnimatePresence, motion } from "framer-motion";
 

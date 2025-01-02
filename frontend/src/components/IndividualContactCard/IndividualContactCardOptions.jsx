@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import {
   FIND_CHAT_BY_MEMBERS,

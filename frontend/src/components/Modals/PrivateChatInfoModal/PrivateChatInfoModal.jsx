@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { IoChevronBack } from "react-icons/io5";
 import { motion } from "framer-motion";
 
