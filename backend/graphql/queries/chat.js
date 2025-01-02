@@ -126,6 +126,18 @@ const resolvers = {
       return chatExist ? true : false;
     },
   },
+  Chat: {
+    title: (parent, args, context) => {
+      if (parent.isGroupChat) {
+        return parent.title;
+      }
+      const findOtherPrivateChatMember = parent.members.find(
+        (member) => member.id !== context.currentUser.id
+      );
+
+      return findOtherPrivateChatMember.name;
+    },
+  },
 };
 
 export default { typeDefs, resolvers };

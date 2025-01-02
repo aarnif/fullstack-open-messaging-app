@@ -60,9 +60,11 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
               >
                 {chat.title}
               </div>
-              <div className="text-sm text-slate-800 dark:text-slate-100">
-                {chatMembersString}
-              </div>
+              {chat.isGroupChat && (
+                <div className="text-sm text-slate-800 dark:text-slate-100">
+                  {chatMembersString}
+                </div>
+              )}
             </div>
           </div>
         </button>
