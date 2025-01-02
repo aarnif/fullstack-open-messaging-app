@@ -1,5 +1,5 @@
 import useField from "../hooks/useField";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useMutation, useApolloClient } from "@apollo/client";
 
 import { CREATE_USER, LOGIN } from "../graphql/mutations";

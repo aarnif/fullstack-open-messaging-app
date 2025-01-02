@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { useMatch } from "react-router-dom";
+import { useMatch } from "react-router";
 
 import { FIND_USER_BY_ID } from "../../graphql/queries";
 import Loading from "../Loading";

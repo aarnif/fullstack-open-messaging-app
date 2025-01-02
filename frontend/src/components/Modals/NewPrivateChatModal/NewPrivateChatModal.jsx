@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useQuery, useLazyQuery } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
 

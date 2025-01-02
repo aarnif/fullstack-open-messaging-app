@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const NewChatHeader = ({ user, chat }) => {
   const navigate = useNavigate();
