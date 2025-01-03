@@ -33,6 +33,13 @@ const typeDefs = `
       description: String
       input: ImageInput
     ): Chat
+    editGroupChat(
+      chatId: ID!
+      title: String
+      description: String
+      input: ImageInput
+      memberIds: [ID!]!
+    ): Chat
     markAllMessagesInChatRead(
       chatId: ID!
     ): Chat
@@ -49,6 +56,11 @@ const typeDefs = `
     removedMemberIds: [ID]
     addedMemberIds: [ID]
   }
+  type groupChatEditedDetails {
+    updatedChat: Chat
+    removedMemberIds: [ID]
+    addedMemberIds: [ID]
+  }
   type leftGroupChatsDetails {
     memberId: ID
     chatIds: [ID]
@@ -61,6 +73,7 @@ const typeDefs = `
     messagesInChatRead: Chat!
     groupChatMembersUpdated: newGroupChatMembers
     leftGroupChats: leftGroupChatsDetails
+    groupChatEdited: groupChatEditedDetails
   }   
 `;
 
@@ -376,6 +389,166 @@ const resolvers = {
       }
     },
 
+    editGroupChat: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const chatToBeUpdated = await Chat.findById(args.chatId).populate(
+        "members"
+      );
+
+      if (!chatToBeUpdated) {
+        throw new GraphQLError("Chat not found!", {
+          extensions: {
+            code: "NOT_FOUND",
+            invalidArgs: args.chatId,
+          },
+        });
+      }
+
+      const notificationMessages = [];
+
+      const groupChatEditedDetails = {
+        updatedChat: null,
+        removedMemberIds: [],
+        addedMemberIds: [],
+      };
+
+      for (const [key, value] of Object.entries(args)) {
+        if (
+          key !== "chatId" &&
+          key !== "input" &&
+          key !== "memberIds" &&
+          value !== chatToBeUpdated[key]
+        ) {
+          console.log(`${key} was updated to: "${value}"`);
+          notificationMessages.push({
+            type: "notification",
+            sender: context.currentUser.id,
+            content: `${
+              key[0].toUpperCase() + key.slice(1)
+            } was updated to: "${value}"`,
+          });
+        } else if (
+          key === "input" &&
+          JSON.stringify(value) !== JSON.stringify(chatToBeUpdated.image)
+        ) {
+          console.log(`Updated image for chat: ${chatToBeUpdated.title}`);
+          notificationMessages.push({
+            type: "notification",
+            sender: context.currentUser.id,
+            content: "Image was updated",
+          });
+        } else if (key === "memberIds") {
+          const oldMembers = chatToBeUpdated.members.map((member) =>
+            member._id.toString()
+          );
+          const newMembers = args.memberIds;
+
+          const removedMembers = [...oldMembers].filter(
+            (member) => !newMembers.includes(member)
+          );
+          const addedMembers = [...newMembers].filter(
+            (member) => !oldMembers.includes(member)
+          );
+
+          const allMembersToFetch = [...removedMembers, ...addedMembers];
+
+          const users = await User.find({ _id: { $in: allMembersToFetch } });
+
+          const usersToRemove = users.filter((user) =>
+            removedMembers.includes(user._id.toString())
+          );
+          if (usersToRemove.length > 0) {
+            await User.updateMany(
+              { _id: { $in: removedMembers } },
+              { $pull: { chats: args.chatId } }
+            );
+
+            usersToRemove.forEach((user) => {
+              notificationMessages.push({
+                type: "notification",
+                sender: context.currentUser.id,
+                content: `${user.name} was removed`,
+              });
+            });
+
+            groupChatEditedDetails.removedMemberIds = usersToRemove.map(
+              (user) => user._id.toString()
+            );
+          }
+
+          const usersToAdd = users.filter((user) =>
+            addedMembers.includes(user._id.toString())
+          );
+          if (usersToAdd.length > 0) {
+            await User.updateMany(
+              { _id: { $in: addedMembers } },
+              { $addToSet: { chats: args.chatId } }
+            );
+
+            usersToAdd.forEach((user) => {
+              notificationMessages.push({
+                type: "notification",
+                sender: context.currentUser.id,
+                content: `${user.name} joined`,
+              });
+            });
+
+            groupChatEditedDetails.addedMemberIds = usersToAdd.map((user) =>
+              user._id.toString()
+            );
+          }
+        }
+      }
+
+      try {
+        const updatedChat = await Chat.findByIdAndUpdate(
+          args.chatId,
+          {
+            $set: { ...args, image: args.input, members: args.memberIds },
+            $push: {
+              messages: { $each: notificationMessages, $position: 0 },
+            },
+          },
+          { new: true }
+        )
+          .populate("admin")
+          .populate("members")
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
+          });
+
+        groupChatEditedDetails.updatedChat = updatedChat;
+
+        pubsub.publish("GROUP_CHAT_EDITED", {
+          groupChatEdited: {
+            ...groupChatEditedDetails,
+          },
+        });
+
+        return updatedChat;
+      } catch (error) {
+        throw new GraphQLError("Updating chat failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            invalidArgs: args,
+            error,
+          },
+        });
+      }
+    },
+
     markAllMessagesInChatRead: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
@@ -637,6 +810,9 @@ const resolvers = {
     },
     leftGroupChats: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHATS"),
+    },
+    groupChatEdited: {
+      subscribe: () => pubsub.asyncIterator("GROUP_CHAT_EDITED"),
     },
   },
 };
