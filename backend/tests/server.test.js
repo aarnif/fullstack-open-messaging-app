@@ -623,16 +623,25 @@ describe("Server tests", () => {
 
       const response = await requestData(
         {
-          query: `mutation UpdateGroupChatMembers($chatId: ID!, $memberIds: [ID!]!) {
-          updateGroupChatMembers(chatId: $chatId, memberIds: $memberIds) {
-            id
-            title
-            members {
-              id
-              username
-            }
-          }
-        }`,
+          query: `mutation EditGroupChat($chatId: ID!
+                  $title: String
+                  $description: String
+                  $input: ImageInput
+                  $memberIds: [ID!]!) 
+                  {
+                  editGroupChat(chatId: $chatId
+                  title: $title
+                  description: $description
+                  input: $input
+                  memberIds: $memberIds) {
+                    id
+                    title
+                    members {
+                      id
+                      username
+                    }
+                  }
+          }`,
           variables: {
             chatId: groupChatDetails[0].id,
             memberIds: [credentials.id].concat(
@@ -644,17 +653,17 @@ describe("Server tests", () => {
       );
 
       expect(response.errors).toBeUndefined();
-      expect(response.body.data.updateGroupChatMembers.title).toBe(
+      expect(response.body.data.editGroupChat.title).toBe(
         groupChatDetails[0].title
       );
-      expect(response.body.data.updateGroupChatMembers.members.length).toBe(6);
-      expect(
-        response.body.data.updateGroupChatMembers.members[0].username
-      ).toBe(credentials.username);
+      expect(response.body.data.editGroupChat.members.length).toBe(6);
+      expect(response.body.data.editGroupChat.members[0].username).toBe(
+        credentials.username
+      );
       for (let i = 1; i < 6; ++i) {
-        expect(
-          response.body.data.updateGroupChatMembers.members[i].username
-        ).toBe(contactDetails[i - 1].username);
+        expect(response.body.data.editGroupChat.members[i].username).toBe(
+          contactDetails[i - 1].username
+        );
       }
     });
 
@@ -673,16 +682,25 @@ describe("Server tests", () => {
 
       const response = await requestData(
         {
-          query: `mutation UpdateGroupChatMembers($chatId: ID!, $memberIds: [ID!]!) {
-          updateGroupChatMembers(chatId: $chatId, memberIds: $memberIds) {
-            id
-            title
-            members {
-              id
-              username
-            }
-          }
-        }`,
+          query: `mutation EditGroupChat($chatId: ID!
+                  $title: String
+                  $description: String
+                  $input: ImageInput
+                  $memberIds: [ID!]!) 
+                  {
+                  editGroupChat(chatId: $chatId
+                  title: $title
+                  description: $description
+                  input: $input
+                  memberIds: $memberIds) {
+                    id
+                    title
+                    members {
+                      id
+                      username
+                    }
+                  }
+          }`,
           variables: {
             chatId: groupChatDetails[0].id,
             memberIds: [
@@ -696,17 +714,17 @@ describe("Server tests", () => {
       );
 
       expect(response.errors).toBeUndefined();
-      expect(response.body.data.updateGroupChatMembers.title).toBe(
+      expect(response.body.data.editGroupChat.title).toBe(
         groupChatDetails[0].title
       );
-      expect(response.body.data.updateGroupChatMembers.members.length).toBe(3);
-      expect(
-        response.body.data.updateGroupChatMembers.members[0].username
-      ).toBe(credentials.username);
+      expect(response.body.data.editGroupChat.members.length).toBe(3);
+      expect(response.body.data.editGroupChat.members[0].username).toBe(
+        credentials.username
+      );
       for (let i = 1; i < 2; ++i) {
-        expect(
-          response.body.data.updateGroupChatMembers.members[i].username
-        ).toBe(contactDetails[i - 1].username);
+        expect(response.body.data.editGroupChat.members[i].username).toBe(
+          contactDetails[i - 1].username
+        );
       }
     });
   });
