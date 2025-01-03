@@ -27,12 +27,6 @@ const typeDefs = `
     deleteChat(
       chatId: ID!
     ): String!
-    updateGroupChat(
-      chatId: ID!
-      title: String
-      description: String
-      input: ImageInput
-    ): Chat
     editGroupChat(
       chatId: ID!
       title: String
@@ -43,18 +37,9 @@ const typeDefs = `
     markAllMessagesInChatRead(
       chatId: ID!
     ): Chat
-    updateGroupChatMembers(
-      chatId: ID!
-      memberIds: [ID!]!
-    ): Chat
     leaveGroupChats(
       chatIds: [ID!]!
     ): [String!]!
-  }
-  type newGroupChatMembers {
-    updatedChat: Chat
-    removedMemberIds: [ID]
-    addedMemberIds: [ID]
   }
   type groupChatEditedDetails {
     updatedChat: Chat
@@ -71,7 +56,6 @@ const typeDefs = `
     chatDeleted: String!
     groupChatUpdated: Chat!
     messagesInChatRead: Chat!
-    groupChatMembersUpdated: newGroupChatMembers
     leftGroupChats: leftGroupChatsDetails
     groupChatEdited: groupChatEditedDetails
   }   
@@ -302,93 +286,6 @@ const resolvers = {
       }
     },
 
-    updateGroupChat: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
-      }
-
-      const chatToBeUpdated = await Chat.findById(args.chatId).populate(
-        "members"
-      );
-
-      if (!chatToBeUpdated) {
-        throw new GraphQLError("Chat not found!", {
-          extensions: {
-            code: "NOT_FOUND",
-            invalidArgs: args.chatId,
-          },
-        });
-      }
-
-      const notificationMessages = [];
-
-      for (const [key, value] of Object.entries(args)) {
-        if (
-          key !== "chatId" &&
-          key !== "input" &&
-          value !== chatToBeUpdated[key]
-        ) {
-          console.log(`${key} was updated to: "${value}"`);
-          notificationMessages.push({
-            type: "notification",
-            sender: context.currentUser.id,
-            content: `${
-              key[0].toUpperCase() + key.slice(1)
-            } was updated to: "${value}"`,
-          });
-        } else if (
-          key === "input" &&
-          JSON.stringify(value) !== JSON.stringify(chatToBeUpdated.image)
-        ) {
-          console.log(`Updated image for chat: ${chatToBeUpdated.title}`);
-          notificationMessages.push({
-            type: "notification",
-            sender: context.currentUser.id,
-            content: "Image was updated",
-          });
-        }
-      }
-
-      try {
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $set: { ...args, image: args.input },
-            $push: {
-              messages: { $each: notificationMessages, $position: 0 },
-            },
-          },
-          { new: true }
-        )
-          .populate("admin")
-          .populate("members")
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-
-        pubsub.publish("GROUP_CHAT_UPDATED", { groupChatUpdated: updatedChat });
-
-        return updatedChat;
-      } catch (error) {
-        throw new GraphQLError("Updating chat failed", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
-          },
-        });
-      }
-    },
-
     editGroupChat: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
@@ -599,109 +496,7 @@ const resolvers = {
         });
       }
     },
-    updateGroupChatMembers: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
-      }
 
-      const findChat = await Chat.findById(args.chatId);
-
-      const oldMembers = findChat.members.map((member) =>
-        member._id.toString()
-      );
-      const newMembers = args.memberIds;
-      const notificationMessages = [];
-
-      try {
-        const removedMembers = [...oldMembers].filter(
-          (member) => !newMembers.includes(member)
-        );
-        const addedMembers = [...newMembers].filter(
-          (member) => !oldMembers.includes(member)
-        );
-
-        const allMembersToFetch = [...removedMembers, ...addedMembers];
-
-        const users = await User.find({ _id: { $in: allMembersToFetch } });
-
-        const usersToRemove = users.filter((user) =>
-          removedMembers.includes(user._id.toString())
-        );
-        if (usersToRemove.length > 0) {
-          await User.updateMany(
-            { _id: { $in: removedMembers } },
-            { $pull: { chats: args.chatId } }
-          );
-
-          usersToRemove.forEach((user) => {
-            notificationMessages.push({
-              type: "notification",
-              sender: context.currentUser.id,
-              content: `${user.name} was removed`,
-            });
-          });
-        }
-
-        const usersToAdd = users.filter((user) =>
-          addedMembers.includes(user._id.toString())
-        );
-        if (usersToAdd.length > 0) {
-          await User.updateMany(
-            { _id: { $in: addedMembers } },
-            { $addToSet: { chats: args.chatId } }
-          );
-
-          usersToAdd.forEach((user) => {
-            notificationMessages.push({
-              type: "notification",
-              sender: context.currentUser.id,
-              content: `${user.name} joined`,
-            });
-          });
-        }
-
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $set: { members: args.memberIds },
-            $push: { messages: { $each: notificationMessages, $position: 0 } },
-          },
-          { new: true }
-        )
-          .populate("admin")
-          .populate("members")
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-
-        pubsub.publish("GROUP_CHAT_MEMBERS_UPDATED", {
-          groupChatMembersUpdated: {
-            updatedChat: updatedChat,
-            removedMemberIds:
-              usersToRemove.map((user) => user._id.toString()) || [],
-            addedMemberIds: usersToAdd.map((user) => user._id.toString()) || [],
-          },
-        });
-
-        return updatedChat;
-      } catch (error) {
-        throw new GraphQLError("Updating chat members failed", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            error,
-          },
-        });
-      }
-    },
     leaveGroupChats: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
@@ -799,14 +594,8 @@ const resolvers = {
     chatDeleted: {
       subscribe: () => pubsub.asyncIterator("CHAT_DELETED"),
     },
-    groupChatUpdated: {
-      subscribe: () => pubsub.asyncIterator("GROUP_CHAT_UPDATED"),
-    },
     messagesInChatRead: {
       subscribe: () => pubsub.asyncIterator("MESSAGES_IN_CHAT_READ"),
-    },
-    groupChatMembersUpdated: {
-      subscribe: () => pubsub.asyncIterator("GROUP_CHAT_MEMBERS_UPDATED"),
     },
     leftGroupChats: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHATS"),
