@@ -4,7 +4,7 @@ import { Outlet } from "react-router";
 import { ALL_CONTACTS_BY_USER, ALL_CHATS_BY_USER } from "../graphql/queries";
 import {
   CONTACT_BLOCKED_OR_UNBLOCKED,
-  GROUP_CHAT_MEMBERS_UPDATED,
+  GROUP_CHAT_EDITED,
 } from "../graphql/subscriptions";
 import Menu from "./Menu";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
@@ -59,13 +59,16 @@ const Home = ({
         }
       );
     },
+    onError: (error) => {
+      console.log("Contact blocked or unblocked error:", error);
+    },
   });
 
-  useSubscription(GROUP_CHAT_MEMBERS_UPDATED, {
+  useSubscription(GROUP_CHAT_EDITED, {
     onData: ({ data }) => {
-      console.log("Use GROUP_CHAT_MEMBERS_UPDATED-subscription:");
+      console.log("Use GROUP_CHAT_EDITED-subscription:");
       const { updatedChat, removedMemberIds, addedMemberIds } =
-        data.data.groupChatMembersUpdated;
+        data.data.groupChatEdited;
       client.cache.updateQuery(
         {
           query: ALL_CHATS_BY_USER,
@@ -97,6 +100,9 @@ const Home = ({
           }
         }
       );
+    },
+    onError: (error) => {
+      console.log("Group chat edited error:", error);
     },
   });
 

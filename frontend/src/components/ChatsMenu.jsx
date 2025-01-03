@@ -4,7 +4,6 @@ import { ALL_CHATS_BY_USER } from "../graphql/queries";
 import {
   NEW_MESSAGE_ADDED,
   NEW_CHAT_ADDED,
-  CHAT_EDITED,
   CHAT_DELETED,
   LEFT_GROUP_CHATS,
 } from "../graphql/subscriptions";
@@ -78,34 +77,6 @@ const ChatsList = ({
     },
     onError: (error) => {
       console.log("New chat added error:", error);
-    },
-  });
-
-  useSubscription(CHAT_EDITED, {
-    onData: ({ data }) => {
-      console.log("Use CHAT_EDITED-subscription:");
-      const updatedChat = data.data.groupChatUpdated;
-      client.cache.updateQuery(
-        {
-          query: ALL_CHATS_BY_USER,
-          variables: {
-            searchByTitle: "",
-          },
-        },
-        ({ allChatsByUser }) => {
-          const sortedChats = chatAndMessageHelpers.sortChatsByDate(
-            allChatsByUser.map((chat) => {
-              return chat.id === updatedChat.id ? { ...updatedChat } : chat;
-            })
-          );
-          return {
-            allChatsByUser: sortedChats,
-          };
-        }
-      );
-    },
-    onError: (error) => {
-      console.log("Chat edited error:", error);
     },
   });
 

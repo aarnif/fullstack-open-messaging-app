@@ -4,7 +4,7 @@ import { IoChevronBack } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { ALL_USERS } from "../../../graphql/queries";
-import { EDIT_CHAT, UPDATE_CHAT_MEMBERS } from "../../../graphql/mutations";
+import { EDIT_GROUP_CHAT } from "../../../graphql/mutations";
 import imageService from "../../../services/imageService";
 import ChangeImage from "../../ChangeImage";
 import useField from "../../../hooks/useField";
@@ -37,13 +37,7 @@ const EditGroupChatModal = ({
 
   const result = useQuery(ALL_USERS);
 
-  const [editChat] = useMutation(EDIT_CHAT, {
-    onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
-    },
-  });
-
-  const [editChatMembers] = useMutation(UPDATE_CHAT_MEMBERS, {
+  const [editGroupChat] = useMutation(EDIT_GROUP_CHAT, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
@@ -84,19 +78,13 @@ const EditGroupChatModal = ({
         title: title.value,
         description: description.value,
         input: newChatImage,
+        memberIds: chosenUserIds,
       };
 
       console.log("New chat data:", newChatData);
 
-      await editChat({
+      await editGroupChat({
         variables: newChatData,
-      });
-
-      await editChatMembers({
-        variables: {
-          chatId: chat.id,
-          memberIds: chosenUserIds,
-        },
       });
 
       console.log("Edit chat success!");
