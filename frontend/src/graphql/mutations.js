@@ -79,16 +79,6 @@ export const MARK_MESSAGES_IN_CHAT_READ = gql`
   ${CHAT_DETAILS}
 `;
 
-export const UPDATE_CHAT_MEMBERS = gql`
-  mutation UpdateGroupChatMembers($chatId: ID!, $memberIds: [ID!]!) {
-    updateGroupChatMembers(chatId: $chatId, memberIds: $memberIds) {
-      ...ChatDetails
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
 export const LEAVE_GROUP_CHATS = gql`
   mutation LeaveGroupChats($chatIds: [ID!]!) {
     leaveGroupChats(chatIds: $chatIds)
@@ -136,18 +126,20 @@ export const EDIT_SETTINGS = gql`
   ${USER_DETAILS}
 `;
 
-export const EDIT_CHAT = gql`
-  mutation UpdateGroupChat(
+export const EDIT_GROUP_CHAT = gql`
+  mutation EditGroupChat(
     $chatId: ID!
     $title: String
     $description: String
     $input: ImageInput
+    $memberIds: [ID!]!
   ) {
-    updateGroupChat(
+    editGroupChat(
       chatId: $chatId
       title: $title
       description: $description
       input: $input
+      memberIds: $memberIds
     ) {
       ...ChatDetails
     }

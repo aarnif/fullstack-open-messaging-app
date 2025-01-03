@@ -38,40 +38,6 @@ export const MESSAGES_IN_CHAT_READ = gql`
   ${CHAT_DETAILS}
 `;
 
-export const MEMBERS_ADDED_TO_GROUP_CHAT = gql`
-  subscription MembersAddedToGroupChat {
-    membersAddedToGroupChat {
-      ...ChatDetails
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
-export const MEMBERS_REMOVED_FROM_GROUP_CHAT = gql`
-  subscription MembersRemovedFromGroupChat {
-    membersRemovedFromGroupChat {
-      ...ChatDetails
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
-export const GROUP_CHAT_MEMBERS_UPDATED = gql`
-  subscription GroupChatMembersUpdated {
-    groupChatMembersUpdated {
-      updatedChat {
-        ...ChatDetails
-      }
-      removedMemberIds
-      addedMemberIds
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
 export const LEFT_GROUP_CHATS = gql`
   subscription LeftGroupChats {
     leftGroupChats {
@@ -101,10 +67,14 @@ export const CONTACT_BLOCKED_OR_UNBLOCKED = gql`
   }
 `;
 
-export const CHAT_EDITED = gql`
-  subscription GroupChatUpdated {
-    groupChatUpdated {
-      ...ChatDetails
+export const GROUP_CHAT_EDITED = gql`
+  subscription GroupChatEdited {
+    groupChatEdited {
+      updatedChat {
+        ...ChatDetails
+      }
+      removedMemberIds
+      addedMemberIds
     }
   }
 
