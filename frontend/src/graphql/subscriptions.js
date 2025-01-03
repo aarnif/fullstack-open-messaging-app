@@ -110,3 +110,17 @@ export const CHAT_EDITED = gql`
 
   ${CHAT_DETAILS}
 `;
+
+export const GROUP_CHAT_EDITED = gql`
+  subscription GroupChatEdited {
+    groupChatEdited {
+      updatedChat {
+        ...ChatDetails
+      }
+      removedMemberIds
+      addedMemberIds
+    }
+  }
+
+  ${CHAT_DETAILS}
+`;
