@@ -35,6 +35,13 @@ This is a full stack project for the Helsinki University [Full Stack Open](https
 - [React Icons](https://react-icons.github.io/react-icons/)
 - [Material Design Icons](https://pictogrammers.com/library/mdi/)
 
+## Instruction videos
+
+- [Add contacts](https://github.com/aarnif/shopping-cart/blob/main/documentation/videos/add_contacts.mp4)
+- [Create private chat](https://github.com/aarnif/shopping-cart/blob/main/documentation/videos/create_private_chat.mp4)
+- [Create group chat](https://github.com/aarnif/shopping-cart/blob/main/documentation/videos/create_group_chat.mp4)
+- [Edit group chat](https://github.com/aarnif/shopping-cart/blob/main/documentation/videos/edit_group_chat.mp4)
+
 ## Testing application locally
 
 First clone the repository and install the dependencies:
@@ -57,14 +64,16 @@ PORT=Server port
 JWT_SECRET=JWT secret
 
 MONGODB_URI=MongoDB URI
-TEST_MONGODB_URI="mongodb://root:password@localhost:5000/test_database?authSource=admin" # Docker mongo URI
+# Docker mongo URI
+TEST_MONGODB_URI="mongodb://root:password@localhost:5000/test_database?authSource=admin"
 
 VITE_APOLLO_URI=GraphQL URI
 VITE_APOLLO_WS_URI=GraphQL WebSocket URI
 VITE_IMGBB_API_KEY=https://imgbb.com/ API key
 
 REDIS_URI=Redis URI
-TEST_REDIS_URI="redis://localhost:6379" # Docker redis URI
+# Docker redis URI
+TEST_REDIS_URI="redis://localhost:6379"
 
 ```
 
