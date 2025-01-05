@@ -41,6 +41,9 @@ This is a full stack project for the Helsinki University [Full Stack Open](https
 - [Create private chat](https://github.com/aarnif/fullstack-open-messaging-app/blob/main/documentation/videos/create_private_chat.mp4)
 - [Create group chat](https://github.com/aarnif/fullstack-open-messaging-app/blob/main/documentation/videos/create_group_chat.mp4)
 - [Edit group chat](https://github.com/aarnif/fullstack-open-messaging-app/blob/main/documentation/videos/edit_group_chat.mp4)
+- [Edit profile](https://github.com/aarnif/fullstack-open-messaging-app/blob/main/documentation/videos/edit_profile.mp4)
+- [Leave group chat](https://github.com/aarnif/fullstack-open-messaging-app/blob/main/documentation/videos/leave_group_chat.mp4)
+- [Remove private chat](https://github.com/aarnif/fullstack-open-messaging-app/blob/main/documentation/videos/remove_private_chat.mp4)
 
 ## Testing application locally
 

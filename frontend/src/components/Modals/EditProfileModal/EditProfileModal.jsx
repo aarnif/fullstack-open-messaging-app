@@ -113,7 +113,7 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
             >
               <ChangeImage
                 currentImage={user.image.thumbnail}
-                imageType={"chat"}
+                imageType={"profile"}
                 setBase64Image={setBase64Image}
               />
               <ul className="flex-grow flex flex-col">
