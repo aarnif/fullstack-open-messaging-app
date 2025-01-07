@@ -62,7 +62,8 @@ const resolvers = {
         .populate({
           path: "chats",
           populate: { path: "messages" },
-        }),
+        })
+        .sort({ name: "asc", username: "asc" }),
     findUserById: async (root, args) =>
       User.findById(args.id)
         .populate("chats")
@@ -98,6 +99,9 @@ const resolvers = {
             },
           ],
         },
+        options: {
+          sort: { name: "asc", username: "asc" },
+        },
       }),
     allContactsExceptByUser: async (root, args, context) =>
       User.find({
@@ -125,7 +129,7 @@ const resolvers = {
             },
           },
         ],
-      }),
+      }).sort({ name: "asc", username: "asc" }),
     checkIfUserHasBlockedYou: async (root, args, context) => {
       const user = await User.findById(args.userId).populate("blockedContacts");
       return user.blockedContacts.includes(context.currentUser.id);
