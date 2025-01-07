@@ -60,7 +60,7 @@ const Home = ({
       );
     },
     onError: (error) => {
-      console.log("Contact blocked or unblocked error:", error);
+      console.log("CONTACT_BLOCKED_OR_UNBLOCKED-subscription error:", error);
     },
   });
 
@@ -102,7 +102,7 @@ const Home = ({
       );
     },
     onError: (error) => {
-      console.log("Group chat edited error:", error);
+      console.log("GROUP_CHAT_EDITED-subscription error:", error);
     },
   });
 

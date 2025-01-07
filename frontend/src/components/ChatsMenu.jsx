@@ -2,8 +2,8 @@ import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 
 import { ALL_CHATS_BY_USER } from "../graphql/queries";
 import {
-  NEW_MESSAGE_ADDED,
-  NEW_CHAT_ADDED,
+  NEW_MESSAGE_TO_CHAT_ADDED,
+  NEW_CHAT_CREATED,
   CHAT_DELETED,
   LEFT_GROUP_CHATS,
 } from "../graphql/subscriptions";
@@ -26,9 +26,9 @@ const ChatsList = ({
     },
   });
 
-  useSubscription(NEW_MESSAGE_ADDED, {
+  useSubscription(NEW_MESSAGE_TO_CHAT_ADDED, {
     onData: ({ data }) => {
-      console.log("Use NEW_MESSAGE_ADDED-subscription:");
+      console.log("Use NEW_MESSAGE_TO_CHAT_ADDED-subscription:");
       const updatedChat = data.data.messageToChatAdded;
       client.cache.updateQuery(
         {
@@ -50,14 +50,14 @@ const ChatsList = ({
       );
     },
     onError: (error) => {
-      console.log("New message added error:", error);
+      console.log("NEW_MESSAGE_TO_CHAT_ADDED-subscription error:", error);
     },
   });
 
-  useSubscription(NEW_CHAT_ADDED, {
+  useSubscription(NEW_CHAT_CREATED, {
     onData: ({ data }) => {
-      console.log("Use NEW_CHAT_ADDED-subscription:");
-      const newChat = data.data.chatAdded;
+      console.log("Use NEW_CHAT_CREATED-subscription:");
+      const newChat = data.data.newChatCreated;
       client.cache.updateQuery(
         {
           query: ALL_CHATS_BY_USER,
@@ -76,7 +76,7 @@ const ChatsList = ({
       );
     },
     onError: (error) => {
-      console.log("New chat added error:", error);
+      console.log("NEW_CHAT_CREATED-subscription error:", error);
     },
   });
 
@@ -106,7 +106,7 @@ const ChatsList = ({
       );
     },
     onError: (error) => {
-      console.log("Chat deleted error:", error);
+      console.log("CHAT_DELETED-subscription error:", error);
     },
   });
 
@@ -140,7 +140,7 @@ const ChatsList = ({
       );
     },
     onError: (error) => {
-      console.log("Left group chats error:", error);
+      console.log("LEFT_GROUP_CHATS-subscription error:", error);
     },
   });
 

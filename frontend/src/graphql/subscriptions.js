@@ -1,8 +1,8 @@
-import { CHAT_DETAILS, USER_DETAILS } from "./queries";
+import { CHAT_DETAILS } from "./queries";
 
 import { gql } from "@apollo/client";
 
-export const NEW_MESSAGE_ADDED = gql`
+export const NEW_MESSAGE_TO_CHAT_ADDED = gql`
   subscription MessageToChatAdded {
     messageToChatAdded {
       ...ChatDetails
@@ -12,9 +12,9 @@ export const NEW_MESSAGE_ADDED = gql`
   ${CHAT_DETAILS}
 `;
 
-export const NEW_CHAT_ADDED = gql`
-  subscription ChatAdded {
-    chatAdded {
+export const NEW_CHAT_CREATED = gql`
+  subscription NewChatCreated {
+    newChatCreated {
       ...ChatDetails
     }
   }
@@ -45,16 +45,6 @@ export const LEFT_GROUP_CHATS = gql`
       chatIds
     }
   }
-`;
-
-export const CONTACTS_ADDED = gql`
-  subscription ContactsAdded {
-    contactsAdded {
-      ...UserDetails
-    }
-  }
-
-  ${USER_DETAILS}
 `;
 
 export const CONTACT_BLOCKED_OR_UNBLOCKED = gql`

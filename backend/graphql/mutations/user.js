@@ -44,7 +44,6 @@ const typeDefs = `
     target: String
   }
   type Subscription {
-    contactsAdded: [User]
     contactBlockedOrUnBlocked: blockedOrUnBlocked
   }   
 `;
@@ -164,8 +163,6 @@ const resolvers = {
 
       const addedContacts = await User.find({ _id: { $in: args.userIds } });
 
-      pubsub.publish("CONTACTS_ADDED", { contactsAdded: addedContacts });
-
       return user;
     },
     removeContact: async (root, args, context) => {
@@ -264,9 +261,6 @@ const resolvers = {
     },
   },
   Subscription: {
-    contactsAdded: {
-      subscribe: () => pubsub.asyncIterator("CONTACTS_ADDED"),
-    },
     contactBlockedOrUnBlocked: {
       subscribe: () => pubsub.asyncIterator("CONTACT_BLOCKED_OR_UNBLOCKED"),
     },
