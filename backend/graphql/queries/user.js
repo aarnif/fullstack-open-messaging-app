@@ -62,7 +62,8 @@ const resolvers = {
         .populate({
           path: "chats",
           populate: { path: "messages" },
-        }),
+        })
+        .sort({ name: "asc", username: "asc" }),
     findUserById: async (root, args) =>
       User.findById(args.id)
         .populate("chats")
@@ -80,25 +81,27 @@ const resolvers = {
           });
         }),
     allContactsByUser: async (root, args, context) =>
-      User.findById(context.currentUser).populate({
-        path: "contacts",
-        match: {
-          $or: [
-            {
-              name: {
-                $regex: args.searchByName ? `${args.searchByName}` : "",
-                $options: "i",
+      User.findById(context.currentUser)
+        .populate({
+          path: "contacts",
+          match: {
+            $or: [
+              {
+                name: {
+                  $regex: args.searchByName ? `${args.searchByName}` : "",
+                  $options: "i",
+                },
               },
-            },
-            {
-              username: {
-                $regex: args.searchByName ? `${args.searchByName}` : "",
-                $options: "i",
+              {
+                username: {
+                  $regex: args.searchByName ? `${args.searchByName}` : "",
+                  $options: "i",
+                },
               },
-            },
-          ],
-        },
-      }),
+            ],
+          },
+        })
+        .sort({ name: "asc", username: "asc" }),
     allContactsExceptByUser: async (root, args, context) =>
       User.find({
         $and: [
@@ -125,7 +128,7 @@ const resolvers = {
             },
           },
         ],
-      }),
+      }).sort({ name: "asc", username: "asc" }),
     checkIfUserHasBlockedYou: async (root, args, context) => {
       const user = await User.findById(args.userId).populate("blockedContacts");
       return user.blockedContacts.includes(context.currentUser.id);
