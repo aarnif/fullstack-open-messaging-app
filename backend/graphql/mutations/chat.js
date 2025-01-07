@@ -51,7 +51,7 @@ const typeDefs = `
     chatIds: [ID]
   }
   type Subscription {
-    chatAdded: Chat!
+    newChatCreated: Chat!
     messageToChatAdded: Chat!
     chatDeleted: String!
     groupChatUpdated: Chat!
@@ -142,11 +142,11 @@ const resolvers = {
         });
       }
 
-      const addedChat = await newChat.populate("members");
+      const createdChat = await newChat.populate("members");
 
-      pubsub.publish("CHAT_ADDED", { chatAdded: addedChat });
+      pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
 
-      return addedChat;
+      return createdChat;
     },
 
     addMessageToChat: async (root, args, context) => {
@@ -585,8 +585,8 @@ const resolvers = {
   },
 
   Subscription: {
-    chatAdded: {
-      subscribe: () => pubsub.asyncIterator("CHAT_ADDED"),
+    newChatCreated: {
+      subscribe: () => pubsub.asyncIterator("NEW_CHAT_CREATED"),
     },
     messageToChatAdded: {
       subscribe: () => pubsub.asyncIterator("MESSAGE_TO_CHAT_ADDED"),
