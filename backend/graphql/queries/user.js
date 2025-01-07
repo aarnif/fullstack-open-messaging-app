@@ -81,27 +81,28 @@ const resolvers = {
           });
         }),
     allContactsByUser: async (root, args, context) =>
-      User.findById(context.currentUser)
-        .populate({
-          path: "contacts",
-          match: {
-            $or: [
-              {
-                name: {
-                  $regex: args.searchByName ? `${args.searchByName}` : "",
-                  $options: "i",
-                },
+      User.findById(context.currentUser).populate({
+        path: "contacts",
+        match: {
+          $or: [
+            {
+              name: {
+                $regex: args.searchByName ? `${args.searchByName}` : "",
+                $options: "i",
               },
-              {
-                username: {
-                  $regex: args.searchByName ? `${args.searchByName}` : "",
-                  $options: "i",
-                },
+            },
+            {
+              username: {
+                $regex: args.searchByName ? `${args.searchByName}` : "",
+                $options: "i",
               },
-            ],
-          },
-        })
-        .sort({ name: "asc", username: "asc" }),
+            },
+          ],
+        },
+        options: {
+          sort: { name: "asc", username: "asc" },
+        },
+      }),
     allContactsExceptByUser: async (root, args, context) =>
       User.find({
         $and: [
