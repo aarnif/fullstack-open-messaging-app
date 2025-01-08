@@ -481,35 +481,7 @@ describe("Server tests", () => {
       );
     });
 
-    it("Count all chats", async () => {
-      await createUser(credentials);
-      await loginUser(credentials);
-      await addContacts(credentials, [contactDetails[0]]);
-
-      for (const groupChatDetail of groupChatDetails) {
-        await createChat(
-          credentials,
-          [
-            credentials.id,
-            "6690caa54dc3eac2b83517d0",
-            "6690caa54dc3eac2b83517d8",
-          ],
-          groupChatDetail.title,
-          groupChatDetail.description
-        );
-      }
-
-      const response = await requestData({
-        query: `query CountChats {
-         countChats
-        }`,
-      });
-
-      expect(response.errors).toBeUndefined();
-      expect(response.body.data.countChats).toBe(2);
-    });
-
-    it("Get all chats", async () => {
+    it("Get all chats by user", async () => {
       await createUser(credentials);
       await loginUser(credentials);
       await addContacts(credentials, [contactDetails[0]]);
@@ -524,17 +496,20 @@ describe("Server tests", () => {
         groupChatDetails[0].description
       );
 
-      const response = await requestData({
-        query: `query AllChats {
-            allChats {
+      const response = await requestData(
+        {
+          query: `query AllChatsByUser {
+            allChatsByUser {
               id
               title
             }
           }`,
-      });
+        },
+        credentials.token
+      );
 
       expect(response.errors).toBeUndefined();
-      assert.strictEqual(response.body.data.allChats.length, 1);
+      assert.strictEqual(response.body.data.allChatsByUser.length, 1);
     });
 
     it("Find chat by id", async () => {
