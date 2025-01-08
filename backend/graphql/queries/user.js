@@ -29,7 +29,6 @@ const typeDefs = `
   }
 
   extend type Query {
-    countUsers: Int!
     allUsers(searchByName: String): [User!]!
     findUserById(id: ID!): User
     allContactsByUser(searchByName: String): User
@@ -41,7 +40,6 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    countUsers: async () => User.collection.countDocuments(),
     allUsers: async (root, args) =>
       User.find({
         $or: [
