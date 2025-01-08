@@ -39,8 +39,6 @@ const typeDefs = `
   }
 
   extend type Query {
-    countChats: Int!
-    allChats: [Chat!]!
     findChatById(chatId: ID!): Chat
     findChatByMembers(members: [ID!]!): Chat
     allChatsByUser(searchByTitle: String): [Chat!]!
@@ -50,21 +48,6 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    countChats: async () => Chat.collection.countDocuments(),
-    allChats: async () => {
-      const chats = await Chat.find({})
-        .populate("admin")
-        .populate("members")
-        .populate({
-          path: "messages",
-          populate: { path: "sender" },
-        })
-        .populate({
-          path: "messages",
-          populate: { path: "isReadBy.member" },
-        });
-      return chats;
-    },
     findChatById: async (root, args) =>
       Chat.findById(args.chatId)
         .populate("admin")
