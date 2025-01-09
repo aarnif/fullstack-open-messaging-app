@@ -4,9 +4,9 @@ import chatAndMessageHelpers from "../../../helpers/chatAndMessageHelpers";
 const ChatMembersList = ({ user, chatMembers, admin }) => {
   const displayChatMembers = [
     user,
-    chatAndMessageHelpers.sortChatMembersByNameAndUsername([
-      ...chatMembers.filter((member) => member.id !== user.id),
-    ]),
+    ...chatAndMessageHelpers.sortChatMembersByNameAndUsername(
+      chatMembers.filter((member) => member.id !== user.id)
+    ),
   ];
 
   return (
