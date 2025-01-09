@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useMutation } from "@apollo/client";
 
 import { MARK_MESSAGES_IN_CHAT_READ } from "../../graphql/mutations";
+import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
   const [mutateMarkMessagesInChatRead] = useMutation(
@@ -33,7 +34,8 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
     setShowChatInfoModal(true);
   };
 
-  const chatMembersString = chat.members
+  const chatMembersString = chatAndMessageHelpers
+    .sortChatMembersByNameAndUsername([...chat.members])
     .map((member) => (member.username === user.username ? "You" : member.name))
     .join(", ");
 
