@@ -40,6 +40,17 @@ const sortChatsByDate = (chats) =>
     );
   });
 
+const sortChatMembersByNameAndUsername = (chatMembers) => {
+  return [
+    ...chatMembers.sort((a, b) => {
+      if (a.name === b.name) {
+        return a.username.localeCompare(b.username);
+      }
+      return a.name.localeCompare(b.name);
+    }),
+  ];
+};
+
 const capitalizeString = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -49,5 +60,6 @@ export default {
   sliceLatestMessage,
   newMessagesCount,
   sortChatsByDate,
+  sortChatMembersByNameAndUsername,
   capitalizeString,
 };
