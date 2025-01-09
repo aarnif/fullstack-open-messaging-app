@@ -1,14 +1,19 @@
 import ChatMember from "./ChatMember";
 
 const ChatMembersList = ({ user, chatMembers, admin }) => {
+  const displayChatMembers = [
+    user,
+    ...chatMembers.filter((member) => member.id !== user.id),
+  ];
+
   return (
     <div className="mt-8 flex-grow w-full max-w-[600px]">
       <div className="w-full py-2 flex flex-col justify-center items-start">
         <div className="mx-4 text-xl text-slate-800 dark:text-slate-100 font-bold">
-          {`${chatMembers.length} members`}
+          {`${displayChatMembers.length} members`}
         </div>
       </div>
-      {chatMembers.map((item) => (
+      {displayChatMembers.map((item) => (
         <ChatMember key={item.id} user={user} item={item} admin={admin} />
       ))}
     </div>
