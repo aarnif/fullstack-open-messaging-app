@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client";
 import { IoChevronBack } from "react-icons/io5";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { ALL_USERS } from "../../../graphql/queries";
+import { ALL_CONTACTS_BY_USER } from "../../../graphql/queries";
 import { EDIT_GROUP_CHAT } from "../../../graphql/mutations";
 import imageService from "../../../services/imageService";
 import ChangeImage from "../../ChangeImage";
@@ -35,7 +35,7 @@ const EditGroupChatModal = ({
     ...chat.members.map((member) => member.id),
   ]);
 
-  const result = useQuery(ALL_USERS);
+  const result = useQuery(ALL_CONTACTS_BY_USER);
 
   const [editGroupChat] = useMutation(EDIT_GROUP_CHAT, {
     onError: (error) => {
@@ -202,8 +202,8 @@ const EditGroupChatModal = ({
                     chatMembers={
                       result.loading
                         ? chat.members
-                        : result.data.allUsers.filter((user) =>
-                            newMemberIds.includes(user.id)
+                        : result.data.allContactsByUser.contacts.filter(
+                            (user) => newMemberIds.includes(user.id)
                           )
                     }
                     admin={chatAdmin}
