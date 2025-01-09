@@ -29,7 +29,6 @@ const typeDefs = `
   }
 
   extend type Query {
-    allUsers(searchByName: String): [User!]!
     findUserById(id: ID!): User
     allContactsByUser(searchByName: String): User
     allContactsExceptByUser(searchByName: String): [User!]!
@@ -40,28 +39,6 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    allUsers: async (root, args) =>
-      User.find({
-        $or: [
-          {
-            name: {
-              $regex: `(?i)${args.searchByName ? args.searchByName : ""}(?-i)`,
-            },
-          },
-          {
-            username: {
-              $regex: `(?i)${args.searchByName ? args.searchByName : ""}(?-i)`,
-            },
-          },
-        ],
-      })
-        .populate("contacts")
-        .populate("chats")
-        .populate({
-          path: "chats",
-          populate: { path: "messages" },
-        })
-        .sort({ name: "asc", username: "asc" }),
     findUserById: async (root, args) =>
       User.findById(args.id)
         .populate("chats")

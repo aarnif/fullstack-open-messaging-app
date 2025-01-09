@@ -62,16 +62,6 @@ export const CHAT_DETAILS = gql`
   ${USER_DETAILS}
 `;
 
-export const ALL_USERS = gql`
-  query AllUsers($searchByName: String) {
-    allUsers(searchByName: $searchByName) {
-      ...UserDetails
-    }
-  }
-
-  ${USER_DETAILS}
-`;
-
 export const CURRENT_USER = gql`
   query {
     me {
