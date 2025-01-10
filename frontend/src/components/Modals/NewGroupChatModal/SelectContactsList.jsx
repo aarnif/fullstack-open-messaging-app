@@ -11,9 +11,14 @@ const SelectContactsList = ({ data, chosenUserIds, setChosenUserIds }) => {
     );
   }
 
+  const selectedAndUnselectedUsers = [
+    ...data.filter((item) => chosenUserIds.includes(item.id)),
+    ...data.filter((item) => !chosenUserIds.includes(item.id)),
+  ];
+
   return (
     <div className="w-full bg-white dark:bg-slate-800">
-      {data.map((item) => (
+      {selectedAndUnselectedUsers.map((item) => (
         <SelectContactsItem
           key={item.id}
           item={item}
