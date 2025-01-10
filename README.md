@@ -45,6 +45,17 @@ This is a full stack project for the Helsinki University [Full Stack Open](https
 - [Leave group chat](https://github.com/aarnif/fullstack-open-messaging-app/blob/main/documentation/videos/leave_group_chat.mp4)
 - [Remove private chat](https://github.com/aarnif/fullstack-open-messaging-app/blob/main/documentation/videos/remove_private_chat.mp4)
 
+## Images
+
+![Signin](documentation/images/signin.png)
+Signin page
+
+![Chats](documentation/images/chats.png)
+Chats page
+
+![Contacts](documentation/images/contacts.png)
+Contacts page
+
 ## Testing application locally
 
 First clone the repository and install the dependencies:
@@ -103,3 +114,7 @@ npm run start:test:server # Start the server in test mode for e2e tests
 npm run test:e2e # Run the e2e tests
 
 ```
+
+## License
+
+This project is [MIT licensed](LICENSE).
