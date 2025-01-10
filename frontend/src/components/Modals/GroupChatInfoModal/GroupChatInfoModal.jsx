@@ -76,7 +76,7 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
           {!chat.description.length ? "No description" : chat.description}
         </div>
       </div>
-      <div className="w-full flex-grow flex flex-col justify-center items-center">
+      <div className="mb-8 w-full flex-grow flex flex-col justify-center items-center">
         <ChatMembersList
           user={user}
           chatMembers={chat.members}
