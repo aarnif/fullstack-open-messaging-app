@@ -31,9 +31,6 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
     }
   }, [data]);
 
-  console.log("Is blocked:", isBlocked);
-  console.log("Have contact blocked you:", haveContactBlockedYou);
-
   return (
     <div className="flex-grow flex bg-slate-50 dark:bg-slate-700">
       {menuComponent}

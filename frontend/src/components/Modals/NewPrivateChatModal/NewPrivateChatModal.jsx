@@ -37,10 +37,7 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
     CHECK_IF_USER_HAS_BLOCKED_YOU
   );
 
-  const handleCreateIndividualChat = async () => {
-    console.log("Press create a individual new chat!");
-    console.log("Chosen user id:", chosenUserId);
-
+  const handleCreatePrivateChat = async () => {
     if (!chosenUserId) {
       notifyMessage.show("Please select a contact to create a chat with!");
       return;
@@ -85,8 +82,6 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
     setShowNewPrivateChatModal(false);
   };
 
-  console.log("Selected user:", chosenUserId);
-
   return (
     <motion.div
       key={"Overlay"}
@@ -114,7 +109,7 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
               {"New Private Chat"}
             </h2>
             <button
-              onClick={handleCreateIndividualChat}
+              onClick={handleCreatePrivateChat}
               data-testid="start-new-private-chat-button"
             >
               <IoChevronForward className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />

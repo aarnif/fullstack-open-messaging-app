@@ -11,7 +11,6 @@ const SelectContactsItem = ({ item, chosenUserIds, setChosenUserIds }) => {
   }, [chosenUserIds, item.id]);
 
   const handlePress = () => {
-    console.log("Contact pressed:", item.id);
     if (isChosen) {
       setChosenUserIds((prev) => [...prev.filter((id) => id !== item.id)]);
     } else {

@@ -48,7 +48,6 @@ const NewMessageBox = ({
   };
 
   const handleClickAddImage = () => {
-    console.log("Handle change chat image.");
     messageImageRef.current.click();
   };
 

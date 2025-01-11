@@ -50,8 +50,7 @@ const EditGroupChatModal = ({
   };
 
   const handleSubmit = async (event) => {
-    console.log("Handle submit edit chat...");
-    console.log("Chosen user ids:", chosenUserIds);
+    console.log("Handle submit edit group chat...");
 
     try {
       let result;
@@ -60,8 +59,6 @@ const EditGroupChatModal = ({
         console.log("Uploading chat picture...");
         result = await imageService.uploadImage(chat.id, base64Image);
       }
-
-      console.log("Result:", result);
 
       const newChatImage = base64Image
         ? {
@@ -80,8 +77,6 @@ const EditGroupChatModal = ({
         input: newChatImage,
         memberIds: chosenUserIds,
       };
-
-      console.log("New chat data:", newChatData);
 
       await editGroupChat({
         variables: newChatData,

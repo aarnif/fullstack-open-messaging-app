@@ -42,7 +42,6 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
           memberIds: newChatInfo.members.map((member) => member.id),
         },
       });
-      console.log("Data:", data);
 
       if (data) {
         console.log("Created chat:", data);

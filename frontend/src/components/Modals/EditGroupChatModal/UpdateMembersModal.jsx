@@ -26,13 +26,11 @@ const UpdateMembersModal = ({
   });
 
   const handleCancel = () => {
-    console.log("Cancel update members.");
     setShowUpdateMembersModal(false);
     setChosenUserIds([...chat.members.map((member) => member.id)]);
   };
 
   const handleUpdateMembers = () => {
-    console.log("Update members:", chosenUserIds);
     setShowUpdateMembersModal(false);
     setNewMemberIds(chosenUserIds);
   };

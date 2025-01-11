@@ -40,14 +40,11 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
   });
 
   const handleAddNewContacts = async () => {
-    console.log("Press add new contacts!");
-    console.log("Chosen user ids:", chosenUserIds);
-
     if (chosenUserIds.length < 1) {
       notifyMessage.show("Please select at least one contact to add!");
       return;
     }
-
+    console.log("Adding new contacts...");
     try {
       const { data, error } = await mutate({
         variables: {
@@ -69,7 +66,7 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
         ],
       });
     } catch (error) {
-      console.log("Error creating chat:", error);
+      console.log("Error adding contacts:", error);
       console.log(error.message);
     }
 

@@ -55,7 +55,7 @@ const PrivateChatModal = ({ user, chat, setShowChatInfoModal }) => {
   };
 
   const handleDeleteChat = async () => {
-    console.log(`Try to delete private chat with contact ${contact.name}`);
+    console.log("Deleting private chat...");
     try {
       await deleteChat({
         variables: {

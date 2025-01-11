@@ -61,8 +61,6 @@ const SettingsCard = ({ user }) => {
   const [time, setTime] = useState(user.settings.time);
   const [mutate] = useMutation(EDIT_SETTINGS);
 
-  console.log("User settings:", theme, time);
-
   useEffect(() => {
     const updateUserSettings = async () => {
       if (theme === user.settings.theme && time === user.settings.time) {
