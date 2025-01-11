@@ -336,9 +336,7 @@ const resolvers = {
           notificationMessages.push({
             type: "notification",
             sender: context.currentUser.id,
-            content: `${
-              key[0].toUpperCase() + key.slice(1)
-            } was updated to: "${value}"`,
+            content: `Chat ${key} was updated`,
           });
         } else if (
           key === "input" &&
@@ -348,7 +346,7 @@ const resolvers = {
           notificationMessages.push({
             type: "notification",
             sender: context.currentUser.id,
-            content: "Image was updated",
+            content: "Chat image was updated",
           });
         } else if (key === "memberIds") {
           const oldMembers = chatToBeUpdated.members.map((member) =>
