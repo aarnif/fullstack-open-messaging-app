@@ -1,15 +1,25 @@
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const LatestMessage = ({ user, latestMessage }) => {
+  let messageContent = null;
   if (latestMessage.type === "notification") {
-    return (
-      <div
-        data-testid="latest-chat-message"
-        className="w-full text-slate-600 dark:text-slate-200 text-left"
-      >
-        {latestMessage.content}
-      </div>
-    );
+    messageContent = latestMessage.content;
+  } else if (latestMessage.type === "singleImage") {
+    messageContent =
+      latestMessage.sender.id === user.id
+        ? "You sent an image"
+        : `${latestMessage.sender.name} sent an image`;
+  } else {
+    messageContent =
+      latestMessage.sender.id === user.id
+        ? `You: ${chatAndMessageHelpers.sliceLatestMessage(
+            latestMessage.content
+          )}`
+        : `${
+            latestMessage.sender.name
+          }: ${chatAndMessageHelpers.sliceLatestMessage(
+            latestMessage.content
+          )}`;
   }
 
   return (
@@ -17,10 +27,7 @@ const LatestMessage = ({ user, latestMessage }) => {
       data-testid="latest-chat-message"
       className="w-full text-slate-600 dark:text-slate-200 text-left"
     >
-      {latestMessage.sender.id === user.id
-        ? "You:"
-        : `${latestMessage.sender.name}:`}{" "}
-      {chatAndMessageHelpers.sliceLatestMessage(latestMessage.content)}
+      {messageContent}
     </div>
   );
 };
