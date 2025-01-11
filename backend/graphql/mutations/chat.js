@@ -55,7 +55,6 @@ const typeDefs = `
     messageToChatAdded: Chat!
     chatDeleted: String!
     groupChatUpdated: Chat!
-    messagesInChatRead: Chat!
     leftGroupChats: leftGroupChatsDetails
     groupChatEdited: groupChatEditedDetails
   }   
@@ -489,9 +488,6 @@ const resolvers = {
             populate: { path: "isReadBy.member" },
           });
 
-        pubsub.publish("MESSAGES_IN_CHAT_READ", {
-          messagesInChatRead: updatedChat,
-        });
         return updatedChat;
       } catch (error) {
         throw new GraphQLError("Marking messages as read failed", {
@@ -600,9 +596,6 @@ const resolvers = {
     },
     chatDeleted: {
       subscribe: () => pubsub.asyncIterator("CHAT_DELETED"),
-    },
-    messagesInChatRead: {
-      subscribe: () => pubsub.asyncIterator("MESSAGES_IN_CHAT_READ"),
     },
     leftGroupChats: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHATS"),

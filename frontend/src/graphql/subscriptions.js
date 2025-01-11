@@ -28,16 +28,6 @@ export const CHAT_DELETED = gql`
   }
 `;
 
-export const MESSAGES_IN_CHAT_READ = gql`
-  subscription MessagesInChatRead {
-    messagesInChatRead {
-      ...ChatDetails
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
 export const LEFT_GROUP_CHATS = gql`
   subscription LeftGroupChats {
     leftGroupChats {
