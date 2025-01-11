@@ -76,6 +76,10 @@ const checkIfMessageIsSingleEmoji = (messageContent) => {
   );
 };
 
+const chekcIfMessageIsImageWithoutText = (messageContent) => {
+  return messageContent === ""; // Currently messages without content are always images
+};
+
 const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
@@ -192,12 +196,17 @@ const resolvers = {
           );
         }
       }
-      const messageIsSingleEmoji = checkIfMessageIsSingleEmoji(
-        args.content.trim()
-      );
+
+      let messageType = "message";
+
+      if (checkIfMessageIsSingleEmoji(args.content.trim())) {
+        messageType = "singleEmoji";
+      } else if (chekcIfMessageIsImageWithoutText(args.content.trim())) {
+        messageType = "singleImage";
+      }
 
       const newMessage = {
-        type: messageIsSingleEmoji ? "singleEmoji" : args.type,
+        type: messageType,
         sender: context.currentUser.id,
         content: args.content.trim(),
         image: args.input,
