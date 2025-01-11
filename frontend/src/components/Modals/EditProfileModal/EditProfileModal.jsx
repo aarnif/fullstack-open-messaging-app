@@ -42,8 +42,6 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
         result = await imageService.uploadImage(user.id, base64Image);
       }
 
-      console.log("Result:", result);
-
       const newProfileImage = base64Image
         ? {
             thumbnail: result.data.thumb.url,
@@ -59,8 +57,6 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
         about: about.value,
         input: newProfileImage,
       };
-
-      console.log("New chat data:", newProfileData);
 
       await editProfile({
         variables: newProfileData,

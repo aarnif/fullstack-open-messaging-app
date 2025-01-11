@@ -3,7 +3,6 @@ import { MdCheck } from "react-icons/md";
 
 const SelectContactItem = ({ item, chosenUserId, setChosenUserId }) => {
   const handlePress = () => {
-    console.log("Contact pressed:", item.id);
     setChosenUserId(item.id);
   };
 

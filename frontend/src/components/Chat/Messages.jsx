@@ -1,6 +1,5 @@
 import { useRef, useEffect, Fragment } from "react";
 import Message from "./Message";
-import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const Messages = ({ user, messages }) => {
   const messagesEndRef = useRef(null);
@@ -13,12 +12,6 @@ const Messages = ({ user, messages }) => {
     scrollToBottom();
   }, [messages]);
 
-  const newMessagesCount = chatAndMessageHelpers.newMessagesCount(
-    user,
-    messages
-  );
-
-  console.log("New messages count:", newMessagesCount);
   return (
     <div className="h-full flex-grow flex flex-col">
       {!messages.length ? (

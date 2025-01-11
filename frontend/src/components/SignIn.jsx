@@ -30,8 +30,6 @@ const SignIn = ({ setActiveMenuItem }) => {
       variables: { username: username.value, password: password.value },
     });
 
-    console.log(data);
-
     if (data) {
       console.log("Logged in successfully!");
       localStorage.setItem("messaging-app-user-token", data.login.value);

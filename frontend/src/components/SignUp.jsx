@@ -6,7 +6,7 @@ import { CREATE_USER, LOGIN } from "../graphql/mutations";
 import useNotifyMessage from "../hooks/useNotifyMessage";
 import Notify from "./Notify";
 
-const SignUp = () => {
+const SignUp = ({ setActiveMenuItem }) => {
   const client = useApolloClient();
   const navigate = useNavigate();
   const username = useField("text", "Enter your username here...");
@@ -33,9 +33,6 @@ const SignUp = () => {
     event.preventDefault();
 
     console.log("Trying to create a new user...");
-    console.log("Username:", username.value);
-    console.log("Password:", password.value);
-    console.log("Confirm Password:", confirmPassword.value);
 
     const { data } = await createUser({
       variables: {
@@ -44,7 +41,6 @@ const SignUp = () => {
         confirmPassword: confirmPassword.value,
       },
     });
-    console.log(data);
 
     if (data) {
       console.log("User created successfully!");
@@ -55,6 +51,7 @@ const SignUp = () => {
       console.log("Logged in successfully!");
       localStorage.setItem("messaging-app-user-token", data.login.value);
       client.resetStore();
+      setActiveMenuItem("chats");
       navigate("/chats");
     }
   };

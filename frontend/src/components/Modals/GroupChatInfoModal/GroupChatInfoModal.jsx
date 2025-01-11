@@ -25,7 +25,7 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   });
 
   const handleLeaveChat = async () => {
-    console.log("Leave group chat:", chat.title);
+    console.log("Leaving group chat...");
     try {
       await mutate({
         variables: {

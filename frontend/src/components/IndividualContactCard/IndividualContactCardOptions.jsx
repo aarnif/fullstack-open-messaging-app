@@ -46,9 +46,8 @@ const IndividualContactOptions = ({
       },
     });
 
-    console.log("Check if chat exists:", checkIfChatExists);
-
     if (checkIfChatExists.data?.findChatByMembers) {
+      console.log("Navigating to existing chat with contact:", contact.name);
       navigate(`/chats/${checkIfChatExists.data.findChatByMembers.id}`);
       return;
     }
@@ -77,9 +76,9 @@ const IndividualContactOptions = ({
       const isContactBlocked = data.blockOrUnBlockContact;
 
       if (isContactBlocked) {
-        console.log("Blocked contact:", contact.id);
+        console.log("Blocked contact:", contact.name);
       } else {
-        console.log("Unblocked contact:", contact.id);
+        console.log("Unblocked contact:", contact.name);
       }
       setIsBlocked(isContactBlocked);
     } catch (error) {
@@ -89,7 +88,7 @@ const IndividualContactOptions = ({
   };
 
   const handleRemoveContact = async () => {
-    console.log("Press remove contact button!");
+    console.log("Removing contact...");
     try {
       const { data } = await removeContact({
         variables: {

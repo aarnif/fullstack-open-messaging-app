@@ -39,7 +39,6 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
 
   const handleCreateGroupChat = async () => {
     console.log("Press create a new group chat!");
-    console.log("Chosen user ids:", chosenUserIds);
 
     if (!groupChatTitle.value.trim().length) {
       notifyMessage.show("Please enter a group chat title!");
@@ -67,8 +66,6 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
     const chosenContacts = result.data.allContactsByUser.contacts.filter(
       (contact) => chosenUserIds.includes(contact.id)
     );
-
-    console.log("Chosen contacts:", chosenContacts);
 
     const newGroupChatInfo = {
       title: groupChatTitle.value.trim(),

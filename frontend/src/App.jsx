@@ -39,7 +39,6 @@ const App = () => {
   const [showAddNewContactsModal, setShowAddNewContactsModal] = useState(false);
 
   const { data, error, loading } = useQuery(CURRENT_USER);
-  console.log("Current user:", data);
 
   useEffect(() => {
     const toggleDarkMode = () => {
@@ -88,7 +87,11 @@ const App = () => {
               <Route
                 path="/signup"
                 element={
-                  data?.me ? <Navigate to="/chats" replace /> : <SignUp />
+                  data?.me ? (
+                    <Navigate to="/chats" replace />
+                  ) : (
+                    <SignUp setActiveMenuItem={setActiveMenuItem} />
+                  )
                 }
               />
               <Route element={<ProtectedRoutes user={data?.me} />}>
