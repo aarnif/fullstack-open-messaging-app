@@ -55,7 +55,6 @@ const typeDefs = `
     messageToChatAdded: Chat!
     chatDeleted: String!
     groupChatUpdated: Chat!
-    messagesInChatRead: Chat!
     leftGroupChats: leftGroupChatsDetails
     groupChatEdited: groupChatEditedDetails
   }   
@@ -336,9 +335,7 @@ const resolvers = {
           notificationMessages.push({
             type: "notification",
             sender: context.currentUser.id,
-            content: `${
-              key[0].toUpperCase() + key.slice(1)
-            } was updated to: "${value}"`,
+            content: `Chat ${key} was updated`,
           });
         } else if (
           key === "input" &&
@@ -348,7 +345,7 @@ const resolvers = {
           notificationMessages.push({
             type: "notification",
             sender: context.currentUser.id,
-            content: "Image was updated",
+            content: "Chat image was updated",
           });
         } else if (key === "memberIds") {
           const oldMembers = chatToBeUpdated.members.map((member) =>
@@ -491,9 +488,6 @@ const resolvers = {
             populate: { path: "isReadBy.member" },
           });
 
-        pubsub.publish("MESSAGES_IN_CHAT_READ", {
-          messagesInChatRead: updatedChat,
-        });
         return updatedChat;
       } catch (error) {
         throw new GraphQLError("Marking messages as read failed", {
@@ -602,9 +596,6 @@ const resolvers = {
     },
     chatDeleted: {
       subscribe: () => pubsub.asyncIterator("CHAT_DELETED"),
-    },
-    messagesInChatRead: {
-      subscribe: () => pubsub.asyncIterator("MESSAGES_IN_CHAT_READ"),
     },
     leftGroupChats: {
       subscribe: () => pubsub.asyncIterator("LEFT_GROUP_CHATS"),

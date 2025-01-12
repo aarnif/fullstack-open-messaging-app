@@ -9,8 +9,8 @@ import MenuHeader from "./MenuHeader";
 const ContactsList = ({
   user,
   searchWord,
-  activeChatOrContact,
-  setActiveChatOrContact,
+  activeChatOrContactId,
+  setActiveChatOrContactId,
 }) => {
   const { data, loading } = useQuery(ALL_CONTACTS_BY_USER, {
     variables: {
@@ -39,8 +39,8 @@ const ContactsList = ({
           key={item.id}
           user={user}
           item={item}
-          activeChatOrContact={activeChatOrContact}
-          setActiveChatOrContact={setActiveChatOrContact}
+          activeChatOrContactId={activeChatOrContactId}
+          setActiveChatOrContactId={setActiveChatOrContactId}
         />
       ))}
     </div>
@@ -50,8 +50,8 @@ const ContactsList = ({
 const ContactsMenu = ({
   user,
   handleClickNewContact,
-  activeChatOrContact,
-  setActiveChatOrContact,
+  activeChatOrContactId,
+  setActiveChatOrContactId,
 }) => {
   const searchWord = useField("text", "Search contacts by name or username...");
 
@@ -66,8 +66,8 @@ const ContactsMenu = ({
         <ContactsList
           user={user}
           searchWord={searchWord}
-          activeChatOrContact={activeChatOrContact}
-          setActiveChatOrContact={setActiveChatOrContact}
+          activeChatOrContactId={activeChatOrContactId}
+          setActiveChatOrContactId={setActiveChatOrContactId}
         />
       </div>
     </div>

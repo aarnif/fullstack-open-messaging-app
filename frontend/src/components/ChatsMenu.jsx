@@ -16,8 +16,8 @@ import MenuHeader from "./MenuHeader";
 const ChatsList = ({
   user,
   searchWord,
-  activeChatOrContact,
-  setActiveChatOrContact,
+  activeChatOrContactId,
+  setActiveChatOrContactId,
 }) => {
   const client = useApolloClient();
   const { data, loading } = useQuery(ALL_CHATS_BY_USER, {
@@ -166,8 +166,8 @@ const ChatsList = ({
           index={index}
           user={user}
           item={item}
-          activeChatOrContact={activeChatOrContact}
-          setActiveChatOrContact={setActiveChatOrContact}
+          activeChatOrContact={activeChatOrContactId}
+          setActiveChatOrContact={setActiveChatOrContactId}
         />
       ))}
     </div>
@@ -177,8 +177,8 @@ const ChatsList = ({
 const ChatsMenu = ({
   user,
   handleClickNewChat,
-  activeChatOrContact,
-  setActiveChatOrContact,
+  activeChatOrContactId,
+  setActiveChatOrContactId,
 }) => {
   const searchWord = useField("text", "Search chats by title...");
 
@@ -193,8 +193,8 @@ const ChatsMenu = ({
         <ChatsList
           user={user}
           searchWord={searchWord}
-          activeChatOrContact={activeChatOrContact}
-          setActiveChatOrContact={setActiveChatOrContact}
+          activeChatOrContactId={activeChatOrContactId}
+          setActiveChatOrContactId={setActiveChatOrContactId}
         />
       </div>
     </div>
