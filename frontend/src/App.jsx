@@ -128,6 +128,7 @@ const App = () => {
                       <Chat
                         user={data?.me}
                         setActiveMenuItem={setActiveMenuItem}
+                        setActiveChatOrContact={setActiveChatOrContact}
                         menuComponent={
                           <ChatsMenu
                             user={data?.me}

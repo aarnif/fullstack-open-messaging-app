@@ -1,30 +1,6 @@
-import { useEffect } from "react";
-import { useMutation } from "@apollo/client";
-
-import { MARK_MESSAGES_IN_CHAT_READ } from "../../graphql/mutations";
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
-  const [mutateMarkMessagesInChatRead] = useMutation(
-    MARK_MESSAGES_IN_CHAT_READ,
-    {
-      onError: (error) => {
-        console.log(error.graphQLErrors[0].message);
-      },
-    }
-  );
-
-  useEffect(() => {
-    const markMessagesInChatRead = async () => {
-      console.log("Marking messages in chat as read, when leaving chat...");
-      mutateMarkMessagesInChatRead({
-        variables: { chatId: chat.id },
-      });
-    };
-    markMessagesInChatRead();
-    return () => markMessagesInChatRead();
-  }, [mutateMarkMessagesInChatRead, chat.id]);
-
   const getInfo = () => {
     if (chat.isGroupChat) {
       console.log("Clicked group chat info!");

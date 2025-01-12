@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useMatch } from "react-router";
 import { AnimatePresence } from "framer-motion";
 
 import { FIND_CHAT_BY_ID } from "../../graphql/queries";
+import { MARK_MESSAGES_IN_CHAT_READ } from "../../graphql/mutations";
 import Loading from "../Loading";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
@@ -11,7 +12,12 @@ import NewMessage from "./NewMessage";
 import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal";
 import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal/PrivateChatInfoModal";
 
-const Chat = ({ user, setActiveMenuItem, menuComponent }) => {
+const Chat = ({
+  user,
+  setActiveMenuItem,
+  setActiveChatOrContact,
+  menuComponent,
+}) => {
   const [showChatInfoModal, setShowChatInfoModal] = useState(false);
   const match = useMatch("/chats/:chatId").params;
   const { data, loading } = useQuery(FIND_CHAT_BY_ID, {
@@ -20,9 +26,32 @@ const Chat = ({ user, setActiveMenuItem, menuComponent }) => {
     },
   });
 
+  const [mutateMarkMessagesInChatRead] = useMutation(
+    MARK_MESSAGES_IN_CHAT_READ,
+    {
+      onError: (error) => {
+        console.log(error.graphQLErrors[0].message);
+      },
+    }
+  );
+
   useEffect(() => {
     setActiveMenuItem("chats");
-  }, []);
+    setActiveChatOrContact(match.chatId);
+    const markMessagesInChatRead = async () => {
+      console.log("Marking messages in the active chat as read");
+      mutateMarkMessagesInChatRead({
+        variables: { chatId: match.chatId },
+      });
+    };
+    markMessagesInChatRead();
+  }, [
+    data,
+    match.chatId,
+    mutateMarkMessagesInChatRead,
+    setActiveChatOrContact,
+    setActiveMenuItem,
+  ]);
 
   let renderComponent = (
     <div className="flex-grow w-full overflow-y-auto h-0 flex flex-col justify-center items-center">
