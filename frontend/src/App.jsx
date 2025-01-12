@@ -32,7 +32,7 @@ const App = () => {
   const [activeMenuItem, setActiveMenuItem] = useState("chats");
   const [activeListMenuComponent, setActiveListMenuComponent] =
     useState("chats");
-  const [activeChatOrContact, setActiveChatOrContact] = useState(null);
+  const [activeChatOrContactId, setActiveChatOrContactId] = useState(null);
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
   const [showNewPrivateChatModal, setShowNewPrivateChatModal] = useState(false);
   const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
@@ -115,8 +115,8 @@ const App = () => {
                           <ChatsMenu
                             user={data?.me}
                             handleClickNewChat={handleClickNewChat}
-                            activeChatOrContact={activeChatOrContact}
-                            setActiveChatOrContact={setActiveChatOrContact}
+                            activeChatOrContactId={activeChatOrContactId}
+                            setactiveChatOrContactId={setActiveChatOrContactId}
                           />
                         }
                       />
@@ -128,13 +128,13 @@ const App = () => {
                       <Chat
                         user={data?.me}
                         setActiveMenuItem={setActiveMenuItem}
-                        setActiveChatOrContact={setActiveChatOrContact}
+                        setActiveChatOrContactId={setActiveChatOrContactId}
                         menuComponent={
                           <ChatsMenu
                             user={data?.me}
                             handleClickNewChat={handleClickNewChat}
-                            activeChatOrContact={activeChatOrContact}
-                            setActiveChatOrContact={setActiveChatOrContact}
+                            activeChatOrContactId={activeChatOrContactId}
+                            setActiveChatOrContactId={setActiveChatOrContactId}
                           />
                         }
                       />
@@ -150,8 +150,8 @@ const App = () => {
                           <ChatsMenu
                             user={data?.me}
                             handleClickNewChat={handleClickNewChat}
-                            activeChatOrContact={activeChatOrContact}
-                            setActiveChatOrContact={setActiveChatOrContact}
+                            activeChatOrContactId={activeChatOrContactId}
+                            setActiveChatOrContactId={setActiveChatOrContactId}
                           />
                         }
                       />
@@ -165,8 +165,8 @@ const App = () => {
                           <ContactsMenu
                             user={data?.me}
                             handleClickNewContact={handleClickNewContact}
-                            activeChatOrContact={activeChatOrContact}
-                            setActiveChatOrContact={setActiveChatOrContact}
+                            activeChatOrContactId={activeChatOrContactId}
+                            setActiveChatOrContactId={setActiveChatOrContactId}
                           />
                         }
                       />
@@ -182,8 +182,8 @@ const App = () => {
                           <ContactsMenu
                             user={data?.me}
                             handleClickNewContact={handleClickNewContact}
-                            activeChatOrContact={activeChatOrContact}
-                            setActiveChatOrContact={setActiveChatOrContact}
+                            activeChatOrContactId={activeChatOrContactId}
+                            setActiveChatOrContactId={setActiveChatOrContactId}
                           />
                         }
                       />
@@ -199,15 +199,19 @@ const App = () => {
                             <ChatsMenu
                               user={data?.me}
                               handleClickNewChat={handleClickNewChat}
-                              activeChatOrContact={activeChatOrContact}
-                              setActiveChatOrContact={setActiveChatOrContact}
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
                             />
                           ) : (
                             <ContactsMenu
                               user={data?.me}
                               handleClickNewContact={handleClickNewContact}
-                              activeChatOrContact={activeChatOrContact}
-                              setActiveChatOrContact={setActiveChatOrContact}
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
                             />
                           )
                         }
@@ -224,15 +228,19 @@ const App = () => {
                             <ChatsMenu
                               user={data?.me}
                               handleClickNewChat={handleClickNewChat}
-                              activeChatOrContact={activeChatOrContact}
-                              setActiveChatOrContact={setActiveChatOrContact}
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
                             />
                           ) : (
                             <ContactsMenu
                               user={data?.me}
                               handleClickNewContact={handleClickNewContact}
-                              activeChatOrContact={activeChatOrContact}
-                              setActiveChatOrContact={setActiveChatOrContact}
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
                             />
                           )
                         }

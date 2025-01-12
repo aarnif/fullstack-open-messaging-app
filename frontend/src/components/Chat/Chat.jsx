@@ -15,7 +15,7 @@ import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal/PrivateChatInfo
 const Chat = ({
   user,
   setActiveMenuItem,
-  setActiveChatOrContact,
+  setActiveChatOrContactId,
   menuComponent,
 }) => {
   const [showChatInfoModal, setShowChatInfoModal] = useState(false);
@@ -37,7 +37,7 @@ const Chat = ({
 
   useEffect(() => {
     setActiveMenuItem("chats");
-    setActiveChatOrContact(match.chatId);
+    setActiveChatOrContactId(match.chatId);
     const markMessagesInChatRead = async () => {
       console.log("Marking messages in the active chat as read");
       mutateMarkMessagesInChatRead({
@@ -49,7 +49,7 @@ const Chat = ({
     data,
     match.chatId,
     mutateMarkMessagesInChatRead,
-    setActiveChatOrContact,
+    setActiveChatOrContactId,
     setActiveMenuItem,
   ]);
 
