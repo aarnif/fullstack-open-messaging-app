@@ -5,15 +5,15 @@ const ChatItem = ({
   index,
   user,
   item,
-  activeChatOrContact,
-  setActiveChatOrContact,
+  activeChatOrContactId,
+  setActiveChatOrContactId,
 }) => {
   const navigate = useNavigate();
 
   const handlePress = () => {
     console.log("Pressed chat titled:", item.title);
     navigate(`/chats/${item.id}`);
-    setActiveChatOrContact(item.id);
+    setActiveChatOrContactId(item.id);
   };
 
   if (!item.messages.length) {
@@ -38,7 +38,7 @@ const ChatItem = ({
   }
 
   const classStyles =
-    activeChatOrContact === item.id
+    activeChatOrContactId === item.id
       ? "w-full flex items-start py-2 px-4 border-b bg-slate-200 dark:bg-slate-700 transition"
       : "w-full flex items-start py-2 px-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
 

@@ -166,8 +166,8 @@ const ChatsList = ({
           index={index}
           user={user}
           item={item}
-          activeChatOrContact={activeChatOrContactId}
-          setActiveChatOrContact={setActiveChatOrContactId}
+          activeChatOrContactId={activeChatOrContactId}
+          setActiveChatOrContactId={setActiveChatOrContactId}
         />
       ))}
     </div>

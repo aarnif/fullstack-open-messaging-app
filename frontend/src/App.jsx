@@ -116,7 +116,7 @@ const App = () => {
                             user={data?.me}
                             handleClickNewChat={handleClickNewChat}
                             activeChatOrContactId={activeChatOrContactId}
-                            setactiveChatOrContactId={setActiveChatOrContactId}
+                            setActiveChatOrContactId={setActiveChatOrContactId}
                           />
                         }
                       />
