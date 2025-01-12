@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router";
+import { Routes, Route, Navigate, useLocation } from "react-router";
 import { useQuery } from "@apollo/client";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -29,7 +29,10 @@ import NewGroupChatModal from "./components/Modals/NewGroupChatModal/NewGroupCha
 import AddNewContactsModal from "./components/Modals/AddNewContactsModal";
 
 const App = () => {
-  const [activeMenuItem, setActiveMenuItem] = useState("chats");
+  const location = useLocation();
+  const [activeMenuItem, setActiveMenuItem] = useState(
+    location.pathname.replace("/", "")
+  );
   const [activeListMenuComponent, setActiveListMenuComponent] =
     useState("chats");
   const [activeChatOrContactId, setActiveChatOrContactId] = useState(null);
@@ -116,7 +119,7 @@ const App = () => {
                             user={data?.me}
                             handleClickNewChat={handleClickNewChat}
                             activeChatOrContactId={activeChatOrContactId}
-                            setactiveChatOrContactId={setActiveChatOrContactId}
+                            setActiveChatOrContactId={setActiveChatOrContactId}
                           />
                         }
                       />
