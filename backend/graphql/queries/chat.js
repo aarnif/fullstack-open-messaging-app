@@ -111,13 +111,13 @@ const resolvers = {
   },
   Chat: {
     title: (parent, args, context) => {
-      if (parent.isGroupChat) {
+      if (!context.currentUser || parent.isGroupChat) {
         return parent.title;
       }
+      // The title of a private chat is always the name of the other member, not the current user.
       const findOtherPrivateChatMember = parent.members.find(
         (member) => member.id !== context.currentUser.id
       );
-
       return findOtherPrivateChatMember.name;
     },
   },

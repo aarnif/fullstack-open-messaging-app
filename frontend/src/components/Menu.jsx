@@ -54,6 +54,7 @@ const Menu = ({
   activeMenuItem,
   setActiveMenuItem,
   setActiveListMenuComponent,
+  setActiveChatOrContactId,
 }) => {
   const navigate = useNavigate();
   const client = useApolloClient();
@@ -75,6 +76,7 @@ const Menu = ({
     console.log("Logging out...");
     localStorage.clear();
     client.resetStore();
+    setActiveChatOrContactId(null);
     navigate("/signin");
   };
 
