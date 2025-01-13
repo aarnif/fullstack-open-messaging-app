@@ -106,6 +106,7 @@ const App = () => {
                       activeMenuItem={activeMenuItem}
                       setActiveMenuItem={setActiveMenuItem}
                       setActiveListMenuComponent={setActiveListMenuComponent}
+                      setActiveChatOrContactId={setActiveChatOrContactId}
                     />
                   }
                 >
