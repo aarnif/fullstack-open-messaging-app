@@ -12,6 +12,15 @@ import NewMessage from "./NewMessage";
 import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal";
 import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal/PrivateChatInfoModal";
 
+const ChatNotFound = () => (
+  <div className="flex-grow w-full overflow-y-auto h-0 flex flex-col justify-center items-center">
+    <div className="text-xl text-red-600 font-bold">Chat not found!</div>
+    <div className="text-xl text-red-600 font-bold">
+      This could be due to wrong id or the chat was deleted.
+    </div>
+  </div>
+);
+
 const Chat = ({
   user,
   setActiveMenuItem,
@@ -53,59 +62,46 @@ const Chat = ({
     setActiveMenuItem,
   ]);
 
-  let renderComponent = (
-    <div className="flex-grow w-full overflow-y-auto h-0 flex flex-col justify-center items-center">
-      <div className="text-xl text-red-600 font-bold">Chat not found!</div>
-      <div className="text-xl text-red-600 font-bold">
-        This could be due to wrong id or the chat was deleted.
-      </div>
-    </div>
-  );
-
-  if (loading) {
-    renderComponent = <Loading />;
-  }
-
-  if (data?.findChatById) {
-    renderComponent = (
-      <>
-        <AnimatePresence>
-          {showChatInfoModal &&
-            (data.findChatById.isGroupChat ? (
-              <GroupChatInfoModal
-                user={user}
-                chat={data.findChatById}
-                setShowChatInfoModal={setShowChatInfoModal}
-              />
-            ) : (
-              <PrivateChatInfoModal
-                user={user}
-                chat={data.findChatById}
-                setShowChatInfoModal={setShowChatInfoModal}
-              />
-            ))}
-        </AnimatePresence>
-        <ChatHeader
-          user={user}
-          chat={data.findChatById}
-          setShowChatInfoModal={setShowChatInfoModal}
-        />
-        <div className="flex-grow w-full overflow-y-auto h-0">
-          <Messages
-            user={user}
-            messages={[...data?.findChatById.messages].reverse()}
-          />
-        </div>
-        <NewMessage user={user} chatId={match.chatId} />
-      </>
-    );
-  }
-
   return (
     <div className="flex-grow flex">
       {menuComponent}
       <div className="relative flex-grow flex flex-col justify-start items-start bg-slate-50 dark:bg-slate-800">
-        {renderComponent}
+        {loading ? (
+          <Loading />
+        ) : data?.findChatById ? (
+          <>
+            <AnimatePresence>
+              {showChatInfoModal &&
+                (data.findChatById.isGroupChat ? (
+                  <GroupChatInfoModal
+                    user={user}
+                    chat={data.findChatById}
+                    setShowChatInfoModal={setShowChatInfoModal}
+                  />
+                ) : (
+                  <PrivateChatInfoModal
+                    user={user}
+                    chat={data.findChatById}
+                    setShowChatInfoModal={setShowChatInfoModal}
+                  />
+                ))}
+            </AnimatePresence>
+            <ChatHeader
+              user={user}
+              chat={data.findChatById}
+              setShowChatInfoModal={setShowChatInfoModal}
+            />
+            <div className="flex-grow w-full overflow-y-auto h-0">
+              <Messages
+                user={user}
+                messages={[...(data?.findChatById.messages || [])].reverse()}
+              />
+            </div>
+            <NewMessage user={user} chatId={match.chatId} />
+          </>
+        ) : (
+          <ChatNotFound />
+        )}
       </div>
     </div>
   );
