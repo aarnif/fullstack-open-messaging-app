@@ -49,7 +49,7 @@ const EditGroupChatModal = ({
     showEditGroupChatModal(false);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async () => {
     console.log("Handle submit edit group chat...");
 
     try {

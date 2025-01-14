@@ -46,7 +46,7 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
     }
     console.log("Adding new contacts...");
     try {
-      const { data, error } = await mutate({
+      await mutate({
         variables: {
           userIds: chosenUserIds,
         },

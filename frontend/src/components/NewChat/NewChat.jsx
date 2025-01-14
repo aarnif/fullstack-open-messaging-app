@@ -10,7 +10,7 @@ const NewChat = ({ user, setActiveMenuItem, menuComponent }) => {
   useEffect(() => {
     setActiveMenuItem("chats");
     setNewChatInfo(JSON.parse(localStorage.getItem("new-chat-info")));
-  }, []);
+  }, [setActiveMenuItem]);
 
   return (
     <div className="flex-grow flex">

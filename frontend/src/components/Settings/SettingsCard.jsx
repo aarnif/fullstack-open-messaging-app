@@ -76,7 +76,7 @@ const SettingsCard = ({ user }) => {
       });
     };
     updateUserSettings();
-  }, [theme, time]);
+  }, [mutate, theme, time, user.settings.theme, user.settings.time]);
 
   return (
     <>
