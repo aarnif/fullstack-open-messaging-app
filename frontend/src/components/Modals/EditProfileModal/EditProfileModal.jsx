@@ -31,7 +31,7 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
     setShowEditProfileModal(false);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async () => {
     console.log("Handle submit edit profile...");
 
     try {

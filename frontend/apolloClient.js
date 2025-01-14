@@ -53,7 +53,7 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         allChatsByUser: {
-          merge(existing = [], incoming = []) {
+          merge(_, incoming = []) {
             return [...incoming];
           },
         },
@@ -62,7 +62,7 @@ const cache = new InMemoryCache({
     Chat: {
       fields: {
         members: {
-          merge(existing = [], incoming = []) {
+          merge(_, incoming = []) {
             return [...incoming];
           },
         },

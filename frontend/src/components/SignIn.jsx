@@ -117,7 +117,7 @@ const SignIn = ({ setActiveMenuItem }) => {
             </li>
             <li className="my-4 w-full flex-grow flex flex-col ">
               <span className="text-slate-700 dark:text-slate-200">
-                Don't have an account?
+                Don&apos;t have an account?
               </span>
               <button
                 onClick={handleClickSignUp}

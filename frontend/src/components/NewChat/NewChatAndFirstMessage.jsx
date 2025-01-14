@@ -35,7 +35,7 @@ const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
     }
 
     try {
-      const { data, error } = await createChat({
+      const { data } = await createChat({
         variables: {
           title: newChatInfo.title ? newChatInfo.title : "",
           description: newChatInfo.description ? newChatInfo.description : "",

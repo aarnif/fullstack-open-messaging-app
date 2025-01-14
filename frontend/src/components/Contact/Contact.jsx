@@ -20,7 +20,7 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
 
   useEffect(() => {
     setActiveMenuItem("contacts");
-  }, []);
+  }, [setActiveMenuItem]);
 
   useEffect(() => {
     if (data) {
@@ -29,7 +29,7 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
         data.findUserById.blockedContacts.includes(user.id)
       );
     }
-  }, [data]);
+  }, [data, user.blockedContacts, user.id]);
 
   return (
     <div className="flex-grow flex bg-slate-50 dark:bg-slate-700">

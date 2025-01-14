@@ -41,7 +41,7 @@ const App = () => {
   const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
   const [showAddNewContactsModal, setShowAddNewContactsModal] = useState(false);
 
-  const { data, error, loading } = useQuery(CURRENT_USER);
+  const { data, loading } = useQuery(CURRENT_USER);
 
   useEffect(() => {
     const toggleDarkMode = () => {
