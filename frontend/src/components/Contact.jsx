@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useMatch } from "react-router";
 
-import { FIND_USER_BY_ID } from "../../graphql/queries";
-import Loading from "../Loading";
-import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
-import IndividualContactOptions from "../IndividualContactCard/IndividualContactCardOptions";
+import { FIND_USER_BY_ID } from "../graphql/queries";
+import Loading from "./Loading";
+import IndividualContactCard from "./IndividualContactCard/IndividualContactCard";
+import IndividualContactOptions from "./IndividualContactCard/IndividualContactCardOptions";
 
 const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
   const [isBlocked, setIsBlocked] = useState(false);

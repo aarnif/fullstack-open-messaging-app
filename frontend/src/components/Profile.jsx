@@ -2,8 +2,8 @@ import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { FiEdit } from "react-icons/fi";
 
-import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
-import EditProfileModal from "../Modals/EditProfileModal/EditProfileModal";
+import IndividualContactCard from "./IndividualContactCard/IndividualContactCard";
+import EditProfileModal from "./Modals/EditProfileModal";
 
 const Profile = ({ user, menuComponent }) => {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
