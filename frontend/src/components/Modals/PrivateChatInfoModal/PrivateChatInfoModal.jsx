@@ -11,7 +11,7 @@ import {
 import IndividualContactCard from "../../IndividualContactCard/IndividualContactCard";
 import useConfirmModal from "../../../hooks/useConfirmModal";
 
-const PrivateChatModal = ({ user, chat, setShowChatInfoModal }) => {
+const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   const { confirmModal } = useConfirmModal();
   const navigate = useNavigate();
   const [isBlocked, setIsBlocked] = useState(false);
@@ -141,4 +141,4 @@ const PrivateChatModal = ({ user, chat, setShowChatInfoModal }) => {
   );
 };
 
-export default PrivateChatModal;
+export default PrivateChatInfoModal;
