@@ -4,12 +4,9 @@ import { useNavigate } from "react-router";
 import { IoChevronBack } from "react-icons/io5";
 import { motion } from "framer-motion";
 
-import {
-  DELETE_CHAT,
-  BLOCK_OR_UNBLOCK_CONTACT,
-} from "../../../graphql/mutations";
-import IndividualContactCard from "../../IndividualContactCard/IndividualContactCard";
-import useConfirmModal from "../../../hooks/useConfirmModal";
+import { DELETE_CHAT, BLOCK_OR_UNBLOCK_CONTACT } from "../../graphql/mutations";
+import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
+import useConfirmModal from "../../hooks/useConfirmModal";
 
 const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   const { confirmModal } = useConfirmModal();

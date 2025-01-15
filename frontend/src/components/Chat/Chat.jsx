@@ -10,7 +10,7 @@ import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";
 import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal";
-import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal/PrivateChatInfoModal";
+import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal";
 
 const ChatNotFound = () => (
   <div className="flex-grow w-full overflow-y-auto h-0 flex flex-col justify-center items-center">
