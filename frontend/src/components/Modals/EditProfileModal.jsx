@@ -3,11 +3,11 @@ import { useMutation } from "@apollo/client";
 import { IoChevronBack } from "react-icons/io5";
 import { motion } from "framer-motion";
 
-import { EDIT_PROFILE } from "../../../graphql/mutations";
-import imageService from "../../../services/imageService";
-import ChangeImage from "../../ChangeImage";
-import useField from "../../../hooks/useField";
-import useConfirmModal from "../../../hooks/useConfirmModal";
+import { EDIT_PROFILE } from "../../graphql/mutations";
+import imageService from "../../services/imageService";
+import ChangeImage from "../ChangeImage";
+import useField from "../../hooks/useField";
+import useConfirmModal from "../../hooks/useConfirmModal";
 
 const EditProfileModal = ({ user, setShowEditProfileModal }) => {
   const { confirmModal } = useConfirmModal();
