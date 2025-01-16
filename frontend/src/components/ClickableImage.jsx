@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
-const FullScreenView = ({
-  fullScreenImageUri,
-  showImageView,
-  setShowImageView,
-}) => {
-  if (!showImageView) return null;
-
+const FullScreenView = ({ fullScreenImageUri, setShowImageView }) => {
   return createPortal(
     <div
       className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 transition"
@@ -38,11 +32,12 @@ const ClickableImage = ({
       <button onClick={() => setShowImageView(true)}>
         <img src={imageUri} alt={imageAlt} className={className} />
       </button>
-      <FullScreenView
-        fullScreenImageUri={fullScreenImageUri}
-        showImageView={showImageView}
-        setShowImageView={setShowImageView}
-      />
+      {showImageView && (
+        <FullScreenView
+          fullScreenImageUri={fullScreenImageUri}
+          setShowImageView={setShowImageView}
+        />
+      )}
     </>
   );
 };
