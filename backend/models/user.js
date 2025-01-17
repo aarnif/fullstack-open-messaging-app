@@ -60,7 +60,8 @@ const userSchema = new Schema({
   ],
   blockedContacts: [
     {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
   chats: [

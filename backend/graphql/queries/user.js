@@ -20,7 +20,7 @@ const typeDefs = `
     settings: Settings
     createdAt: Date!
     contacts: [User!]!
-    blockedContacts: [ID!]!
+    blockedContacts: [User!]!
     chats: [Chat!]!
   }
 
@@ -46,6 +46,7 @@ const resolvers = {
           path: "chats",
           populate: { path: "messages" },
         })
+        .populate("blockedContacts")
         .catch((error) => {
           throw new GraphQLError("Invalid id!", {
             extensions: {
@@ -56,28 +57,31 @@ const resolvers = {
           });
         }),
     allContactsByUser: async (root, args, context) =>
-      User.findById(context.currentUser).populate({
-        path: "contacts",
-        match: {
-          $or: [
-            {
-              name: {
-                $regex: args.searchByName ? `${args.searchByName}` : "",
-                $options: "i",
+      User.findById(context.currentUser)
+        .populate({
+          path: "contacts",
+          match: {
+            $or: [
+              {
+                name: {
+                  $regex: args.searchByName ? `${args.searchByName}` : "",
+                  $options: "i",
+                },
               },
-            },
-            {
-              username: {
-                $regex: args.searchByName ? `${args.searchByName}` : "",
-                $options: "i",
+              {
+                username: {
+                  $regex: args.searchByName ? `${args.searchByName}` : "",
+                  $options: "i",
+                },
               },
-            },
-          ],
-        },
-        options: {
-          sort: { name: "asc", username: "asc" },
-        },
-      }),
+            ],
+          },
+          options: {
+            sort: { name: "asc", username: "asc" },
+          },
+          populate: { path: "blockedContacts" },
+        })
+        .populate("blockedContacts"),
     allContactsExceptByUser: async (root, args, context) =>
       User.find({
         $and: [
@@ -104,12 +108,15 @@ const resolvers = {
             },
           },
         ],
-      }).sort({ name: "asc", username: "asc" }),
+      })
+        .populate("blockedContacts")
+        .sort({ name: "asc", username: "asc" }),
     checkIfUserHasBlockedYou: async (root, args, context) => {
       const user = await User.findById(args.userId).populate("blockedContacts");
       return user.blockedContacts.includes(context.currentUser.id);
     },
-    me: async (root, args, context) => context.currentUser,
+    me: async (root, args, context) =>
+      User.findById(context.currentUser).populate("blockedContacts"),
   },
 };
 

@@ -24,9 +24,13 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
 
   useEffect(() => {
     if (data) {
-      setIsBlocked(user.blockedContacts.includes(data.findUserById.id));
+      setIsBlocked(
+        user.blockedContacts.find((user) => user.id === data.findUserById.id)
+      );
       setHaveContactBlockedYou(
-        data.findUserById.blockedContacts.includes(user.id)
+        data.findUserById.blockedContacts.find(
+          (contact) => contact.id === user.id
+        )
       );
     }
   }, [data, user.blockedContacts, user.id]);

@@ -40,7 +40,7 @@ const Home = ({
                     ]),
                   ]
                 : contact.blockedContacts.filter(
-                    (id) => id !== blockingData.target
+                    (contact) => contact.id !== blockingData.target.id
                   );
 
               return {

@@ -281,7 +281,9 @@ describe("Server tests", () => {
         {
           query: `query FindUserById($id: ID!) {
           findUserById(id: $id) {
-            blockedContacts
+            blockedContacts {
+              id
+            }
           }
         }`,
           variables: {
@@ -297,7 +299,7 @@ describe("Server tests", () => {
       expect(findUserById.body.data.findUserById.blockedContacts.length).toBe(
         1
       );
-      expect(findUserById.body.data.findUserById.blockedContacts[0]).toBe(
+      expect(findUserById.body.data.findUserById.blockedContacts[0].id).toBe(
         "6690caa54dc3eac2b83517d0"
       );
     });
@@ -317,7 +319,9 @@ describe("Server tests", () => {
         {
           query: `query FindUserById($id: ID!) {
           findUserById(id: $id) {
-            blockedContacts
+            blockedContacts {
+              id
+            }
           }
         }`,
           variables: {

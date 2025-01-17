@@ -14,7 +14,9 @@ export const USER_DETAILS = gql`
       theme
       time
     }
-    blockedContacts
+    blockedContacts {
+      id
+    }
   }
 `;
 
