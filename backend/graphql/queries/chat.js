@@ -136,6 +136,16 @@ const resolvers = {
       );
       return findOtherPrivateChatMember.name;
     },
+    image: (parent, args, context) => {
+      if (parent.isGroupChat) {
+        return parent.image;
+      }
+      // The image of a private chat is always the image of the other member, not the current user.
+      const findOtherPrivateChatMember = parent.members.find(
+        (member) => member.id !== context.currentUser.id
+      );
+      return findOtherPrivateChatMember.image;
+    },
   },
 };
 
