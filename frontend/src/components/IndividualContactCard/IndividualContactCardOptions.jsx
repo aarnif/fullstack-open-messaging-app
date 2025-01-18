@@ -113,13 +113,19 @@ const IndividualContactOptions = ({
   };
 
   return (
-    <div className="w-full p-4 flex flex-col justify-end items-start">
+    <div className="w-full p-4 flex flex-col justify-center items-center">
       <button
         disabled={haveContactBlockedYou}
         onClick={handleChatWithContact}
-        className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
+        className={
+          haveContactBlockedYou
+            ? "mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 \
+        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 \
+        rounded-xl transition"
+            : "mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 \
+        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 \
         active:scale-95 rounded-xl transition"
+        }
       >
         <div
           className={
