@@ -227,8 +227,16 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
@@ -424,8 +432,16 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
@@ -480,8 +496,16 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
@@ -531,14 +555,21 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
             populate: { path: "isReadBy.member" },
           });
-
         const removeChatFromCurrentUser = await User.findByIdAndUpdate(
           context.currentUser.id,
           {
@@ -553,8 +584,16 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
