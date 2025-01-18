@@ -108,7 +108,7 @@ const Home = ({
   });
 
   return (
-    <main className="flex-grow flex">
+    <main className="flex-grow flex flex-col-reverse lg:flex-row">
       {user && (
         <Menu
           activeMenuItem={activeMenuItem}

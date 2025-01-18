@@ -18,7 +18,7 @@ const MenuTitle = ({ title }) => {
     <motion.div
       initial={{ x: -20, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      className="absolute left-[80px] h-10 w-28 flex justify-center items-center bg-slate-200 rounded-lg dark:bg-slate-800"
+      className="hidden absolute left-[80px] h-10 w-28 lg:flex justify-center items-center bg-slate-200 rounded-lg dark:bg-slate-800"
     >
       <div className="text-slate-800 dark:text-white font-bold">
         {chatAndMessageHelpers.capitalizeString(title)}
@@ -31,7 +31,7 @@ const MenuTitle = ({ title }) => {
 const MenuItem = ({ item, onClick, activeMenuItem }) => {
   const [hovered, setHovered] = useState(false);
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-center lg:justify-between items-center">
       <button
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -39,8 +39,8 @@ const MenuItem = ({ item, onClick, activeMenuItem }) => {
         data-testid={item["data-testid"]}
         className={
           item.id === activeMenuItem
-            ? "relative group w-14 h-14 rounded-lg bg-violet-500 flex justify-center items-center active:scale-95 transition"
-            : "relative group w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-500 flex justify-center items-center hover:rounded-lg hover:bg-violet-500 active:scale-95 transition"
+            ? "relative group w-10 h-10 sm:w-14 sm:h-14 rounded-lg bg-violet-500 flex justify-center items-center active:scale-95 transition"
+            : "relative group w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-slate-200 dark:bg-slate-500 flex justify-center items-center hover:rounded-lg hover:bg-violet-500 active:scale-95 transition"
         }
       >
         {item.icon}
@@ -80,6 +80,12 @@ const Menu = ({
     navigate("/signin");
   };
 
+  const menuItemStyles = {
+    active: "w-7 h-7 sm:w-9 sm:h-9 text-white fill-current",
+    inactive:
+      "w-7 h-7 sm:w-9 sm:h-9 text-slate-800 group-hover:text-white fill-current",
+  };
+
   const menuItems = [
     {
       id: "chats",
@@ -87,8 +93,8 @@ const Menu = ({
         <FaComments
           className={
             activeMenuItem === "chats"
-              ? "w-9 h-9 text-white fill-current"
-              : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
+              ? menuItemStyles.active
+              : menuItemStyles.inactive
           }
         />
       ),
@@ -102,8 +108,8 @@ const Menu = ({
         <FaAddressBook
           className={
             activeMenuItem === "contacts"
-              ? "w-9 h-9 text-white fill-current"
-              : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
+              ? menuItemStyles.active
+              : menuItemStyles.inactive
           }
         />
       ),
@@ -117,8 +123,8 @@ const Menu = ({
         <FaUserCircle
           className={
             activeMenuItem === "profile"
-              ? "w-9 h-9 text-white fill-current"
-              : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
+              ? menuItemStyles.active
+              : menuItemStyles.inactive
           }
         />
       ),
@@ -132,8 +138,8 @@ const Menu = ({
         <FaCog
           className={
             activeMenuItem === "settings"
-              ? "w-9 h-9 text-white fill-current"
-              : "w-9 h-9 text-slate-800 group-hover:text-white fill-current"
+              ? menuItemStyles.active
+              : menuItemStyles.inactive
           }
         />
       ),
@@ -143,9 +149,7 @@ const Menu = ({
     },
     {
       id: "logout",
-      icon: (
-        <FaSignOutAlt className="w-9 h-9 text-slate-800 group-hover:text-white fill-current" />
-      ),
+      icon: <FaSignOutAlt className={menuItemStyles.inactive} />,
       path: "/logout",
       onClick: () =>
         confirmModal("Are you sure you want to logout?", handleLogout),
@@ -155,9 +159,9 @@ const Menu = ({
 
   return (
     <div className="bg-slate-200 dark:bg-slate-800">
-      <ul className="flex flex-col my-2">
+      <ul className="flex justify-around lg:justify-center items-center flex-row lg:flex-col px-4 lg:px-0 my-0 lg:my-2">
         {menuItems.map((item, index) => (
-          <li key={index} id={item.id} className="m-2">
+          <li key={index} id={item.id} className="m-1 lg:m-2">
             <MenuItem
               item={item}
               onClick={item.onClick}
