@@ -9,10 +9,18 @@ import IndividualContactCard from "../IndividualContactCard/IndividualContactCar
 import useConfirmModal from "../../hooks/useConfirmModal";
 
 const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
+  const contact = chat.members.find(
+    (member) => member.username !== user.username
+  );
+
   const { confirmModal } = useConfirmModal();
   const navigate = useNavigate();
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(null);
+  const [isBlocked, setIsBlocked] = useState(
+    user.blockedContacts.find((user) => user.id === contact.id)
+  );
+  const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(
+    contact.blockedContacts.find((contact) => contact.id === user.id)
+  );
 
   const [deleteChat] = useMutation(DELETE_CHAT, {
     onError: (error) => {
@@ -66,10 +74,6 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
       console.log(error);
     }
   };
-
-  const contact = chat.members.find(
-    (member) => member.username !== user.username
-  );
 
   return (
     <motion.div
