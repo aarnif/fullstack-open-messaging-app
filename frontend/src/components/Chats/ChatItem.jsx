@@ -30,8 +30,8 @@ const ChatItem = ({
           />
         </div>
         <div className="flex-1">
-          <div className="text-mobile lg:text-md font-bold">{item.title}</div>
-          <div className="text-mobile lg:text-md text-slate-800 dark:text-slate-100">
+          <div className="text-mobile lg:text-base font-bold">{item.title}</div>
+          <div className="text-mobile lg:text-base text-slate-800 dark:text-slate-100">
             No messages
           </div>
         </div>
