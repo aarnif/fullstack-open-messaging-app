@@ -8,7 +8,7 @@ import IndividualContactCard from "./IndividualContactCard/IndividualContactCard
 import IndividualContactOptions from "./IndividualContactCard/IndividualContactCardOptions";
 
 const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
-  const [isBlocked, setIsBlocked] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(null);
   const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(null);
 
   const match = useMatch("/contacts/:contactId").params;
