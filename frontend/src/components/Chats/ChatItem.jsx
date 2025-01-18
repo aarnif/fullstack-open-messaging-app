@@ -24,14 +24,16 @@ const ChatItem = ({
       >
         <div className="mr-4">
           <img
-            className="w-16 h-16 rounded-full"
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-full"
             src={item.image.thumbnail}
             alt="Chat Thumbnail"
           />
         </div>
         <div className="flex-1">
-          <div className="text-md font-bold">{item.title}</div>
-          <div className="text-slate-800 dark:text-slate-100">No messages</div>
+          <div className="text-mobile lg:text-md font-bold">{item.title}</div>
+          <div className="text-mobile lg:text-md text-slate-800 dark:text-slate-100">
+            No messages
+          </div>
         </div>
       </div>
     );
