@@ -40,8 +40,8 @@ const typeDefs = `
   }
   type blockedOrUnBlocked {
     isBlocked: Boolean
-    actor: String
-    target: String
+    actor: ID!
+    target: User
   }
   type Subscription {
     contactBlockedOrUnBlocked: blockedOrUnBlocked
@@ -237,6 +237,10 @@ const resolvers = {
       const checkIfContactBlocked =
         context.currentUser.blockedContacts.includes(args.contactId);
 
+      const userToBeBlockedOrUnBlocked = await User.findById(
+        args.contactId
+      ).populate("blockedContacts");
+
       if (checkIfContactBlocked) {
         await User.findByIdAndUpdate(context.currentUser, {
           $pull: { blockedContacts: args.contactId },
@@ -253,7 +257,7 @@ const resolvers = {
         contactBlockedOrUnBlocked: {
           isBlocked: result,
           actor: context.currentUser.id,
-          target: args.contactId,
+          target: userToBeBlockedOrUnBlocked,
         },
       });
 

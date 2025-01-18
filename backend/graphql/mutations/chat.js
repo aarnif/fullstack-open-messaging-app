@@ -163,7 +163,11 @@ const resolvers = {
 
       const chatToBeUpdated = await Chat.findById(args.chatId)
         .populate("admin")
-        .populate("members");
+        .populate("members")
+        .populate({
+          path: "members",
+          populate: { path: "blockedContacts" },
+        });
 
       if (!chatToBeUpdated) {
         throw new GraphQLError("Chat not found!", {
@@ -174,17 +178,21 @@ const resolvers = {
         });
       }
 
-      if (chatToBeUpdated.title === "Private chat") {
+      if (!chatToBeUpdated.isGroupChat) {
         const checkIfAnotherUserHasBlockedYou = chatToBeUpdated.members.find(
           (member) => {
             return (
-              member._id !== context.currentUser.id &&
-              member.blockedContacts.includes(context.currentUser.id)
+              member.username !== context.currentUser.username &&
+              member.blockedContacts.find(
+                (blockedContact) =>
+                  blockedContact.username === context.currentUser.username
+              )
             );
           }
         );
 
         if (checkIfAnotherUserHasBlockedYou) {
+          console.log("Another user has blocked you!");
           throw new GraphQLError(
             `${checkIfAnotherUserHasBlockedYou.name} has blocked you!`,
             {
@@ -227,8 +235,16 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
@@ -424,8 +440,16 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
@@ -480,8 +504,16 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
@@ -531,14 +563,21 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",
             populate: { path: "isReadBy.member" },
           });
-
         const removeChatFromCurrentUser = await User.findByIdAndUpdate(
           context.currentUser.id,
           {
@@ -553,8 +592,16 @@ const resolvers = {
           .populate("admin")
           .populate("members")
           .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
             path: "messages",
             populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
           })
           .populate({
             path: "messages",

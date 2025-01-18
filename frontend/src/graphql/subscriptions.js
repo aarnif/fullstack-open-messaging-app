@@ -1,4 +1,4 @@
-import { CHAT_DETAILS } from "./queries";
+import { CHAT_DETAILS, USER_DETAILS } from "./queries";
 
 import { gql } from "@apollo/client";
 
@@ -42,9 +42,12 @@ export const CONTACT_BLOCKED_OR_UNBLOCKED = gql`
     contactBlockedOrUnBlocked {
       isBlocked
       actor
-      target
+      target {
+        ...UserDetails
+      }
     }
   }
+  ${USER_DETAILS}
 `;
 
 export const GROUP_CHAT_EDITED = gql`

@@ -68,6 +68,15 @@ const cache = new InMemoryCache({
         },
       },
     },
+    User: {
+      fields: {
+        blockedContacts: {
+          merge(_, incoming = []) {
+            return [...incoming];
+          },
+        },
+      },
+    },
   },
 });
 
