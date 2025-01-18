@@ -15,7 +15,7 @@ const Profile = ({ user, menuComponent }) => {
       </div>
       <div className="relative flex-grow flex justify-center items-start">
         <div className="flex-grow p-4 sm:p-8 flex flex-col justify-start items-center">
-          <div className="m-4 w-full flex justify-end">
+          <div className="m-0 sm:m-4 w-full flex justify-end">
             <button
               data-testid="edit-profile-button"
               onClick={() => setShowEditProfileModal(true)}
