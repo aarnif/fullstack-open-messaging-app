@@ -31,9 +31,9 @@ const ChangeImage = ({ currentImage, imageType, setBase64Image }) => {
         <img
           src={imagePreview}
           alt={`${imageType} image`}
-          className="w-32 h-32 rounded-full"
+          className="w-24 h-24 sm:w-32 sm:h-32 rounded-full"
         />
-        <div className="my-2 text-md font-semibold text-slate-800 dark:text-slate-100">
+        <div className="my-2 text-mobile lg:text-base font-semibold text-slate-800 dark:text-slate-100">
           Change {imageType} image
         </div>
         <input
