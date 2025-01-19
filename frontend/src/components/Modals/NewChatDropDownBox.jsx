@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 const DropDownMenuItem = ({ menuItem }) => {
   return (
     <li className="w-full my-2">
@@ -44,13 +46,19 @@ const NewChatDropDownBox = ({
       className="fixed inset-0 flex justify-center items-center z-10"
       onClick={() => setShowNewChatDropdownBox(false)}
     >
-      <div className="absolute top-[70px] right-12 lg:left-[500px] flex-grow p-4 flex flex-col justify-center items-center bg-white dark:bg-slate-800 rounded-xl text-slate-700 z-10">
+      <motion.div
+        className="absolute top-[70px] right-12 lg:left-[500px] flex-grow p-4 flex flex-col justify-center items-center bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-700 z-10"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1, duration: 0.4 }}
+        exit={{ y: -50, opacity: 0 }}
+        transition={{ delay: 0.4, type: "tween" }}
+      >
         <ul className="flex-grow w-full">
           {menuItems.map((menuItem) => (
             <DropDownMenuItem key={menuItem.id} menuItem={menuItem} />
           ))}
         </ul>
-      </div>
+      </motion.div>
     </div>
   );
 };
