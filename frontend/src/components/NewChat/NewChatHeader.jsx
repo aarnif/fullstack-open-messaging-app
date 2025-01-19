@@ -25,7 +25,7 @@ const NewChatHeader = ({ user, chat }) => {
           <div className="flex justify-center items-center">
             <div className="mr-4">
               <img
-                className="w-16 h-16 rounded-full"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-full"
                 src={chat.image}
                 alt="chat-thumbnail"
               />
@@ -33,7 +33,7 @@ const NewChatHeader = ({ user, chat }) => {
             <div>
               <div
                 data-testid="new-chat-title"
-                className="text-base text-slate-800 dark:text-slate-100 font-bold text-left"
+                className="text-mobile sm:text-base text-slate-800 dark:text-slate-100 font-bold text-left"
               >
                 {chat.title}
               </div>

@@ -39,16 +39,16 @@ const ConfirmModalProvider = ({ children }) => {
           >
             <motion.div
               key={"confirmModal"}
-              className="z-10 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-lg p-6 max-w-sm text-center"
+              className="z-10 p-6 m-4 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-lg max-w-sm text-center"
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1, duration: 0.4 }}
               exit={{ y: -50, opacity: 0 }}
               transition={{ delay: 0.4, type: "tween" }}
             >
-              <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+              <h2 className="text-lg lg:text-xl font-semibold text-slate-800 dark:text-slate-100">
                 Confirmation
               </h2>
-              <div className="my-4 text-slate-800 dark:text-slate-100">
+              <div className="my-4 text-mobile sm:text-lg text-slate-800 dark:text-slate-100">
                 {message}
               </div>
               <div className="flex justify-center space-x-2">
@@ -59,7 +59,7 @@ const ConfirmModalProvider = ({ children }) => {
                   border-red-600 bg-red-600 hover:bg-red-700 hover:border-red-700 
                   active:scale-95 rounded-lg transition"
                 >
-                  <div className="text-slate-800 dark:text-slate-100 font-bold">
+                  <div className="text-mobile sm:text-lg text-slate-800 dark:text-slate-100 font-bold">
                     Confirm
                   </div>
                 </button>
@@ -71,7 +71,7 @@ const ConfirmModalProvider = ({ children }) => {
                   hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900
                   active:scale-95 rounded-lg transition"
                 >
-                  <div className="text-slate-800 dark:text-slate-100 font-bold">
+                  <div className="text-mobile sm:text-lg text-slate-800 dark:text-slate-100 font-bold">
                     Cancel
                   </div>
                 </button>

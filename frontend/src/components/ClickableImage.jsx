@@ -23,7 +23,7 @@ const ClickableImage = ({
   imageUri,
   imageAlt,
   fullScreenImageUri,
-  className = "w-[120px] h-[120px] rounded-full",
+  className = "w-24 h-24 lg:w-28 lg:h-28 rounded-full",
 }) => {
   const [showImageView, setShowImageView] = useState(false);
 

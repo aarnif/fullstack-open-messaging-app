@@ -1,6 +1,15 @@
+import { useNavigate } from "react-router";
+import { IoChevronBack } from "react-icons/io5";
+
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
+  const navigate = useNavigate();
+
+  const goBack = () => {
+    navigate("/chats");
+  };
+
   const getInfo = () => {
     if (chat.isGroupChat) {
       console.log("Clicked group chat info!");
@@ -10,13 +19,23 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
     setShowChatInfoModal(true);
   };
 
-  const chatMembersString = chatAndMessageHelpers
-    .sortChatMembersByNameAndUsername([...chat.members])
-    .map((member) => (member.username === user.username ? "You" : member.name))
-    .join(", ");
+  const chatMembersString = chatAndMessageHelpers.sliceLatestMessage(
+    chatAndMessageHelpers
+      .sortChatMembersByNameAndUsername([...chat.members])
+      .map((member) =>
+        member.username === user.username ? "You" : member.name
+      )
+      .join(", "),
+    30
+  );
 
   return (
-    <div className="w-full flex justify-center items-center py-2 bg-white dark:bg-slate-800 shadow-lg">
+    <div className="relative w-full flex justify-center items-center py-2 bg-white dark:bg-slate-800 shadow-lg">
+      <div className="absolute left-2 flex justify-center items-center sm:hidden">
+        <button onClick={goBack}>
+          <IoChevronBack className="w-6 h-6 lg:w-7 lg:h-7 text-slate-700 dark:text-slate-100 fill-current" />
+        </button>
+      </div>
       <div className="flex">
         <button
           data-testid="chat-info-button"
@@ -26,7 +45,7 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
           <div className="flex justify-center items-center">
             <div className="mr-4">
               <img
-                className="w-16 h-16 rounded-full"
+                className="w-14 h-14 sm:w-16 sm:h-16 rounded-full"
                 src={chat.image.thumbnail}
                 alt="chat-thumbnail"
               />
@@ -34,7 +53,7 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
             <div>
               <div
                 data-testid="chat-title"
-                className="text-base text-slate-800 dark:text-slate-100 font-bold text-left"
+                className="text-mobile sm:text-base text-slate-800 dark:text-slate-100 font-bold text-left"
               >
                 {chat.title}
               </div>

@@ -3,7 +3,7 @@ const ContactCard = ({ user, item, admin }) => {
     <div className="mr-4 flex-grow flex items-start">
       <div>
         <img
-          className="w-16 h-16 rounded-full"
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-full"
           src={item.image.thumbnail}
           alt={item.name}
         />
@@ -12,15 +12,15 @@ const ContactCard = ({ user, item, admin }) => {
         {user?.id === item.id ? (
           <>
             <div className="flex justify-between items-start">
-              <div className="text-md text-slate-800 dark:text-slate-100 font-bold">
+              <div className="text-mobile lg:text-base text-slate-800 dark:text-slate-100 font-bold">
                 You{" "}
                 {admin?.id === item.id && (
-                  <span className="text-md text-slate-700 dark:text-slate-200 font-semibold">
+                  <span className="text-mobile lg:text-base text-slate-700 dark:text-slate-200 font-semibold">
                     Admin
                   </span>
                 )}
               </div>
-              <div className="text-md text-slate-600 dark:text-slate-200 font-bold">
+              <div className="text-mobile lg:text-base text-slate-600 dark:text-slate-200 font-bold">
                 @{item.username}
               </div>
             </div>
@@ -31,19 +31,19 @@ const ContactCard = ({ user, item, admin }) => {
         ) : (
           <>
             <div className="flex justify-between items-start">
-              <div className="text-md text-slate-800 dark:text-slate-100 font-bold">
+              <div className="text-mobile lg:text-base text-slate-800 dark:text-slate-100 font-bold">
                 {item.name}{" "}
                 {admin?.id === item.id && (
-                  <span className="text-md text-slate-700 dark:text-slate-200 font-semibold">
+                  <span className="text-mobile lg:text-base text-slate-700 dark:text-slate-200 font-semibold">
                     Admin
                   </span>
                 )}
               </div>
-              <div className="text-md text-slate-600 dark:text-slate-200 font-bold">
+              <div className="text-mobile lg:text-base text-slate-600 dark:text-slate-200 font-bold">
                 @{item.username}
               </div>
             </div>
-            <div className="text-sm ttext-slate-600 dark:text-slate-200 text-left">
+            <div className="text-sm text-slate-600 dark:text-slate-200 text-left">
               {item.about}
             </div>
           </>

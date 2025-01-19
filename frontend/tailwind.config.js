@@ -3,7 +3,11 @@ export default {
   darkMode: "selector",
   content: ["./frontend/index.html", "./frontend/src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontSize: {
+        mobile: "0.95rem",
+      },
+    },
   },
   plugins: [],
 };

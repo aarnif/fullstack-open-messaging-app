@@ -13,7 +13,7 @@ const EnableDarkMode = ({ theme, setTheme }) => {
 
   return (
     <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 dark:bg-slate-800">
-      <div className="text-md font-semibold text-slate-800 dark:text-slate-100">
+      <div className="text-mobile lg:text-base font-semibold text-slate-800 dark:text-slate-100">
         {theme === "dark" ? "Light Mode" : "Dark Mode"}
       </div>
       <button onClick={handleToggleDarkMode}>
@@ -22,9 +22,9 @@ const EnableDarkMode = ({ theme, setTheme }) => {
             backgroundColor: theme === "dark" ? "#22c55e" : "#94a3b8",
             justifyContent: theme === "dark" ? "flex-end" : "flex-start",
           }}
-          className="w-16 h-8 flex justify-center rounded-full"
+          className="w-14 sm:w-16 h-7 sm:h-8 flex justify-center rounded-full"
         >
-          <div className="m-1 w-6 h-6 rounded-full bg-slate-100"></div>
+          <div className="m-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-100"></div>
         </div>
       </button>
     </div>
@@ -34,7 +34,7 @@ const EnableDarkMode = ({ theme, setTheme }) => {
 const ChangeClockFormat = ({ time, setTime }) => {
   return (
     <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 dark:bg-slate-800">
-      <div className="text-md font-semibold text-slate-800 dark:text-slate-100">
+      <div className="text-mobile lg:text-base font-semibold text-slate-800 dark:text-slate-100">
         24-Hour Clock
       </div>
       <button
@@ -47,9 +47,9 @@ const ChangeClockFormat = ({ time, setTime }) => {
             backgroundColor: time === "12h" ? "#94a3b8" : "#22c55e",
             justifyContent: time === "12h" ? "flex-start" : "flex-end",
           }}
-          className="w-16 h-8 flex justify-center rounded-full"
+          className="w-14 sm:w-16 h-7 sm:h-8 flex justify-center rounded-full"
         >
-          <div className="m-1 w-6 h-6 rounded-full bg-slate-100"></div>
+          <div className="m-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-100"></div>
         </div>
       </button>
     </div>
@@ -80,7 +80,7 @@ const SettingsCard = ({ user }) => {
 
   return (
     <>
-      <h2 className="mt-4 mx-4 mb-2 text-2xl font-bold text-slate-800 dark:text-slate-100">
+      <h2 className="mt-4 mx-4 mb-2 text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">
         Settings
       </h2>
       <EnableDarkMode theme={theme} setTheme={setTheme} />

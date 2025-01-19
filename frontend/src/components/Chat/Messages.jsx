@@ -19,12 +19,12 @@ const Messages = ({ user, messages }) => {
           className="w-full flex-grow flex justify-center items-center"
           key={"Empty item"}
         >
-          <div className="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold">
+          <div className="p-2 rounded-lg bg-slate-200 dark:bg-slate-700 text-mobile sm:text-base text-slate-800 dark:text-slate-100 font-bold">
             Send a message to start the chat.
           </div>
         </div>
       ) : (
-        <div className="w-full flex-grow py-8 px-16">
+        <div className="w-full flex-grow py-4 sm:py-8 px-4 sm:px-16">
           {messages.map((item, index) => {
             return (
               <Fragment key={item.id}>

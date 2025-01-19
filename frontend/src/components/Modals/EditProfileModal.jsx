@@ -90,12 +90,12 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
               <div className="w-[70px] flex justify-start items-center">
                 <div className="w-8 h-8 rounded-full flex justify-center items-center">
                   <button onClick={goBack}>
-                    <IoChevronBack className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
+                    <IoChevronBack className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
                   </button>
                 </div>
               </div>
               <div className="flex-grow flex justify-center items-center">
-                <h2 className="text-xl text-slate-800 dark:text-slate-100 font-bold">
+                <h2 className="text-lg sm:text-xl text-slate-800 dark:text-slate-100 font-bold">
                   Edit Profile
                 </h2>
               </div>
@@ -114,27 +114,27 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
               />
               <ul className="flex-grow flex flex-col">
                 <li className="w-full flex flex-col">
-                  <label className="text-md font-bold text-slate-800 dark:text-slate-100">
+                  <label className="text-mobile lg:text-base font-bold text-slate-800 dark:text-slate-100">
                     Profile name:
                   </label>
                 </li>
                 <li className="w-full flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
                     data-testid="profile-name-input"
-                    className="w-full text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
+                    className="w-full text-mobile lg:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...name}
                   />
                 </li>
 
                 <li className="w-full flex flex-col">
-                  <label className="text-md font-bold text-slate-800 dark:text-slate-100">
+                  <label className="text-mobile lg:text-base font-bold text-slate-800 dark:text-slate-100">
                     About:
                   </label>
                 </li>
                 <li className="w-full flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
                     data-testid="profile-about-input"
-                    className="w-full text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
+                    className="w-full text-mobile lg:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...about}
                   />
                 </li>
@@ -146,7 +146,7 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
                     border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
                     active:scale-95 rounded-xl transition"
                   >
-                    <div className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                    <div className="text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100">
                       Edit Profile
                     </div>
                   </button>

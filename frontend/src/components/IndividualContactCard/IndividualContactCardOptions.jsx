@@ -130,8 +130,8 @@ const IndividualContactOptions = ({
         <div
           className={
             haveContactBlockedYou
-              ? "text-lg font-bold text-slate-400 dark:text-slate-500"
-              : "text-lg font-bold text-slate-800 dark:text-slate-100"
+              ? "text-mobile sm:text-lg font-bold text-slate-400 dark:text-slate-500"
+              : "text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100"
           }
         >
           Chat
@@ -151,7 +151,7 @@ const IndividualContactOptions = ({
         border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
         active:scale-95 rounded-xl transition"
       >
-        <div className="text-lg font-bold text-slate-800 dark:text-slate-100">
+        <div className="text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100">
           {isBlocked ? "Unblock Contact" : "Block Contact"}
         </div>
       </button>
@@ -167,7 +167,7 @@ const IndividualContactOptions = ({
         border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
         active:scale-95 rounded-xl transition"
       >
-        <div className="text-lg font-bold text-slate-800 dark:text-slate-100">
+        <div className="text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100">
           Remove Contact
         </div>
       </button>

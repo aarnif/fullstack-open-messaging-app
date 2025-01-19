@@ -10,6 +10,7 @@ import {
   FIND_CHAT_BY_MEMBERS,
   CHECK_IF_USER_HAS_BLOCKED_YOU,
 } from "../../../graphql/queries";
+import useWindowDimensions from "../../../hooks/useWindowDimensions";
 import useField from "../../../hooks/useField";
 
 import Loading from "../../Loading";
@@ -20,6 +21,7 @@ import useNotifyMessage from "../../../hooks/useNotifyMessage";
 import Notify from "../../Notify";
 
 const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
+  const { width } = useWindowDimensions();
   const notifyMessage = useNotifyMessage();
   const navigate = useNavigate();
   const searchWord = useField("text", "Search contacts by name or username...");
@@ -85,7 +87,7 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
   return (
     <motion.div
       key={"Overlay"}
-      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-60 z-10 transition"
+      className="fixed inset-0 flex justify-center items-end sm:items-center bg-black bg-opacity-50 z-10 transition"
       onClick={() => setShowNewPrivateChatModal(false)}
       initial={{ width: "0vw", opacity: 0 }}
       animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
@@ -93,26 +95,26 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
     >
       <motion.div
         key={"newChatModal"}
-        className="w-[500px] h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-800 dark:text-slate-100 z-100"
+        className="w-full h-[90vh] sm:w-[500px] sm:h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-800 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
-        initial={{ y: -50, opacity: 0 }}
+        initial={{ y: width <= 640 ? 50 : -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
-        exit={{ y: -50, opacity: 0 }}
+        exit={{ y: width <= 640 ? 50 : -50, opacity: 0 }}
         transition={{ delay: 0.4, type: "tween" }}
       >
         <div className="h-full flex-grow flex flex-col py-4 px-4">
           <div className="w-full flex justify-center items-center pb-2">
             <button onClick={() => setShowNewPrivateChatModal(false)}>
-              <MdClose className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
+              <MdClose className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
-            <h2 className="flex-grow text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
-              {"New Private Chat"}
+            <h2 className="flex-grow text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
+              New Private Chat
             </h2>
             <button
               onClick={handleCreatePrivateChat}
               data-testid="start-new-private-chat-button"
             >
-              <IoChevronForward className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
+              <IoChevronForward className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
           </div>
           <>

@@ -14,7 +14,9 @@ const NewChat = ({ user, setActiveMenuItem, menuComponent }) => {
 
   return (
     <div className="flex-grow flex">
-      {menuComponent}
+      <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
+        {menuComponent}
+      </div>
       <div className="flex-grow flex flex-col justify-start items-start bg-slate-50 dark:bg-slate-800">
         {!newChatInfo ? (
           <div>Loading...</div>
