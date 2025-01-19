@@ -37,9 +37,11 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
 
   return (
     <div className="flex-grow flex bg-slate-50 dark:bg-slate-700">
-      {menuComponent}
+      <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
+        {menuComponent}
+      </div>
       <div className="flex-grow flex justify-center items-start">
-        <div className="flex-grow max-w-[1000px] h-full p-8 flex flex-col justify-start items-center">
+        <div className="flex-grow max-w-[1000px] h-full p-4 lg:p-8 flex flex-col justify-start items-center">
           {loading ? (
             <Loading />
           ) : (
@@ -51,14 +53,14 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
                 />
                 {isBlocked && (
                   <div className="flex-grow w-full max-h-[60px] flex flex-row justify-center items-center p-2 rounded-xl">
-                    <div className="text-xl text-red-600 font-bold">
+                    <div className="text-mobile sm:text-xl text-red-600 font-bold">
                       You have blocked this contact!
                     </div>
                   </div>
                 )}
                 {haveContactBlockedYou && (
                   <div className="flex-grow w-full max-h-[60px] flex flex-row justify-center items-center p-2 rounded-xl">
-                    <div className="text-xl text-red-600 font-bold">
+                    <div className="text-mobile sm:text-xl text-red-600 font-bold">
                       This contact has blocked you!
                     </div>
                   </div>
