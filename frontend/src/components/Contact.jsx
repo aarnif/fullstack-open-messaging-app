@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { useMatch } from "react-router";
+import { useMatch, useNavigate } from "react-router";
+import { IoChevronBack } from "react-icons/io5";
 
 import { FIND_USER_BY_ID } from "../graphql/queries";
 import Loading from "./Loading";
@@ -8,6 +9,8 @@ import IndividualContactCard from "./IndividualContactCard/IndividualContactCard
 import IndividualContactOptions from "./IndividualContactCard/IndividualContactCardOptions";
 
 const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
+  const navigate = useNavigate();
+
   const [isBlocked, setIsBlocked] = useState(null);
   const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(null);
 
@@ -35,13 +38,22 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
     }
   }, [data, user.blockedContacts, user.id]);
 
+  const goBack = () => {
+    navigate("/contacts");
+  };
+
   return (
     <div className="flex-grow flex bg-slate-50 dark:bg-slate-700">
       <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
         {menuComponent}
       </div>
       <div className="flex-grow flex justify-center items-start">
-        <div className="flex-grow max-w-[1000px] h-full p-4 lg:p-8 flex flex-col justify-start items-center">
+        <div className="relative flex-grow max-w-[1000px] h-full p-4 lg:p-8 flex flex-col justify-start items-center">
+          <div className="absolute left-8 flex justify-center items-center sm:hidden">
+            <button onClick={goBack}>
+              <IoChevronBack className="w-6 h-6 lg:w-7 lg:h-7 text-slate-700 dark:text-slate-100 fill-current" />
+            </button>
+          </div>
           {loading ? (
             <Loading />
           ) : (
