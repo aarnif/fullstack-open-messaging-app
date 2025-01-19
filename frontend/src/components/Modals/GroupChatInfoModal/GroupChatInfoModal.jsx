@@ -47,7 +47,7 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
 
   return (
     <motion.div
-      className="z-10 absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700"
+      className="z-10 absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700 overflow-y-auto sm:overflow-hidden"
       initial={{ width: "0%", opacity: 0 }}
       animate={{ width: "100%", opacity: 1, duration: 0.2 }}
       exit={{ width: "0%", opacity: 0 }}
@@ -57,33 +57,33 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
           data-testid="close-group-chat-info-button"
           onClick={() => setShowChatInfoModal(false)}
         >
-          <IoChevronBack className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
+          <IoChevronBack className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 fill-current" />
         </button>
         <button data-testid="edit-group-chat-button" onClick={handleEditChat}>
-          <FiEdit className="w-7 h-7 text-slate-700 dark:text-slate-100" />
+          <FiEdit className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100" />
         </button>
       </div>
-      <div className="w-full py-4 flex flex-col justify-center items-center">
+      <div className="w-full py-0 sm:py-4 flex flex-col justify-center items-center">
         <ClickableImage
           imageUri={chat.image.thumbnail}
           imageAlt={`${chat.title} image`}
           fullScreenImageUri={chat.image.original}
         />
-        <div className="pt-4 text-xl text-slate-800 dark:text-slate-100 font-bold">
+        <div className="pt-4 text-lg sm:text-xl text-slate-800 dark:text-slate-100 font-bold">
           {chat.title}
         </div>
         <div className="mx-8 text-sm text-slate-700 dark:text-slate-200 text-center">
           {!chat.description.length ? "No description" : chat.description}
         </div>
       </div>
-      <div className="mb-8 w-full flex-grow flex flex-col justify-center items-center">
+      <div className="mb-0 sm:mb-8 w-full flex-grow flex flex-col justify-center items-center">
         <ChatMembersList
           user={user}
           chatMembers={chat.members}
           admin={chatAdmin}
         />
         {user.id !== chatAdmin.id && (
-          <div className="w-full p-4 flex flex-col justify-center items-start">
+          <div className="w-full px-4 py-2 sm:p-4 flex flex-col justify-center items-start">
             <button
               onClick={() =>
                 confirmModal(
@@ -91,9 +91,11 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
                   handleLeaveChat
                 )
               }
-              className="mb-2 w-full flex-grow max-h-[60px] p-2 flex justify-center items-center border-2 border-slate-200 bg-slate-200 rounded-xl"
+              className="mb-0 sm:mb-2 w-full flex-grow max-h-[60px] p-2 flex justify-center items-center border-2 border-slate-200 bg-slate-200 rounded-xl"
             >
-              <div className="text-lg font-bold text-slate-700">Leave Chat</div>
+              <div className="text-base sm:text-lg font-bold text-slate-700">
+                Leave Chat
+              </div>
             </button>
           </div>
         )}

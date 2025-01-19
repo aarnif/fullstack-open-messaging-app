@@ -103,23 +103,23 @@ const EditGroupChatModal = ({
   return (
     <>
       <motion.div
-        className="absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700"
+        className="absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700 overflow-y-auto sm:overflow-hidden"
         initial={{ width: "0%", opacity: 0 }}
         animate={{ width: "100%", opacity: 1, duration: 0.2 }}
         exit={{ width: "0%", opacity: 0 }}
       >
-        <div className="w-full flex-grow p-8 flex flex-col">
+        <div className="w-full flex-grow p-4 sm:p-8 flex flex-col">
           <div className="w-full flex-grow flex flex-col justify-center items-center">
             <div className="w-full flex justify-center items-center pb-4">
               <div className="w-[70px] flex justify-start items-center">
                 <div className="w-8 h-8 rounded-full flex justify-center items-center">
                   <button onClick={goBack}>
-                    <IoChevronBack className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
+                    <IoChevronBack className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
                   </button>
                 </div>
               </div>
               <div className="flex-grow flex justify-center items-center">
-                <h2 className="text-xl text-slate-800 dark:text-slate-100 font-bold">
+                <h2 className="text-lg sm:text-xl text-slate-800 dark:text-slate-100 font-bold">
                   Edit Chat
                 </h2>
               </div>
@@ -138,39 +138,39 @@ const EditGroupChatModal = ({
               />
               <ul className="flex-grow flex flex-col">
                 <li className="w-full flex flex-col">
-                  <label className="text-md font-bold text-slate-800 dark:text-slate-100">
+                  <label className="text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100">
                     Chat title:
                   </label>
                 </li>
                 <li className="w-full flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
-                    className="w-full text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
+                    className="w-full text-mobile sm:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...title}
                   />
                 </li>
                 <li className="mb-2">
                   {title.value.length === 0 && (
-                    <span className="pl-[10px] text-md text-red-500">
+                    <span className="pl-[10px] text-mobile sm:text-base text-red-500">
                       Please enter chat title
                     </span>
                   )}
                 </li>
 
                 <li className="w-full flex flex-col">
-                  <label className="text-md font-bold text-slate-800 dark:text-slate-100">
+                  <label className="text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100">
                     Chat description:
                   </label>
                 </li>
                 <li className="w-full flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
-                    className="w-full text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
+                    className="w-full text-mobile sm:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...description}
                   />
                 </li>
 
                 <li className="mb-2">
                   {description.value.length === 0 && (
-                    <span className="pl-[10px] text-md text-red-500">
+                    <span className="pl-[10px] text-mobile sm:text-base text-red-500">
                       Please enter chat description
                     </span>
                   )}
@@ -185,7 +185,7 @@ const EditGroupChatModal = ({
                     active:scale-95 rounded-xl transition"
                     onClick={() => setShowUpdateMembersModal(true)}
                   >
-                    <div className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                    <div className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">
                       Update members
                     </div>
                   </button>
@@ -213,7 +213,7 @@ const EditGroupChatModal = ({
                     border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
                     active:scale-95 rounded-xl transition"
                   >
-                    <div className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                    <div className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">
                       Edit Chat
                     </div>
                   </button>

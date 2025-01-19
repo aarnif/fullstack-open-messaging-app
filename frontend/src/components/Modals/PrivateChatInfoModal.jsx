@@ -82,23 +82,23 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
       animate={{ width: "100%", opacity: 1, duration: 0.2 }}
       exit={{ width: "0%", opacity: 0 }}
     >
-      <div className="m-4 flex justify-between">
+      <div className="mx-4 my-2 lg:m-4 flex justify-between">
         <button onClick={() => setShowChatInfoModal(false)}>
-          <IoChevronBack className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
+          <IoChevronBack className="w-6 h-6 lg:w-7 lg:h-7 text-slate-700 dark:text-slate-100 fill-current" />
         </button>
       </div>
       <div className="flex-grow">
         <IndividualContactCard user={user} contact={contact} />
         {isBlocked && (
           <div className="flex-grow w-full max-h-[60px] flex flex-row justify-center items-center p-2 rounded-xl">
-            <div className="text-xl text-red-600 font-bold">
+            <div className="text-mobile sm:text-xl text-red-600 font-bold">
               You have blocked this contact!
             </div>
           </div>
         )}
         {haveContactBlockedYou && (
           <div className="flex-grow w-full max-h-[60px] flex flex-row justify-center items-center p-2 rounded-xl">
-            <div className="text-xl text-red-600 font-bold">
+            <div className="text-mobile sm:text-xl text-red-600 font-bold">
               This contact has blocked you!
             </div>
           </div>
@@ -118,7 +118,7 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
         active:scale-95 rounded-xl transition"
         >
-          <div className="text-lg font-bold text-slate-800 dark:text-slate-100">
+          <div className="text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100">
             {isBlocked ? "Unblock Contact" : "Block Contact"}
           </div>
         </button>
@@ -133,7 +133,7 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
         active:scale-95 rounded-xl transition"
         >
-          <div className="text-lg font-bold text-slate-800 dark:text-slate-100">
+          <div className="text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100">
             Delete Chat
           </div>
         </button>
