@@ -66,6 +66,11 @@ const cache = new InMemoryCache({
             return [...incoming];
           },
         },
+        messages: {
+          merge(_, incoming = []) {
+            return [...incoming];
+          },
+        },
       },
     },
     User: {
