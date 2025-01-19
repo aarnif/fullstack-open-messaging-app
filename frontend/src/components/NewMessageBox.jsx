@@ -72,10 +72,13 @@ const NewMessageBox = ({
           }}
         />
       </div>
-      <div className="w-full h-[50px] p-2 flex bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 shadow-lg">
+      <div className="w-full h-[50px] p-2 flex bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 lg:shadow-lg">
         <div className="mx-2 flex justify-center items-center space-x-2">
           <button onClick={handleClickAddImage}>
-            <FaImage size={26} color="#16a34a" />
+            <FaImage
+              size={26}
+              className="w-6 h-6 sm:w-7 sm:h-7 fill-current text-green-600"
+            />
             <input
               ref={messageImageRef}
               hidden={true}
@@ -90,7 +93,7 @@ const NewMessageBox = ({
         <div className="w-full flex justify-center items-center border-2 rounded-full border-slate-200 dark:border-slate-500 bg-slate-200 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
           <input
             data-testid="new-message-input"
-            className="w-full pl-3 rounded-full text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-200 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
+            className="w-full pl-3 rounded-full text-mobile sm:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-200 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
             placeholder="New Message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -98,10 +101,10 @@ const NewMessageBox = ({
         </div>
         <div className="mx-2 flex justify-center items-center space-x-2">
           <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
-            <FaRegSmile size={26} color="#16a34a" />
+            <FaRegSmile className="w-6 h-6 sm:w-7 sm:h-7 fill-current text-green-600" />
           </button>
           <button data-testid="send-new-message-button" onClick={handleSubmit}>
-            <MdSend size={26} color="#16a34a" />
+            <MdSend className="w-6 h-6 sm:w-7 sm:h-7 fill-current text-green-600" />
           </button>
         </div>
       </div>

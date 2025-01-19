@@ -5,7 +5,7 @@ const NotificationMessage = ({ message }) => {
   return (
     <div className="mr-2 my-2 flex flex-col items-center">
       <div className="min-w-[100px] max-w-[300px] flex justify-center items-center pt-2 px-2 pb-1 bg-slate-300 rounded-lg">
-        <div className="text-slate-800 text-sm text-center">{`${message.content}`}</div>
+        <div className="text-mobile sm:text-base text-slate-800 text-sm text-center">{`${message.content}`}</div>
       </div>
     </div>
   );
@@ -14,8 +14,8 @@ const NotificationMessage = ({ message }) => {
 const MessageByAnotherUser = ({ user, message }) => {
   return (
     <div className="mr-2 my-2 flex flex-col items-start">
-      <div className="min-w-[100px] max-w-[600px] ml-8 pt-2 px-2 flex flex-col bg-slate-300 dark:bg-slate-500 rounded-lg relative">
-        <div className="text-slate-800 dark:text-slate-100 font-bold">
+      <div className="min-w-[100px] max-w-[250px] sm:max-w-[600px] ml-8 pt-2 px-2 flex flex-col bg-slate-300 dark:bg-slate-500 rounded-lg relative">
+        <div className="text-mobile sm:text-base text-slate-800 dark:text-slate-100 font-bold">
           {message.sender.name}
         </div>
         {message.image.thumbnail && (
@@ -33,7 +33,7 @@ const MessageByAnotherUser = ({ user, message }) => {
               fontSize: message.type === "singleEmoji" ? 32 : "inherit",
               textAlign: message.type === "singleEmoji" ? "center" : "inherit",
             }}
-            className="text-slate-800 dark:text-slate-100"
+            className="text-sm sm:text-base text-slate-800 dark:text-slate-100"
           >
             {message.content}
           </div>
@@ -57,15 +57,16 @@ const MessageByAnotherUser = ({ user, message }) => {
 
 const MessageByCurrentUser = ({ user, message }) => {
   return (
-    <div className="mr-2 my-2 flex flex-col items-end">
-      <div className="min-w-[100px] max-w-[600px] mr-8 pt-2 px-2 flex flex-col bg-green-300 rounded-lg relative">
-        <div className="text-slate-800 font-bold">You</div>
+    <div className="mr-0 sm:mr-2 my-2 flex flex-col items-end">
+      <div className="min-w-[100px] max-w-[250px] sm:max-w-[600px] mr-4 sm:mr-8 pt-2 px-2 flex flex-col bg-green-300 rounded-lg relative">
+        <div className="text-mobile sm:text-base text-slate-800 font-bold">
+          You
+        </div>
         {message.image.thumbnail && (
           <ClickableImage
             fullScreenImageUri={message.image.original}
             imageAlt="message-image"
             imageUri={message.image.thumbnail}
-            className="w-[120px] h-[120px]"
           />
         )}
         {message.content && (
@@ -75,7 +76,7 @@ const MessageByCurrentUser = ({ user, message }) => {
               fontSize: message.type === "singleEmoji" ? 32 : "inherit",
               textAlign: message.type === "singleEmoji" ? "center" : "inherit",
             }}
-            className="text-slate-800"
+            className="text-sm sm:text-base text-slate-800"
           >
             {message.content}
           </div>
