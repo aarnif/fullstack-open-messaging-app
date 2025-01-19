@@ -47,7 +47,7 @@ const SignIn = ({ setActiveMenuItem }) => {
     <div className="flex-grow w-full flex justify-center items-center">
       <div
         className="flex-grow max-w-[500px] max-h-[600px] p-8 flex justify-center items-center
-         bg-white dark:bg-slate-800 bg-opacity-90 rounded-xl text-black shadow-xl"
+         lg:bg-white dark:bg-slate-800 bg-opacity-90 lg:rounded-xl text-black lg:shadow-xl"
       >
         <form
           onSubmit={handleSubmit}
@@ -55,7 +55,7 @@ const SignIn = ({ setActiveMenuItem }) => {
         >
           <h1
             data-testid="sign-in-title"
-            className="text-2xl font-bold text-slate-800 dark:text-slate-100"
+            className="text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100"
           >
             Sign In
           </h1>
@@ -65,7 +65,7 @@ const SignIn = ({ setActiveMenuItem }) => {
             </li>
 
             <li className="w-full flex-grow flex flex-col">
-              <label className="text-md font-medium text-slate-700 dark:text-slate-200">
+              <label className="text-mobile sm:text-base font-medium text-slate-700 dark:text-slate-200">
                 USERNAME:
               </label>
             </li>
@@ -78,14 +78,14 @@ const SignIn = ({ setActiveMenuItem }) => {
             </li>
             <li>
               {username.value.length === 0 && (
-                <span className="pl-[10px] text-md text-red-500">
+                <span className="pl-[10px] text-mobile sm:text-base text-red-500">
                   Please enter your username
                 </span>
               )}
             </li>
 
             <li className="w-full flex-grow flex flex-col">
-              <label className="text-md font-medium text-slate-700 dark:text-slate-200">
+              <label className="text-mobile sm:text-base font-medium text-slate-700 dark:text-slate-200">
                 PASSWORD:
               </label>
             </li>
@@ -99,7 +99,7 @@ const SignIn = ({ setActiveMenuItem }) => {
             </li>
             <li>
               {password.value.length === 0 && (
-                <span className="pl-[10px] text-md text-red-500">
+                <span className="pl-[10px] text-mobile sm:text-base text-red-500">
                   Please enter your password
                 </span>
               )}
@@ -109,10 +109,12 @@ const SignIn = ({ setActiveMenuItem }) => {
               <button
                 type="submit"
                 data-testid="sign-in-button"
-                className="flex-grow h-[70px] bg-green-500 border-2 border-green-500 rounded-xl
+                className="flex-grow py-4 sm:py-6 bg-green-500 border-2 border-green-500 rounded-xl
                 hover:bg-green-600 focus:bg-green-600 active:scale-95 transition"
               >
-                <div className="text-xl font-bold text-white">Sign In</div>
+                <div className="text-lg sm:text-xl font-bold text-white">
+                  Sign In
+                </div>
               </button>
             </li>
             <li className="my-4 w-full flex-grow flex flex-col ">
@@ -123,10 +125,10 @@ const SignIn = ({ setActiveMenuItem }) => {
                 onClick={handleClickSignUp}
                 type="button"
                 data-testid="sign-up-button"
-                className="w-full flex-grow h-[70px] border-2 border-slate-400 rounded-xl
+                className="w-full flex-grow py-4 sm:py-6 border-2 border-slate-400 rounded-xl
 hover:bg-slate-300 dark:hover:bg-slate-900 focus:bg-slate-300 active:scale-95 transition"
               >
-                <div className="text-xl font-bold text-slate-700 dark:text-slate-300">
+                <div className="text-lg sm:text-xl font-bold text-slate-700 dark:text-slate-300">
                   Sign Up Here
                 </div>
               </button>
