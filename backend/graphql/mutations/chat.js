@@ -127,7 +127,7 @@ const resolvers = {
       });
 
       try {
-        newChat.save();
+        await newChat.save();
         const addChatToParticipatingUsersChats = args.memberIds.map(
           async (memberId) => {
             await User.findByIdAndUpdate(memberId, {
@@ -145,7 +145,13 @@ const resolvers = {
         });
       }
 
-      const createdChat = await newChat.populate("members");
+      const createdChat = await Chat.findById(newChat._id)
+        .populate("admin")
+        .populate("members")
+        .populate({
+          path: "members",
+          populate: { path: "blockedContacts" },
+        });
 
       pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
 
