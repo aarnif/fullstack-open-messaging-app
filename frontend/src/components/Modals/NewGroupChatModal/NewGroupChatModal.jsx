@@ -9,6 +9,7 @@ import {
   ALL_CONTACTS_BY_USER,
   CHECK_IF_GROUP_CHAT_EXISTS,
 } from "../../../graphql/queries";
+import useWindowDimensions from "../../../hooks/useWindowDimensions";
 import useField from "../../../hooks/useField";
 
 import Loading from "../../Loading";
@@ -19,6 +20,7 @@ import useNotifyMessage from "../../../hooks/useNotifyMessage";
 import Notify from "../../Notify";
 
 const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
+  const { width } = useWindowDimensions();
   const notifyMessage = useNotifyMessage();
   const navigate = useNavigate();
   const groupChatTitle = useField("text", "Enter group chat title...");
@@ -82,7 +84,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
   return (
     <motion.div
       key={"Overlay"}
-      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 transition"
+      className="fixed inset-0 flex justify-center items-end sm:items-center bg-black bg-opacity-50 z-10 transition"
       onClick={() => setShowNewGroupChatModal(false)}
       initial={{ width: "0vw", opacity: 0 }}
       animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
@@ -90,26 +92,26 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
     >
       <motion.div
         key={"newChatModal"}
-        className="w-[500px] h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-800 dark:text-slate-100 z-100"
+        className="w-full h-[90vh] sm:w-[500px] sm:h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-800 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
-        initial={{ y: -50, opacity: 0 }}
+        initial={{ y: width <= 640 ? 50 : -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
-        exit={{ y: -50, opacity: 0 }}
+        exit={{ y: width <= 640 ? 50 : -50, opacity: 0 }}
         transition={{ delay: 0.4, type: "tween" }}
       >
         <div className="h-full flex-grow flex flex-col pt-4 px-4">
           <div className="w-full flex justify-center items-center">
             <button onClick={() => setShowNewGroupChatModal(false)}>
-              <MdClose className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
+              <MdClose className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
-            <h2 className="flex-grow text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
+            <h2 className="flex-grow text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
               New Group Chat
             </h2>
             <button
               data-testid="start-new-group-chat-button"
               onClick={handleCreateGroupChat}
             >
-              <IoChevronForward className="w-7 h-7 text-slate-800 dark:text-slate-100 fill-current" />
+              <IoChevronForward className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
             </button>
           </div>
           <>
@@ -127,18 +129,18 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
                     setChosenUserIds={setChosenUserIds}
                   />
                 </div>
-                <div className="flex justify-center items-center my-2 p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
+                <div className="flex justify-center items-center my-2 p-1 sm:p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
                     data-testid="group-chat-title-input"
-                    className="w-full pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
+                    className="w-full text-mobile lg:text-base pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...groupChatTitle}
                   />
                 </div>
 
-                <div className="flex justify-center items-center my-2 p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
+                <div className="flex justify-center items-center my-2 p-1 sm:p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
                   <input
                     data-testid="group-chat-description-input"
-                    className="w-full pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
+                    className="w-full text-mobile lg:text-base pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
                     {...groupChatDescription}
                   />
                 </div>

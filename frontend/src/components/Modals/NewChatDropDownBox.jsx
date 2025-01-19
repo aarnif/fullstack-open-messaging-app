@@ -44,7 +44,7 @@ const NewChatDropDownBox = ({
       className="fixed inset-0 flex justify-center items-center z-10"
       onClick={() => setShowNewChatDropdownBox(false)}
     >
-      <div className="absolute top-[70px] left-[500px] flex-grow p-4 flex flex-col justify-center items-center bg-white dark:bg-slate-800 rounded-xl text-slate-700 z-10">
+      <div className="absolute top-[70px] right-12 lg:left-[500px] flex-grow p-4 flex flex-col justify-center items-center bg-white dark:bg-slate-800 rounded-xl text-slate-700 z-10">
         <ul className="flex-grow w-full">
           {menuItems.map((menuItem) => (
             <DropDownMenuItem key={menuItem.id} menuItem={menuItem} />

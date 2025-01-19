@@ -23,7 +23,7 @@ const SelectContactsItem = ({ item, chosenUserIds, setChosenUserIds }) => {
     <div
       onClick={handlePress}
       data-testid={`contact-${item.username}`}
-      className="flex items-center py-2 px-4 rounded-lg cursor-pointer"
+      className="flex items-center px-0 py-2 sm:px-4 rounded-lg cursor-pointer"
     >
       <ContactCard item={item} />
 
