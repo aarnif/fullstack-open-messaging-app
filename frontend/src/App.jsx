@@ -255,31 +255,33 @@ const App = () => {
               </Route>
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-            {showNewChatDropdownBox && (
-              <NewChatDropDownBox
-                setShowNewChatDropdownBox={setShowNewChatDropdownBox}
-                setShowNewPrivateChatModal={setShowNewPrivateChatModal}
-                setShowNewGroupChatModal={setShowNewGroupChatModal}
-              />
-            )}
-            {showNewPrivateChatModal && (
-              <NewPrivateChatModal
-                user={data?.me}
-                setShowNewPrivateChatModal={setShowNewPrivateChatModal}
-              />
-            )}
-            {showNewGroupChatModal && (
-              <NewGroupChatModal
-                user={data?.me}
-                setShowNewGroupChatModal={setShowNewGroupChatModal}
-              />
-            )}
-            {showAddNewContactsModal && (
-              <AddNewContactsModal
-                user={data?.me}
-                setShowAddNewContactsModal={setShowAddNewContactsModal}
-              />
-            )}
+            <AnimatePresence>
+              {showNewChatDropdownBox && (
+                <NewChatDropDownBox
+                  setShowNewChatDropdownBox={setShowNewChatDropdownBox}
+                  setShowNewPrivateChatModal={setShowNewPrivateChatModal}
+                  setShowNewGroupChatModal={setShowNewGroupChatModal}
+                />
+              )}
+              {showNewPrivateChatModal && (
+                <NewPrivateChatModal
+                  user={data?.me}
+                  setShowNewPrivateChatModal={setShowNewPrivateChatModal}
+                />
+              )}
+              {showNewGroupChatModal && (
+                <NewGroupChatModal
+                  user={data?.me}
+                  setShowNewGroupChatModal={setShowNewGroupChatModal}
+                />
+              )}
+              {showAddNewContactsModal && (
+                <AddNewContactsModal
+                  user={data?.me}
+                  setShowAddNewContactsModal={setShowAddNewContactsModal}
+                />
+              )}
+            </AnimatePresence>
             <Footer />
           </motion.div>
         )}
