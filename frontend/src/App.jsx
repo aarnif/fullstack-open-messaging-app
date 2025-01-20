@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router";
 import { useQuery } from "@apollo/client";
 import { AnimatePresence, motion } from "framer-motion";
 
-import ConfirmModalProvider from "./components/ConfirmModalProvider";
+import ModalProvider from "./components/ModalProvider";
 import { CURRENT_USER } from "./graphql/queries";
 import LoadingPage from "./components/LoadingPage";
 import Header from "./components/Header";
@@ -63,7 +63,7 @@ const App = () => {
   };
 
   return (
-    <ConfirmModalProvider>
+    <ModalProvider>
       <AnimatePresence>
         {loading ? (
           <LoadingPage key="loading-page" />
@@ -286,7 +286,7 @@ const App = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </ConfirmModalProvider>
+    </ModalProvider>
   );
 };
 

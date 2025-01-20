@@ -7,10 +7,10 @@ import { EDIT_PROFILE } from "../../graphql/mutations";
 import imageService from "../../services/imageService";
 import ChangeImage from "../ChangeImage";
 import useField from "../../hooks/useField";
-import useConfirmModal from "../../hooks/useConfirmModal";
+import useModal from "../../hooks/useModal";
 
 const EditProfileModal = ({ user, setShowEditProfileModal }) => {
-  const { confirmModal } = useConfirmModal();
+  const { modal } = useModal();
   const [base64Image, setBase64Image] = useState(null);
   const name = useField("text", "Enter profile name...", user.name);
   const about = useField(
@@ -73,7 +73,11 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
 
   const handleClickSubmit = (event) => {
     event.preventDefault();
-    confirmModal("Are you sure you want to update the profile?", handleSubmit);
+    modal(
+      "confirm",
+      "Are you sure you want to update the profile?",
+      handleSubmit
+    );
   };
 
   return (

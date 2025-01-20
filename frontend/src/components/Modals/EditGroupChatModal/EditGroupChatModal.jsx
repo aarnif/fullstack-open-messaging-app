@@ -10,7 +10,7 @@ import ChangeImage from "../../ChangeImage";
 import useField from "../../../hooks/useField";
 import ChatMembersList from "../GroupChatInfoModal/ChatMembersList";
 import UpdateMembersModal from "./UpdateMembersModal";
-import useConfirmModal from "../../../hooks/useConfirmModal";
+import useModal from "../../../hooks/useModal";
 
 const EditGroupChatModal = ({
   user,
@@ -18,7 +18,7 @@ const EditGroupChatModal = ({
   chatAdmin,
   showEditGroupChatModal,
 }) => {
-  const { confirmModal } = useConfirmModal();
+  const { modal } = useModal();
   const [base64Image, setBase64Image] = useState(null);
   const [showUpdateMembersModal, setShowUpdateMembersModal] = useState(false);
   const title = useField("text", "Enter chat title here...", chat.title);
@@ -94,7 +94,8 @@ const EditGroupChatModal = ({
 
   const handleClickSubmit = (event) => {
     event.preventDefault();
-    confirmModal(
+    modal(
+      "confirm",
       "Are you sure you want to update the chat information?",
       handleSubmit
     );

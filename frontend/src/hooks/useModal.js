@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import ConfirmModalContext from "../contexts/ConfirmModalContext";
 
-const useConfirmModal = () => {
+const useModal = () => {
   return useContext(ConfirmModalContext);
 };
 
-export default useConfirmModal;
+export default useModal;

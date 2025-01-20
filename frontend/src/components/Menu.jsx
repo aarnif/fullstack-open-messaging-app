@@ -11,7 +11,7 @@ import {
 import { motion } from "framer-motion";
 
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
-import useConfirmModal from "../hooks/useConfirmModal";
+import useModal from "../hooks/useModal";
 
 const MenuTitle = ({ title }) => {
   return (
@@ -58,7 +58,7 @@ const Menu = ({
 }) => {
   const navigate = useNavigate();
   const client = useApolloClient();
-  const { confirmModal } = useConfirmModal();
+  const { modal } = useModal();
 
   const handleNavigation = (event, path) => {
     setActiveMenuItem(event.target.closest("li").id);
@@ -152,7 +152,7 @@ const Menu = ({
       icon: <FaSignOutAlt className={menuItemStyles.inactive} />,
       path: "/logout",
       onClick: () =>
-        confirmModal("Are you sure you want to logout?", handleLogout),
+        modal("confirm", "Are you sure you want to logout?", handleLogout),
       "data-testid": "logout-button",
     },
   ];
