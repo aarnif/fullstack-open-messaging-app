@@ -54,7 +54,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.4",
-    "@playwright/test": "^1.48.2",
+    "@playwright/test": "^1.49.1",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^15.0.2",
     "@types/node": "^22.9.0",
