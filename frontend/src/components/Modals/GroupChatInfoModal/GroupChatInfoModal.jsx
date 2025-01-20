@@ -10,10 +10,10 @@ import { LEAVE_GROUP_CHATS } from "../../../graphql/mutations";
 import ChatMembersList from "./ChatMembersList";
 import EditGroupChatModal from "../EditGroupChatModal/EditGroupChatModal";
 import ClickableImage from "../../ClickableImage";
-import useConfirmModal from "../../../hooks/useConfirmModal";
+import useModal from "../../../hooks/useModal";
 
 const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
-  const { confirmModal } = useConfirmModal();
+  const { modal } = useModal();
   const [showEditGroupChatModal, setShowEditGroupChatModal] = useState(false);
   const navigate = useNavigate();
   const chatAdmin = chat.admin;
@@ -86,7 +86,8 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
           <div className="w-full px-4 py-2 sm:p-4 flex flex-col justify-center items-start">
             <button
               onClick={() =>
-                confirmModal(
+                modal(
+                  "confirm",
                   "Are you sure you want to leave the chat?",
                   handleLeaveChat
                 )

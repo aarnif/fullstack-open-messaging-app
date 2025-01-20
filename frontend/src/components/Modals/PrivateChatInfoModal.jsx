@@ -6,14 +6,14 @@ import { motion } from "framer-motion";
 
 import { DELETE_CHAT, BLOCK_OR_UNBLOCK_CONTACT } from "../../graphql/mutations";
 import IndividualContactCard from "../IndividualContactCard/IndividualContactCard";
-import useConfirmModal from "../../hooks/useConfirmModal";
+import useModal from "../../hooks/useModal";
 
 const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   const contact = chat.members.find(
     (member) => member.username !== user.username
   );
 
-  const { confirmModal } = useConfirmModal();
+  const { modal } = useModal();
   const navigate = useNavigate();
   const [isBlocked, setIsBlocked] = useState(
     user.blockedContacts.find((user) => user.id === contact.id)
@@ -107,7 +107,8 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
       <div className="w-full p-4 flex flex-col justify-end items-start">
         <button
           onClick={() =>
-            confirmModal(
+            modal(
+              "confirm",
               `Are you sure you want to ${isBlocked ? "unblock" : "block"} ${
                 contact.name
               }?`,
@@ -124,7 +125,8 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         </button>
         <button
           onClick={() =>
-            confirmModal(
+            modal(
+              "confirm",
               `Are you sure you want to delete the chat? This removes the chat from both of you!`,
               handleDeleteChat
             )
