@@ -4,14 +4,17 @@ import { useMutation } from "@apollo/client";
 import imageService from "../../services/imageService";
 import { ADD_MESSAGE_TO_CHAT } from "../../graphql/mutations";
 import NewMessageBox from "../NewMessageBox";
+import useModal from "../../hooks/useModal";
 
 const NewMessage = ({ user, chatId }) => {
+  const { modal } = useModal();
   const [message, setMessage] = useState("");
   const [image, setImage] = useState(null);
   const [base64Image, setBase64Image] = useState(null);
 
   const [mutate] = useMutation(ADD_MESSAGE_TO_CHAT, {
     onError: (error) => {
+      modal("alert", error.graphQLErrors[0].message);
       console.log(error.graphQLErrors[0].message);
     },
   });
