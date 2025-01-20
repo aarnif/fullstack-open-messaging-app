@@ -33,7 +33,7 @@ const MessageByAnotherUser = ({ user, message }) => {
               fontSize: message.type === "singleEmoji" ? 32 : "inherit",
               textAlign: message.type === "singleEmoji" ? "center" : "inherit",
             }}
-            className="text-sm sm:text-base text-slate-800 dark:text-slate-100"
+            className="text-sm sm:text-base text-slate-800 dark:text-slate-100 break-words"
           >
             {message.content}
           </div>
@@ -76,7 +76,7 @@ const MessageByCurrentUser = ({ user, message }) => {
               fontSize: message.type === "singleEmoji" ? 32 : "inherit",
               textAlign: message.type === "singleEmoji" ? "center" : "inherit",
             }}
-            className="text-sm sm:text-base text-slate-800"
+            className="text-sm sm:text-base text-slate-800 break-words"
           >
             {message.content}
           </div>
