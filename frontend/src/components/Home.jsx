@@ -19,46 +19,74 @@ const Home = ({
   const client = useApolloClient();
 
   useSubscription(CONTACT_BLOCKED_OR_UNBLOCKED, {
-    onData: ({ data }) => {
+    onData: async ({ data }) => {
       console.log("Use CONTACT_BLOCKED_OR_UNBLOCKED-subscription:");
       const blockingData = data.data.contactBlockedOrUnBlocked;
-      client.cache.updateQuery(
-        {
-          query: ALL_CONTACTS_BY_USER,
-          variables: {
-            searchByName: "",
-          },
+
+      const cachedData = client.cache.readQuery({
+        query: ALL_CONTACTS_BY_USER,
+        variables: {
+          searchByName: "",
         },
-        ({ allContactsByUser }) => {
-          const updatedContacts = allContactsByUser.contacts.map((contact) => {
-            if (contact.id === blockingData.actor) {
-              const updatedBlockedContacts = blockingData.isBlocked
-                ? [
-                    ...new Set([
-                      ...contact.blockedContacts,
-                      blockingData.target,
-                    ]),
-                  ]
-                : contact.blockedContacts.filter(
-                    (contact) => contact.id !== blockingData.target.id
-                  );
+      });
 
-              return {
-                ...contact,
-                blockedContacts: updatedBlockedContacts,
-              };
-            }
-            return contact;
-          });
+      if (!cachedData) {
+        console.log(
+          "No cached data for ALL_CONTACTS_BY_USER query, fetching from server."
+        );
+        client.query({
+          query: ALL_CONTACTS_BY_USER,
+          variables: { searchByName: "" },
+        });
+      }
 
-          return {
-            allContactsByUser: {
-              ...allContactsByUser,
-              contacts: updatedContacts,
+      if (cachedData) {
+        console.log("ALL_CONTACTS_BY_USER query in cache, updating...");
+        client.cache.updateQuery(
+          {
+            query: ALL_CONTACTS_BY_USER,
+            variables: {
+              searchByName: "",
             },
-          };
-        }
-      );
+          },
+          ({ allContactsByUser }) => {
+            const updatedContacts = allContactsByUser.contacts.map(
+              (contact) => {
+                if (contact.id === blockingData.actor) {
+                  const updatedBlockedContacts = blockingData.isBlocked
+                    ? [
+                        ...new Set([
+                          ...contact.blockedContacts,
+                          blockingData.target,
+                        ]),
+                      ]
+                    : contact.blockedContacts.filter(
+                        (blockedContact) =>
+                          blockedContact.id !== blockingData.target.id
+                      );
+
+                  return {
+                    ...contact,
+                    blockedContacts: updatedBlockedContacts,
+                  };
+                }
+                return contact;
+              }
+            );
+
+            return {
+              allContactsByUser: {
+                ...allContactsByUser,
+                contacts: updatedContacts,
+              },
+            };
+          }
+        );
+      } else {
+        console.log(
+          "ALL_CONTACTS_BY_USER query not in cache, skipping update."
+        );
+      }
     },
     onError: (error) => {
       console.log("CONTACT_BLOCKED_OR_UNBLOCKED-subscription error:", error);
