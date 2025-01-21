@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { IoChevronBack } from "react-icons/io5";
@@ -21,6 +21,15 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(
     contact.blockedContacts.find((contact) => contact.id === user.id)
   );
+
+  useEffect(() => {
+    if (chat) {
+      setIsBlocked(user.blockedContacts.find((user) => user.id === contact.id));
+      setHaveContactBlockedYou(
+        contact.blockedContacts.find((contact) => contact.id === user.id)
+      );
+    }
+  }, [chat, user.blockedContacts, user.id]);
 
   const [deleteChat] = useMutation(DELETE_CHAT, {
     onError: (error) => {
