@@ -8,16 +8,16 @@ import { IoChevronForward } from "react-icons/io5";
 import {
   ALL_CONTACTS_BY_USER,
   CHECK_IF_GROUP_CHAT_EXISTS,
-} from "../../../graphql/queries";
-import useWindowDimensions from "../../../hooks/useWindowDimensions";
-import useField from "../../../hooks/useField";
+} from "../../graphql/queries";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
+import useField from "../../hooks/useField";
 
-import Loading from "../../Loading";
-import SearchBar from "../../SearchBar";
+import Loading from "../Loading";
+import SearchBar from "../SearchBar";
 import SelectContactsList from "./SelectContactsList";
 
-import useNotifyMessage from "../../../hooks/useNotifyMessage";
-import Notify from "../../Notify";
+import useNotifyMessage from "../../hooks/useNotifyMessage";
+import Notify from "../Notify";
 
 const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
   const { width } = useWindowDimensions();
