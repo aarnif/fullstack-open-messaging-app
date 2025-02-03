@@ -34,7 +34,7 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
 
   const [mutate] = useMutation(ADD_CONTACTS, {
     onError: (error) => {
-      console.log("Error creating chat mutation:");
+      console.log("Error adding contacts mutation:");
       console.log(error.graphQLErrors[0].message);
     },
   });
@@ -73,9 +73,6 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
     setShowAddNewContactsModal(false);
     navigate("/contacts");
   };
-
-  console.log("res1.data:", result.data?.allContactsExceptByUser);
-  console.log("chosenUserIds:", chosenUserIds);
 
   return (
     <motion.div

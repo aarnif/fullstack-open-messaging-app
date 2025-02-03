@@ -90,7 +90,7 @@ const IndividualContactOptions = ({
   const handleRemoveContact = async () => {
     console.log("Removing contact...");
     try {
-      const { data } = await removeContact({
+      await removeContact({
         variables: {
           contactId: contact.id,
         },
@@ -104,7 +104,7 @@ const IndividualContactOptions = ({
         ],
       });
 
-      console.log("Removed contact:", data);
+      console.log("Removed contact:", contact.name);
       navigate("/contacts");
     } catch (error) {
       console.log("Error removing contact:", error);
