@@ -151,17 +151,18 @@ const resolvers = {
         });
       }
 
-      console.log("Adding contacts: ", args.userIds);
-
       const user = await User.findByIdAndUpdate(
         context.currentUser,
         {
           $addToSet: { contacts: { $each: args.userIds } },
         },
         { new: true }
-      ).populate("contacts");
-
-      const addedContacts = await User.find({ _id: { $in: args.userIds } });
+      )
+        .populate("contacts")
+        .populate({
+          path: "contacts",
+          populate: { path: "blockedContacts" },
+        });
 
       return user;
     },
