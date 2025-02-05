@@ -47,14 +47,34 @@ This is a full stack project for the Helsinki University [Full Stack Open](https
 
 ## Images
 
-![Signin](documentation/images/signin.png)
+### Desktop
+
+![Signin](documentation/images/desktop/signin.png)
 Signin page
 
-![Chats](documentation/images/chats.png)
+![Chats](documentation/images/desktop/chats.png)
 Chats page
 
-![Contacts](documentation/images/contacts.png)
+![Contacts](documentation/images/desktop/contacts.png)
 Contacts page
+
+### Mobile
+
+<div style="width: 100%; display: flex; justify-content: space-between; gap: 20px;">
+    <div style="flex-grow: 1;">
+        <img src="documentation/images/mobile/signin.png" width="100%">
+        <div>Signin page</div>
+    </div>
+     <div style="flex-grow: 1;">
+        <img src="documentation/images/mobile/chats.png" width="100%">
+        <div>Chats page</div>
+    </div>
+    <div style="flex-grow: 1;">
+        <img src="documentation/images/mobile/contacts.png" width="100%">
+        <div>Contacts page</div>
+    </div>
+
+</div>
 
 ## Testing application locally
 
