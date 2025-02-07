@@ -7,6 +7,7 @@ const users = [
     about: "Test user for development purposes.",
     status: "online",
     createdAt: new Date("2023-12-08T10:00:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517ca",
@@ -21,6 +22,7 @@ const users = [
     },
     status: "online",
     createdAt: new Date("2023-12-08T10:00:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517cc",
@@ -34,6 +36,7 @@ const users = [
     },
     status: "offline",
     createdAt: new Date("2024-01-15T14:30:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517ce",
@@ -47,6 +50,7 @@ const users = [
     },
     status: "offline",
     createdAt: new Date("2024-03-22T08:45:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517d0",
@@ -60,6 +64,7 @@ const users = [
     },
     status: "online",
     createdAt: new Date("2024-05-28T16:20:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517d2",
@@ -73,6 +78,7 @@ const users = [
     },
     status: "online",
     createdAt: new Date("2024-06-01T10:00:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517d4",
@@ -86,6 +92,7 @@ const users = [
     },
     status: "offline",
     createdAt: new Date("2024-06-05T12:30:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517d6",
@@ -99,6 +106,7 @@ const users = [
     },
     status: "online",
     createdAt: new Date("2024-06-10T14:45:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517d8",
@@ -112,6 +120,7 @@ const users = [
     },
     status: "offline",
     createdAt: new Date("2024-06-15T16:00:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517da",
@@ -125,6 +134,7 @@ const users = [
     },
     status: "online",
     createdAt: new Date("2024-06-20T18:15:00Z"),
+    chats: [],
   },
   {
     _id: "6690caa54dc3eac2b83517dc",
@@ -138,6 +148,7 @@ const users = [
     },
     status: "offline",
     createdAt: new Date("2024-06-25T20:30:00Z"),
+    chats: [],
   },
 ];
 
