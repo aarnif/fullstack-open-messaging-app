@@ -141,4 +141,7 @@ const users = [
   },
 ];
 
+// Add all users as contacts to the test user
+users[0].contacts = users.slice(1);
+
 export default users;
