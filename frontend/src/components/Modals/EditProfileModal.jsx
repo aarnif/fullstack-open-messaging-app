@@ -75,7 +75,9 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
     event.preventDefault();
     modal(
       "success",
+      "Update Profile",
       "Are you sure you want to update the profile?",
+      "Update",
       handleSubmit
     );
   };
