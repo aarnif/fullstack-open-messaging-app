@@ -141,10 +141,12 @@ const IndividualContactOptions = ({
         data-testid="block-or-unblock-contact-button"
         onClick={() =>
           modal(
-            "confirm",
+            isBlocked ? "success" : "danger",
+            isBlocked ? "Unblock Contact" : "Block Contact",
             `Are you sure you want to ${isBlocked ? "unblock" : "block"} ${
               contact.name
             }?`,
+            isBlocked ? "Unblock" : "Block",
             handleBlockContact
           )
         }
@@ -160,8 +162,10 @@ const IndividualContactOptions = ({
         data-testid="remove-contact-button"
         onClick={() =>
           modal(
-            "confirm",
+            "danger",
+            "Remove Contact",
             `Are you sure you want to remove ${contact.name} from your contacts?`,
+            "Remove",
             handleRemoveContact
           )
         }

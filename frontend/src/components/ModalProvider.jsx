@@ -1,82 +1,121 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { FaExclamation } from "react-icons/fa6";
 
 import ConfirmModalContext from "../contexts/ConfirmModalContext";
 
-const AlertModal = ({ closeModal, message }) => {
+const AlertModal = ({ title, message, closeModal }) => {
   return (
     <motion.div
-      key={"alertModal"}
-      className="z-10 p-6 m-4 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-lg max-w-sm text-center"
-      initial={{ y: -50, opacity: 0 }}
+      initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1, duration: 0.4 }}
-      exit={{ y: -50, opacity: 0 }}
+      exit={{ y: 50, opacity: 0 }}
       transition={{ delay: 0.4, type: "tween" }}
+      className="bg-yellow-50 rounded-lg border-t border-yellow-900"
     >
-      <h2 className="text-lg lg:text-xl font-semibold text-slate-800 dark:text-slate-100">
-        Alert
-      </h2>
-      <div className="my-4 text-mobile sm:text-lg text-slate-800 dark:text-slate-100">
-        {message}
-      </div>
-      <div className="flex justify-center space-x-2">
-        <button
-          onClick={closeModal}
-          data-testid="cancel-button"
-          className="w-full max-w-[100px] p-2 flex justify-center items-center border-2 
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 
-        hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900
-        active:scale-95 rounded-lg transition"
-        >
-          <div className="text-mobile sm:text-lg text-slate-800 dark:text-slate-100 font-bold">
-            Close
+      <div className="w-full px-12 py-8 md:px-14 md:py-10 flex flex-col gap-4">
+        <div className="flex justify-start items-center gap-3">
+          <div className="w-8.5 h-8.5 md:w-10 md:h-10 flex justify-center items-center rounded-full bg-yellow-300">
+            <div className="w-6 h-6 md:w-7 md:h-7 flex justify-center items-center rounded-full bg-yellow-100 border-2 border-yellow-400">
+              <FaExclamation className="w-4 h-4 md:w-4.5 md:h-4.5 text-yellow-900 fill-current" />
+            </div>
           </div>
+          <h2 className="text-center text-yellow-900 text-lg md:text-xl font-semibold font-robo-condensed">
+            {title}
+          </h2>
+        </div>
+        <div className="self-stretch h-12 text-yellow-700 text-sm md:text-base">
+          {message}
+        </div>
+
+        <button
+          className="w-full px-4 py-2 bg-yellow-200 rounded-lg border border-yellow-200 shadow-xl flex justify-center items-center text-yellow-900 cursor-pointer text-sm md:text-base font-bold
+              hover:bg-yellow-300 active:bg-yellow-300 active:border-yellow-400 active:inset-shadow-sm transition-all duration-300 ease-in-out"
+          onClick={closeModal}
+        >
+          Close
         </button>
       </div>
     </motion.div>
   );
 };
 
-const ConfirmModal = ({ closeModal, message, onConfirm }) => {
+const ConfirmModal = ({
+  variant,
+  title,
+  message,
+  confirmText,
+  closeModal,
+  onConfirm,
+}) => {
   return (
     <motion.div
-      key={"confirmModal"}
-      className="z-10 p-6 m-4 bg-slate-100 dark:bg-slate-700 rounded-lg shadow-lg max-w-sm text-center"
-      initial={{ y: -50, opacity: 0 }}
+      initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1, duration: 0.4 }}
-      exit={{ y: -50, opacity: 0 }}
+      exit={{ y: 50, opacity: 0 }}
       transition={{ delay: 0.4, type: "tween" }}
+      className={`rounded-lg border-l-4 ${
+        variant === "success"
+          ? "border-green-900 bg-green-50"
+          : "border-red-900 bg-red-50"
+      }`}
     >
-      <h2 className="text-lg lg:text-xl font-semibold text-slate-800 dark:text-slate-100">
-        Confirmation
-      </h2>
-      <div className="my-4 text-mobile sm:text-lg text-slate-800 dark:text-slate-100">
-        {message}
-      </div>
-      <div className="flex justify-center space-x-2">
-        <button
-          onClick={onConfirm}
-          data-testid="confirm-button"
-          className="w-full max-w-[100px] p-2 flex justify-center items-center border-2 
-        border-red-600 bg-red-600 hover:bg-red-700 hover:border-red-700 
-        active:scale-95 rounded-lg transition"
-        >
-          <div className="text-mobile sm:text-lg text-slate-800 dark:text-slate-100 font-bold">
-            Confirm
+      <div className="w-full px-12 py-8 md:px-14 md:py-10 flex flex-col gap-4">
+        <div className="flex justify-start items-center gap-3">
+          <div
+            className={`w-8.5 h-8.5 md:w-10 md:h-10 flex justify-center items-center rounded-full ${
+              variant === "success" ? "bg-green-300" : "bg-red-300"
+            }`}
+          >
+            <div
+              className={`w-6 h-6 md:w-7 md:h-7 flex justify-center items-center rounded-full border-2 ${
+                variant === "success"
+                  ? "border-green-400 bg-green-100"
+                  : "border-red-400 bg-red-100"
+              }`}
+            >
+              <FaExclamation
+                className={`w-4 h-4 md:w-4.5 md:h-4.5 fill-current ${
+                  variant === "success" ? "text-green-900" : "text-red-900"
+                }`}
+              />
+            </div>
           </div>
-        </button>
-        <button
-          onClick={closeModal}
-          data-testid="cancel-button"
-          className="w-full max-w-[100px] p-2 flex justify-center items-center border-2 
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 
-        hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900
-        active:scale-95 rounded-lg transition"
+          <h2
+            className={`text-center ${
+              variant === "success" ? "text-green-900" : "text-red-900"
+            } text-lg md:text-xl font-semibold font-robo-condensed`}
+          >
+            {title}
+          </h2>
+        </div>
+        <div
+          className={`w-full h-12 ${
+            variant === "success" ? "text-green-700" : "text-red-700"
+          } text-sm md:text-base`}
         >
-          <div className="text-mobile sm:text-lg text-slate-800 dark:text-slate-100 font-bold">
+          {message}
+        </div>
+        <div className="flex justify-center space-x-2">
+          <button
+            onClick={closeModal}
+            data-testid="cancel-button"
+            className="w-full flex justify-center items-center text-base font-medium text-slate-700 dark:text-slate-200 hover:underline transition"
+          >
             Cancel
-          </div>
-        </button>
+          </button>
+          <button
+            data-testid="confirm-button"
+            className={`w-full px-4 py-2 rounded-lg border shadow-xl flex justify-center items-center cursor-pointer text-sm md:text-base font-bold transition-all duration-300 ease-in-out ${
+              variant === "success"
+                ? "bg-green-200 border-green-200 text-green-900 hover:bg-green-300 active:bg-green-300 active:border-green-400 active:inset-shadow-sm"
+                : "bg-red-200 border-red-200 text-red-900 hover:bg-red-300 active:bg-red-300 active:border-red-400 active:inset-shadow-sm"
+            }`}
+            onClick={onConfirm}
+          >
+            {confirmText}
+          </button>
+        </div>
       </div>
     </motion.div>
   );
@@ -85,10 +124,18 @@ const ConfirmModal = ({ closeModal, message, onConfirm }) => {
 const ModalProvider = ({ children }) => {
   const [onConfirm, setOnConfirm] = useState(null);
   const [type, setType] = useState("");
+  const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
+  const [confirmText, setConfirmText] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const modal = (type, message, onConfirmAction = () => {}) => {
+  const modal = (
+    type,
+    title,
+    message,
+    confirmText,
+    onConfirmAction = () => {}
+  ) => {
     const handleConfirm = () => {
       onConfirmAction();
       closeModal();
@@ -96,13 +143,41 @@ const ModalProvider = ({ children }) => {
 
     setOnConfirm(() => handleConfirm);
     setType(type);
+    setTitle(title);
     setMessage(message);
+    setConfirmText(confirmText);
     setIsOpen(true);
   };
 
   const closeModal = () => {
     setIsOpen(false);
     setMessage("");
+  };
+
+  const modalComponents = {
+    alert: (
+      <AlertModal title={title} message={message} closeModal={closeModal} />
+    ),
+    success: (
+      <ConfirmModal
+        variant="success"
+        title={title}
+        message={message}
+        confirmText={confirmText}
+        closeModal={closeModal}
+        onConfirm={onConfirm}
+      />
+    ),
+    danger: (
+      <ConfirmModal
+        variant="danger"
+        title={title}
+        message={message}
+        confirmText={confirmText}
+        closeModal={closeModal}
+        onConfirm={onConfirm}
+      />
+    ),
   };
 
   return (
@@ -118,15 +193,7 @@ const ModalProvider = ({ children }) => {
             animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
             exit={{ width: "0vw", opacity: 0, transition: { delay: 1.0 } }}
           >
-            {type === "alert" ? (
-              <AlertModal closeModal={closeModal} message={message} />
-            ) : (
-              <ConfirmModal
-                closeModal={closeModal}
-                message={message}
-                onConfirm={onConfirm}
-              />
-            )}
+            {modalComponents[type]}
           </motion.div>
         )}
       </AnimatePresence>

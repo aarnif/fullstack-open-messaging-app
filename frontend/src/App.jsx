@@ -11,7 +11,6 @@ import Home from "./components/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import Footer from "./components/Footer";
 import ChatsMenu from "./components/ChatsMenu";
 import ContactsMenu from "./components/ContactsMenu";
 
@@ -70,7 +69,7 @@ const App = () => {
         ) : (
           <motion.div
             key="front-page"
-            className="h-screen flex flex-col"
+            className="h-screen flex flex-col bg-light dark:bg-dark"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { delay: 0.5 } }}
           >
@@ -282,7 +281,6 @@ const App = () => {
                 />
               )}
             </AnimatePresence>
-            <Footer />
           </motion.div>
         )}
       </AnimatePresence>

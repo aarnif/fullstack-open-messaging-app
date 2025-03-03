@@ -67,7 +67,7 @@ const Chat = ({
       <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
         {menuComponent}
       </div>
-      <div className="relative flex-grow flex flex-col justify-start items-start bg-slate-50 dark:bg-slate-800">
+      <div className="relative flex-grow flex flex-col justify-start items-start">
         {loading ? (
           <Loading />
         ) : data?.findChatById ? (

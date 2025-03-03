@@ -87,7 +87,7 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
             <button
               onClick={() =>
                 modal(
-                  "confirm",
+                  "danger",
                   "Are you sure you want to leave the chat?",
                   handleLeaveChat
                 )

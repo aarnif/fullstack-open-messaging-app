@@ -152,7 +152,13 @@ const Menu = ({
       icon: <FaSignOutAlt className={menuItemStyles.inactive} />,
       path: "/logout",
       onClick: () =>
-        modal("confirm", "Are you sure you want to logout?", handleLogout),
+        modal(
+          "danger",
+          "Log Out",
+          "Are you sure you want to logout?",
+          "Log Out",
+          handleLogout
+        ),
       "data-testid": "logout-button",
     },
   ];

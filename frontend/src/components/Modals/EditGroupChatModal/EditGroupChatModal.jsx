@@ -95,8 +95,10 @@ const EditGroupChatModal = ({
   const handleClickSubmit = (event) => {
     event.preventDefault();
     modal(
-      "confirm",
-      "Are you sure you want to update the chat information?",
+      "success",
+      "Edit Chat",
+      "Are you sure you want to edit the chat information?",
+      "Edit",
       handleSubmit
     );
   };

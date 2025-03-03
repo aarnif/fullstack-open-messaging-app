@@ -74,8 +74,10 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
   const handleClickSubmit = (event) => {
     event.preventDefault();
     modal(
-      "confirm",
+      "success",
+      "Update Profile",
       "Are you sure you want to update the profile?",
+      "Update",
       handleSubmit
     );
   };

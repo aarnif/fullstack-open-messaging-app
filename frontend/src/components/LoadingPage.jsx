@@ -4,7 +4,7 @@ import Loading from "./Loading";
 const LoadingPage = () => {
   return (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center"
+      className="fixed inset-0 flex items-center justify-center bg-light dark:bg-dark"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.5 } }}
     >

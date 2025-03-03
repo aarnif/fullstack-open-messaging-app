@@ -7,6 +7,10 @@ export default {
       fontSize: {
         mobile: "0.95rem",
       },
+      backgroundImage: {
+        light: "url('/images/background-light.svg')",
+        dark: "url('/images/background-dark.svg')",
+      },
     },
   },
   plugins: [],
