@@ -117,7 +117,8 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         <button
           onClick={() =>
             modal(
-              "confirm",
+              isBlocked ? "success" : "danger",
+              isBlocked ? "Unblock Contact" : "Block Contact",
               `Are you sure you want to ${isBlocked ? "unblock" : "block"} ${
                 contact.name
               }?`,
@@ -135,8 +136,10 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         <button
           onClick={() =>
             modal(
-              "confirm",
+              "danger",
+              "Delete Chat",
               `Are you sure you want to delete the chat? This removes the chat from both of you!`,
+              "Delete",
               handleDeleteChat
             )
           }

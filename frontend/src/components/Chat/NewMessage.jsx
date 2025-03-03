@@ -14,7 +14,7 @@ const NewMessage = ({ user, chatId }) => {
 
   const [mutate] = useMutation(ADD_MESSAGE_TO_CHAT, {
     onError: (error) => {
-      modal("alert", error.graphQLErrors[0].message);
+      modal("alert", "Notification", error.graphQLErrors[0].message);
       console.log(error.graphQLErrors[0].message);
     },
   });
