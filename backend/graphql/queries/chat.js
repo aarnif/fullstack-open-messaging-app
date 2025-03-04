@@ -42,7 +42,7 @@ const typeDefs = `
     findChatById(chatId: ID!): Chat
     findChatByMembers(members: [ID!]!): Chat
     allChatsByUser(searchByTitle: String): [Chat!]!
-    checkIfGroupChatExists(title: String!): Boolean!
+    findGroupChatByTitle(title: String!): Chat
   }
 `;
 
@@ -127,10 +127,26 @@ const resolvers = {
               populate: { path: "isReadBy.member" },
             })
             .sort({ "messages.0.createdAt": "desc" }),
-    checkIfGroupChatExists: async (root, args) => {
-      const chatExist = await Chat.findOne({ title: args.title });
-      return chatExist ? true : false;
-    },
+    findGroupChatByTitle: async (root, args) =>
+      Chat.findOne({ title: args.title, isGroupChat: true })
+        .populate("admin")
+        .populate("members")
+        .populate({
+          path: "members",
+          populate: { path: "blockedContacts" },
+        })
+        .populate({
+          path: "messages",
+          populate: { path: "sender" },
+        })
+        .populate({
+          path: "messages.sender",
+          populate: { path: "blockedContacts" },
+        })
+        .populate({
+          path: "messages",
+          populate: { path: "isReadBy.member" },
+        }),
   },
   Chat: {
     title: (parent, args, context) => {

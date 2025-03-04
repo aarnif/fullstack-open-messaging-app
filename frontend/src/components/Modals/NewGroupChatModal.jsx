@@ -7,7 +7,7 @@ import { IoChevronForward } from "react-icons/io5";
 
 import {
   ALL_CONTACTS_BY_USER,
-  CHECK_IF_GROUP_CHAT_EXISTS,
+  FIND_GROUP_CHAT_BY_TITLE,
 } from "../../graphql/queries";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useField from "../../hooks/useField";
@@ -37,7 +37,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
     },
   });
 
-  const [checkIfGroupChatExists] = useLazyQuery(CHECK_IF_GROUP_CHAT_EXISTS);
+  const [findGroupChatByTitle] = useLazyQuery(FIND_GROUP_CHAT_BY_TITLE);
 
   const handleCreateGroupChat = async () => {
     console.log("Press create a new group chat!");
@@ -47,7 +47,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
       return;
     }
 
-    const checkIfGroupChatAlreadyExists = await checkIfGroupChatExists({
+    const checkIfGroupChatAlreadyExists = await findGroupChatByTitle({
       variables: {
         title: groupChatTitle.value.trim(),
       },
