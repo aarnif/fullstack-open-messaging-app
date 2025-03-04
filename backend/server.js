@@ -4,7 +4,6 @@ import User from "./models/user.js";
 
 import mongoose from "mongoose";
 import { ApolloServer } from "@apollo/server";
-
 import http from "http";
 import express from "express";
 import cors from "cors";
@@ -23,8 +22,15 @@ mongoose
     console.log("error connection to MongoDB:", error.message);
   });
 
+const getUserFromToken = async (token) => {
+  if (token && token.startsWith("Bearer ")) {
+    const decodedToken = jwt.verify(token.substring(7), config.JWT_SECRET);
+    return await User.findById(decodedToken.id);
+  }
+  return null;
+};
+
 const start = async () => {
-  const JWT_SECRET = config.JWT_SECRET;
   const app = express();
   const httpServer = http.createServer(app);
 
@@ -36,15 +42,12 @@ const start = async () => {
   const serverCleanup = useServer(
     {
       schema,
-      context: async (ctx, msg, args) => {
+      context: async (ctx) => {
         const auth =
           ctx.connectionParams?.Authorization ||
-          ctx.connectionParams?.headers?.authorization; // Whether the client is using apollo server or apollo client
-        if (auth && auth.startsWith("Bearer ")) {
-          const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
-          const currentUser = await User.findById(decodedToken.id);
-          return { currentUser };
-        }
+          ctx.connectionParams?.headers?.authorization;
+        const currentUser = await getUserFromToken(auth);
+        return { currentUser };
       },
     },
     wsServer
@@ -75,12 +78,9 @@ const start = async () => {
     "/",
     expressMiddleware(server, {
       context: async ({ req }) => {
-        const auth = req ? req.headers.authorization : null;
-        if (auth && auth.startsWith("Bearer ")) {
-          const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
-          const currentUser = await User.findById(decodedToken.id);
-          return { currentUser };
-        }
+        const auth = req.headers.authorization || null;
+        const currentUser = await getUserFromToken(auth);
+        return { currentUser };
       },
     })
   );
