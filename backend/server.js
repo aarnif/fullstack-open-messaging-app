@@ -1,26 +1,17 @@
 import config from "../config.js";
 import schema from "./graphql/schema.js";
 import User from "./models/user.js";
+import db from "./db.js";
 
-import mongoose from "mongoose";
-import { ApolloServer } from "@apollo/server";
 import http from "http";
 import express from "express";
 import cors from "cors";
 import jwt from "jsonwebtoken";
+import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
-
-mongoose
-  .connect(config.MONGODB_URI)
-  .then(() => {
-    console.log("connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("error connection to MongoDB:", error.message);
-  });
 
 const getUserFromToken = async (token) => {
   if (token && token.startsWith("Bearer ")) {
@@ -31,6 +22,8 @@ const getUserFromToken = async (token) => {
 };
 
 const start = async () => {
+  await db.connect();
+
   const app = express();
   const httpServer = http.createServer(app);
 
