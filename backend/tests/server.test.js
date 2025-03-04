@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import assert from "node:assert";
 import request from "supertest";
 
@@ -6,6 +5,7 @@ import config from "../../config.js";
 import { emptyDataBase, addUsers } from "../populateDataBase.js";
 import server from "../server.js";
 import pubsub from "../pubsub.js";
+import db from "../db.js";
 
 const timeOut = 60000;
 const credentials = {
@@ -174,7 +174,7 @@ describe("Server tests", () => {
 
   afterAll(async () => {
     await testServer?.stop();
-    await mongoose.connection.close();
+    await db.disconnect();
     pubsub.close();
   }, timeOut);
 

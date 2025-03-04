@@ -1,15 +1,10 @@
-import config from "../config.js";
 import User from "./models/user.js";
 import Chat from "./models/chat.js";
 import users from "./dummyData/users.js";
 import chats from "./dummyData/chats.js";
+import db from "./db.js";
 
-import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-
-const MONGODB_URI = config.MONGODB_URI;
-
-console.log("connecting to", MONGODB_URI);
 
 export const emptyDataBase = async () => {
   console.log("emptying database...");
@@ -43,16 +38,14 @@ export const addChats = async () => {
 
 const main = async () => {
   try {
-    mongoose.connect(MONGODB_URI);
-    console.log("connected to MongoDB");
+    await db.connect();
     await emptyDataBase();
     await addUsers();
     await addChats();
-    console.log("close connection to MongoDB");
-    mongoose.connection.close();
   } catch (error) {
-    console.log("error connecting to MongoDB:", error.message);
+    console.error("Error in database operations:", error.message);
   }
+  await db.disconnect();
 };
 
 if (process.env.NODE_ENV !== "test") {

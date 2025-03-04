@@ -42,7 +42,7 @@ const typeDefs = `
     findChatById(chatId: ID!): Chat
     findChatByMembers(members: [ID!]!): Chat
     allChatsByUser(searchByTitle: String): [Chat!]!
-    checkIfGroupChatExists(title: String!): Boolean!
+    findGroupChatByTitle(title: String!): Chat
   }
 `;
 
@@ -97,17 +97,38 @@ const resolvers = {
           path: "messages",
           populate: { path: "isReadBy.member" },
         }),
-    allChatsByUser: async (root, args, context) => {
-      if (!context.currentUser) {
-        return [];
-      }
-
-      return Chat.find({
-        members: { $in: context.currentUser.id },
-        title: {
-          $regex: `(?i)${args.searchByTitle ? args.searchByTitle : ""}(?-i)`,
-        },
-      })
+    allChatsByUser: async (root, args, context) =>
+      !context.currentUser
+        ? []
+        : Chat.find({
+            members: { $in: context.currentUser.id },
+            title: {
+              $regex: args.searchByTitle
+                ? `(?i)${args.searchByTitle}(?-i)`
+                : "(?i)(?-i)",
+            },
+          })
+            .populate("admin")
+            .populate("members")
+            .populate({
+              path: "members",
+              populate: { path: "blockedContacts" },
+            })
+            .populate({
+              path: "messages",
+              populate: { path: "sender" },
+            })
+            .populate({
+              path: "messages.sender",
+              populate: { path: "blockedContacts" },
+            })
+            .populate({
+              path: "messages",
+              populate: { path: "isReadBy.member" },
+            })
+            .sort({ "messages.0.createdAt": "desc" }),
+    findGroupChatByTitle: async (root, args) =>
+      Chat.findOne({ title: args.title, isGroupChat: true })
         .populate("admin")
         .populate("members")
         .populate({
@@ -125,13 +146,7 @@ const resolvers = {
         .populate({
           path: "messages",
           populate: { path: "isReadBy.member" },
-        })
-        .sort({ "messages.0.createdAt": "desc" });
-    },
-    checkIfGroupChatExists: async (root, args) => {
-      const chatExist = await Chat.findOne({ title: args.title });
-      return chatExist ? true : false;
-    },
+        }),
   },
   Chat: {
     title: (parent, args, context) => {

@@ -136,10 +136,14 @@ export const FIND_CHAT_BY_MEMBERS = gql`
   ${CHAT_DETAILS}
 `;
 
-export const CHECK_IF_GROUP_CHAT_EXISTS = gql`
-  query CheckIfGroupChatExists($title: String!) {
-    checkIfGroupChatExists(title: $title)
+export const FIND_GROUP_CHAT_BY_TITLE = gql`
+  query FindGroupChatByTitle($title: String!) {
+    findGroupChatByTitle(title: $title) {
+      ...ChatDetails
+    }
   }
+
+  ${CHAT_DETAILS}
 `;
 
 export const CHECK_IF_USER_HAS_BLOCKED_YOU = gql`
