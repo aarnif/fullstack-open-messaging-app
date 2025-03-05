@@ -39,15 +39,45 @@ const typeDefs = `
   }
 
   extend type Query {
+    allChatsByUser(searchByTitle: String): [Chat!]!
     findChatById(chatId: ID!): Chat
     findChatByMembers(members: [ID!]!): Chat
-    allChatsByUser(searchByTitle: String): [Chat!]!
     findGroupChatByTitle(title: String!): Chat
   }
 `;
 
 const resolvers = {
   Query: {
+    allChatsByUser: async (root, args, context) =>
+      !context.currentUser
+        ? []
+        : Chat.find({
+            members: { $in: context.currentUser.id },
+            title: {
+              $regex: args.searchByTitle
+                ? `(?i)${args.searchByTitle}(?-i)`
+                : "(?i)(?-i)",
+            },
+          })
+            .populate("admin")
+            .populate("members")
+            .populate({
+              path: "members",
+              populate: { path: "blockedContacts" },
+            })
+            .populate({
+              path: "messages",
+              populate: { path: "sender" },
+            })
+            .populate({
+              path: "messages.sender",
+              populate: { path: "blockedContacts" },
+            })
+            .populate({
+              path: "messages",
+              populate: { path: "isReadBy.member" },
+            })
+            .sort({ "messages.0.createdAt": "desc" }),
     findChatById: async (root, args) =>
       Chat.findById(args.chatId)
         .populate("admin")
@@ -97,36 +127,6 @@ const resolvers = {
           path: "messages",
           populate: { path: "isReadBy.member" },
         }),
-    allChatsByUser: async (root, args, context) =>
-      !context.currentUser
-        ? []
-        : Chat.find({
-            members: { $in: context.currentUser.id },
-            title: {
-              $regex: args.searchByTitle
-                ? `(?i)${args.searchByTitle}(?-i)`
-                : "(?i)(?-i)",
-            },
-          })
-            .populate("admin")
-            .populate("members")
-            .populate({
-              path: "members",
-              populate: { path: "blockedContacts" },
-            })
-            .populate({
-              path: "messages",
-              populate: { path: "sender" },
-            })
-            .populate({
-              path: "messages.sender",
-              populate: { path: "blockedContacts" },
-            })
-            .populate({
-              path: "messages",
-              populate: { path: "isReadBy.member" },
-            })
-            .sort({ "messages.0.createdAt": "desc" }),
     findGroupChatByTitle: async (root, args) =>
       Chat.findOne({ title: args.title, isGroupChat: true })
         .populate("admin")
