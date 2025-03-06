@@ -51,50 +51,68 @@ const typeDefs = `
 const resolvers = {
   Mutation: {
     createUser: async (root, args) => {
-      const error = new GraphQLError({
-        extensions: {
-          code: "BAD_USER_INPUT",
-          invalidArgs: args.password,
-        },
-      });
+      const validateInput = () => {
+        const validationError = {
+          invalidArgs: [],
+          message: "",
+        };
+        if (args.username.length < 4) {
+          validationError.invalidArgs.push(args.username);
+          validationError.message =
+            "Username must be at least 4 characters long!";
+          return validationError;
+        } else if (args.password.length < 6) {
+          validationError.invalidArgs.push(args.password);
+          validationError.message =
+            "Password must be at least 6 characters long!";
+          return validationError;
+        } else if (args.password !== args.confirmPassword) {
+          validationError.invalidArgs.push(args.confirmPassword);
+          validationError.message = "Passwords do not match!";
+          return validationError;
+        }
 
-      if (args.username.length < 4) {
-        error.message = "Username must be at least 4 characters long!";
-        throw error;
+        return null;
+      };
+
+      const validationError = validateInput();
+      if (validationError) {
+        throw new GraphQLError(validationError.message, {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: validationError.invalidArgs,
+          },
+        });
       }
 
-      const checkIfUserNameExists = await User.findOne({
-        username: args.username,
-      });
-
-      if (checkIfUserNameExists) {
-        error.message = "Username already exists!";
-        throw error;
+      const existingUser = await User.findOne({ username: args.username });
+      if (existingUser) {
+        throw new GraphQLError("Username already exists!", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.username,
+          },
+        });
       }
-
-      if (args.password.length < 6) {
-        error.message = "Password must be at least 6 characters long!";
-        throw error;
-      }
-
-      if (args.password !== args.confirmPassword) {
-        error.message = "Passwords do not match!";
-        throw error;
-      }
-
-      const passwordHash = await bcrypt.hash(args.password, 10);
-      const user = new User({
-        username: args.username,
-        passwordHash: passwordHash,
-        name: args.username[0].toUpperCase() + args.username.slice(1), // Use capitalized username as default name
-      });
 
       try {
-        await user.save();
+        const passwordHash = await bcrypt.hash(args.password, 10);
+
+        const user = new User({
+          username: args.username,
+          passwordHash,
+          name: args.username[0].toUpperCase() + args.username.slice(1),
+        });
+
+        return await user.save();
       } catch (error) {
-        throw error;
+        throw new GraphQLError("Failed to create user", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
+          },
+        });
       }
-      return user;
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username });
