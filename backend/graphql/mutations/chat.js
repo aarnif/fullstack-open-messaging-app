@@ -189,19 +189,14 @@ const resolvers = {
 
       if (!chatToBeUpdated.isGroupChat) {
         const checkIfAnotherUserHasBlockedYou = chatToBeUpdated.members.find(
-          (member) => {
-            return (
-              member.username !== context.currentUser.username &&
-              member.blockedContacts.find(
-                (blockedContact) =>
-                  blockedContact.username === context.currentUser.username
-              )
-            );
-          }
+          (member) =>
+            member.username !== context.currentUser.username &&
+            member.blockedContacts.some(
+              (contact) => contact.username === context.currentUser.username
+            )
         );
 
         if (checkIfAnotherUserHasBlockedYou) {
-          console.log("Another user has blocked you!");
           throw new GraphQLError(
             `${checkIfAnotherUserHasBlockedYou.name} has blocked you!`,
             {
@@ -213,24 +208,24 @@ const resolvers = {
         }
       }
 
+      const trimmedContent = args.content.trim();
       let messageType = "message";
 
-      if (checkIfMessageIsSingleEmoji(args.content.trim())) {
+      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
         messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(args.content.trim())) {
+      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
         messageType = "singleImage";
       }
 
       const newMessage = {
         type: messageType,
         sender: context.currentUser.id,
-        content: args.content.trim(),
+        content: trimmedContent,
         image: args.input,
-        isReadBy: chatToBeUpdated.members.map((member) => {
-          return context.currentUser._id.equals(member._id)
-            ? { member: member._id, isRead: true }
-            : { member: member._id, isRead: false };
-        }),
+        isReadBy: chatToBeUpdated.members.map((member) => ({
+          member: member._id,
+          isRead: context.currentUser._id.equals(member._id),
+        })),
       };
 
       try {
@@ -259,17 +254,17 @@ const resolvers = {
             path: "messages",
             populate: { path: "isReadBy.member" },
           });
+
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
           messageToChatAdded: updatedChat,
         });
 
         return updatedChat;
       } catch (error) {
-        throw new GraphQLError("Adding message to chat failed", {
+        throw new GraphQLError("Failed to add message to chat", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
+            error: error.message,
           },
         });
       }
