@@ -292,23 +292,33 @@ const resolvers = {
         });
       }
 
+      if (
+        chatToBeDeleted.isGroupChat &&
+        !chatToBeDeleted.admin.equals(context.currentUser.id)
+      ) {
+        throw new GraphQLError("Not authorized to delete this chat", {
+          extensions: { code: "FORBIDDEN" },
+        });
+      }
+
       try {
         const removeChat = await Chat.findByIdAndDelete(args.chatId);
-        console.log("removeChat", removeChat);
-        const removeChatFromParticipatingUsersChats =
-          chatToBeDeleted.members.map(async (member) => {
-            const user = await User.findByIdAndUpdate(member, {
-              $pull: { chats: args.chatId },
-            });
-          });
-        pubsub.publish("CHAT_DELETED", { chatDeleted: removeChat.id });
+
+        await User.updateMany(
+          { _id: { $in: chatToBeDeleted.members.map((member) => member._id) } },
+          { $pull: { chats: args.chatId } }
+        );
+
+        pubsub.publish("CHAT_DELETED", {
+          chatDeleted: removeChat.id,
+        });
+
         return removeChat.id;
       } catch (error) {
-        throw new GraphQLError("Removing chat failed", {
+        throw new GraphQLError("Failed to delete chat", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
+            error: error.message,
           },
         });
       }
