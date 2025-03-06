@@ -346,8 +346,12 @@ const resolvers = {
         });
       }
 
+      if (!chatToBeUpdated.admin.equals(context.currentUser.id)) {
+        throw new GraphQLError("Not authorized to edit this chat", {
+          extensions: { code: "FORBIDDEN" },
+        });
+      }
       const notificationMessages = [];
-
       const groupChatEditedDetails = {
         updatedChat: null,
         removedMemberIds: [],
@@ -378,32 +382,27 @@ const resolvers = {
             content: "Chat image was updated",
           });
         } else if (key === "memberIds") {
-          const oldMembers = chatToBeUpdated.members.map((member) =>
+          const oldMembersIds = chatToBeUpdated.members.map((member) =>
             member._id.toString()
           );
-          const newMembers = args.memberIds;
-
-          const removedMembers = [...oldMembers].filter(
-            (member) => !newMembers.includes(member)
-          );
-          const addedMembers = [...newMembers].filter(
-            (member) => !oldMembers.includes(member)
+          const removedMemberIds = oldMembersIds.filter(
+            (id) => !args.memberIds.includes(id)
           );
 
-          const allMembersToFetch = [...removedMembers, ...addedMembers];
-
-          const users = await User.find({ _id: { $in: allMembersToFetch } });
-
-          const usersToRemove = users.filter((user) =>
-            removedMembers.includes(user._id.toString())
+          const addedMemberIds = args.memberIds.filter(
+            (id) => !oldMembersIds.includes(id)
           );
-          if (usersToRemove.length > 0) {
+
+          if (removedMemberIds.length > 0) {
+            const removedUsers = await User.find({
+              _id: { $in: removedMemberIds },
+            });
             await User.updateMany(
-              { _id: { $in: removedMembers } },
+              { _id: { $in: removedMemberIds } },
               { $pull: { chats: args.chatId } }
             );
 
-            usersToRemove.forEach((user) => {
+            removedUsers.forEach((user) => {
               notificationMessages.push({
                 type: "notification",
                 sender: context.currentUser.id,
@@ -411,21 +410,20 @@ const resolvers = {
               });
             });
 
-            groupChatEditedDetails.removedMemberIds = usersToRemove.map(
-              (user) => user._id.toString()
-            );
+            groupChatEditedDetails.removedMemberIds = removedMemberIds;
           }
 
-          const usersToAdd = users.filter((user) =>
-            addedMembers.includes(user._id.toString())
-          );
-          if (usersToAdd.length > 0) {
+          if (addedMemberIds.length > 0) {
+            const addedUsers = await User.find({
+              _id: { $in: addedMemberIds },
+            });
+
             await User.updateMany(
-              { _id: { $in: addedMembers } },
+              { _id: { $in: addedMemberIds } },
               { $addToSet: { chats: args.chatId } }
             );
 
-            usersToAdd.forEach((user) => {
+            addedUsers.forEach((user) => {
               notificationMessages.push({
                 type: "notification",
                 sender: context.currentUser.id,
@@ -433,9 +431,7 @@ const resolvers = {
               });
             });
 
-            groupChatEditedDetails.addedMemberIds = usersToAdd.map((user) =>
-              user._id.toString()
-            );
+            groupChatEditedDetails.addedMemberIds = addedMemberIds;
           }
         }
       }
