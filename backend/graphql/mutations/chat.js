@@ -479,7 +479,6 @@ const resolvers = {
         throw new GraphQLError("Updating chat failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
             error,
           },
         });
@@ -535,7 +534,6 @@ const resolvers = {
         throw new GraphQLError("Marking messages as read failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
             error,
           },
         });
@@ -551,54 +549,26 @@ const resolvers = {
         });
       }
 
-      const message = {
+      const exitMessage = {
         type: "notification",
         sender: context.currentUser.id,
         content: `${context.currentUser.name} left`,
       };
 
       try {
-        const updatedChats = await Chat.updateMany(
+        await Chat.updateMany(
+          { _id: { $in: args.chatIds } },
           {
-            _id: { $in: args.chatIds },
-          },
-          {
-            $push: {
-              messages: { $each: [message], $position: 0 },
-            },
+            $push: { messages: { $each: [exitMessage], $position: 0 } },
             $pull: { members: context.currentUser.id },
-          },
-          { new: true }
-        )
-          .populate("admin")
-          .populate("members")
-          .populate({
-            path: "members",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages.sender",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-        const removeChatFromCurrentUser = await User.findByIdAndUpdate(
-          context.currentUser.id,
-          {
-            $pull: { chats: { $in: args.chatIds } },
-          },
-          { new: true }
+          }
         );
 
-        const getUpdatedChats = await Chat.find({
-          _id: { $in: args.chatIds },
-        })
+        await User.findByIdAndUpdate(context.currentUser.id, {
+          $pull: { chats: { $in: args.chatIds } },
+        });
+
+        const updatedChats = await Chat.find({ _id: { $in: args.chatIds } })
           .populate("admin")
           .populate("members")
           .populate({
@@ -618,7 +588,7 @@ const resolvers = {
             populate: { path: "isReadBy.member" },
           });
 
-        getUpdatedChats.forEach((chat) => {
+        updatedChats.forEach((chat) => {
           pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
             messageToChatAdded: chat,
           });
@@ -633,10 +603,9 @@ const resolvers = {
 
         return args.chatIds;
       } catch (error) {
-        throw new GraphQLError("Removing chat members failed", {
+        throw new GraphQLError("Failed to leave group chats", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
             error,
           },
         });
