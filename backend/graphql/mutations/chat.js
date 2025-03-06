@@ -82,80 +82,83 @@ const chekcIfMessageIsImageWithoutText = (messageContent) => {
 const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
-      let chatTitle = args.title;
-      let chatImage = args.input;
-      let isGroupChat = false;
-      const userInputError = new GraphQLError({
-        extensions: {
-          code: "BAD_USER_INPUT",
-          invalidArgs: args,
-        },
-      });
-
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
           extensions: {
             code: "NOT_AUTHENTICATED",
           },
         });
-      } else if (args.memberIds.length < 2) {
-        userInputError.message = "At least two members are required!";
-        throw userInputError;
-      } else if (args.memberIds.length === 2) {
-        console.log("Creating private chat with two members");
-        const findTheOtherChatMember = args.memberIds.find(
-          (member) => member !== context.currentUser.id
+      }
+
+      if (args.memberIds.length < 2) {
+        throw new GraphQLError("At least two members are required", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args,
+          },
+        });
+      }
+
+      const isGroupChat = args.memberIds.length > 2;
+      let chatTitle = args.title;
+      let chatImage = args.input;
+
+      if (!isGroupChat) {
+        const otherMemberId = args.memberIds.find(
+          (id) => id !== context.currentUser.id
         );
-        const theOtherChatMember = await User.findById(findTheOtherChatMember);
-        chatTitle = theOtherChatMember.name;
-        chatImage = theOtherChatMember.image;
-      } else if (args.memberIds.length > 2 && !args.title) {
-        userInputError.message = "Chat title is required for group chats!";
-        throw userInputError;
-      } else {
-        console.log("Creating group chat");
-        isGroupChat = true;
+        const otherMember = await User.findById(otherMemberId);
+
+        if (!otherMember) {
+          throw new GraphQLError("One or more members not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+
+        chatTitle = otherMember.name;
+        chatImage = otherMember.image;
+      } else if (!args.title) {
+        throw new GraphQLError("Group chats require a title", {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
       }
 
       const newChat = new Chat({
         title: chatTitle,
         image: chatImage,
-        description: args.description,
-        isGroupChat: isGroupChat,
-        admin: context.currentUser,
+        description: args.description || "",
+        isGroupChat,
+        admin: context.currentUser.id,
         members: args.memberIds,
       });
 
       try {
         await newChat.save();
-        const addChatToParticipatingUsersChats = args.memberIds.map(
-          async (memberId) => {
-            await User.findByIdAndUpdate(memberId, {
-              $push: { chats: newChat },
-            });
-          }
+
+        await User.updateMany(
+          { _id: { $in: args.memberIds } },
+          { $push: { chats: newChat._id } }
         );
+
+        const createdChat = await Chat.findById(newChat._id)
+          .populate("admin")
+          .populate("members")
+          .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          });
+
+        pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
+
+        return createdChat;
       } catch (error) {
-        throw new GraphQLError("Creating chat failed", {
+        throw new GraphQLError("Failed to create chat", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
+            error: error.message,
           },
         });
       }
-
-      const createdChat = await Chat.findById(newChat._id)
-        .populate("admin")
-        .populate("members")
-        .populate({
-          path: "members",
-          populate: { path: "blockedContacts" },
-        });
-
-      pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
-
-      return createdChat;
     },
 
     addMessageToChat: async (root, args, context) => {
