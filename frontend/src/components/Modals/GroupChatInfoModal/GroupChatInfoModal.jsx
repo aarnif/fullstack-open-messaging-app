@@ -88,15 +88,15 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
               onClick={() =>
                 modal(
                   "danger",
+                  "Leave Chat",
                   "Are you sure you want to leave the chat?",
+                  "Leave",
                   handleLeaveChat
                 )
               }
-              className="mb-0 sm:mb-2 w-full flex-grow max-h-[60px] p-2 flex justify-center items-center border-2 border-slate-200 bg-slate-200 rounded-xl"
+              className="mb-0 sm:mb-2 w-full flex-grow max-h-[60px] p-2 flex justify-center items-center text-base sm:text-lg font-bold text-slate-700 border-2 border-slate-200 bg-slate-200 rounded-xl"
             >
-              <div className="text-base sm:text-lg font-bold text-slate-700">
-                Leave Chat
-              </div>
+              Leave Chat
             </button>
           </div>
         )}
