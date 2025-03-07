@@ -19,7 +19,7 @@ const userSchema = new Schema({
   },
   about: {
     type: String,
-    default: "",
+    default: "Hey there! I'm using this app!",
   },
   image: {
     thumbnail: {
@@ -30,11 +30,6 @@ const userSchema = new Schema({
       type: String,
       default: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
     },
-  },
-  status: {
-    type: String,
-    default: "offline",
-    enum: ["online", "offline"],
   },
   settings: {
     theme: {
