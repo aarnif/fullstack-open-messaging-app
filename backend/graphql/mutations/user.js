@@ -209,14 +209,31 @@ const resolvers = {
         });
       }
 
-      const removeContactFromUser = await User.findByIdAndUpdate(
-        context.currentUser,
-        {
-          $pull: { contacts: args.contactId },
-        }
-      );
+      const currentUser = await User.findById(context.currentUser.id);
 
-      return args.contactId;
+      if (!currentUser.contacts.includes(args.contactId)) {
+        throw new GraphQLError("Contact is not in your contacts", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.contactId,
+          },
+        });
+      }
+
+      try {
+        await User.findByIdAndUpdate(currentUser._id, {
+          $pull: { contacts: args.contactId },
+        });
+
+        return args.contactId;
+      } catch (error) {
+        throw new GraphQLError("Failed to remove contact!", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error,
+          },
+        });
+      }
     },
     editProfile: async (root, args, context) => {
       if (!context.currentUser) {
