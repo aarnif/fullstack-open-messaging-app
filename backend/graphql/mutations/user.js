@@ -51,63 +51,80 @@ const typeDefs = `
 const resolvers = {
   Mutation: {
     createUser: async (root, args) => {
-      const error = new GraphQLError({
-        extensions: {
-          code: "BAD_USER_INPUT",
-          invalidArgs: args.password,
-        },
-      });
+      const validateInput = () => {
+        const validationError = {
+          invalidArgs: [],
+          message: "",
+        };
+        if (args.username.length < 4) {
+          validationError.invalidArgs.push(args.username);
+          validationError.message =
+            "Username must be at least 4 characters long!";
+          return validationError;
+        } else if (args.password.length < 6) {
+          validationError.invalidArgs.push(args.password);
+          validationError.message =
+            "Password must be at least 6 characters long!";
+          return validationError;
+        } else if (args.password !== args.confirmPassword) {
+          validationError.invalidArgs.push(args.confirmPassword);
+          validationError.message = "Passwords do not match!";
+          return validationError;
+        }
 
-      if (args.username.length < 4) {
-        error.message = "Username must be at least 4 characters long!";
-        throw error;
+        return null;
+      };
+
+      const validationError = validateInput();
+      if (validationError) {
+        throw new GraphQLError(validationError.message, {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: validationError.invalidArgs,
+          },
+        });
       }
 
-      const checkIfUserNameExists = await User.findOne({
-        username: args.username,
-      });
-
-      if (checkIfUserNameExists) {
-        error.message = "Username already exists!";
-        throw error;
+      const existingUser = await User.findOne({ username: args.username });
+      if (existingUser) {
+        throw new GraphQLError("Username already exists!", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.username,
+          },
+        });
       }
-
-      if (args.password.length < 6) {
-        error.message = "Password must be at least 6 characters long!";
-        throw error;
-      }
-
-      if (args.password !== args.confirmPassword) {
-        error.message = "Passwords do not match!";
-        throw error;
-      }
-
-      const passwordHash = await bcrypt.hash(args.password, 10);
-      const user = new User({
-        username: args.username,
-        passwordHash: passwordHash,
-        name: args.username[0].toUpperCase() + args.username.slice(1), // Use capitalized username as default name
-      });
 
       try {
-        await user.save();
+        const passwordHash = await bcrypt.hash(args.password, 10);
+
+        const user = new User({
+          username: args.username,
+          passwordHash,
+          name: args.username[0].toUpperCase() + args.username.slice(1),
+        });
+
+        return await user.save();
       } catch (error) {
-        throw error;
+        throw new GraphQLError("Failed to create user", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
+          },
+        });
       }
-      return user;
     },
     login: async (root, args) => {
-      const user = await User.findOne({ username: args.username });
-      const error = new GraphQLError("Invalid username or password!", {
+      const authError = new GraphQLError("Invalid username or password!", {
         extensions: {
           code: "BAD_USER_INPUT",
-          invalidArgs: args,
         },
       });
 
+      const user = await User.findOne({ username: args.username });
+
       if (!user) {
-        console.log("Invalid username!");
-        throw error;
+        throw authError;
       }
 
       const passwordMatch = await bcrypt.compare(
@@ -116,16 +133,24 @@ const resolvers = {
       );
 
       if (!passwordMatch) {
-        console.log("Password does not match!");
-        throw error;
+        throw authError;
       }
 
-      const userForToken = {
-        username: user.username,
-        id: user._id,
-      };
+      try {
+        const userForToken = {
+          username: user.username,
+          id: user._id,
+        };
 
-      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+        return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+      } catch (error) {
+        throw new GraphQLError("Failed to login!", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
+          },
+        });
+      }
     },
     logout: async (root, args, context) => {
       context.currentUser = null;
@@ -151,20 +176,29 @@ const resolvers = {
         });
       }
 
-      const user = await User.findByIdAndUpdate(
-        context.currentUser,
-        {
-          $addToSet: { contacts: { $each: args.userIds } },
-        },
-        { new: true }
-      )
-        .populate("contacts")
-        .populate({
-          path: "contacts",
-          populate: { path: "blockedContacts" },
-        });
+      try {
+        const user = await User.findByIdAndUpdate(
+          context.currentUser,
+          {
+            $addToSet: { contacts: { $each: args.userIds } },
+          },
+          { new: true }
+        )
+          .populate("contacts")
+          .populate({
+            path: "contacts",
+            populate: { path: "blockedContacts" },
+          });
 
-      return user;
+        return user;
+      } catch (error) {
+        throw new GraphQLError("Failed to add contacts!", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error,
+          },
+        });
+      }
     },
     removeContact: async (root, args, context) => {
       if (!context.currentUser) {
@@ -175,14 +209,31 @@ const resolvers = {
         });
       }
 
-      const removeContactFromUser = await User.findByIdAndUpdate(
-        context.currentUser,
-        {
-          $pull: { contacts: args.contactId },
-        }
-      );
+      const currentUser = await User.findById(context.currentUser.id);
 
-      return args.contactId;
+      if (!currentUser.contacts.includes(args.contactId)) {
+        throw new GraphQLError("Contact is not in your contacts", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.contactId,
+          },
+        });
+      }
+
+      try {
+        await User.findByIdAndUpdate(currentUser._id, {
+          $pull: { contacts: args.contactId },
+        });
+
+        return args.contactId;
+      } catch (error) {
+        throw new GraphQLError("Failed to remove contact!", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error,
+          },
+        });
+      }
     },
     editProfile: async (root, args, context) => {
       if (!context.currentUser) {
@@ -213,16 +264,24 @@ const resolvers = {
           },
         });
       }
+      try {
+        const updatedUser = await User.findByIdAndUpdate(
+          context.currentUser,
+          { $set: { settings: args } },
+          {
+            new: true,
+          }
+        );
 
-      const updatedUser = await User.findByIdAndUpdate(
-        context.currentUser,
-        { $set: { settings: args } },
-        {
-          new: true,
-        }
-      );
-
-      return updatedUser;
+        return updatedUser;
+      } catch (error) {
+        throw new GraphQLError("Failed to update settings!", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error,
+          },
+        });
+      }
     },
     blockOrUnBlockContact: async (root, args, context) => {
       if (!context.currentUser) {
@@ -233,36 +292,73 @@ const resolvers = {
         });
       }
 
-      let result = null;
+      const currentUser = await User.findById(context.currentUser.id);
 
-      const checkIfContactBlocked =
-        context.currentUser.blockedContacts.includes(args.contactId);
-
-      const userToBeBlockedOrUnBlocked = await User.findById(
-        args.contactId
-      ).populate("blockedContacts");
-
-      if (checkIfContactBlocked) {
-        await User.findByIdAndUpdate(context.currentUser, {
-          $pull: { blockedContacts: args.contactId },
-        });
-        result = false;
-      } else {
-        await User.findByIdAndUpdate(context.currentUser, {
-          $addToSet: { blockedContacts: args.contactId },
-        });
-        result = true;
+      if (!currentUser.contacts.includes(args.contactId)) {
+        throw new GraphQLError(
+          "The specified contact is not in your contact list.",
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.contactId,
+            },
+          }
+        );
       }
 
-      pubsub.publish("CONTACT_BLOCKED_OR_UNBLOCKED", {
-        contactBlockedOrUnBlocked: {
-          isBlocked: result,
-          actor: context.currentUser.id,
-          target: userToBeBlockedOrUnBlocked,
-        },
-      });
+      try {
+        const contactToBeBlockedOrUnblocked = await User.findById(
+          args.contactId
+        ).populate("blockedContacts");
 
-      return result;
+        if (!contactToBeBlockedOrUnblocked) {
+          throw new GraphQLError("Contact not found", {
+            extensions: {
+              code: "NOT_FOUND",
+              invalidArgs: args.contactId,
+            },
+          });
+        }
+
+        const checkIfContactIsAlreadyBlocked =
+          currentUser.blockedContacts.includes(args.contactId);
+        let updatedUser;
+
+        if (checkIfContactIsAlreadyBlocked) {
+          updatedUser = await User.findByIdAndUpdate(
+            currentUser._id,
+            { $pull: { blockedContacts: args.contactId } },
+            { new: true }
+          );
+        } else {
+          updatedUser = await User.findByIdAndUpdate(
+            currentUser._id,
+            { $addToSet: { blockedContacts: args.contactId } },
+            { new: true }
+          );
+        }
+
+        const newBlockedState = updatedUser.blockedContacts.includes(
+          args.contactId
+        );
+
+        pubsub.publish("CONTACT_BLOCKED_OR_UNBLOCKED", {
+          contactBlockedOrUnBlocked: {
+            isBlocked: newBlockedState,
+            actor: currentUser._id.toString(),
+            target: contactToBeBlockedOrUnblocked,
+          },
+        });
+
+        return newBlockedState;
+      } catch (error) {
+        throw new GraphQLError("Failed to block/unblock contact", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
+          },
+        });
+      }
     },
   },
   Subscription: {

@@ -82,80 +82,83 @@ const chekcIfMessageIsImageWithoutText = (messageContent) => {
 const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
-      let chatTitle = args.title;
-      let chatImage = args.input;
-      let isGroupChat = false;
-      const userInputError = new GraphQLError({
-        extensions: {
-          code: "BAD_USER_INPUT",
-          invalidArgs: args,
-        },
-      });
-
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
           extensions: {
             code: "NOT_AUTHENTICATED",
           },
         });
-      } else if (args.memberIds.length < 2) {
-        userInputError.message = "At least two members are required!";
-        throw userInputError;
-      } else if (args.memberIds.length === 2) {
-        console.log("Creating private chat with two members");
-        const findTheOtherChatMember = args.memberIds.find(
-          (member) => member !== context.currentUser.id
+      }
+
+      if (args.memberIds.length < 2) {
+        throw new GraphQLError("At least two members are required", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args,
+          },
+        });
+      }
+
+      const isGroupChat = args.memberIds.length > 2;
+      let chatTitle = args.title;
+      let chatImage = args.input;
+
+      if (!isGroupChat) {
+        const otherMemberId = args.memberIds.find(
+          (id) => id !== context.currentUser.id
         );
-        const theOtherChatMember = await User.findById(findTheOtherChatMember);
-        chatTitle = theOtherChatMember.name;
-        chatImage = theOtherChatMember.image;
-      } else if (args.memberIds.length > 2 && !args.title) {
-        userInputError.message = "Chat title is required for group chats!";
-        throw userInputError;
-      } else {
-        console.log("Creating group chat");
-        isGroupChat = true;
+        const otherMember = await User.findById(otherMemberId);
+
+        if (!otherMember) {
+          throw new GraphQLError("One or more members not found", {
+            extensions: { code: "NOT_FOUND" },
+          });
+        }
+
+        chatTitle = otherMember.name;
+        chatImage = otherMember.image;
+      } else if (!args.title) {
+        throw new GraphQLError("Group chats require a title", {
+          extensions: { code: "BAD_USER_INPUT" },
+        });
       }
 
       const newChat = new Chat({
         title: chatTitle,
         image: chatImage,
-        description: args.description,
-        isGroupChat: isGroupChat,
-        admin: context.currentUser,
+        description: args.description || "",
+        isGroupChat,
+        admin: context.currentUser.id,
         members: args.memberIds,
       });
 
       try {
         await newChat.save();
-        const addChatToParticipatingUsersChats = args.memberIds.map(
-          async (memberId) => {
-            await User.findByIdAndUpdate(memberId, {
-              $push: { chats: newChat },
-            });
-          }
+
+        await User.updateMany(
+          { _id: { $in: args.memberIds } },
+          { $push: { chats: newChat._id } }
         );
+
+        const createdChat = await Chat.findById(newChat._id)
+          .populate("admin")
+          .populate("members")
+          .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          });
+
+        pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
+
+        return createdChat;
       } catch (error) {
-        throw new GraphQLError("Creating chat failed", {
+        throw new GraphQLError("Failed to create chat", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
+            error: error.message,
           },
         });
       }
-
-      const createdChat = await Chat.findById(newChat._id)
-        .populate("admin")
-        .populate("members")
-        .populate({
-          path: "members",
-          populate: { path: "blockedContacts" },
-        });
-
-      pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
-
-      return createdChat;
     },
 
     addMessageToChat: async (root, args, context) => {
@@ -186,19 +189,14 @@ const resolvers = {
 
       if (!chatToBeUpdated.isGroupChat) {
         const checkIfAnotherUserHasBlockedYou = chatToBeUpdated.members.find(
-          (member) => {
-            return (
-              member.username !== context.currentUser.username &&
-              member.blockedContacts.find(
-                (blockedContact) =>
-                  blockedContact.username === context.currentUser.username
-              )
-            );
-          }
+          (member) =>
+            member.username !== context.currentUser.username &&
+            member.blockedContacts.some(
+              (contact) => contact.username === context.currentUser.username
+            )
         );
 
         if (checkIfAnotherUserHasBlockedYou) {
-          console.log("Another user has blocked you!");
           throw new GraphQLError(
             `${checkIfAnotherUserHasBlockedYou.name} has blocked you!`,
             {
@@ -210,24 +208,24 @@ const resolvers = {
         }
       }
 
+      const trimmedContent = args.content.trim();
       let messageType = "message";
 
-      if (checkIfMessageIsSingleEmoji(args.content.trim())) {
+      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
         messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(args.content.trim())) {
+      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
         messageType = "singleImage";
       }
 
       const newMessage = {
         type: messageType,
         sender: context.currentUser.id,
-        content: args.content.trim(),
+        content: trimmedContent,
         image: args.input,
-        isReadBy: chatToBeUpdated.members.map((member) => {
-          return context.currentUser._id.equals(member._id)
-            ? { member: member._id, isRead: true }
-            : { member: member._id, isRead: false };
-        }),
+        isReadBy: chatToBeUpdated.members.map((member) => ({
+          member: member._id,
+          isRead: context.currentUser._id.equals(member._id),
+        })),
       };
 
       try {
@@ -256,17 +254,17 @@ const resolvers = {
             path: "messages",
             populate: { path: "isReadBy.member" },
           });
+
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
           messageToChatAdded: updatedChat,
         });
 
         return updatedChat;
       } catch (error) {
-        throw new GraphQLError("Adding message to chat failed", {
+        throw new GraphQLError("Failed to add message to chat", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
+            error: error.message,
           },
         });
       }
@@ -294,23 +292,33 @@ const resolvers = {
         });
       }
 
+      if (
+        chatToBeDeleted.isGroupChat &&
+        !chatToBeDeleted.admin.equals(context.currentUser.id)
+      ) {
+        throw new GraphQLError("Not authorized to delete this chat", {
+          extensions: { code: "FORBIDDEN" },
+        });
+      }
+
       try {
         const removeChat = await Chat.findByIdAndDelete(args.chatId);
-        console.log("removeChat", removeChat);
-        const removeChatFromParticipatingUsersChats =
-          chatToBeDeleted.members.map(async (member) => {
-            const user = await User.findByIdAndUpdate(member, {
-              $pull: { chats: args.chatId },
-            });
-          });
-        pubsub.publish("CHAT_DELETED", { chatDeleted: removeChat.id });
+
+        await User.updateMany(
+          { _id: { $in: chatToBeDeleted.members.map((member) => member._id) } },
+          { $pull: { chats: args.chatId } }
+        );
+
+        pubsub.publish("CHAT_DELETED", {
+          chatDeleted: removeChat.id,
+        });
+
         return removeChat.id;
       } catch (error) {
-        throw new GraphQLError("Removing chat failed", {
+        throw new GraphQLError("Failed to delete chat", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
-            error,
+            error: error.message,
           },
         });
       }
@@ -338,8 +346,12 @@ const resolvers = {
         });
       }
 
+      if (!chatToBeUpdated.admin.equals(context.currentUser.id)) {
+        throw new GraphQLError("Not authorized to edit this chat", {
+          extensions: { code: "FORBIDDEN" },
+        });
+      }
       const notificationMessages = [];
-
       const groupChatEditedDetails = {
         updatedChat: null,
         removedMemberIds: [],
@@ -370,32 +382,27 @@ const resolvers = {
             content: "Chat image was updated",
           });
         } else if (key === "memberIds") {
-          const oldMembers = chatToBeUpdated.members.map((member) =>
+          const oldMembersIds = chatToBeUpdated.members.map((member) =>
             member._id.toString()
           );
-          const newMembers = args.memberIds;
-
-          const removedMembers = [...oldMembers].filter(
-            (member) => !newMembers.includes(member)
-          );
-          const addedMembers = [...newMembers].filter(
-            (member) => !oldMembers.includes(member)
+          const removedMemberIds = oldMembersIds.filter(
+            (id) => !args.memberIds.includes(id)
           );
 
-          const allMembersToFetch = [...removedMembers, ...addedMembers];
-
-          const users = await User.find({ _id: { $in: allMembersToFetch } });
-
-          const usersToRemove = users.filter((user) =>
-            removedMembers.includes(user._id.toString())
+          const addedMemberIds = args.memberIds.filter(
+            (id) => !oldMembersIds.includes(id)
           );
-          if (usersToRemove.length > 0) {
+
+          if (removedMemberIds.length > 0) {
+            const removedUsers = await User.find({
+              _id: { $in: removedMemberIds },
+            });
             await User.updateMany(
-              { _id: { $in: removedMembers } },
+              { _id: { $in: removedMemberIds } },
               { $pull: { chats: args.chatId } }
             );
 
-            usersToRemove.forEach((user) => {
+            removedUsers.forEach((user) => {
               notificationMessages.push({
                 type: "notification",
                 sender: context.currentUser.id,
@@ -403,21 +410,20 @@ const resolvers = {
               });
             });
 
-            groupChatEditedDetails.removedMemberIds = usersToRemove.map(
-              (user) => user._id.toString()
-            );
+            groupChatEditedDetails.removedMemberIds = removedMemberIds;
           }
 
-          const usersToAdd = users.filter((user) =>
-            addedMembers.includes(user._id.toString())
-          );
-          if (usersToAdd.length > 0) {
+          if (addedMemberIds.length > 0) {
+            const addedUsers = await User.find({
+              _id: { $in: addedMemberIds },
+            });
+
             await User.updateMany(
-              { _id: { $in: addedMembers } },
+              { _id: { $in: addedMemberIds } },
               { $addToSet: { chats: args.chatId } }
             );
 
-            usersToAdd.forEach((user) => {
+            addedUsers.forEach((user) => {
               notificationMessages.push({
                 type: "notification",
                 sender: context.currentUser.id,
@@ -425,9 +431,7 @@ const resolvers = {
               });
             });
 
-            groupChatEditedDetails.addedMemberIds = usersToAdd.map((user) =>
-              user._id.toString()
-            );
+            groupChatEditedDetails.addedMemberIds = addedMemberIds;
           }
         }
       }
@@ -475,7 +479,6 @@ const resolvers = {
         throw new GraphQLError("Updating chat failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
             error,
           },
         });
@@ -531,7 +534,6 @@ const resolvers = {
         throw new GraphQLError("Marking messages as read failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
             error,
           },
         });
@@ -547,54 +549,26 @@ const resolvers = {
         });
       }
 
-      const message = {
+      const exitMessage = {
         type: "notification",
         sender: context.currentUser.id,
         content: `${context.currentUser.name} left`,
       };
 
       try {
-        const updatedChats = await Chat.updateMany(
+        await Chat.updateMany(
+          { _id: { $in: args.chatIds } },
           {
-            _id: { $in: args.chatIds },
-          },
-          {
-            $push: {
-              messages: { $each: [message], $position: 0 },
-            },
+            $push: { messages: { $each: [exitMessage], $position: 0 } },
             $pull: { members: context.currentUser.id },
-          },
-          { new: true }
-        )
-          .populate("admin")
-          .populate("members")
-          .populate({
-            path: "members",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages.sender",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-        const removeChatFromCurrentUser = await User.findByIdAndUpdate(
-          context.currentUser.id,
-          {
-            $pull: { chats: { $in: args.chatIds } },
-          },
-          { new: true }
+          }
         );
 
-        const getUpdatedChats = await Chat.find({
-          _id: { $in: args.chatIds },
-        })
+        await User.findByIdAndUpdate(context.currentUser.id, {
+          $pull: { chats: { $in: args.chatIds } },
+        });
+
+        const updatedChats = await Chat.find({ _id: { $in: args.chatIds } })
           .populate("admin")
           .populate("members")
           .populate({
@@ -614,7 +588,7 @@ const resolvers = {
             populate: { path: "isReadBy.member" },
           });
 
-        getUpdatedChats.forEach((chat) => {
+        updatedChats.forEach((chat) => {
           pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
             messageToChatAdded: chat,
           });
@@ -629,10 +603,9 @@ const resolvers = {
 
         return args.chatIds;
       } catch (error) {
-        throw new GraphQLError("Removing chat members failed", {
+        throw new GraphQLError("Failed to leave group chats", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            invalidArgs: args,
             error,
           },
         });

@@ -30,7 +30,7 @@ const typeDefs = `
 
   extend type Query {
     findUserById(id: ID!): User
-    allContactsByUser(searchByName: String): User
+    allContactsByUser(searchByName: String): User!
     allContactsExceptByUser(searchByName: String): [User!]!
     checkIfUserHasBlockedYou(userId: ID!): Boolean
     me: User
@@ -56,62 +56,64 @@ const resolvers = {
             },
           });
         }),
-    allContactsByUser: async (root, args, context) =>
-      User.findById(context.currentUser)
+    allContactsByUser: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const searchRegex = args.searchByName || "";
+
+      return User.findById(context.currentUser)
         .populate({
           path: "contacts",
           match: {
             $or: [
-              {
-                name: {
-                  $regex: args.searchByName ? `${args.searchByName}` : "",
-                  $options: "i",
-                },
-              },
-              {
-                username: {
-                  $regex: args.searchByName ? `${args.searchByName}` : "",
-                  $options: "i",
-                },
-              },
+              { name: { $regex: searchRegex, $options: "i" } },
+              { username: { $regex: searchRegex, $options: "i" } },
             ],
           },
-          options: {
-            sort: { name: "asc", username: "asc" },
-          },
+          options: { sort: { name: "asc", username: "asc" } },
           populate: { path: "blockedContacts" },
         })
-        .populate("blockedContacts"),
-    allContactsExceptByUser: async (root, args, context) =>
-      User.find({
-        $and: [
-          {
-            _id: {
-              $ne: context.currentUser,
-            },
+        .populate("blockedContacts");
+    },
+    allContactsExceptByUser: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
           },
-          {
-            _id: {
-              $nin: context.currentUser.contacts,
-            },
-          },
-        ],
+        });
+      }
+
+      const searchTerm = args.searchByName || "";
+
+      return User.find({
+        _id: {
+          $ne: context.currentUser.id,
+          $nin: context.currentUser.contacts,
+        },
         $or: [
-          {
-            name: {
-              $regex: `(?i)${args.searchByName}(?-i)`,
-            },
-          },
-          {
-            username: {
-              $regex: `(?i)${args.searchByName}(?-i)`,
-            },
-          },
+          { name: { $regex: searchTerm, $options: "i" } },
+          { username: { $regex: searchTerm, $options: "i" } },
         ],
       })
         .populate("blockedContacts")
-        .sort({ name: "asc", username: "asc" }),
+        .sort({ name: "asc", username: "asc" });
+    },
     checkIfUserHasBlockedYou: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
       const user = await User.findById(args.userId).populate("blockedContacts");
       return user.blockedContacts.includes(context.currentUser.id);
     },
