@@ -264,16 +264,24 @@ const resolvers = {
           },
         });
       }
+      try {
+        const updatedUser = await User.findByIdAndUpdate(
+          context.currentUser,
+          { $set: { settings: args } },
+          {
+            new: true,
+          }
+        );
 
-      const updatedUser = await User.findByIdAndUpdate(
-        context.currentUser,
-        { $set: { settings: args } },
-        {
-          new: true,
-        }
-      );
-
-      return updatedUser;
+        return updatedUser;
+      } catch (error) {
+        throw new GraphQLError("Failed to update settings!", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error,
+          },
+        });
+      }
     },
     blockOrUnBlockContact: async (root, args, context) => {
       if (!context.currentUser) {
