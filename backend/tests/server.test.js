@@ -431,6 +431,74 @@ describe("Server tests", () => {
       expect(JSON.parse(response.text).errors).toBeUndefined();
       expect(response.body.data.removeContact).toBe(contactDetails[1].id);
     });
+
+    it("Find user by id", async () => {
+      await createUser(credentials);
+      await loginUser(credentials);
+
+      const response = await requestData(
+        {
+          query: `query FindUserById($id: ID!) {
+            findUserById(id: $id) {
+              id
+              username
+              blockedContacts {
+                id
+              }
+            }
+          }`,
+          variables: { id: credentials.id },
+        },
+        credentials.token
+      );
+
+      expect(JSON.parse(response.text).errors).toBeUndefined();
+      expect(response.body.data.findUserById.username).toBe(
+        credentials.username
+      );
+    });
+
+    it("Returns null for 'me' when not logged in", async () => {
+      const response = await requestData(
+        {
+          query: `query Me {
+            me {
+              id
+              username
+            }
+          }`,
+        },
+        ""
+      );
+
+      expect(JSON.parse(response.text).errors).toBeUndefined();
+      expect(response.body.data.me).toBe(null);
+    });
+
+    it("Edit profile", async () => {
+      await createUser(credentials);
+      await loginUser(credentials);
+      const newName = "Updated Name";
+      const newAbout = "Updated about text";
+      const response = await requestData(
+        {
+          query: `mutation EditProfile($name: String, $about: String) {
+            editProfile(name: $name, about: $about) {
+              id
+              username
+              name
+              about
+            }
+          }`,
+          variables: { name: newName, about: newAbout },
+        },
+        credentials.token
+      );
+
+      expect(JSON.parse(response.text).errors).toBeUndefined();
+      expect(response.body.data.editProfile.name).toBe(newName);
+      expect(response.body.data.editProfile.about).toBe(newAbout);
+    });
   });
 
   describe("Chat tests", () => {
