@@ -67,138 +67,55 @@ const App = () => {
         {loading ? (
           <LoadingPage key="loading-page" />
         ) : (
-          <motion.div
-            key="front-page"
-            className="h-screen flex flex-col bg-light dark:bg-dark"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { delay: 0.5 } }}
-          >
-            <Header />
-            <Routes>
-              <Route path="/" element={<Navigate to="/chats" replace />} />
-              <Route
-                path="/signin"
-                element={
-                  data?.me ? (
-                    <Navigate to="/chats" replace />
-                  ) : (
-                    <SignIn setActiveMenuItem={setActiveMenuItem} />
-                  )
-                }
-              />
-              <Route
-                path="/signup"
-                element={
-                  data?.me ? (
-                    <Navigate to="/chats" replace />
-                  ) : (
-                    <SignUp setActiveMenuItem={setActiveMenuItem} />
-                  )
-                }
-              />
-              <Route element={<ProtectedRoutes user={data?.me} />}>
+          <div className="bg-light dark:bg-dark">
+            <motion.div
+              key="front-page"
+              className="h-screen flex flex-col"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: 0.5 } }}
+            >
+              <Header />
+              <Routes>
+                <Route path="/" element={<Navigate to="/chats" replace />} />
                 <Route
-                  path="/"
+                  path="/signin"
                   element={
-                    <Home
-                      user={data?.me}
-                      activeMenuItem={activeMenuItem}
-                      setActiveMenuItem={setActiveMenuItem}
-                      setActiveListMenuComponent={setActiveListMenuComponent}
-                      setActiveChatOrContactId={setActiveChatOrContactId}
-                    />
+                    data?.me ? (
+                      <Navigate to="/chats" replace />
+                    ) : (
+                      <SignIn setActiveMenuItem={setActiveMenuItem} />
+                    )
                   }
-                >
+                />
+                <Route
+                  path="/signup"
+                  element={
+                    data?.me ? (
+                      <Navigate to="/chats" replace />
+                    ) : (
+                      <SignUp setActiveMenuItem={setActiveMenuItem} />
+                    )
+                  }
+                />
+                <Route element={<ProtectedRoutes user={data?.me} />}>
                   <Route
-                    path="/chats"
+                    path="/"
                     element={
-                      <Chats
+                      <Home
                         user={data?.me}
-                        menuComponent={
-                          <ChatsMenu
-                            user={data?.me}
-                            handleClickNewChat={handleClickNewChat}
-                            activeChatOrContactId={activeChatOrContactId}
-                            setActiveChatOrContactId={setActiveChatOrContactId}
-                          />
-                        }
-                      />
-                    }
-                  />
-                  <Route
-                    path="/chats/:id"
-                    element={
-                      <Chat
-                        user={data?.me}
+                        activeMenuItem={activeMenuItem}
                         setActiveMenuItem={setActiveMenuItem}
+                        setActiveListMenuComponent={setActiveListMenuComponent}
                         setActiveChatOrContactId={setActiveChatOrContactId}
-                        menuComponent={
-                          <ChatsMenu
-                            user={data?.me}
-                            handleClickNewChat={handleClickNewChat}
-                            activeChatOrContactId={activeChatOrContactId}
-                            setActiveChatOrContactId={setActiveChatOrContactId}
-                          />
-                        }
                       />
                     }
-                  />
-                  <Route
-                    path="/chats/new"
-                    element={
-                      <NewChat
-                        user={data?.me}
-                        setActiveMenuItem={setActiveMenuItem}
-                        menuComponent={
-                          <ChatsMenu
-                            user={data?.me}
-                            handleClickNewChat={handleClickNewChat}
-                            activeChatOrContactId={activeChatOrContactId}
-                            setActiveChatOrContactId={setActiveChatOrContactId}
-                          />
-                        }
-                      />
-                    }
-                  />
-                  <Route
-                    path="/contacts"
-                    element={
-                      <Contacts
-                        menuComponent={
-                          <ContactsMenu
-                            user={data?.me}
-                            handleClickNewContact={handleClickNewContact}
-                            activeChatOrContactId={activeChatOrContactId}
-                            setActiveChatOrContactId={setActiveChatOrContactId}
-                          />
-                        }
-                      />
-                    }
-                  />
-                  <Route
-                    path="/contacts/:id"
-                    element={
-                      <Contact
-                        user={data?.me}
-                        setActiveMenuItem={setActiveMenuItem}
-                        menuComponent={
-                          <ContactsMenu
-                            user={data?.me}
-                            handleClickNewContact={handleClickNewContact}
-                            activeChatOrContactId={activeChatOrContactId}
-                            setActiveChatOrContactId={setActiveChatOrContactId}
-                          />
-                        }
-                      />
-                    }
-                  />
-                  <Route
-                    path="/profile"
-                    element={
-                      <Profile
-                        user={data?.me}
-                        menuComponent={
-                          activeListMenuComponent === "chats" ? (
+                  >
+                    <Route
+                      path="/chats"
+                      element={
+                        <Chats
+                          user={data?.me}
+                          menuComponent={
                             <ChatsMenu
                               user={data?.me}
                               handleClickNewChat={handleClickNewChat}
@@ -207,27 +124,18 @@ const App = () => {
                                 setActiveChatOrContactId
                               }
                             />
-                          ) : (
-                            <ContactsMenu
-                              user={data?.me}
-                              handleClickNewContact={handleClickNewContact}
-                              activeChatOrContactId={activeChatOrContactId}
-                              setActiveChatOrContactId={
-                                setActiveChatOrContactId
-                              }
-                            />
-                          )
-                        }
-                      />
-                    }
-                  />
-                  <Route
-                    path="/settings"
-                    element={
-                      <Settings
-                        user={data?.me}
-                        menuComponent={
-                          activeListMenuComponent === "chats" ? (
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path="/chats/:id"
+                      element={
+                        <Chat
+                          user={data?.me}
+                          setActiveMenuItem={setActiveMenuItem}
+                          setActiveChatOrContactId={setActiveChatOrContactId}
+                          menuComponent={
                             <ChatsMenu
                               user={data?.me}
                               handleClickNewChat={handleClickNewChat}
@@ -236,7 +144,34 @@ const App = () => {
                                 setActiveChatOrContactId
                               }
                             />
-                          ) : (
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path="/chats/new"
+                      element={
+                        <NewChat
+                          user={data?.me}
+                          setActiveMenuItem={setActiveMenuItem}
+                          menuComponent={
+                            <ChatsMenu
+                              user={data?.me}
+                              handleClickNewChat={handleClickNewChat}
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
+                            />
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path="/contacts"
+                      element={
+                        <Contacts
+                          menuComponent={
                             <ContactsMenu
                               user={data?.me}
                               handleClickNewContact={handleClickNewContact}
@@ -245,43 +180,120 @@ const App = () => {
                                 setActiveChatOrContactId
                               }
                             />
-                          )
-                        }
-                      />
-                    }
-                  />
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path="/contacts/:id"
+                      element={
+                        <Contact
+                          user={data?.me}
+                          setActiveMenuItem={setActiveMenuItem}
+                          menuComponent={
+                            <ContactsMenu
+                              user={data?.me}
+                              handleClickNewContact={handleClickNewContact}
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
+                            />
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path="/profile"
+                      element={
+                        <Profile
+                          user={data?.me}
+                          menuComponent={
+                            activeListMenuComponent === "chats" ? (
+                              <ChatsMenu
+                                user={data?.me}
+                                handleClickNewChat={handleClickNewChat}
+                                activeChatOrContactId={activeChatOrContactId}
+                                setActiveChatOrContactId={
+                                  setActiveChatOrContactId
+                                }
+                              />
+                            ) : (
+                              <ContactsMenu
+                                user={data?.me}
+                                handleClickNewContact={handleClickNewContact}
+                                activeChatOrContactId={activeChatOrContactId}
+                                setActiveChatOrContactId={
+                                  setActiveChatOrContactId
+                                }
+                              />
+                            )
+                          }
+                        />
+                      }
+                    />
+                    <Route
+                      path="/settings"
+                      element={
+                        <Settings
+                          user={data?.me}
+                          menuComponent={
+                            activeListMenuComponent === "chats" ? (
+                              <ChatsMenu
+                                user={data?.me}
+                                handleClickNewChat={handleClickNewChat}
+                                activeChatOrContactId={activeChatOrContactId}
+                                setActiveChatOrContactId={
+                                  setActiveChatOrContactId
+                                }
+                              />
+                            ) : (
+                              <ContactsMenu
+                                user={data?.me}
+                                handleClickNewContact={handleClickNewContact}
+                                activeChatOrContactId={activeChatOrContactId}
+                                setActiveChatOrContactId={
+                                  setActiveChatOrContactId
+                                }
+                              />
+                            )
+                          }
+                        />
+                      }
+                    />
+                  </Route>
                 </Route>
-              </Route>
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-            <AnimatePresence>
-              {showNewChatDropdownBox && (
-                <NewChatDropDownBox
-                  setShowNewChatDropdownBox={setShowNewChatDropdownBox}
-                  setShowNewPrivateChatModal={setShowNewPrivateChatModal}
-                  setShowNewGroupChatModal={setShowNewGroupChatModal}
-                />
-              )}
-              {showNewPrivateChatModal && (
-                <NewPrivateChatModal
-                  user={data?.me}
-                  setShowNewPrivateChatModal={setShowNewPrivateChatModal}
-                />
-              )}
-              {showNewGroupChatModal && (
-                <NewGroupChatModal
-                  user={data?.me}
-                  setShowNewGroupChatModal={setShowNewGroupChatModal}
-                />
-              )}
-              {showAddNewContactsModal && (
-                <AddNewContactsModal
-                  user={data?.me}
-                  setShowAddNewContactsModal={setShowAddNewContactsModal}
-                />
-              )}
-            </AnimatePresence>
-          </motion.div>
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+              <AnimatePresence>
+                {showNewChatDropdownBox && (
+                  <NewChatDropDownBox
+                    setShowNewChatDropdownBox={setShowNewChatDropdownBox}
+                    setShowNewPrivateChatModal={setShowNewPrivateChatModal}
+                    setShowNewGroupChatModal={setShowNewGroupChatModal}
+                  />
+                )}
+                {showNewPrivateChatModal && (
+                  <NewPrivateChatModal
+                    user={data?.me}
+                    setShowNewPrivateChatModal={setShowNewPrivateChatModal}
+                  />
+                )}
+                {showNewGroupChatModal && (
+                  <NewGroupChatModal
+                    user={data?.me}
+                    setShowNewGroupChatModal={setShowNewGroupChatModal}
+                  />
+                )}
+                {showAddNewContactsModal && (
+                  <AddNewContactsModal
+                    user={data?.me}
+                    setShowAddNewContactsModal={setShowAddNewContactsModal}
+                  />
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </ModalProvider>
