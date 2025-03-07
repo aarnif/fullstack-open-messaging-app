@@ -115,26 +115,42 @@ const resolvers = {
       }
     },
     login: async (root, args) => {
+      const authError = new GraphQLError("Invalid username or password!", {
+        extensions: {
+          code: "BAD_USER_INPUT",
+        },
+      });
+
       const user = await User.findOne({ username: args.username });
+
+      if (!user) {
+        throw authError;
+      }
+
       const passwordMatch = await bcrypt.compare(
         args.password,
         user.passwordHash
       );
 
-      if (!user || !passwordMatch) {
-        throw new GraphQLError("Invalid username or password!", {
+      if (!passwordMatch) {
+        throw authError;
+      }
+
+      try {
+        const userForToken = {
+          username: user.username,
+          id: user._id,
+        };
+
+        return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+      } catch (error) {
+        throw new GraphQLError("Failed to login!", {
           extensions: {
-            code: "BAD_USER_INPUT",
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
           },
         });
       }
-
-      const userForToken = {
-        username: user.username,
-        id: user._id,
-      };
-
-      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
     },
     logout: async (root, args, context) => {
       context.currentUser = null;
