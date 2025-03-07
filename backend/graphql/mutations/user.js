@@ -160,20 +160,29 @@ const resolvers = {
         });
       }
 
-      const user = await User.findByIdAndUpdate(
-        context.currentUser,
-        {
-          $addToSet: { contacts: { $each: args.userIds } },
-        },
-        { new: true }
-      )
-        .populate("contacts")
-        .populate({
-          path: "contacts",
-          populate: { path: "blockedContacts" },
-        });
+      try {
+        const user = await User.findByIdAndUpdate(
+          context.currentUser,
+          {
+            $addToSet: { contacts: { $each: args.userIds } },
+          },
+          { new: true }
+        )
+          .populate("contacts")
+          .populate({
+            path: "contacts",
+            populate: { path: "blockedContacts" },
+          });
 
-      return user;
+        return user;
+      } catch (error) {
+        throw new GraphQLError("Failed to add contacts!", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error,
+          },
+        });
+      }
     },
     removeContact: async (root, args, context) => {
       if (!context.currentUser) {
