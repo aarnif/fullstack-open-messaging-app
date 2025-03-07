@@ -116,26 +116,17 @@ const resolvers = {
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username });
-      const error = new GraphQLError("Invalid username or password!", {
-        extensions: {
-          code: "BAD_USER_INPUT",
-          invalidArgs: args,
-        },
-      });
-
-      if (!user) {
-        console.log("Invalid username!");
-        throw error;
-      }
-
       const passwordMatch = await bcrypt.compare(
         args.password,
         user.passwordHash
       );
 
-      if (!passwordMatch) {
-        console.log("Password does not match!");
-        throw error;
+      if (!user || !passwordMatch) {
+        throw new GraphQLError("Invalid username or password!", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+          },
+        });
       }
 
       const userForToken = {
