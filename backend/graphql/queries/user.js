@@ -79,7 +79,8 @@ const resolvers = {
           options: { sort: { name: "asc", username: "asc" } },
           populate: { path: "blockedContacts" },
         })
-        .populate("blockedContacts");
+        .populate("blockedContacts")
+        .sort({ name: "asc", username: "asc" });
     },
     allContactsExceptByUser: async (root, args, context) => {
       if (!context.currentUser) {
