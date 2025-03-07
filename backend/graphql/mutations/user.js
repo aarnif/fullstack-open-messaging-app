@@ -292,36 +292,73 @@ const resolvers = {
         });
       }
 
-      let result = null;
+      const currentUser = await User.findById(context.currentUser.id);
 
-      const checkIfContactBlocked =
-        context.currentUser.blockedContacts.includes(args.contactId);
-
-      const userToBeBlockedOrUnBlocked = await User.findById(
-        args.contactId
-      ).populate("blockedContacts");
-
-      if (checkIfContactBlocked) {
-        await User.findByIdAndUpdate(context.currentUser, {
-          $pull: { blockedContacts: args.contactId },
-        });
-        result = false;
-      } else {
-        await User.findByIdAndUpdate(context.currentUser, {
-          $addToSet: { blockedContacts: args.contactId },
-        });
-        result = true;
+      if (!currentUser.contacts.includes(args.contactId)) {
+        throw new GraphQLError(
+          "The specified contact is not in your contact list.",
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.contactId,
+            },
+          }
+        );
       }
 
-      pubsub.publish("CONTACT_BLOCKED_OR_UNBLOCKED", {
-        contactBlockedOrUnBlocked: {
-          isBlocked: result,
-          actor: context.currentUser.id,
-          target: userToBeBlockedOrUnBlocked,
-        },
-      });
+      try {
+        const contactToBeBlockedOrUnblocked = await User.findById(
+          args.contactId
+        ).populate("blockedContacts");
 
-      return result;
+        if (!contactToBeBlockedOrUnblocked) {
+          throw new GraphQLError("Contact not found", {
+            extensions: {
+              code: "NOT_FOUND",
+              invalidArgs: args.contactId,
+            },
+          });
+        }
+
+        const checkIfContactIsAlreadyBlocked =
+          currentUser.blockedContacts.includes(args.contactId);
+        let updatedUser;
+
+        if (checkIfContactIsAlreadyBlocked) {
+          updatedUser = await User.findByIdAndUpdate(
+            currentUser._id,
+            { $pull: { blockedContacts: args.contactId } },
+            { new: true }
+          );
+        } else {
+          updatedUser = await User.findByIdAndUpdate(
+            currentUser._id,
+            { $addToSet: { blockedContacts: args.contactId } },
+            { new: true }
+          );
+        }
+
+        const newBlockedState = updatedUser.blockedContacts.includes(
+          args.contactId
+        );
+
+        pubsub.publish("CONTACT_BLOCKED_OR_UNBLOCKED", {
+          contactBlockedOrUnBlocked: {
+            isBlocked: newBlockedState,
+            actor: currentUser._id.toString(),
+            target: contactToBeBlockedOrUnblocked,
+          },
+        });
+
+        return newBlockedState;
+      } catch (error) {
+        throw new GraphQLError("Failed to block/unblock contact", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
+          },
+        });
+      }
     },
   },
   Subscription: {
