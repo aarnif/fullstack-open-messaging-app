@@ -79,7 +79,8 @@ const resolvers = {
           options: { sort: { name: "asc", username: "asc" } },
           populate: { path: "blockedContacts" },
         })
-        .populate("blockedContacts");
+        .populate("blockedContacts")
+        .sort({ name: "asc", username: "asc" });
     },
     allContactsExceptByUser: async (root, args, context) => {
       if (!context.currentUser) {
@@ -114,8 +115,39 @@ const resolvers = {
         });
       }
 
-      const user = await User.findById(args.userId).populate("blockedContacts");
-      return user.blockedContacts.includes(context.currentUser.id);
+      if (!args.userId) {
+        throw new GraphQLError("User ID is required", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.userId,
+          },
+        });
+      }
+
+      try {
+        const user = await User.findById(args.userId);
+
+        if (!user) {
+          throw new GraphQLError("User not found", {
+            extensions: {
+              code: "NOT_FOUND",
+              invalidArgs: args.userId,
+            },
+          });
+        }
+
+        return user.blockedContacts.some(
+          (blockedId) =>
+            blockedId.toString() === context.currentUser.id.toString()
+        );
+      } catch (error) {
+        throw new GraphQLError("Error checking block status", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
+          },
+        });
+      }
     },
     me: async (root, args, context) =>
       User.findById(context.currentUser).populate("blockedContacts"),
