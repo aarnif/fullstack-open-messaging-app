@@ -45,6 +45,98 @@ describe("User tests", () => {
     );
   });
 
+  it("Returns error when username is too short", async () => {
+    const invalidCredentials = {
+      username: "abc", // Too short (less than 4 chars)
+      password: "password",
+      confirmPassword: "password",
+    };
+
+    const response = await createUser(invalidCredentials);
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toContain(
+      "at least 4 characters"
+    );
+  });
+
+  it("Returns error when password is too short", async () => {
+    const invalidCredentials = {
+      username: "validuser",
+      password: "short", // Too short (less than 6 chars)
+      confirmPassword: "short",
+    };
+
+    const response = await createUser(invalidCredentials);
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toContain(
+      "at least 6 characters"
+    );
+  });
+
+  it("Returns error when passwords don't match", async () => {
+    const invalidCredentials = {
+      username: "validuser",
+      password: "password",
+      confirmPassword: "different",
+    };
+
+    const response = await createUser(invalidCredentials);
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toContain(
+      "do not match"
+    );
+  });
+
+  it("Returns an error when trying to login with non-existent username", async () => {
+    const nonExistentUser = {
+      username: "doesnotexist",
+      password: "password",
+    };
+
+    const response = await requestData({
+      query: `mutation Login($username: String!, $password: String!) {
+        login(username: $username, password: $password) {
+          value
+        }
+      }`,
+      variables: nonExistentUser,
+    });
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toBe(
+      "Invalid username or password!"
+    );
+  });
+
+  it("Returns an error when trying to login with wrong password", async () => {
+    await createUser(credentials);
+
+    const wrongCredentials = {
+      ...credentials,
+      password: "wrongpassword",
+    };
+
+    const response = await requestData({
+      query: `mutation Login($username: String!, $password: String!) {
+        login(username: $username, password: $password) {
+          value
+        }
+      }`,
+      variables: {
+        username: wrongCredentials.username,
+        password: wrongCredentials.password,
+      },
+    });
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toBe(
+      "Invalid username or password!"
+    );
+  });
+
   it("Login user", async () => {
     await createUser(credentials);
     const response = await loginUser(credentials);
@@ -137,6 +229,28 @@ describe("User tests", () => {
     });
   });
 
+  it("Returns error when trying to add non-existent contact", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+
+    const response = await requestData(
+      {
+        query: `mutation AddContacts($userIds: [ID!]) {
+          addContacts(userIds: $userIds) {
+            id
+            contacts {
+              id
+            }
+          }
+        }`,
+        variables: { userIds: ["non-existent-id"] },
+      },
+      credentials.token
+    );
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
+  });
+
   it("Add three new contacts", async () => {
     await createUser(credentials);
     await loginUser(credentials);
@@ -174,6 +288,25 @@ describe("User tests", () => {
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.removeContact).toBe(contactDetails[0].id);
+  });
+
+  it("Returns error when trying to remove a contact that doesn't exist", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+
+    const nonExistentId = "507f1f77bcf86cd799439011";
+
+    const response = await requestData(
+      {
+        query: `mutation RemoveContact($contactId: ID!) {
+          removeContact(contactId: $contactId)
+        }`,
+        variables: { contactId: nonExistentId },
+      },
+      credentials.token
+    );
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
   });
 
   it("Block contact", async () => {
@@ -330,5 +463,51 @@ describe("User tests", () => {
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.editProfile.name).toBe(newName);
     expect(response.body.data.editProfile.about).toBe(newAbout);
+  });
+
+  it("Returns error when unauthorized user tries to edit profile", async () => {
+    const response = await requestData({
+      query: `mutation EditProfile($name: String) {
+          editProfile(name: $name) {
+            id
+          }
+        }`,
+      variables: { name: "New Name" },
+    });
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toContain(
+      "Not logged in"
+    );
+  });
+
+  it("Edit user settings", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+
+    const newSettings = {
+      theme: "dark",
+      time: "24",
+    };
+
+    const response = await requestData(
+      {
+        query: `mutation EditSettings($theme: String, $time: String) {
+          editSettings(theme: $theme, time: $time) {
+            id
+            settings {
+              theme
+              time
+            }
+          }
+        }`,
+        variables: newSettings,
+      },
+      credentials.token
+    );
+
+    expect(JSON.parse(response.text).errors).toBeUndefined();
+    expect(response.body.data.editSettings.settings.theme).toBe("dark");
+    expect(response.body.data.editSettings.settings.time).toBe("24");
   });
 });
