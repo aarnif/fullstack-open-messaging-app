@@ -135,6 +135,22 @@ const createChat = async (
   return response;
 };
 
+const checkIfUserHasBlockedYou = async (credentials, userId) => {
+  const response = await requestData(
+    {
+      query: `query CheckIfUserHasBlockedYou($userId: ID!) {
+        checkIfUserHasBlockedYou(userId: $userId)
+      }`,
+      variables: {
+        userId: userId,
+      },
+    },
+    credentials.token
+  );
+
+  return response;
+};
+
 export default {
   timeOut,
   testServer,
@@ -147,4 +163,5 @@ export default {
   addContacts,
   blockOrUnBlockContact,
   createChat,
+  checkIfUserHasBlockedYou,
 };

@@ -15,6 +15,7 @@ const {
   loginUser,
   addContacts,
   blockOrUnBlockContact,
+  checkIfUserHasBlockedYou,
 } = helpers;
 
 describe("User tests", () => {
@@ -509,5 +510,40 @@ describe("User tests", () => {
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.editSettings.settings.theme).toBe("dark");
     expect(response.body.data.editSettings.settings.time).toBe("24");
+  });
+
+  it("Check if user has blocked you", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+
+    const secondUser = contactDetails[0];
+
+    await loginUser(secondUser);
+    await addContacts(secondUser, [credentials]);
+
+    const blockResult = await blockOrUnBlockContact(secondUser, credentials.id);
+    expect(JSON.parse(blockResult.text).errors).toBeUndefined();
+    expect(blockResult.body.data.blockOrUnBlockContact).toBe(true);
+
+    const checkResponse = await checkIfUserHasBlockedYou(
+      credentials,
+      secondUser.id
+    );
+    expect(JSON.parse(checkResponse.text).errors).toBeUndefined();
+    expect(checkResponse.body.data.checkIfUserHasBlockedYou).toBe(true);
+
+    const unblockResult = await blockOrUnBlockContact(
+      secondUser,
+      credentials.id
+    );
+    expect(JSON.parse(unblockResult.text).errors).toBeUndefined();
+    expect(unblockResult.body.data.blockOrUnBlockContact).toBe(false);
+
+    const checkAfterUnblock = await checkIfUserHasBlockedYou(
+      credentials,
+      secondUser.id
+    );
+    expect(JSON.parse(checkAfterUnblock.text).errors).toBeUndefined();
+    expect(checkAfterUnblock.body.data.checkIfUserHasBlockedYou).toBe(false);
   });
 });
