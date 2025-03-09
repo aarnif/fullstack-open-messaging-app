@@ -96,6 +96,27 @@ test.describe("Chats", () => {
     ).toBeVisible(); // Check if message shows in chats list
   });
 
+  test("Does not create a chat without first message", async ({
+    page,
+    request,
+  }) => {
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+    await addContacts(page, [user2Credentials]);
+    await createPrivateChat(page, user2Credentials);
+    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+
+    const chatItems = page.getByTestId(/chat-item-/);
+    const initialCount = await chatItems.count();
+
+    await page.getByTestId("new-message-input").fill("");
+    await page.getByTestId("send-new-message-button").click();
+
+    await page.waitForTimeout(500);
+
+    const finalCount = await chatItems.count();
+    expect(finalCount).toBe(initialCount);
+  });
+
   test("Add new members to group chat", async ({ page, request }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
