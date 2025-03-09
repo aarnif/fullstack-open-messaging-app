@@ -4,7 +4,12 @@ import { test, expect } from "@playwright/test";
 import data from "./data.js";
 import helpers from "./helpers.js";
 
-const { userCredentials, user1Credentials, user2Credentials } = data;
+const {
+  userCredentials,
+  user1Credentials,
+  user2Credentials,
+  user3Credentials,
+} = data;
 
 const { signUp, signIn, signOut, addContacts } = helpers;
 
@@ -230,6 +235,21 @@ test.describe("Users And Contacts", () => {
       await page.getByTestId("remove-contact-button").click();
       await page.getByTestId("confirm-button").click();
       await expect(page.getByText("No contacts found")).not.toBeVisible();
+    });
+
+    test("Users can search for contacts", async ({ page }) => {
+      await signIn(page, user1Credentials.username, user1Credentials.password);
+      await addContacts(page, [user2Credentials, user3Credentials]);
+
+      await page.getByTestId("contacts-button").click();
+      await page
+        .getByTestId("contact-search-input")
+        .fill(user2Credentials.name);
+
+      await expect(page.getByTestId(user2Credentials.username)).toBeVisible();
+      await expect(
+        page.getByTestId(user3Credentials.username)
+      ).not.toBeVisible();
     });
   });
 });

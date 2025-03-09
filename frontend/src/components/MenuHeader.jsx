@@ -18,7 +18,12 @@ const MenuHeader = ({ title, handleCallBack, searchWord }) => {
         </button>
       </div>
 
-      <SearchBar searchWord={searchWord} />
+      <SearchBar
+        searchWord={searchWord}
+        dataTestId={
+          title === "Contacts" ? "contact-search-input" : "chat-search-input"
+        }
+      />
     </div>
   );
 };
