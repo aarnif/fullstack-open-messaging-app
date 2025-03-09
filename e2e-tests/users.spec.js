@@ -152,6 +152,26 @@ test.describe("Users And Contacts", () => {
       ).toBeVisible();
     });
 
+    test("User stays logged in after page refresh", async ({ page }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+
+      await expect(
+        page.getByText("Select Chat to Start Messaging.")
+      ).toBeVisible();
+
+      await page.reload();
+
+      await expect(
+        page.getByText("Select Chat to Start Messaging.")
+      ).toBeVisible();
+      await expect(page.getByTestId("profile-button")).toBeVisible();
+    });
+
     test("Edit user profile", async ({ page }) => {
       await signUp(
         page,
