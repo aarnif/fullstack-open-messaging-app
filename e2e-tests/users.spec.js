@@ -172,6 +172,20 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByTestId("profile-button")).toBeVisible();
     });
 
+    test("User session is cleared after logout", async ({ page }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await signOut(page);
+
+      await page.reload();
+
+      await expect(page.getByTestId("sign-in-title")).toBeVisible();
+    });
+
     test("Edit user profile", async ({ page }) => {
       await signUp(
         page,
