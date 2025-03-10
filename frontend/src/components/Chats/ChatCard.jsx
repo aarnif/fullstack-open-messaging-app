@@ -71,7 +71,10 @@ const ChatCard = ({ user, chat }) => {
                 }}
                 className="w-[22px] h-[22px] flex justify-center items-center rounded-full"
               >
-                <div className="flex justify-center items-center text-white font-semibold">
+                <div
+                  data-testid="new-messages-count"
+                  className="flex justify-center items-center text-white font-semibold"
+                >
                   {newMessagesCount}
                 </div>
               </div>

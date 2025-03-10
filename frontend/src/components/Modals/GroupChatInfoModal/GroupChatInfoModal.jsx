@@ -85,6 +85,7 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
         {user.id !== chatAdmin.id && (
           <div className="w-full px-4 py-2 sm:p-4 flex flex-col justify-center items-start">
             <button
+              data-testid="leave-group-chat-button"
               onClick={() =>
                 modal(
                   "danger",
