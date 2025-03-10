@@ -117,6 +117,35 @@ test.describe("Chats", () => {
     expect(finalCount).toBe(initialCount);
   });
 
+  test("Does not send an empty message in an existing chat", async ({
+    page,
+    request,
+  }) => {
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+    await addContacts(page, [user2Credentials]);
+    await createPrivateChat(page, user2Credentials);
+    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+
+    await sendMessage(page, "Hello!");
+
+    await expect(page.getByText("Hello!", { exact: true })).toBeVisible();
+    await expect(page.getByText("You: Hello!", { exact: true })).toBeVisible();
+
+    const messagesSelector = '[data-testid^="message-"]';
+    const initialMsgCount = await page.locator(messagesSelector).count();
+
+    await page.pause();
+
+    await page.getByTestId("new-message-input").fill("");
+    await page.getByTestId("send-new-message-button").click();
+    await page.waitForTimeout(500);
+
+    const finalMsgCount = await page.locator(messagesSelector).count();
+    expect(finalMsgCount).toBe(initialMsgCount);
+
+    await expect(page.getByText("You: Hello!", { exact: true })).toBeVisible(); // Check if last message is still the same
+  });
+
   test("Add new members to group chat", async ({ page, request }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
