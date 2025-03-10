@@ -146,6 +146,47 @@ test.describe("Chats", () => {
     await expect(page.getByText("You: Hello!", { exact: true })).toBeVisible(); // Check if last message is still the same
   });
 
+  test("Edit group chat title and description", async ({ page }) => {
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+
+    await expect(
+      page.getByText("Select Chat to Start Messaging.")
+    ).toBeVisible();
+
+    await addContacts(page, [user2Credentials, user3Credentials]);
+
+    await createGroupChat(page, "Test chat", "This is a test chat.", [
+      user2Credentials,
+      user3Credentials,
+    ]);
+
+    await page.getByTestId("new-message-input").fill("Hello everybody!");
+
+    await page.getByTestId("send-new-message-button").click();
+
+    await page.getByTestId("chat-info-button").click();
+    await page.getByTestId("edit-group-chat-button").click();
+
+    await page.pause();
+
+    await page.getByTestId("edit-group-chat-title-input").fill("Updated title");
+    await page
+      .getByTestId("edit-group-chat-description-input")
+      .fill("Updated description");
+
+    await page.getByTestId("edit-group-chat-submit-button").click();
+    await page.getByTestId("confirm-button").click();
+
+    const chatTitle = await page.getByTestId("chat-title");
+
+    await expect(chatTitle).toBeVisible();
+    await expect(chatTitle).toHaveText("Updated title");
+
+    const chatDescription = await page.getByText("Updated description");
+    await expect(chatDescription).toBeVisible();
+    await page.getByTestId("close-group-chat-info-button").click();
+  });
+
   test("Add new members to group chat", async ({ page, request }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
