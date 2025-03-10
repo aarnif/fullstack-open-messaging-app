@@ -317,4 +317,28 @@ test.describe("Chats", () => {
 
     await expect(page.getByText("No chats found")).toBeVisible();
   });
+
+  test("Users receive notifications for new messages", async ({
+    page,
+    browser,
+  }) => {
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+    await addContacts(page, [user2Credentials]);
+    await createPrivateChat(page, user2Credentials);
+    await page.getByTestId("new-message-input").fill("Hello!");
+    await page.getByTestId("send-new-message-button").click();
+
+    await signOut(page);
+    await signIn(page, user2Credentials.username, user2Credentials.password);
+
+    const chatItem = await page.getByTestId("chat-item-0");
+    await expect(chatItem).toBeVisible();
+
+    const newMessagesCount = await chatItem.getByTestId("new-messages-count");
+    await expect(newMessagesCount).toBeVisible();
+    await expect(newMessagesCount).toHaveText("1");
+
+    chatItem.click();
+    await expect(newMessagesCount).not.toBeVisible();
+  });
 });
