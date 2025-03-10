@@ -15,6 +15,7 @@ const {
 
 const {
   signIn,
+  signOut,
   addContacts,
   createPrivateChat,
   createGroupChat,
@@ -292,5 +293,28 @@ test.describe("Chats", () => {
     firstChatItem = await page.getByTestId("chat-item-0");
     await expect(firstChatItem).toBeVisible();
     await expect(firstChatItem.getByText("You: Hi!")).toBeVisible();
+  });
+
+  test("User can leave a group chat", async ({ page }) => {
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+    await addContacts(page, [user2Credentials, user3Credentials]);
+    await createGroupChat(page, "Test Group", "A group to leave", [
+      user2Credentials,
+      user3Credentials,
+    ]);
+
+    await page.getByTestId("new-message-input").fill("Hello everybody!");
+    await page.getByTestId("send-new-message-button").click();
+
+    await signOut(page);
+    await signIn(page, user2Credentials.username, user2Credentials.password);
+
+    await page.getByTestId("chat-item-0").click();
+
+    await page.getByTestId("chat-info-button").click();
+    await page.getByTestId("leave-group-chat-button").click();
+    await page.getByTestId("confirm-button").click();
+
+    await expect(page.getByText("No chats found")).toBeVisible();
   });
 });
