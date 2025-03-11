@@ -203,6 +203,34 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByText("John Doe", { exact: true })).toBeVisible();
       await expect(page.getByText("I am John Doe.")).toBeVisible();
     });
+
+    test.only("Edit user profile fails with empty name", async ({ page }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await page.getByTestId("profile-button").click();
+      await page.getByTestId("edit-profile-button").click();
+
+      await page.getByTestId("profile-name-input").fill("");
+      await page.getByTestId("profile-about-input").fill("I am John Doe.");
+
+      await page.pause();
+
+      await page.getByTestId("submit-edit-profile-button").click();
+
+      await expect(
+        page.getByText("Profile name cannot be empty!")
+      ).toBeVisible();
+
+      await page.getByTestId("close-button").click();
+
+      await expect(
+        page.getByText("Profile name cannot be empty!")
+      ).not.toBeVisible();
+    });
   });
 
   test.describe("Contacts", () => {

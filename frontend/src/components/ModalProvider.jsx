@@ -13,7 +13,7 @@ const AlertModal = ({ title, message, closeModal }) => {
       transition={{ delay: 0.4, type: "tween" }}
       className="bg-yellow-50 rounded-lg border-t border-yellow-900"
     >
-      <div className="w-full px-12 py-8 md:px-14 md:py-10 flex flex-col gap-4">
+      <div className="w-full md:min-w-[400px] px-12 py-8 md:px-14 md:py-10 flex flex-col gap-4">
         <div className="flex justify-start items-center gap-3">
           <div className="w-8.5 h-8.5 md:w-10 md:h-10 flex justify-center items-center rounded-full bg-yellow-300">
             <div className="w-6 h-6 md:w-7 md:h-7 flex justify-center items-center rounded-full bg-yellow-100 border-2 border-yellow-400">
@@ -24,11 +24,12 @@ const AlertModal = ({ title, message, closeModal }) => {
             {title}
           </h2>
         </div>
-        <div className="self-stretch h-12 text-yellow-700 text-sm md:text-base">
+        <div className="w-full h-12 text-yellow-700 text-sm md:text-base">
           {message}
         </div>
 
         <button
+          data-testid="close-button"
           className="w-full px-4 py-2 bg-yellow-200 rounded-lg border border-yellow-200 shadow-xl flex justify-center items-center text-yellow-900 cursor-pointer text-sm md:text-base font-bold
               hover:bg-yellow-300 active:bg-yellow-300 active:border-yellow-400 active:inset-shadow-sm transition-all duration-300 ease-in-out"
           onClick={closeModal}

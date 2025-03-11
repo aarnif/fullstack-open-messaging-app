@@ -73,6 +73,17 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
 
   const handleClickSubmit = (event) => {
     event.preventDefault();
+
+    if (!name.value) {
+      modal(
+        "alert",
+        "Empty Profile Name",
+        "Profile name cannot be empty!",
+        "Close"
+      );
+      return;
+    }
+
     modal(
       "success",
       "Update Profile",
@@ -119,6 +130,9 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
                 setBase64Image={setBase64Image}
               />
               <ul className="flex-grow flex flex-col">
+                {/* <li className="my-4 w-full flex">
+                  <Notify notifyMessage={showNotifyMessage} />
+                </li> */}
                 <li className="w-full flex flex-col">
                   <label className="text-mobile lg:text-base font-bold text-slate-800 dark:text-slate-100">
                     Profile name:
