@@ -11,6 +11,7 @@
     "dev:server": "NODE_ENV=development nodemon backend/index.js",
     "prod:server": "NODE_ENV=production node backend/index.js",
     "build:ui": "vite build --config frontend/vite.config.js",
+    "test:ui": "NODE_ENV=test npx vitest run --config frontend/vite.config.js",
     "test:server": "NODE_ENV=test jest --runInBand --rootDir backend",
     "lint": "eslint frontend --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "prod:ui": "vite preview --config frontend/vite.config.js",
