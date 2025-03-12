@@ -22,6 +22,8 @@ jobs:
         run: npx playwright install --with-deps
       - name: Make build
         run: npm run build:ui
+      - name: Run test ui-components
+        run: npm run test:ui
       - name: Run test database
         run: docker compose -f docker-compose.dev.yml up -d
       - name: Run server tests
