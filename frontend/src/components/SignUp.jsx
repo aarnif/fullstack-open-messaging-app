@@ -70,7 +70,10 @@ const SignUp = ({ setActiveMenuItem }) => {
           onSubmit={handleSubmit}
           className="flex-grow h-full flex flex-col"
         >
-          <h1 className="text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100">
+          <h1
+            data-testid="sign-up-title"
+            className="text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100"
+          >
             Sign Up
           </h1>
           <ul>
@@ -156,6 +159,7 @@ const SignUp = ({ setActiveMenuItem }) => {
               <button
                 onClick={handleClickReturn}
                 type="button"
+                data-testid="return-to-sign-in-button"
                 className="w-full flex-grow py-4 sm:py-6 border-2 border-slate-400 rounded-xl
 hover:bg-slate-300 dark:hover:bg-slate-900 focus:bg-slate-300 active:scale-95 transition"
               >

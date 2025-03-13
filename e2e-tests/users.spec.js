@@ -204,7 +204,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByText("I am John Doe.")).toBeVisible();
     });
 
-    test.only("Edit user profile fails with empty name", async ({ page }) => {
+    test("Edit user profile fails with empty name", async ({ page }) => {
       await signUp(
         page,
         user1Credentials.username,
