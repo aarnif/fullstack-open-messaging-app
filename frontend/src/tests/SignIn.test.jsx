@@ -1,11 +1,19 @@
 import { render, screen } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import * as apolloClient from "@apollo/client";
 import { LOGIN } from "../graphql/mutations";
 import SignIn from "../components/SignIn";
 import { describe, test, vi, expect } from "vitest";
+
+vi.mock("react-router", async () => {
+  const actual = await vi.importActual("react-router");
+  return {
+    ...actual,
+    useNavigate: vi.fn(),
+  };
+});
 
 const client = {
   resetStore: vi.fn(),
@@ -16,6 +24,8 @@ const setActiveMenuItem = vi.fn();
 const localStorage = {
   setItem: vi.fn(),
 };
+
+const navigate = vi.fn();
 
 Object.defineProperty(global, "localStorage", { value: localStorage });
 
@@ -36,9 +46,13 @@ const mocks = [
 ];
 
 describe("<SignIn />", () => {
-  test("clicking sign in works", async () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    useNavigate.mockReturnValue(navigate);
     vi.spyOn(apolloClient, "useApolloClient").mockReturnValue(client);
+  });
 
+  test("clicking sign in works", async () => {
     const user = userEvent.setup();
 
     render(
@@ -67,5 +81,21 @@ describe("<SignIn />", () => {
     );
     expect(client.resetStore).toHaveBeenCalled();
     expect(setActiveMenuItem).toHaveBeenCalledWith("chats");
+    expect(navigate).toHaveBeenCalledWith("/chats");
+  });
+
+  test("clicking sign up button navigates to signup page", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MockedProvider mocks={mocks}>
+        <MemoryRouter>
+          <SignIn setActiveMenuItem={setActiveMenuItem} />
+        </MemoryRouter>
+      </MockedProvider>
+    );
+
+    await user.click(screen.getByTestId("sign-up-button"));
+    expect(navigate).toHaveBeenCalledWith("/signup");
   });
 });
