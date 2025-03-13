@@ -3,9 +3,12 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import * as apolloClient from "@apollo/client";
-import { LOGIN, CREATE_USER } from "../graphql/mutations";
 import SignUp from "../components/SignUp";
 import { describe, test, vi, expect } from "vitest";
+import mockData from "./mocks/data.js";
+import mocks from "./mocks/funcs.js";
+
+const { client, setActiveMenuItem, localStorage, navigate } = mocks;
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -15,53 +18,7 @@ vi.mock("react-router", async () => {
   };
 });
 
-const client = {
-  resetStore: vi.fn(),
-};
-
-const setActiveMenuItem = vi.fn();
-
-const localStorage = {
-  setItem: vi.fn(),
-};
-
-const navigate = vi.fn();
-
 Object.defineProperty(global, "localStorage", { value: localStorage });
-
-const mocks = [
-  {
-    request: {
-      query: LOGIN,
-      variables: { username: "test", password: "password" },
-    },
-    result: {
-      data: {
-        login: {
-          value: "fake-token-12345",
-        },
-      },
-    },
-  },
-  {
-    request: {
-      query: CREATE_USER,
-      variables: {
-        username: "test",
-        password: "password",
-        confirmPassword: "password",
-      },
-    },
-    result: {
-      data: {
-        createUser: {
-          username: "test",
-          name: "Test",
-        },
-      },
-    },
-  },
-];
 
 describe("<SignUp />", () => {
   beforeEach(() => {
@@ -74,7 +31,7 @@ describe("<SignUp />", () => {
     const user = userEvent.setup();
 
     render(
-      <MockedProvider mocks={mocks}>
+      <MockedProvider mocks={mockData}>
         <MemoryRouter>
           <SignUp setActiveMenuItem={setActiveMenuItem} />
         </MemoryRouter>
@@ -83,15 +40,15 @@ describe("<SignUp />", () => {
 
     await user.type(
       screen.getByTestId("username-input"),
-      mocks[1].request.variables.username
+      mockData[1].request.variables.username
     );
     await user.type(
       screen.getByTestId("password-input"),
-      mocks[1].request.variables.password
+      mockData[1].request.variables.password
     );
     await user.type(
       screen.getByTestId("confirm-password-input"),
-      mocks[1].request.variables.confirmPassword
+      mockData[1].request.variables.confirmPassword
     );
     await user.click(screen.getByTestId("sign-up-submit-button"));
 
@@ -110,7 +67,7 @@ describe("<SignUp />", () => {
     const user = userEvent.setup();
 
     render(
-      <MockedProvider mocks={mocks}>
+      <MockedProvider mocks={mockData}>
         <MemoryRouter>
           <SignUp setActiveMenuItem={setActiveMenuItem} />
         </MemoryRouter>

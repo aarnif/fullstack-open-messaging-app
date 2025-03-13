@@ -3,9 +3,12 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import * as apolloClient from "@apollo/client";
-import { LOGIN } from "../graphql/mutations";
 import SignIn from "../components/SignIn";
 import { describe, test, vi, expect } from "vitest";
+import mockData from "./mocks/data.js";
+import mocks from "./mocks/funcs.js";
+
+const { client, setActiveMenuItem, localStorage, navigate } = mocks;
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -15,35 +18,7 @@ vi.mock("react-router", async () => {
   };
 });
 
-const client = {
-  resetStore: vi.fn(),
-};
-
-const setActiveMenuItem = vi.fn();
-
-const localStorage = {
-  setItem: vi.fn(),
-};
-
-const navigate = vi.fn();
-
 Object.defineProperty(global, "localStorage", { value: localStorage });
-
-const mocks = [
-  {
-    request: {
-      query: LOGIN,
-      variables: { username: "test", password: "password" },
-    },
-    result: {
-      data: {
-        login: {
-          value: "fake-token-12345",
-        },
-      },
-    },
-  },
-];
 
 describe("<SignIn />", () => {
   beforeEach(() => {
@@ -56,7 +31,7 @@ describe("<SignIn />", () => {
     const user = userEvent.setup();
 
     render(
-      <MockedProvider mocks={mocks}>
+      <MockedProvider mocks={mockData}>
         <MemoryRouter>
           <SignIn setActiveMenuItem={setActiveMenuItem} />
         </MemoryRouter>
@@ -65,11 +40,11 @@ describe("<SignIn />", () => {
 
     await user.type(
       screen.getByTestId("username-input"),
-      mocks[0].request.variables.username
+      mockData[0].request.variables.username
     );
     await user.type(
       screen.getByTestId("password-input"),
-      mocks[0].request.variables.password
+      mockData[0].request.variables.password
     );
     await user.click(screen.getByTestId("sign-in-button"));
 
@@ -88,7 +63,7 @@ describe("<SignIn />", () => {
     const user = userEvent.setup();
 
     render(
-      <MockedProvider mocks={mocks}>
+      <MockedProvider mocks={mockData}>
         <MemoryRouter>
           <SignIn setActiveMenuItem={setActiveMenuItem} />
         </MemoryRouter>
