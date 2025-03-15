@@ -13,10 +13,13 @@ const EnableDarkMode = ({ theme, setTheme }) => {
 
   return (
     <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 dark:bg-slate-800">
-      <div className="text-mobile lg:text-base font-semibold text-slate-800 dark:text-slate-100">
+      <div
+        data-testid={theme === "dark" ? "dark-mode" : "light-mode"}
+        className="text-mobile lg:text-base font-semibold text-slate-800 dark:text-slate-100"
+      >
         {theme === "dark" ? "Light Mode" : "Dark Mode"}
       </div>
-      <button onClick={handleToggleDarkMode}>
+      <button data-testid="dark-mode-button" onClick={handleToggleDarkMode}>
         <div
           style={{
             backgroundColor: theme === "dark" ? "#22c55e" : "#94a3b8",
@@ -38,11 +41,13 @@ const ChangeClockFormat = ({ time, setTime }) => {
         24-Hour Clock
       </div>
       <button
+        data-testid="time-format-button"
         onClick={() =>
           setTime((prevState) => (prevState === "12h" ? "24h" : "12h"))
         }
       >
         <div
+          data-testid={time === "24h" ? "24-hour-clock" : "12-hour-clock"}
           style={{
             backgroundColor: time === "12h" ? "#94a3b8" : "#22c55e",
             justifyContent: time === "12h" ? "flex-start" : "flex-end",
@@ -80,7 +85,10 @@ const SettingsCard = ({ user }) => {
 
   return (
     <>
-      <h2 className="mt-4 mx-4 mb-2 text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100">
+      <h2
+        data-testid="settings-header"
+        className="mt-4 mx-4 mb-2 text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100"
+      >
         Settings
       </h2>
       <EnableDarkMode theme={theme} setTheme={setTheme} />
