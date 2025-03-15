@@ -117,7 +117,7 @@ export const EDIT_PROFILE = gql`
 `;
 
 export const EDIT_SETTINGS = gql`
-  mutation EditSettings($theme: String, $time: String) {
+  mutation EditSettings($theme: String!, $time: String!) {
     editSettings(theme: $theme, time: $time) {
       ...UserDetails
     }

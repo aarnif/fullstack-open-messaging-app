@@ -31,8 +31,8 @@ const typeDefs = `
       input: ImageInput
     ): User
     editSettings(
-      theme: String
-      time: String
+      theme: String!
+      time: String!
     ): User
     blockOrUnBlockContact(
       contactId: ID!
@@ -264,12 +264,38 @@ const resolvers = {
           },
         });
       }
+
+      const validThemes = ["light", "dark"];
+      const validTimeFormats = ["12h", "24h"];
+
+      if (!validThemes.includes(args.theme)) {
+        throw new GraphQLError(
+          "Invalid theme value. Must be 'light' or 'dark'.",
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.theme,
+            },
+          }
+        );
+      }
+
+      if (!validTimeFormats.includes(args.time)) {
+        throw new GraphQLError("Invalid time format. Must be '12h' or '24h'.", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.time,
+          },
+        });
+      }
+
       try {
         const updatedUser = await User.findByIdAndUpdate(
           context.currentUser,
           { $set: { settings: args } },
           {
             new: true,
+            runValidators: true,
           }
         );
 
