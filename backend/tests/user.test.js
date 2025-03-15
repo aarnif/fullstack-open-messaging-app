@@ -488,12 +488,12 @@ describe("User tests", () => {
 
     const newSettings = {
       theme: "dark",
-      time: "24",
+      time: "24h",
     };
 
     const response = await requestData(
       {
-        query: `mutation EditSettings($theme: String, $time: String) {
+        query: `mutation EditSettings($theme: String!, $time: String!) {
           editSettings(theme: $theme, time: $time) {
             id
             settings {
@@ -509,7 +509,7 @@ describe("User tests", () => {
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.editSettings.settings.theme).toBe("dark");
-    expect(response.body.data.editSettings.settings.time).toBe("24");
+    expect(response.body.data.editSettings.settings.time).toBe("24h");
   });
 
   it("Check if user has blocked you", async () => {
