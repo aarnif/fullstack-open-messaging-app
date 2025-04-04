@@ -14,13 +14,36 @@ Object.defineProperty(global, "localStorage", { value: localStorage });
 
 const userData = currentUserMock.result.data.me;
 
-const twelveHourUser = {
+const createUserWithSettings = (settingsOverrides) => ({
   ...userData,
   settings: {
     ...userData.settings,
-    time: "12h",
+    ...settingsOverrides,
   },
-};
+});
+
+const createSettingsMock = (settingsOverrides) => ({
+  request: {
+    ...editSettingsMock.request,
+    variables: {
+      ...editSettingsMock.request.variables,
+      ...settingsOverrides,
+    },
+  },
+  result: {
+    data: {
+      editSettings: {
+        ...editSettingsMock.result.data.editSettings,
+        settings: {
+          ...editSettingsMock.result.data.editSettings.settings,
+          ...settingsOverrides,
+        },
+      },
+    },
+  },
+});
+
+const twelveHourUser = createUserWithSettings({ time: "12h" });
 
 const renderComponent = (user, mockData) => {
   render(
@@ -47,23 +70,7 @@ describe("<SettingsCard />", () => {
   });
 
   test("User can change to dark mode", async () => {
-    const editSettingsMockWithDarkMode = {
-      request: {
-        ...editSettingsMock.request,
-        variables: { ...editSettingsMock.request.variables, theme: "dark" },
-      },
-      result: {
-        data: {
-          editSettings: {
-            ...editSettingsMock.result.data.editSettings,
-            settings: {
-              ...editSettingsMock.result.data.editSettings.settings,
-              theme: "dark",
-            },
-          },
-        },
-      },
-    };
+    const editSettingsMockWithDarkMode = createSettingsMock({ theme: "dark" });
 
     const user = userEvent.setup();
 
@@ -79,31 +86,11 @@ describe("<SettingsCard />", () => {
   });
 
   test("User can change from dark mode to light mode", async () => {
-    const darkModeUser = {
-      ...userData,
-      settings: {
-        ...userData.settings,
-        theme: "dark",
-      },
-    };
+    const darkModeUser = createUserWithSettings({ theme: "dark" });
 
-    const editSettingsMockWithLightMode = {
-      request: {
-        ...editSettingsMock.request,
-        variables: { ...editSettingsMock.request.variables, theme: "light" },
-      },
-      result: {
-        data: {
-          editSettings: {
-            ...editSettingsMock.result.data.editSettings,
-            settings: {
-              ...editSettingsMock.result.data.editSettings.settings,
-              theme: "light",
-            },
-          },
-        },
-      },
-    };
+    const editSettingsMockWithLightMode = createSettingsMock({
+      theme: "light",
+    });
 
     const user = userEvent.setup();
     renderComponent(darkModeUser, [
@@ -126,23 +113,7 @@ describe("<SettingsCard />", () => {
   test("User can toggle clock format", async () => {
     const user = userEvent.setup();
 
-    const editSettingsMockWith24Hour = {
-      request: {
-        ...editSettingsMock.request,
-        variables: { ...editSettingsMock.request.variables, time: "24h" },
-      },
-      result: {
-        data: {
-          editSettings: {
-            ...editSettingsMock.result.data.editSettings,
-            settings: {
-              ...editSettingsMock.result.data.editSettings.settings,
-              theme: "light",
-            },
-          },
-        },
-      },
-    };
+    const editSettingsMockWith24Hour = createSettingsMock({ time: "24h" });
 
     renderComponent(twelveHourUser, [
       currentUserMock,
