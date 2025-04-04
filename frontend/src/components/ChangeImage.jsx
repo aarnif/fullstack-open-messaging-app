@@ -22,13 +22,18 @@ const ChangeImage = ({ currentImage, imageType, setBase64Image }) => {
   };
 
   return (
-    <div className="mb-5 flex justify-center items-center bg-slate-200 dark:bg-slate-800 rounded-lg">
+    <div
+      data-testid="change-image"
+      className="mb-5 flex justify-center items-center bg-slate-200 dark:bg-slate-800 rounded-lg"
+    >
       <button
+        data-testid="change-image-button"
         type="button"
         onClick={handleClick}
         className="p-4 flex flex-col justify-center items-center rounded-lg"
       >
         <img
+          data-testid="current-image"
           src={imagePreview}
           alt={`${imageType} image`}
           className="w-24 h-24 sm:w-32 sm:h-32 rounded-full"
@@ -37,6 +42,7 @@ const ChangeImage = ({ currentImage, imageType, setBase64Image }) => {
           Change {imageType} image
         </div>
         <input
+          data-testid="change-image-input"
           ref={fileInputRef}
           hidden={true}
           type="file"
