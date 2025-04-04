@@ -12,9 +12,12 @@ const localStorage = {
 
 const navigate = vi.fn();
 
+const location = vi.fn();
+
 export default {
   client,
   setActiveMenuItem,
   localStorage,
   navigate,
+  location,
 };
