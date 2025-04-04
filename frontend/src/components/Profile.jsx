@@ -9,7 +9,10 @@ const Profile = ({ user, menuComponent }) => {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
 
   return (
-    <div className="flex-grow flex bg-slate-50 dark:bg-slate-700">
+    <div
+      data-testid="profile"
+      className="flex-grow flex bg-slate-50 dark:bg-slate-700"
+    >
       <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
         {menuComponent}
       </div>

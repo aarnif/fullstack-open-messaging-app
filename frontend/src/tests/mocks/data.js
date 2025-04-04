@@ -1,4 +1,9 @@
-import { LOGIN, CREATE_USER, EDIT_SETTINGS } from "../../graphql/mutations";
+import {
+  LOGIN,
+  CREATE_USER,
+  EDIT_SETTINGS,
+  EDIT_PROFILE,
+} from "../../graphql/mutations";
 import { CURRENT_USER, FIND_USER_BY_ID } from "../../graphql/queries";
 
 const mockData = [
@@ -109,6 +114,38 @@ const mockData = [
       },
     },
   },
+  {
+    request: {
+      query: EDIT_PROFILE,
+      variables: {
+        name: "Test User",
+        about: "Test user for development purposes.",
+        input: {
+          thumbnail: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+          original: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
+        },
+      },
+      result: {
+        data: {
+          editProfile: {
+            id: "6690caa44dc3eac2b83517c7",
+            username: "test",
+            name: "Test User",
+            about: "Test user for development purposes.",
+            image: {
+              thumbnail: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+              original: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
+            },
+            settings: {
+              theme: "dark",
+              time: "24h",
+            },
+            blockedContacts: [],
+          },
+        },
+      },
+    },
+  },
 ];
 
 const [
@@ -117,6 +154,7 @@ const [
   editSettingsMock,
   currentUserMock,
   findUserByIdMock,
+  editProfileMock,
 ] = mockData;
 
 export default {
@@ -125,4 +163,5 @@ export default {
   editSettingsMock,
   currentUserMock,
   findUserByIdMock,
+  editProfileMock,
 };
