@@ -20,6 +20,16 @@ vi.mock("react-router", async () => {
 
 Object.defineProperty(global, "localStorage", { value: localStorage });
 
+const renderSignUp = () => {
+  return render(
+    <MockedProvider mocks={mockData}>
+      <MemoryRouter>
+        <SignUp setActiveMenuItem={setActiveMenuItem} />
+      </MemoryRouter>
+    </MockedProvider>
+  );
+};
+
 describe("<SignUp />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -30,13 +40,7 @@ describe("<SignUp />", () => {
   test("clicking sign up works", async () => {
     const user = userEvent.setup();
 
-    render(
-      <MockedProvider mocks={mockData}>
-        <MemoryRouter>
-          <SignUp setActiveMenuItem={setActiveMenuItem} />
-        </MemoryRouter>
-      </MockedProvider>
-    );
+    renderSignUp();
 
     await user.type(
       screen.getByTestId("username-input"),
@@ -66,13 +70,7 @@ describe("<SignUp />", () => {
   test("clicking return to sign in button navigates to signin page", async () => {
     const user = userEvent.setup();
 
-    render(
-      <MockedProvider mocks={mockData}>
-        <MemoryRouter>
-          <SignUp setActiveMenuItem={setActiveMenuItem} />
-        </MemoryRouter>
-      </MockedProvider>
-    );
+    renderSignUp();
 
     await user.click(screen.getByTestId("return-to-sign-in-button"));
     expect(navigate).toHaveBeenCalledWith("/signin");
