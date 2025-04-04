@@ -6,13 +6,13 @@ import SettingsCard from "../components/Settings/SettingsCard.jsx";
 import { describe, test, vi, expect, beforeEach } from "vitest";
 import mockData from "./mocks/data.js";
 import mocks from "./mocks/funcs.js";
-import { EDIT_SETTINGS } from "../graphql/mutations.js";
 
+const { editSettingsMock, currentUserMock } = mockData;
 const { localStorage } = mocks;
 
 Object.defineProperty(global, "localStorage", { value: localStorage });
 
-const userData = mockData[2].result.data.me;
+const userData = currentUserMock.result.data.me;
 
 const twelveHourUser = {
   ...userData,
@@ -39,7 +39,7 @@ describe("<SettingsCard />", () => {
   });
 
   test("Settings header renders correctly", () => {
-    renderComponent(userData, mockData);
+    renderComponent(userData, [currentUserMock]);
 
     const header = screen.getByTestId("settings-header");
     expect(header).toBeInTheDocument();
@@ -47,17 +47,17 @@ describe("<SettingsCard />", () => {
   });
 
   test("User can change to dark mode", async () => {
-    const editSettingsMock = {
+    const editSettingsMockWithDarkMode = {
       request: {
-        query: EDIT_SETTINGS,
-        variables: { theme: "dark", time: userData.settings.time },
+        ...editSettingsMock.request,
+        variables: { ...editSettingsMock.request.variables, theme: "dark" },
       },
       result: {
         data: {
           editSettings: {
-            ...userData,
+            ...editSettingsMock.result.data.editSettings,
             settings: {
-              ...userData.settings,
+              ...editSettingsMock.result.data.editSettings.settings,
               theme: "dark",
             },
           },
@@ -67,7 +67,7 @@ describe("<SettingsCard />", () => {
 
     const user = userEvent.setup();
 
-    renderComponent(userData, [...mockData, editSettingsMock]);
+    renderComponent(userData, [currentUserMock, editSettingsMockWithDarkMode]);
 
     expect(screen.getByTestId("settings-header")).toBeInTheDocument();
     expect(screen.getByTestId("light-mode")).toBeInTheDocument();
@@ -87,17 +87,17 @@ describe("<SettingsCard />", () => {
       },
     };
 
-    const editSettingsMock = {
+    const editSettingsMockWithLightMode = {
       request: {
-        query: EDIT_SETTINGS,
-        variables: { theme: "light", time: userData.settings.time },
+        ...editSettingsMock.request,
+        variables: { ...editSettingsMock.request.variables, theme: "light" },
       },
       result: {
         data: {
           editSettings: {
-            ...userData,
+            ...editSettingsMock.result.data.editSettings,
             settings: {
-              ...userData.settings,
+              ...editSettingsMock.result.data.editSettings.settings,
               theme: "light",
             },
           },
@@ -106,7 +106,10 @@ describe("<SettingsCard />", () => {
     };
 
     const user = userEvent.setup();
-    renderComponent(darkModeUser, [...mockData, editSettingsMock]);
+    renderComponent(darkModeUser, [
+      currentUserMock,
+      editSettingsMockWithLightMode,
+    ]);
 
     expect(screen.getByTestId("dark-mode")).toBeInTheDocument();
 
@@ -116,32 +119,35 @@ describe("<SettingsCard />", () => {
   });
 
   test("Shows correct clock format setting", () => {
-    renderComponent(twelveHourUser, mockData);
+    renderComponent(twelveHourUser, [currentUserMock]);
     expect(screen.getByTestId("12-hour-clock")).toBeInTheDocument();
   });
 
   test("User can toggle clock format", async () => {
     const user = userEvent.setup();
 
-    const editSettingsMock = {
+    const editSettingsMockWith24Hour = {
       request: {
-        query: EDIT_SETTINGS,
-        variables: { theme: userData.settings.theme, time: "24h" },
+        ...editSettingsMock.request,
+        variables: { ...editSettingsMock.request.variables, time: "24h" },
       },
       result: {
         data: {
           editSettings: {
-            ...userData,
+            ...editSettingsMock.result.data.editSettings,
             settings: {
-              ...userData.settings,
-              time: "24h",
+              ...editSettingsMock.result.data.editSettings.settings,
+              theme: "light",
             },
           },
         },
       },
     };
 
-    renderComponent(twelveHourUser, [...mockData, editSettingsMock]);
+    renderComponent(twelveHourUser, [
+      currentUserMock,
+      editSettingsMockWith24Hour,
+    ]);
 
     expect(screen.getByTestId("12-hour-clock")).toBeInTheDocument();
     const clockToggleButton = screen.getByTestId("time-format-button");

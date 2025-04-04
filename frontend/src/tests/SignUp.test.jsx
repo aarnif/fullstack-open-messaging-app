@@ -8,6 +8,7 @@ import { describe, test, vi, expect } from "vitest";
 import mockData from "./mocks/data.js";
 import mocks from "./mocks/funcs.js";
 
+const { loginMock, createUserMock } = mockData;
 const { client, setActiveMenuItem, localStorage, navigate } = mocks;
 
 vi.mock("react-router", async () => {
@@ -22,7 +23,7 @@ Object.defineProperty(global, "localStorage", { value: localStorage });
 
 const renderSignUp = () => {
   return render(
-    <MockedProvider mocks={mockData}>
+    <MockedProvider mocks={[loginMock, createUserMock]}>
       <MemoryRouter>
         <SignUp setActiveMenuItem={setActiveMenuItem} />
       </MemoryRouter>
@@ -39,20 +40,16 @@ describe("<SignUp />", () => {
 
   test("clicking sign up works", async () => {
     const user = userEvent.setup();
+    const { username, password, confirmPassword } =
+      createUserMock.request.variables;
 
     renderSignUp();
 
-    await user.type(
-      screen.getByTestId("username-input"),
-      mockData[1].request.variables.username
-    );
-    await user.type(
-      screen.getByTestId("password-input"),
-      mockData[1].request.variables.password
-    );
+    await user.type(screen.getByTestId("username-input"), username);
+    await user.type(screen.getByTestId("password-input"), password);
     await user.type(
       screen.getByTestId("confirm-password-input"),
-      mockData[1].request.variables.confirmPassword
+      confirmPassword
     );
     await user.click(screen.getByTestId("sign-up-submit-button"));
 

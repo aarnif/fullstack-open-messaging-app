@@ -3,8 +3,10 @@ import { describe, test, expect } from "vitest";
 import IndividualContactCard from "../components/IndividualContactCard/IndividualContactCard.jsx";
 import mockData from "./mocks/data.js";
 
-const userData = mockData[2].result.data.me;
-const contactData = mockData[3].result.data.findUserById;
+const { currentUserMock, findUserByIdMock } = mockData;
+
+const userData = currentUserMock.result.data.me;
+const contactData = findUserByIdMock.result.data.findUserById;
 
 describe("<IndividualContactCard />", () => {
   test("renders component with correct contact", () => {
