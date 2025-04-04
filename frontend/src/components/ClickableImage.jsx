@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 const FullScreenView = ({ fullScreenImageUri, setShowImageView }) => {
   return createPortal(
     <div
+      data-testid="full-screen-view"
       className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 transition"
       onClick={() => setShowImageView(false)}
     >
@@ -29,7 +30,10 @@ const ClickableImage = ({
 
   return (
     <>
-      <button onClick={() => setShowImageView(true)}>
+      <button
+        data-testid="show-fullscreen-view-button"
+        onClick={() => setShowImageView(true)}
+      >
         <img src={imageUri} alt={imageAlt} className={className} />
       </button>
       {showImageView && (
