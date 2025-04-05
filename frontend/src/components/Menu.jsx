@@ -164,7 +164,7 @@ const Menu = ({
   ];
 
   return (
-    <div className="bg-slate-200 dark:bg-slate-800">
+    <div data-testid="menu" className="bg-slate-200 dark:bg-slate-800">
       <ul className="flex justify-around lg:justify-center items-center flex-row lg:flex-col px-4 lg:px-0 my-0 lg:my-2">
         {menuItems.map((item, index) => (
           <li key={index} id={item.id} className="m-1 lg:m-2">
