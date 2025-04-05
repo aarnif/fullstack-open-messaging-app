@@ -47,6 +47,7 @@ const NewChatDropDownBox = ({
       onClick={() => setShowNewChatDropdownBox(false)}
     >
       <motion.div
+        data-testid="new-chat-dropdown-box"
         className="absolute top-[70px] right-12 lg:right-auto lg:left-[500px] flex-grow p-4 flex flex-col justify-center items-center bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-700 z-10"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
