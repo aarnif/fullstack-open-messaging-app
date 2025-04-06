@@ -3,9 +3,12 @@ import { MdOpenInNew } from "react-icons/md";
 
 const MenuHeader = ({ title, handleCallBack, searchWord }) => {
   return (
-    <div className="p-4">
+    <div data-testid="menu-header" className="p-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl lg:text-2xl text-slate-800 dark:text-slate-100 font-bold">
+        <h1
+          data-testid="menu-header-title"
+          className="text-xl lg:text-2xl text-slate-800 dark:text-slate-100 font-bold"
+        >
           {title}
         </h1>
         <button

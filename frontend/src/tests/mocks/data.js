@@ -148,6 +148,11 @@ const mockData = [
   },
 ];
 
+const mockSearchWord = {
+  value: "Travel",
+  onChange: vi.fn(),
+};
+
 const [
   loginMock,
   createUserMock,
@@ -164,4 +169,5 @@ export default {
   currentUserMock,
   findUserByIdMock,
   editProfileMock,
+  mockSearchWord,
 };

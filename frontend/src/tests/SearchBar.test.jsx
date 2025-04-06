@@ -1,10 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
+import mockData from "./mocks/data.js";
 import SearchBar from "../components/SearchBar";
 
-const mockSearchWord = {
-  value: "Travel",
-};
+const { mockSearchWord } = mockData;
 
 describe("<SearchBar />", () => {
   test("renders component with correct search text", () => {
