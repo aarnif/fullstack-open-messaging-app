@@ -6,7 +6,7 @@ import { IoChevronBack } from "react-icons/io5";
 import { FIND_USER_BY_ID } from "../graphql/queries";
 import Loading from "./Loading";
 import IndividualContactCard from "./IndividualContactCard/IndividualContactCard";
-import IndividualContactOptions from "./IndividualContactCard/IndividualContactCardOptions";
+import IndividualContactCardOptions from "./IndividualContactCard/IndividualContactCardOptions";
 
 const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
                   </div>
                 )}
               </div>
-              <IndividualContactOptions
+              <IndividualContactCardOptions
                 user={user}
                 contact={data.findUserById}
                 isBlocked={isBlocked}

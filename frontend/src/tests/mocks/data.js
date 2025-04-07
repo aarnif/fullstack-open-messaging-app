@@ -4,7 +4,11 @@ import {
   EDIT_SETTINGS,
   EDIT_PROFILE,
 } from "../../graphql/mutations";
-import { CURRENT_USER, FIND_USER_BY_ID } from "../../graphql/queries";
+import {
+  CURRENT_USER,
+  FIND_USER_BY_ID,
+  FIND_CHAT_BY_MEMBERS,
+} from "../../graphql/queries";
 
 const mockData = [
   {
@@ -32,6 +36,7 @@ const mockData = [
     result: {
       data: {
         createUser: {
+          __typename: "User",
           username: "test",
           name: "Test",
         },
@@ -46,6 +51,7 @@ const mockData = [
     result: {
       data: {
         editSettings: {
+          __typename: "User",
           id: "6690caa44dc3eac2b83517c7",
           username: "test",
           name: "Test User",
@@ -70,6 +76,7 @@ const mockData = [
     result: {
       data: {
         me: {
+          __typename: "User",
           id: "6690caa44dc3eac2b83517c7",
           username: "test",
           name: "Test User",
@@ -97,6 +104,7 @@ const mockData = [
     result: {
       data: {
         findUserById: {
+          __typename: "User",
           id: "6690caa54dc3eac2b83517ce",
           username: "techie_alice",
           name: "Alice Jones",
@@ -128,6 +136,7 @@ const mockData = [
       result: {
         data: {
           editProfile: {
+            __typename: "User",
             id: "6690caa44dc3eac2b83517c7",
             username: "test",
             name: "Test User",
@@ -146,6 +155,129 @@ const mockData = [
       },
     },
   },
+  {
+    request: {
+      query: FIND_CHAT_BY_MEMBERS,
+      variables: {
+        members: ["6690caa44dc3eac2b83517c7", "6690caa54dc3eac2b83517ce"],
+      },
+    },
+    result: {
+      data: {
+        findChatByMembers: {
+          __typename: "Chat",
+          id: "67f3d9e15b5ec0457e8d19ed",
+          title: "Alice Jones",
+          image: {
+            __typename: "Image",
+            thumbnail: "https://i.ibb.co/YBz3jdp/6690caa54dc3eac2b83517ce.png",
+            original: "https://i.ibb.co/r2Cmyp4/6690caa54dc3eac2b83517ce.png",
+          },
+          description: "",
+          isGroupChat: false,
+          admin: {
+            __typename: "User",
+            id: "6690caa44dc3eac2b83517c7",
+            username: "test",
+            name: "Test User",
+            about: "This is a test user.",
+          },
+          members: [
+            {
+              __typename: "User",
+              id: "6690caa44dc3eac2b83517c7",
+              username: "test",
+              name: "Test User",
+              about: "This is a test user.",
+              image: {
+                __typename: "Image",
+                thumbnail: null,
+                original: null,
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "dark",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517ce",
+              username: "techie_alice",
+              name: "Alice Jones",
+              about: "Tech geek and foodie.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/YBz3jdp/6690caa54dc3eac2b83517ce.png",
+                original:
+                  "https://i.ibb.co/r2Cmyp4/6690caa54dc3eac2b83517ce.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+          ],
+          messages: [
+            {
+              __typename: "Message",
+              id: "67f3d9e15b5ec0457e8d19ff",
+              type: "message",
+              content: "Hello!",
+              image: {
+                __typename: "Image",
+                thumbnail: null,
+                original: null,
+              },
+              sender: {
+                __typename: "User",
+                id: "6690caa44dc3eac2b83517c7",
+                username: "test",
+                name: "Test User",
+                about: "This is a test user.",
+                image: {
+                  __typename: "Image",
+                  thumbnail: null,
+                  original: null,
+                },
+                settings: {
+                  __typename: "Settings",
+                  theme: "dark",
+                  time: "24h",
+                },
+                blockedContacts: [],
+              },
+              isReadBy: [
+                {
+                  __typename: "IsReadBy",
+                  member: {
+                    __typename: "User",
+                    id: "6690caa44dc3eac2b83517c7",
+                    username: "test",
+                  },
+                  isRead: true,
+                },
+                {
+                  __typename: "IsReadBy",
+                  member: {
+                    __typename: "User",
+                    id: "6690caa54dc3eac2b83517ce",
+                    username: "techie_alice",
+                  },
+                  isRead: false,
+                },
+              ],
+              createdAt: "2025-04-07T13:57:53.368Z",
+            },
+          ],
+        },
+      },
+    },
+  },
 ];
 
 const mockSearchWord = {
@@ -160,6 +292,7 @@ const [
   currentUserMock,
   findUserByIdMock,
   editProfileMock,
+  findChatByMembersMock,
 ] = mockData;
 
 export default {
@@ -169,5 +302,6 @@ export default {
   currentUserMock,
   findUserByIdMock,
   editProfileMock,
+  findChatByMembersMock,
   mockSearchWord,
 };
