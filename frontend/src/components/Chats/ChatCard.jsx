@@ -41,7 +41,7 @@ const ChatCard = ({ user, chat }) => {
 
   return (
     <>
-      <div className="mr-4">
+      <div data-testid="chat-card" className="mr-4">
         <img
           className="w-14 h-14 sm:w-16 sm:h-16 rounded-full"
           src={chat.image.thumbnail}
