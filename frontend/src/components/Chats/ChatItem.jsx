@@ -46,6 +46,7 @@ const ChatItem = ({
 
   return (
     <button
+      id={activeChatOrContactId === item.id ? "active-chat" : ""}
       className={classStyles}
       data-testid={`chat-item-${index}`}
       onClick={handlePress}
