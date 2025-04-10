@@ -4,10 +4,10 @@ import ChatCard from "../components/Chats/ChatCard.jsx";
 import mockData from "./mocks/data.js";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers.js";
 
-const { currentUserMock, findChatByIdMock } = mockData;
+const { currentUserMock, groupChatMock } = mockData;
 
 const userData = currentUserMock.result.data.me;
-const chatData = findChatByIdMock.result.data.findChatById;
+const chatData = groupChatMock.result.data.findChatById;
 
 describe("<ChatCard />", () => {
   test("renders chat with correct info", () => {

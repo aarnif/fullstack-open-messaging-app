@@ -7,11 +7,11 @@ import ChatItem from "../components/Chats/ChatItem.jsx";
 import mockData from "./mocks/data.js";
 import mocks from "./mocks/funcs.js";
 
-const { currentUserMock, findChatByIdMock } = mockData;
+const { currentUserMock, groupChatMock } = mockData;
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
-const mockChatData = findChatByIdMock.result.data.findChatById;
+const mockChatData = groupChatMock.result.data.findChatById;
 
 const mockSetActiveChatOrContactId = vi.fn();
 
@@ -28,7 +28,7 @@ const renderChatItem = (
   activeChatOrContactId = chatData.id
 ) => {
   return render(
-    <MockedProvider mocks={[currentUserMock, findChatByIdMock]}>
+    <MockedProvider mocks={[currentUserMock, groupChatMock]}>
       <MemoryRouter>
         <ChatItem
           index={0}
