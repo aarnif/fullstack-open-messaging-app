@@ -27,7 +27,7 @@ const Messages = ({ user, messages }) => {
         <div className="w-full flex-grow py-4 sm:py-8 px-4 sm:px-16">
           {messages.map((item, index) => {
             return (
-              <Fragment key={item.id} data-testid={`message-${index}`}>
+              <Fragment key={item.id}>
                 <Message user={user} message={item} index={index} />
                 <div ref={messagesEndRef} />
               </Fragment>

@@ -86,6 +86,7 @@ const PrivateChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
 
   return (
     <motion.div
+      data-testid="private-chat-info-modal"
       className="z-10 absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700"
       initial={{ width: "0%", opacity: 0 }}
       animate={{ width: "100%", opacity: 1, duration: 0.2 }}
