@@ -30,9 +30,12 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
   );
 
   return (
-    <div className="relative w-full flex justify-center items-center py-2 bg-white dark:bg-slate-800 shadow-lg">
+    <div
+      data-testid="chat-header"
+      className="relative w-full flex justify-center items-center py-2 bg-white dark:bg-slate-800 shadow-lg"
+    >
       <div className="absolute left-2 flex justify-center items-center sm:hidden">
-        <button onClick={goBack}>
+        <button data-testid="go-back-button" onClick={goBack}>
           <IoChevronBack className="w-6 h-6 lg:w-7 lg:h-7 text-slate-700 dark:text-slate-100 fill-current" />
         </button>
       </div>
