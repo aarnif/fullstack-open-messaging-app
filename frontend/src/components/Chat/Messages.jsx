@@ -13,9 +13,10 @@ const Messages = ({ user, messages }) => {
   }, [messages]);
 
   return (
-    <div className="h-full flex-grow flex flex-col">
+    <div data-testid="chat-messages" className="h-full flex-grow flex flex-col">
       {!messages.length ? (
         <div
+          data-testid="no-messages"
           className="w-full flex-grow flex justify-center items-center"
           key={"Empty item"}
         >
