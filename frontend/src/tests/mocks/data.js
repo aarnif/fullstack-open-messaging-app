@@ -5,6 +5,7 @@ import {
   EDIT_PROFILE,
   MARK_MESSAGES_IN_CHAT_READ,
   ADD_MESSAGE_TO_CHAT,
+  CREATE_CHAT,
 } from "../../graphql/mutations";
 import {
   CURRENT_USER,
@@ -1824,11 +1825,300 @@ const mockData = [
       },
     },
   },
+
+  {
+    request: {
+      query: CREATE_CHAT,
+      variables: {
+        title: "New Group Chat",
+        description: "This is a group chat.",
+        memberIds: [
+          "6690caa44dc3eac2b83517c7",
+          "6690caa54dc3eac2b83517ca",
+          "6690caa54dc3eac2b83517d6",
+        ],
+      },
+    },
+    result: {
+      data: {
+        addMessageToChat: {
+          __typename: "Chat",
+          id: "6690cc6331f8d4e66b57ae99",
+          title: "New Group Chat",
+          image: {
+            __typename: "Image",
+            thumbnail: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+            original: "https://i.ibb.co/FqHrScZ/chat-placeholder.png",
+          },
+          description: "This is a group chat.",
+          isGroupChat: true,
+          admin: {
+            __typename: "User",
+            id: "6690caa44dc3eac2b83517c7",
+            username: "test",
+            name: "Test User",
+            about: "This is a test user.",
+          },
+          members: [
+            {
+              __typename: "User",
+              id: "6690caa44dc3eac2b83517c7",
+              username: "test",
+              name: "Test User",
+              about: "This is a test user.",
+              image: {
+                __typename: "Image",
+                thumbnail: null,
+                original: null,
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "dark",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517ca",
+              username: "hiker_john",
+              name: "John Doe",
+              about: "Love hiking and outdoor adventures.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/gRT6j6Z/6690caa54dc3eac2b83517ca.png",
+                original:
+                  "https://i.ibb.co/Tg8rvrM/g-RT6j6-Z-6690caa54dc3eac2b83517ca.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517d6",
+              username: "travel_emma",
+              name: "Emma Davis",
+              about: "Travel blogger.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/nDQkfL2/6690caa54dc3eac2b83517d6.png",
+                original:
+                  "https://i.ibb.co/rZ5yMwP/6690caa54dc3eac2b83517d6.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+          ],
+          messages: [],
+        },
+      },
+    },
+  },
+
+  {
+    request: {
+      query: ADD_MESSAGE_TO_CHAT,
+      variables: {
+        chatId: "6690cc6331f8d4e66b57ae99",
+        content: "This is a first message.",
+        input: { thumbnail: null, original: null },
+      },
+    },
+    result: {
+      data: {
+        addMessageToChat: {
+          __typename: "Chat",
+          id: "6690cc6331f8d4e66b57ae99",
+          title: "New Group Chat",
+          image: {
+            __typename: "Image",
+            thumbnail: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+            original: "https://i.ibb.co/FqHrScZ/chat-placeholder.png",
+          },
+          description: "This is a group chat.",
+          isGroupChat: true,
+          admin: {
+            __typename: "User",
+            id: "6690caa44dc3eac2b83517c7",
+            username: "test",
+            name: "Test User",
+            about: "This is a test user.",
+          },
+          members: [
+            {
+              __typename: "User",
+              id: "6690caa44dc3eac2b83517c7",
+              username: "test",
+              name: "Test User",
+              about: "This is a test user.",
+              image: {
+                __typename: "Image",
+                thumbnail: null,
+                original: null,
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "dark",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517ca",
+              username: "hiker_john",
+              name: "John Doe",
+              about: "Love hiking and outdoor adventures.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/gRT6j6Z/6690caa54dc3eac2b83517ca.png",
+                original:
+                  "https://i.ibb.co/Tg8rvrM/g-RT6j6-Z-6690caa54dc3eac2b83517ca.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517d6",
+              username: "travel_emma",
+              name: "Emma Davis",
+              about: "Travel blogger.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/nDQkfL2/6690caa54dc3eac2b83517d6.png",
+                original:
+                  "https://i.ibb.co/rZ5yMwP/6690caa54dc3eac2b83517d6.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+          ],
+          messages: [
+            {
+              __typename: "Message",
+              id: "67d2a1b3f99fb810c3a83be9",
+              type: "message",
+              content: "This is a first message.",
+              image: {
+                __typename: "Image",
+                thumbnail: "",
+                original: "",
+              },
+              sender: {
+                __typename: "User",
+                id: "6690caa44dc3eac2b83517c7",
+                username: "test",
+                name: "Test User",
+                about: "This is a test user.",
+                image: {
+                  __typename: "Image",
+                  thumbnail: null,
+                  original: null,
+                },
+                settings: {
+                  __typename: "Settings",
+                  theme: "dark",
+                  time: "24h",
+                },
+                blockedContacts: [],
+              },
+              isReadBy: [],
+              createdAt: "2024-06-01T10:00:00.000Z",
+            },
+          ],
+        },
+      },
+    },
+  },
 ];
 
 const mockSearchWord = {
   value: "Travel",
   onChange: vi.fn(),
+};
+
+const mockNewChatInfo = {
+  title: "New Group Chat",
+  description: "This is a group chat.",
+  members: [
+    {
+      __typename: "User",
+      id: "6690caa44dc3eac2b83517c7",
+      username: "test",
+      name: "Test User",
+      about: "This is a test user.",
+      image: {
+        __typename: "Image",
+        thumbnail: null,
+        original: null,
+      },
+      settings: {
+        __typename: "Settings",
+        theme: "dark",
+        time: "24h",
+      },
+      blockedContacts: [],
+    },
+    {
+      __typename: "User",
+      id: "6690caa54dc3eac2b83517ca",
+      username: "hiker_john",
+      name: "John Doe",
+      about: "Love hiking and outdoor adventures.",
+      image: {
+        __typename: "Image",
+        thumbnail: "https://i.ibb.co/gRT6j6Z/6690caa54dc3eac2b83517ca.png",
+        original:
+          "https://i.ibb.co/Tg8rvrM/g-RT6j6-Z-6690caa54dc3eac2b83517ca.png",
+      },
+      settings: {
+        __typename: "Settings",
+        theme: "light",
+        time: "24h",
+      },
+      blockedContacts: [],
+    },
+    {
+      __typename: "User",
+      id: "6690caa54dc3eac2b83517d6",
+      username: "travel_emma",
+      name: "Emma Davis",
+      about: "Travel blogger.",
+      image: {
+        __typename: "Image",
+        thumbnail: "https://i.ibb.co/nDQkfL2/6690caa54dc3eac2b83517d6.png",
+        original: "https://i.ibb.co/rZ5yMwP/6690caa54dc3eac2b83517d6.png",
+      },
+      settings: {
+        __typename: "Settings",
+        theme: "light",
+        time: "24h",
+      },
+      blockedContacts: [],
+    },
+  ],
+  image: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
 };
 
 const [
@@ -1844,6 +2134,8 @@ const [
   markAllMessagesInGroupChatReadMock,
   markAllMessagesInPrivateChatReadMock,
   addMessageToChatMock,
+  createNewChatMock,
+  addMessageToNewChatMock,
 ] = mockData;
 
 export default {
@@ -1859,5 +2151,8 @@ export default {
   markAllMessagesInGroupChatReadMock,
   markAllMessagesInPrivateChatReadMock,
   addMessageToChatMock,
+  createNewChatMock,
+  addMessageToNewChatMock,
   mockSearchWord,
+  mockNewChatInfo,
 };
