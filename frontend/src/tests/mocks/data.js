@@ -1841,7 +1841,7 @@ const mockData = [
     },
     result: {
       data: {
-        addMessageToChat: {
+        createChat: {
           __typename: "Chat",
           id: "6690cc6331f8d4e66b57ae99",
           title: "New Group Chat",
@@ -1931,6 +1931,7 @@ const mockData = [
       variables: {
         chatId: "6690cc6331f8d4e66b57ae99",
         content: "This is a first message.",
+        senderId: "6690caa44dc3eac2b83517c7",
         input: { thumbnail: null, original: null },
       },
     },

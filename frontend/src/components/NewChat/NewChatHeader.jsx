@@ -19,9 +19,16 @@ const NewChatHeader = ({ user, chat }) => {
     .join(", ");
 
   return (
-    <div className="w-full flex justify-center items-center py-2 bg-white dark:bg-slate-800 shadow-lg">
+    <div
+      data-testid="new-chat-header"
+      className="w-full flex justify-center items-center py-2 bg-white dark:bg-slate-800 shadow-lg"
+    >
       <div className="flex">
-        <button onClick={getInfo} className="flex-grow">
+        <button
+          data-testid="chat-info-button"
+          onClick={getInfo}
+          className="flex-grow"
+        >
           <div className="flex justify-center items-center">
             <div className="mr-4">
               <img
