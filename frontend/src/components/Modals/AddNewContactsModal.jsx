@@ -85,6 +85,7 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
     >
       <motion.div
         key={"newContactModal"}
+        data-testid="add-new-contacts-modal"
         className="w-[500px] h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-700 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
         initial={{ y: -50, opacity: 0 }}
@@ -95,6 +96,7 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
         <div className="h-full flex-grow flex flex-col pt-4 px-4">
           <div className="w-full flex justify-center items-center">
             <button
+              data-testid="close-add-new-contacts-modal-button"
               className="text-2xl text-slate-700"
               onClick={() => setShowAddNewContactsModal(false)}
             >
@@ -113,7 +115,10 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
           </div>
           <>
             <Notify notifyMessage={notifyMessage} />
-            <SearchBar searchWord={searchWord} />
+            <SearchBar
+              searchWord={searchWord}
+              dataTestId={"search-contacts-input"}
+            />
             {result.loading ? (
               <Loading />
             ) : (
