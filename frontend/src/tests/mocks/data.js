@@ -13,7 +13,9 @@ import {
   FIND_USER_BY_ID,
   FIND_CHAT_BY_MEMBERS,
   FIND_CHAT_BY_ID,
+  FIND_GROUP_CHAT_BY_TITLE,
   ALL_CONTACTS_EXCEPT_BY_USER,
+  ALL_CONTACTS_BY_USER,
 } from "../../graphql/queries";
 
 const mockData = [
@@ -702,6 +704,113 @@ const mockData = [
               createdAt: "2024-06-01T10:00:00.000Z",
             },
           ],
+        },
+      },
+    },
+  },
+
+  {
+    request: {
+      query: FIND_GROUP_CHAT_BY_TITLE,
+      variables: {
+        title: "Test Group Chat",
+      },
+    },
+    result: {
+      data: {
+        findGroupChatByTitle: null,
+      },
+    },
+  },
+
+  {
+    request: {
+      query: FIND_GROUP_CHAT_BY_TITLE,
+      variables: {
+        title: "Test Group Chat",
+      },
+    },
+    result: {
+      data: {
+        findGroupChatByTitle: {
+          __typename: "Chat",
+          id: "67f3d9e15b5ec0457e8d19ed",
+          title: "Test Group Chat",
+          image: {
+            __typename: "Image",
+            thumbnail: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+            original: "https://i.ibb.co/FqHrScZ/chat-placeholder.png",
+          },
+          description: "This is a test group chat",
+          isGroupChat: true,
+          admin: {
+            __typename: "User",
+            id: "6690caa44dc3eac2b83517c7",
+            username: "test",
+            name: "Test User",
+            about: "This is a test user.",
+          },
+          members: [
+            {
+              __typename: "User",
+              id: "6690caa44dc3eac2b83517c7",
+              username: "test",
+              name: "Test User",
+              about: "This is a test user.",
+              image: {
+                __typename: "Image",
+                thumbnail: null,
+                original: null,
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "dark",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517ce",
+              username: "techie_alice",
+              name: "Alice Jones",
+              about: "Tech geek and foodie.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/YBz3jdp/6690caa54dc3eac2b83517ce.png",
+                original:
+                  "https://i.ibb.co/r2Cmyp4/6690caa54dc3eac2b83517ce.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517d0",
+              username: "music_bob",
+              name: "Bob Brown",
+              about: "Musician and artist.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/GcRP93m/6690caa54dc3eac2b83517d0.png",
+                original:
+                  "https://i.ibb.co/qkp1CF6/6690caa54dc3eac2b83517d0.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+          ],
+          messages: [],
         },
       },
     },
@@ -2515,6 +2624,348 @@ const mockData = [
 
   {
     request: {
+      query: ALL_CONTACTS_BY_USER,
+      variables: {
+        searchByName: "",
+      },
+    },
+    result: {
+      data: {
+        allContactsByUser: {
+          contacts: [
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517ce",
+              username: "techie_alice",
+              name: "Alice Jones",
+              about: "Tech geek and foodie.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/YBz3jdp/6690caa54dc3eac2b83517ce.png",
+                original:
+                  "https://i.ibb.co/r2Cmyp4/6690caa54dc3eac2b83517ce.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517d0",
+              username: "music_bob",
+              name: "Bob Brown",
+              about: "Musician and artist.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/GcRP93m/6690caa54dc3eac2b83517d0.png",
+                original:
+                  "https://i.ibb.co/qkp1CF6/6690caa54dc3eac2b83517d0.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517d2",
+              username: "streamer_charlie",
+              name: "Charlie Clark",
+              about: "Gamer and streamer.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/MBFDk3Q/6690caa54dc3eac2b83517d2.png",
+                original:
+                  "https://i.ibb.co/GHzvQbN/6690caa54dc3eac2b83517d2.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517d6",
+              username: "travel_emma",
+              name: "Emma Davis",
+              about: "Travel blogger.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/nDQkfL2/6690caa54dc3eac2b83517d6.png",
+                original:
+                  "https://i.ibb.co/rZ5yMwP/6690caa54dc3eac2b83517d6.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517d8",
+              username: "history_frank",
+              name: "Frank Miller",
+              about: "History buff.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/HggGYm2/6690caa54dc3eac2b83517d8.png",
+                original:
+                  "https://i.ibb.co/SvvV0qx/6690caa54dc3eac2b83517d8.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517da",
+              username: "photo_grace",
+              name: "Grace Martin",
+              about: "Photographer.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/DG7wnT2/6690caa54dc3eac2b83517da.png",
+                original:
+                  "https://i.ibb.co/vsJL8Rn/6690caa54dc3eac2b83517da.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517dc",
+              username: "chef_harry",
+              name: "Harry Thompson",
+              about: "Chef and food critic.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/pJz7k8K/6690caa54dc3eac2b83517dc.png",
+                original:
+                  "https://i.ibb.co/WgyhRwz/6690caa54dc3eac2b83517dc.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517cc",
+              username: "bookworm_jane",
+              name: "Jane Smith",
+              about: "Avid reader and coffee enthusiast.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/0QSZqjv/6690caa54dc3eac2b83517cc.png",
+                original:
+                  "https://i.ibb.co/wYXCyNj/6690caa54dc3eac2b83517cc.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517ca",
+              username: "hiker_john",
+              name: "John Doe",
+              about: "Love hiking and outdoor adventures.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/gRT6j6Z/6690caa54dc3eac2b83517ca.png",
+                original:
+                  "https://i.ibb.co/Tg8rvrM/g-RT6j6-Z-6690caa54dc3eac2b83517ca.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "6690caa44dc3eac2b83517c7",
+              username: "test",
+              name: "Test User",
+              about: "This is a test user.",
+              image: {
+                __typename: "Image",
+                thumbnail: null,
+                original: null,
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "dark",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "67d587f9a1ac8a94656663fa",
+              username: "user1",
+              name: "User1",
+              about: "Hey there! I'm using this app!",
+              image: {
+                __typename: "Image",
+                thumbnail: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+                original: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "67d587f9a1ac8a94656663fc",
+              username: "user2",
+              name: "User2",
+              about: "Hey there! I'm using this app!",
+              image: {
+                __typename: "Image",
+                thumbnail: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+                original: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "67d587f9a1ac8a9465666402",
+              username: "user3",
+              name: "User3",
+              about: "Hey there! I'm using this app!",
+              image: {
+                __typename: "Image",
+                thumbnail: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+                original: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "67d587f9a1ac8a9465666400",
+              username: "user4",
+              name: "User4",
+              about: "Hey there! I'm using this app!",
+              image: {
+                __typename: "Image",
+                thumbnail: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+                original: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+            {
+              __typename: "User",
+              id: "67d587f9a1ac8a94656663fe",
+              username: "user5",
+              name: "User5",
+              about: "Hey there! I'm using this app!",
+              image: {
+                __typename: "Image",
+                thumbnail: "https://i.ibb.co/vJDhmJJ/profile-placeholder.png",
+                original: "https://i.ibb.co/cNxwtNN/profile-placeholder.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+          ],
+        },
+      },
+    },
+  },
+
+  {
+    request: {
+      query: ALL_CONTACTS_BY_USER,
+      variables: {
+        searchByName: "Alice Jones",
+      },
+    },
+    result: {
+      data: {
+        allContactsByUser: {
+          contacts: [
+            {
+              __typename: "User",
+              id: "6690caa54dc3eac2b83517ce",
+              username: "techie_alice",
+              name: "Alice Jones",
+              about: "Tech geek and foodie.",
+              image: {
+                __typename: "Image",
+                thumbnail:
+                  "https://i.ibb.co/YBz3jdp/6690caa54dc3eac2b83517ce.png",
+                original:
+                  "https://i.ibb.co/r2Cmyp4/6690caa54dc3eac2b83517ce.png",
+              },
+              settings: {
+                __typename: "Settings",
+                theme: "light",
+                time: "24h",
+              },
+              blockedContacts: [],
+            },
+          ],
+        },
+      },
+    },
+  },
+
+  {
+    request: {
       query: ADD_CONTACTS,
       variables: {
         userIds: [
@@ -2890,6 +3341,8 @@ const [
   editProfileMock,
   findChatByMembersMock,
   groupChatMock,
+  findGroupChatByTitleNullMock,
+  findGroupChatByTitleMock,
   privateChatMock,
   markAllMessagesInGroupChatReadMock,
   markAllMessagesInPrivateChatReadMock,
@@ -2899,6 +3352,8 @@ const [
   findNewChatByMembersMock,
   allContactsExceptByUserMock,
   allContactsExceptByUserSearchMock,
+  allContactsByUserMock,
+  allContactsByUserSearchMock,
   addContactsMock,
 ] = mockData;
 
@@ -2911,6 +3366,8 @@ export default {
   editProfileMock,
   findChatByMembersMock,
   groupChatMock,
+  findGroupChatByTitleNullMock,
+  findGroupChatByTitleMock,
   privateChatMock,
   markAllMessagesInGroupChatReadMock,
   markAllMessagesInPrivateChatReadMock,
@@ -2920,6 +3377,8 @@ export default {
   findNewChatByMembersMock,
   allContactsExceptByUserMock,
   allContactsExceptByUserSearchMock,
+  allContactsByUserMock,
+  allContactsByUserSearchMock,
   addContactsMock,
   mockSearchWord,
   mockNewChatInfo,
