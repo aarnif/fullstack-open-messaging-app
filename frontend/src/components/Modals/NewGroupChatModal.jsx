@@ -53,7 +53,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
       },
     });
 
-    if (checkIfGroupChatAlreadyExists.data?.checkIfGroupChatExists) {
+    if (checkIfGroupChatAlreadyExists.data?.findGroupChatByTitle) {
       notifyMessage.show("Group chat with the same title already exists!");
       return;
     }
