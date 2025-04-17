@@ -16,6 +16,7 @@ import {
   FIND_GROUP_CHAT_BY_TITLE,
   ALL_CONTACTS_EXCEPT_BY_USER,
   ALL_CONTACTS_BY_USER,
+  CHECK_IF_USER_HAS_BLOCKED_YOU,
 } from "../../graphql/queries";
 
 const mockData = [
@@ -163,6 +164,21 @@ const mockData = [
       },
     },
   },
+
+  {
+    request: {
+      query: FIND_CHAT_BY_MEMBERS,
+      variables: {
+        members: ["6690caa44dc3eac2b83517c7", "6690caa54dc3eac2b83517ce"],
+      },
+    },
+    result: {
+      data: {
+        findChatByMembers: null,
+      },
+    },
+  },
+
   {
     request: {
       query: FIND_CHAT_BY_MEMBERS,
@@ -3262,6 +3278,34 @@ const mockData = [
       },
     },
   },
+
+  {
+    request: {
+      query: CHECK_IF_USER_HAS_BLOCKED_YOU,
+      variables: {
+        userId: "6690caa54dc3eac2b83517ce",
+      },
+    },
+    result: {
+      data: {
+        checkIfUserHasBlockedYou: true,
+      },
+    },
+  },
+
+  {
+    request: {
+      query: CHECK_IF_USER_HAS_BLOCKED_YOU,
+      variables: {
+        userId: "6690caa54dc3eac2b83517ce",
+      },
+    },
+    result: {
+      data: {
+        checkIfUserHasBlockedYou: false,
+      },
+    },
+  },
 ];
 
 const mockSearchWord = {
@@ -3339,6 +3383,7 @@ const [
   currentUserMock,
   findUserByIdMock,
   editProfileMock,
+  findChatByMembersNullMock,
   findChatByMembersMock,
   groupChatMock,
   findGroupChatByTitleNullMock,
@@ -3355,6 +3400,8 @@ const [
   allContactsByUserMock,
   allContactsByUserSearchMock,
   addContactsMock,
+  checkIfUserHasBlockedYouTrueMock,
+  checkIfUserHasBlockedYouFalseMock,
 ] = mockData;
 
 export default {
@@ -3364,6 +3411,7 @@ export default {
   currentUserMock,
   findUserByIdMock,
   editProfileMock,
+  findChatByMembersNullMock,
   findChatByMembersMock,
   groupChatMock,
   findGroupChatByTitleNullMock,
@@ -3380,6 +3428,8 @@ export default {
   allContactsByUserMock,
   allContactsByUserSearchMock,
   addContactsMock,
+  checkIfUserHasBlockedYouTrueMock,
+  checkIfUserHasBlockedYouFalseMock,
   mockSearchWord,
   mockNewChatInfo,
 };
