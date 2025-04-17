@@ -7,7 +7,12 @@ import EditGroupChatModal from "../components/Modals/EditGroupChatModal/EditGrou
 import mockData from "./mocks/data.js";
 import mocks from "./mocks/funcs.js";
 
-const { currentUserMock, allContactsByUserMock, groupChatMock } = mockData;
+const {
+  currentUserMock,
+  groupChatMock,
+  allContactsByUserMock,
+  allContactsByUserMockWithoutSearchWord,
+} = mockData;
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
@@ -15,14 +20,6 @@ const chatData = groupChatMock.result.data.findChatById;
 
 const mockModal = vi.fn();
 const mockShowEditGroupChatModal = vi.fn();
-
-const allContactsByUserMockWithoutSearchWord = {
-  ...allContactsByUserMock,
-  request: {
-    ...allContactsByUserMock.request,
-    variables: {}, // ensure no variables are being passed
-  },
-};
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");

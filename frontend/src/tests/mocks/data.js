@@ -3404,6 +3404,14 @@ const [
   checkIfUserHasBlockedYouFalseMock,
 ] = mockData;
 
+const allContactsByUserMockWithoutSearchWord = {
+  ...allContactsByUserMock,
+  request: {
+    ...allContactsByUserMock.request,
+    variables: {},
+  },
+};
+
 export default {
   loginMock,
   createUserMock,
@@ -3427,6 +3435,7 @@ export default {
   allContactsExceptByUserSearchMock,
   allContactsByUserMock,
   allContactsByUserSearchMock,
+  allContactsByUserMockWithoutSearchWord,
   addContactsMock,
   checkIfUserHasBlockedYouTrueMock,
   checkIfUserHasBlockedYouFalseMock,
