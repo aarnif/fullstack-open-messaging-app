@@ -17,7 +17,10 @@ const SelectContactsList = ({ data, chosenUserIds, setChosenUserIds }) => {
   ];
 
   return (
-    <div className="w-full bg-white dark:bg-slate-800">
+    <div
+      data-testid="select-contacts-list"
+      className="w-full bg-white dark:bg-slate-800"
+    >
       {selectedAndUnselectedUsers.map((item) => (
         <SelectContactsItem
           key={item.id}
