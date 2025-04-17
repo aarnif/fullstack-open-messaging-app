@@ -12,7 +12,10 @@ const SelectContactList = ({ data, chosenUserId, setChosenUserId }) => {
   }
 
   return (
-    <div className="w-full bg-white dark:bg-slate-800">
+    <div
+      data-testid="select-contact-list"
+      className="w-full bg-white dark:bg-slate-800"
+    >
       {data.map((item) => (
         <SelectContactItem
           key={item.id}
