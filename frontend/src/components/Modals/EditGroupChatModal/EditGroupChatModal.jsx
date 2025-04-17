@@ -106,6 +106,7 @@ const EditGroupChatModal = ({
   return (
     <>
       <motion.div
+        data-testid="edit-group-chat-modal"
         className="absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700 overflow-y-auto sm:overflow-hidden"
         initial={{ width: "0%", opacity: 0 }}
         animate={{ width: "100%", opacity: 1, duration: 0.2 }}
@@ -116,7 +117,10 @@ const EditGroupChatModal = ({
             <div className="w-full flex justify-center items-center pb-4">
               <div className="w-[70px] flex justify-start items-center">
                 <div className="w-8 h-8 rounded-full flex justify-center items-center">
-                  <button onClick={goBack}>
+                  <button
+                    data-testid="close-edit-group-chat-modal-button"
+                    onClick={goBack}
+                  >
                     <IoChevronBack className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
                   </button>
                 </div>
@@ -185,14 +189,13 @@ const EditGroupChatModal = ({
                   <button
                     type="button"
                     data-testid="update-group-chat-members-button"
-                    className="w-full max-h-[60px] p-2 flex justify-center items-center border-2 
+                    className="w-full max-h-[60px] p-2 flex justify-center items-center border-2
+                    text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100
                     border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
                     active:scale-95 rounded-xl transition"
                     onClick={() => setShowUpdateMembersModal(true)}
                   >
-                    <div className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100">
-                      Update members
-                    </div>
+                    Update members
                   </button>
                 </li>
 

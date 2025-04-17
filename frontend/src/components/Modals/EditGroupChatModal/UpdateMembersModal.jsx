@@ -48,6 +48,7 @@ const UpdateMembersModal = ({
       exit={{ width: "0vw", opacity: 0, transition: { delay: 1.0 } }}
     >
       <motion.div
+        data-testid="update-members-modal"
         key={"updateMembersModal"}
         className="w-full h-[90vh] sm:w-[500px] sm:h-[600px] bg-white dark:bg-slate-800 rounded-t-xl sm:rounded-xl text-slate-700 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
