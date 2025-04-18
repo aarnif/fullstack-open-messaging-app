@@ -7,6 +7,7 @@ import ConfirmModalContext from "../contexts/ConfirmModalContext";
 const AlertModal = ({ title, message, closeModal }) => {
   return (
     <motion.div
+      data-testid="alert-modal"
       initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1, duration: 0.4 }}
       exit={{ y: 50, opacity: 0 }}
@@ -29,7 +30,7 @@ const AlertModal = ({ title, message, closeModal }) => {
         </div>
 
         <button
-          data-testid="close-button"
+          data-testid="close-modal-button"
           className="w-full px-4 py-2 bg-yellow-200 rounded-lg border border-yellow-200 shadow-xl flex justify-center items-center text-yellow-900 cursor-pointer text-sm md:text-base font-bold
               hover:bg-yellow-300 active:bg-yellow-300 active:border-yellow-400 active:inset-shadow-sm transition-all duration-300 ease-in-out"
           onClick={closeModal}
@@ -187,6 +188,7 @@ const ModalProvider = ({ children }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            data-testid="modal-provider"
             key={"Overlay"}
             className="z-10 fixed inset-0 flex items-center justify-center bg-black bg-opacity-60"
             onClick={closeModal}
