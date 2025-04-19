@@ -4,18 +4,19 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import NewPrivateChatModal from "../components/Modals/NewPrivateChatModal/NewPrivateChatModal.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
 const {
   currentUserMock,
-  privateChatMock,
+  findPrivateChatByIdMock,
   allContactsByUserMock,
   allContactsByUserSearchMock,
   findChatByMembersNullMock,
   findChatByMembersMock,
   checkIfUserHasBlockedYouTrueMock,
-} = mockData;
+} = queryMocks;
+
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
@@ -33,7 +34,7 @@ vi.mock("react-router", async () => {
 const renderComponent = (
   mockData = [
     currentUserMock,
-    privateChatMock,
+    findPrivateChatByIdMock,
     allContactsByUserMock,
     allContactsByUserSearchMock,
     findChatByMembersNullMock,
@@ -118,7 +119,7 @@ describe("<NewPrivateChatModal />", () => {
 
     expect(mockSetShowNewPrivateChatModal).toHaveBeenCalledTimes(1);
     expect(navigate).toHaveBeenCalledWith(
-      `/chats/${privateChatMock.result.data.findChatById.id}`
+      `/chats/${findPrivateChatByIdMock.result.data.findChatById.id}`
     );
     expect(mockSetShowNewPrivateChatModal).toHaveBeenCalledWith(false);
   });

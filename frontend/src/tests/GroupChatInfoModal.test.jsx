@@ -1,26 +1,26 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
-import { MemoryRouter, useNavigate, useMatch } from "react-router";
+import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 
 import GroupChatInfoModal from "../components/Modals/GroupChatInfoModal/GroupChatInfoModal.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
 const {
   currentUserMock,
-  groupChatMock,
+  findGroupChatByIdMock,
   allContactsByUserMock,
   allContactsByUserMockWithoutSearchWord,
-} = mockData;
+} = queryMocks;
 
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
 const anotherUserData =
   allContactsByUserMock.result.data.allContactsByUser.contacts[0];
-const chatData = groupChatMock.result.data.findChatById;
+const chatData = findGroupChatByIdMock.result.data.findChatById;
 
 const mockSetShowChatInfoModal = vi.fn();
 const mockModal = vi.fn();
@@ -45,7 +45,7 @@ const renderComponent = (mockUserData = userData, mockChatData = chatData) => {
     <MockedProvider
       mocks={[
         currentUserMock,
-        groupChatMock,
+        findGroupChatByIdMock,
         allContactsByUserMock,
         allContactsByUserMockWithoutSearchWord,
       ]}
@@ -78,7 +78,7 @@ describe("<GroupChatInfoModal />", () => {
 
   test("displays 'no description' when no chat description is provided", () => {
     const groupChatDataWithoutDescriptionMock = {
-      ...groupChatMock.result.data.findChatById,
+      ...findGroupChatByIdMock.result.data.findChatById,
       description: "",
     };
     renderComponent(userData, groupChatDataWithoutDescriptionMock);

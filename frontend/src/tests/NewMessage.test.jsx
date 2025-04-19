@@ -5,9 +5,11 @@ import { MockedProvider } from "@apollo/client/testing";
 import { ApolloError } from "@apollo/client";
 
 import NewMessage from "../components/Chat/NewMessage.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 
-const { currentUserMock, groupChatMock, addMessageToChatMock } = mockData;
+const { currentUserMock, findGroupChatByIdMock } = queryMocks;
+const { addMessageToChatMock } = mutationMocks;
 
 const userData = currentUserMock.result.data.me;
 
@@ -37,7 +39,7 @@ const renderComponent = (mockData) => {
     <MockedProvider mocks={mockData} addTypename={false}>
       <NewMessage
         user={userData}
-        chatId={groupChatMock.result.data.findChatById.id}
+        chatId={findGroupChatByIdMock.result.data.findChatById.id}
       />
     </MockedProvider>
   );
@@ -50,7 +52,11 @@ describe("<NewMessage />", () => {
 
   test("handles send message", async () => {
     const user = userEvent.setup();
-    renderComponent([currentUserMock, groupChatMock, addMessageToChatMock]);
+    renderComponent([
+      currentUserMock,
+      findGroupChatByIdMock,
+      addMessageToChatMock,
+    ]);
 
     await user.type(screen.getByTestId("new-message-input"), "This is a test.");
     await user.click(screen.getByTestId("send-new-message-button"));
@@ -80,7 +86,11 @@ describe("<NewMessage />", () => {
         },
       },
     };
-    renderComponent([currentUserMock, groupChatMock, addMessageWithImageMock]);
+    renderComponent([
+      currentUserMock,
+      findGroupChatByIdMock,
+      addMessageWithImageMock,
+    ]);
 
     const file = new File(["test"], "test.png", { type: "image/png" });
     await user.upload(screen.getByTestId("image-input"), file);
@@ -103,7 +113,7 @@ describe("<NewMessage />", () => {
       error,
     };
 
-    renderComponent([currentUserMock, groupChatMock, errorMock]);
+    renderComponent([currentUserMock, findGroupChatByIdMock, errorMock]);
 
     await user.type(screen.getByTestId("new-message-input"), "This is a test.");
     await user.click(screen.getByTestId("send-new-message-button"));

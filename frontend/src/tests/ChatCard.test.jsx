@@ -1,13 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
 import ChatCard from "../components/Chats/ChatCard.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers.js";
 
-const { currentUserMock, groupChatMock } = mockData;
+const { currentUserMock, findGroupChatByIdMock } = queryMocks;
 
 const userData = currentUserMock.result.data.me;
-const chatData = groupChatMock.result.data.findChatById;
+const chatData = findGroupChatByIdMock.result.data.findChatById;
 
 describe("<ChatCard />", () => {
   test("renders chat with correct info", () => {

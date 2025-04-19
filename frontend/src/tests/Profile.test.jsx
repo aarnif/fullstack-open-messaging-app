@@ -2,10 +2,12 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks";
+import mutationMocks from "./mocks/mutationMocks.js";
 import Profile from "../components/Profile";
 
-const { currentUserMock, editProfileMock } = mockData;
+const { currentUserMock } = queryMocks;
+const { editProfileMock } = mutationMocks;
 
 const userData = currentUserMock.result.data.me;
 

@@ -5,9 +5,9 @@ import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import IndividualContactCardOptions from "../components/IndividualContactCard/IndividualContactCardOptions.jsx";
 import mocks from "./mocks/funcs.js";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 
-const { currentUserMock, findUserByIdMock, findChatByMembersMock } = mockData;
+const { currentUserMock, findUserByIdMock, findChatByMembersMock } = queryMocks;
 
 const userData = currentUserMock.result.data.me;
 const contactData = findUserByIdMock.result.data.findUserById;

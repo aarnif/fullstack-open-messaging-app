@@ -5,15 +5,14 @@ import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 
 import NewChatHeader from "../components/NewChat/NewChatHeader.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const {
-  currentUserMock,
-  createNewChatMock,
-  addMessageToNewChatMock,
-  mockNewChatInfo,
-} = mockData;
+const { currentUserMock } = queryMocks;
+const { createNewChatMock, addMessageToNewChatMock, mockNewChatInfo } =
+  mutationMocks;
+
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;

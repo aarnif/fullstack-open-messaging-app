@@ -4,14 +4,14 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import ChatItem from "../components/Chats/ChatItem.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const { currentUserMock, groupChatMock } = mockData;
+const { currentUserMock, findGroupChatByIdMock } = queryMocks;
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
-const mockChatData = groupChatMock.result.data.findChatById;
+const mockChatData = findGroupChatByIdMock.result.data.findChatById;
 
 const mockSetActiveChatOrContactId = vi.fn();
 
@@ -28,7 +28,7 @@ const renderChatItem = (
   activeChatOrContactId = chatData.id
 ) => {
   return render(
-    <MockedProvider mocks={[currentUserMock, groupChatMock]}>
+    <MockedProvider mocks={[currentUserMock, findGroupChatByIdMock]}>
       <MemoryRouter>
         <ChatItem
           index={0}

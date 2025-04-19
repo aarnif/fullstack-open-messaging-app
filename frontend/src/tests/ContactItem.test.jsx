@@ -4,10 +4,10 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import ContactItem from "../components/Contacts/ContactItem.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const { currentUserMock, findUserByIdMock } = mockData;
+const { currentUserMock, findUserByIdMock } = queryMocks;
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;

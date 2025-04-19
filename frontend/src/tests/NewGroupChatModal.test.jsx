@@ -1,10 +1,10 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { MockedProvider, wait } from "@apollo/client/testing";
+import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import NewGroupChatModal from "../components/Modals/NewGroupChatModal.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
 const {
@@ -13,7 +13,8 @@ const {
   allContactsByUserSearchMock,
   findGroupChatByTitleNullMock,
   findGroupChatByTitleMock,
-} = mockData;
+} = queryMocks;
+
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;

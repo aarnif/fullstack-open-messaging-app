@@ -6,16 +6,15 @@ import { ApolloError } from "@apollo/client";
 import { MemoryRouter, useNavigate } from "react-router";
 
 import NewChatAndFirstMessage from "../components/NewChat/NewChatAndFirstMessage.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const {
-  currentUserMock,
-  findNewChatByMembersMock,
-  createNewChatMock,
-  addMessageToNewChatMock,
-  mockNewChatInfo,
-} = mockData;
+const { currentUserMock, findNewChatByMembersMock } = queryMocks;
+
+const { createNewChatMock, addMessageToNewChatMock, mockNewChatInfo } =
+  mutationMocks;
+
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;

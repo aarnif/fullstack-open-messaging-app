@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
 import userEvent from "@testing-library/user-event";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 
 import MenuHeader from "../components/MenuHeader";
 
-const { mockSearchWord } = mockData;
+const { mockSearchWord } = queryMocks;
 
 const mockHandleCallBack = vi.fn();
 

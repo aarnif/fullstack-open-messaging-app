@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
 import IndividualContactCard from "../components/IndividualContactCard/IndividualContactCard.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 
-const { currentUserMock, findUserByIdMock } = mockData;
+const { currentUserMock, findUserByIdMock } = queryMocks;
 
 const userData = currentUserMock.result.data.me;
 const contactData = findUserByIdMock.result.data.findUserById;

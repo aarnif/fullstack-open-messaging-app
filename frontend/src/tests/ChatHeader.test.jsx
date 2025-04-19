@@ -4,14 +4,15 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import ChatHeader from "../components/Chat/ChatHeader.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const { currentUserMock, groupChatMock } = mockData;
+const { currentUserMock, findGroupChatByIdMock } = queryMocks;
+
 const { navigate } = mocks;
 
 const mockUserData = currentUserMock.result.data.me;
-const mockChatData = groupChatMock.result.data.findChatById;
+const mockChatData = findGroupChatByIdMock.result.data.findChatById;
 
 const mockSetShowChatInfoModal = vi.fn();
 

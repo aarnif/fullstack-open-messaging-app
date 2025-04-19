@@ -4,10 +4,13 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import EditProfileModal from "../components/Modals/EditProfileModal.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const { currentUserMock, editProfileMock } = mockData;
+const { currentUserMock } = queryMocks;
+const { editProfileMock } = mutationMocks;
+
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;

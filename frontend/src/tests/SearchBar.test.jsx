@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks";
 import SearchBar from "../components/SearchBar";
 
-const { mockSearchWord } = mockData;
+const { mockSearchWord } = queryMocks;
 
 describe("<SearchBar />", () => {
   test("renders component with correct search text", () => {

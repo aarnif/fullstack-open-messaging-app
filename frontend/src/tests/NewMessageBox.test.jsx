@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import NewMessageBox from "../components/NewMessageBox";
 import { MockedIntersectionObserver } from "jsdom-testing-mocks";
 
-const { currentUserMock } = mockData;
+const { currentUserMock } = queryMocks;
 
 const userData = currentUserMock.result.data.me;
 

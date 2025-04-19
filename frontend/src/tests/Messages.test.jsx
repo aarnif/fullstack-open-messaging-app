@@ -2,12 +2,12 @@ import { render, screen } from "@testing-library/react";
 import { describe, test, expect, vi } from "vitest";
 
 import Messages from "../components/Chat/Messages.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 
-const { currentUserMock, groupChatMock } = mockData;
+const { currentUserMock, findGroupChatByIdMock } = queryMocks;
 
 const userData = currentUserMock.result.data.me;
-const chatMessages = groupChatMock.result.data.findChatById.messages;
+const chatMessages = findGroupChatByIdMock.result.data.findChatById.messages;
 
 Element.prototype.scrollIntoView = vi.fn();
 

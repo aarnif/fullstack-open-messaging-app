@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
 
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 
 import SelectContactList from "../components/Modals/NewPrivateChatModal/SelectContactList";
 
-const { allContactsByUserMock } = mockData;
+const { allContactsByUserMock } = queryMocks;
 const contactData =
   allContactsByUserMock.result.data.allContactsByUser.contacts;
 

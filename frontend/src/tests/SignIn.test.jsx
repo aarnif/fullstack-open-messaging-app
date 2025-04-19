@@ -5,10 +5,11 @@ import userEvent from "@testing-library/user-event";
 import * as apolloClient from "@apollo/client";
 import SignIn from "../components/SignIn";
 import { describe, test, vi, expect } from "vitest";
-import mockData from "./mocks/data.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const { loginMock } = mockData;
+const { loginMock } = mutationMocks;
+
 const { client, setActiveMenuItem, localStorage, navigate } = mocks;
 
 vi.mock("react-router", async () => {

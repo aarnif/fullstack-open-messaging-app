@@ -4,14 +4,18 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import UpdateMembersModal from "../components/Modals/EditGroupChatModal/UpdateMembersModal.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const { groupChatMock, allContactsByUserMock, allContactsByUserSearchMock } =
-  mockData;
+const {
+  findGroupChatByIdMock,
+  allContactsByUserMock,
+  allContactsByUserSearchMock,
+} = queryMocks;
+
 const { navigate } = mocks;
 
-const chatData = groupChatMock.result.data.findChatById;
+const chatData = findGroupChatByIdMock.result.data.findChatById;
 
 const mockSetChosenUserIds = vi.fn();
 const mockSetNewMemberIds = vi.fn();
@@ -26,7 +30,11 @@ vi.mock("react-router", async () => {
 });
 
 const renderComponent = (
-  mockData = [groupChatMock, allContactsByUserMock, allContactsByUserSearchMock]
+  mockData = [
+    findGroupChatByIdMock,
+    allContactsByUserMock,
+    allContactsByUserSearchMock,
+  ]
 ) => {
   render(
     <MockedProvider mocks={mockData}>

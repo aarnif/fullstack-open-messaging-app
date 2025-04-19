@@ -4,15 +4,18 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import AddNewContactsModal from "../components/Modals/AddNewContactsModal.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
 
 const {
   currentUserMock,
   allContactsExceptByUserMock,
   allContactsExceptByUserSearchMock,
-  addContactsMock,
-} = mockData;
+} = queryMocks;
+
+const { addContactsMock } = mutationMocks;
+
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;

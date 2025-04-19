@@ -4,10 +4,13 @@ import { MemoryRouter } from "react-router";
 import userEvent from "@testing-library/user-event";
 import SettingsCard from "../components/Settings/SettingsCard.jsx";
 import { describe, test, vi, expect, beforeEach } from "vitest";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const { editSettingsMock, currentUserMock } = mockData;
+const { currentUserMock } = queryMocks;
+const { editSettingsMock } = mutationMocks;
+
 const { localStorage } = mocks;
 
 Object.defineProperty(global, "localStorage", { value: localStorage });

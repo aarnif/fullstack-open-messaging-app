@@ -5,16 +5,17 @@ import { MemoryRouter, useNavigate, useMatch } from "react-router";
 import userEvent from "@testing-library/user-event";
 
 import Chat from "../components/Chat/Chat.jsx";
-import mockData from "./mocks/data.js";
+import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
 
+const { currentUserMock, findGroupChatByIdMock, findPrivateChatByIdMock } =
+  queryMocks;
+
 const {
-  currentUserMock,
-  groupChatMock,
-  privateChatMock,
   markAllMessagesInGroupChatReadMock,
   markAllMessagesInPrivateChatReadMock,
-} = mockData;
+} = mutationMocks;
 
 const { navigate } = mocks;
 
@@ -23,8 +24,8 @@ const userData = currentUserMock.result.data.me;
 const mockSetActiveMenuItem = vi.fn();
 const mockSetActiveChatOrContactId = vi.fn();
 const mockModal = vi.fn();
-const groupChatMatch = groupChatMock.request.variables.chatId;
-const privateChatMatch = privateChatMock.request.variables.chatId;
+const groupChatMatch = findGroupChatByIdMock.request.variables.chatId;
+const privateChatMatch = findPrivateChatByIdMock.request.variables.chatId;
 
 Element.prototype.scrollIntoView = vi.fn();
 
@@ -44,7 +45,7 @@ vi.mock("../hooks/useModal", () => ({
 }));
 
 const renderComponent = (
-  mockData = [groupChatMock, markAllMessagesInGroupChatReadMock]
+  mockData = [findGroupChatByIdMock, markAllMessagesInGroupChatReadMock]
 ) => {
   render(
     <MockedProvider mocks={mockData} addTypename={false}>
@@ -88,9 +89,9 @@ describe("<Chat />", () => {
 
   test("renders error if chat not found", async () => {
     const findChatByIdMockError = {
-      ...groupChatMock,
+      ...findGroupChatByIdMock,
       result: {
-        ...groupChatMock.result,
+        ...findGroupChatByIdMock.result,
         data: { findChatById: null },
       },
     };
@@ -125,7 +126,10 @@ describe("<Chat />", () => {
       params: { chatId: privateChatMatch },
     });
 
-    renderComponent([privateChatMock, markAllMessagesInPrivateChatReadMock]);
+    renderComponent([
+      findPrivateChatByIdMock,
+      markAllMessagesInPrivateChatReadMock,
+    ]);
 
     await waitFor(() => {
       expect(screen.getByTestId("chat-info")).toBeInTheDocument();
