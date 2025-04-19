@@ -225,7 +225,7 @@ test.describe("Users And Contacts", () => {
         page.getByText("Profile name cannot be empty!")
       ).toBeVisible();
 
-      await page.getByTestId("close-button").click();
+      await page.getByTestId("close-modal-button").click();
 
       await expect(
         page.getByText("Profile name cannot be empty!")
