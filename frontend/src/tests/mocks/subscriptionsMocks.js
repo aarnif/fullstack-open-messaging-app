@@ -1,6 +1,10 @@
 import {
   CONTACT_BLOCKED_OR_UNBLOCKED,
   GROUP_CHAT_EDITED,
+  NEW_CHAT_CREATED,
+  NEW_MESSAGE_TO_CHAT_ADDED,
+  LEFT_GROUP_CHATS,
+  CHAT_DELETED,
 } from "../../graphql/subscriptions";
 
 const contactBlockedOrUnBlockedMock = {
@@ -549,7 +553,279 @@ const groupChatEditedMock = {
   },
 };
 
+const newChatCreated = {
+  request: {
+    query: NEW_CHAT_CREATED,
+  },
+  result: {
+    data: {
+      newChatCreated: {
+        __typename: "Chat",
+        id: "6690cc6331f8d4e66b57ae99",
+        title: "New Group Chat",
+        image: {
+          __typename: "Image",
+          thumbnail: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+          original: "https://i.ibb.co/FqHrScZ/chat-placeholder.png",
+        },
+        description: "This is a group chat.",
+        isGroupChat: true,
+        admin: {
+          __typename: "User",
+          id: "6690caa44dc3eac2b83517c7",
+          username: "test",
+          name: "Test User",
+          about: "This is a test user.",
+        },
+        members: [
+          {
+            __typename: "User",
+            id: "6690caa44dc3eac2b83517c7",
+            username: "test",
+            name: "Test User",
+            about: "This is a test user.",
+            image: {
+              __typename: "Image",
+              thumbnail: null,
+              original: null,
+            },
+            settings: {
+              __typename: "Settings",
+              theme: "dark",
+              time: "24h",
+            },
+            blockedContacts: [],
+          },
+          {
+            __typename: "User",
+            id: "6690caa54dc3eac2b83517ca",
+            username: "hiker_john",
+            name: "John Doe",
+            about: "Love hiking and outdoor adventures.",
+            image: {
+              __typename: "Image",
+              thumbnail:
+                "https://i.ibb.co/gRT6j6Z/6690caa54dc3eac2b83517ca.png",
+              original:
+                "https://i.ibb.co/Tg8rvrM/g-RT6j6-Z-6690caa54dc3eac2b83517ca.png",
+            },
+            settings: {
+              __typename: "Settings",
+              theme: "light",
+              time: "24h",
+            },
+            blockedContacts: [],
+          },
+          {
+            __typename: "User",
+            id: "6690caa54dc3eac2b83517d6",
+            username: "travel_emma",
+            name: "Emma Davis",
+            about: "Travel blogger.",
+            image: {
+              __typename: "Image",
+              thumbnail:
+                "https://i.ibb.co/nDQkfL2/6690caa54dc3eac2b83517d6.png",
+              original: "https://i.ibb.co/rZ5yMwP/6690caa54dc3eac2b83517d6.png",
+            },
+            settings: {
+              __typename: "Settings",
+              theme: "light",
+              time: "24h",
+            },
+            blockedContacts: [],
+          },
+        ],
+        messages: [],
+      },
+    },
+  },
+};
+
+const newMessageToChatAddedMock = {
+  request: {
+    query: NEW_MESSAGE_TO_CHAT_ADDED,
+  },
+  result: {
+    data: {
+      messageToChatAdded: {
+        __typename: "Chat",
+        id: "6690cc6331f8d4e66b57ae99",
+        title: "New Group Chat",
+        image: {
+          __typename: "Image",
+          thumbnail: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+          original: "https://i.ibb.co/FqHrScZ/chat-placeholder.png",
+        },
+        description: "This is a group chat.",
+        isGroupChat: true,
+        admin: {
+          __typename: "User",
+          id: "6690caa44dc3eac2b83517c7",
+          username: "test",
+          name: "Test User",
+          about: "This is a test user.",
+        },
+        members: [
+          {
+            __typename: "User",
+            id: "6690caa44dc3eac2b83517c7",
+            username: "test",
+            name: "Test User",
+            about: "This is a test user.",
+            image: {
+              __typename: "Image",
+              thumbnail: null,
+              original: null,
+            },
+            settings: {
+              __typename: "Settings",
+              theme: "dark",
+              time: "24h",
+            },
+            blockedContacts: [],
+          },
+          {
+            __typename: "User",
+            id: "6690caa54dc3eac2b83517ca",
+            username: "hiker_john",
+            name: "John Doe",
+            about: "Love hiking and outdoor adventures.",
+            image: {
+              __typename: "Image",
+              thumbnail:
+                "https://i.ibb.co/gRT6j6Z/6690caa54dc3eac2b83517ca.png",
+              original:
+                "https://i.ibb.co/Tg8rvrM/g-RT6j6-Z-6690caa54dc3eac2b83517ca.png",
+            },
+            settings: {
+              __typename: "Settings",
+              theme: "light",
+              time: "24h",
+            },
+            blockedContacts: [],
+          },
+          {
+            __typename: "User",
+            id: "6690caa54dc3eac2b83517d6",
+            username: "travel_emma",
+            name: "Emma Davis",
+            about: "Travel blogger.",
+            image: {
+              __typename: "Image",
+              thumbnail:
+                "https://i.ibb.co/nDQkfL2/6690caa54dc3eac2b83517d6.png",
+              original: "https://i.ibb.co/rZ5yMwP/6690caa54dc3eac2b83517d6.png",
+            },
+            settings: {
+              __typename: "Settings",
+              theme: "light",
+              time: "24h",
+            },
+            blockedContacts: [],
+          },
+        ],
+        messages: [
+          {
+            id: "67f949b5ee1ad20bb84776a6",
+            type: "message",
+            content: "This is a test.",
+            image: {
+              thumbnail: null,
+              original: null,
+              __typename: "Image",
+            },
+            sender: {
+              id: "6690caa44dc3eac2b83517c7",
+              username: "test",
+              name: "Test User",
+              about: "This is a test user.",
+              image: {
+                thumbnail: null,
+                original: null,
+                __typename: "Image",
+              },
+              settings: {
+                theme: "dark",
+                time: "24h",
+                __typename: "Settings",
+              },
+              blockedContacts: [
+                {
+                  id: "6690caa54dc3eac2b83517ce",
+                  __typename: "User",
+                },
+              ],
+              __typename: "User",
+            },
+            isReadBy: [
+              {
+                member: {
+                  id: "6690caa44dc3eac2b83517c7",
+                  username: "test",
+                  __typename: "User",
+                },
+                isRead: true,
+                __typename: "IsReadBy",
+              },
+              {
+                member: {
+                  id: "6690caa54dc3eac2b83517ca",
+                  username: "hiker_john",
+                  __typename: "User",
+                },
+                isRead: false,
+                __typename: "IsReadBy",
+              },
+              {
+                member: {
+                  id: "6690caa54dc3eac2b83517d6",
+                  username: "travel_emma",
+                  __typename: "User",
+                },
+                isRead: false,
+                __typename: "IsReadBy",
+              },
+            ],
+            createdAt: "2025-04-11T16:56:21.905Z",
+            __typename: "Message",
+          },
+        ],
+      },
+    },
+  },
+};
+
+const leftGroupChatsMock = {
+  request: {
+    query: LEFT_GROUP_CHATS,
+  },
+  result: {
+    data: {
+      leftGroupChats: {
+        memberId: "6690caa44dc3eac2b83517c7",
+        chatIds: ["6690cc6331f8d4e66b57ae22", "6690cc6331f8d4e66b57ae99"],
+      },
+    },
+  },
+};
+
+const chatDeletedMock = {
+  request: {
+    query: CHAT_DELETED,
+  },
+  result: {
+    data: {
+      chatDeleted: "6690cc6331f8d4e66b57ae22",
+    },
+  },
+};
+
 export default {
   contactBlockedOrUnBlockedMock,
   groupChatEditedMock,
+  newChatCreated,
+  newMessageToChatAddedMock,
+  leftGroupChatsMock,
+  chatDeletedMock,
 };

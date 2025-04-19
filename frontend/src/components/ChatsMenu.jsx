@@ -150,7 +150,10 @@ const ChatsList = ({
 
   if (!data.allChatsByUser.length) {
     return (
-      <div className="flex justify-start items-center">
+      <div
+        data-testid="no-chats-found"
+        className="flex justify-start items-center"
+      >
         <div className="mx-4 text-xl lg:text-2xl font-bold text-slate-800 dark:text-white">
           No chats found
         </div>
@@ -183,7 +186,10 @@ const ChatsMenu = ({
   const searchWord = useField("text", "Search chats by title...");
 
   return (
-    <div className="flex-grow lg:max-w-[450px] flex flex-col bg-white dark:bg-slate-600">
+    <div
+      data-testid="chats-menu"
+      className="flex-grow lg:max-w-[450px] flex flex-col bg-white dark:bg-slate-600"
+    >
       <div className="flex-grow flex flex-col overflow-y-auto h-0">
         <MenuHeader
           title={"Chats"}

@@ -1,7 +1,16 @@
 import { vi } from "vitest";
 
+const updateQueryMock = vi.fn();
+const evictMock = vi.fn();
+const identifyMock = vi.fn();
+
 const client = {
   resetStore: vi.fn(),
+  cache: {
+    updateQuery: updateQueryMock,
+    evict: evictMock,
+    identify: identifyMock,
+  },
 };
 
 const setActiveMenuItem = vi.fn();
