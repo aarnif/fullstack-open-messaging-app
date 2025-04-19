@@ -24,7 +24,10 @@ const ContactsList = ({
 
   if (!data.allContactsByUser.contacts.length) {
     return (
-      <div className="flex justify-start items-center">
+      <div
+        data-testid="no-contacts-found"
+        className="flex justify-start items-center"
+      >
         <div className="mx-4 text-xl lg:text-2xl font-bold text-slate-800 dark:text-white">
           No contacts found
         </div>
@@ -56,7 +59,10 @@ const ContactsMenu = ({
   const searchWord = useField("text", "Search contacts by name or username...");
 
   return (
-    <div className="flex-grow lg:max-w-[450px] flex flex-col bg-white dark:bg-slate-600">
+    <div
+      data-testid="contacts-menu"
+      className="flex-grow lg:max-w-[450px] flex flex-col bg-white dark:bg-slate-600"
+    >
       <div className="flex-grow flex flex-col overflow-y-auto h-0">
         <MenuHeader
           title={"Contacts"}
