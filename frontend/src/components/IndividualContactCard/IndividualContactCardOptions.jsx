@@ -11,7 +11,7 @@ import {
 } from "../../graphql/mutations";
 import useModal from "../../hooks/useModal";
 
-const IndividualContactOptions = ({
+const IndividualContactCardOptions = ({
   user,
   contact,
   isBlocked,
@@ -21,7 +21,7 @@ const IndividualContactOptions = ({
   const { modal } = useModal();
   const navigate = useNavigate();
 
-  const [getChatByMembers] = useLazyQuery(FIND_CHAT_BY_MEMBERS);
+  const [findChatByMembers] = useLazyQuery(FIND_CHAT_BY_MEMBERS);
 
   const [blockOrUnblockContact] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
     onError: (error) => {
@@ -40,7 +40,7 @@ const IndividualContactOptions = ({
   const handleChatWithContact = async () => {
     console.log("Press chat with contact button!");
 
-    const checkIfChatExists = await getChatByMembers({
+    const checkIfChatExists = await findChatByMembers({
       variables: {
         members: [user.id, contact.id],
       },
@@ -113,8 +113,12 @@ const IndividualContactOptions = ({
   };
 
   return (
-    <div className="w-full p-4 flex flex-col justify-center items-center">
+    <div
+      data-testid="individual-contact-card-options"
+      className="w-full p-4 flex flex-col justify-center items-center"
+    >
       <button
+        data-testid="chat-with-contact-button"
         disabled={haveContactBlockedYou}
         onClick={handleChatWithContact}
         className={
@@ -181,4 +185,4 @@ const IndividualContactOptions = ({
   );
 };
 
-export default IndividualContactOptions;
+export default IndividualContactCardOptions;

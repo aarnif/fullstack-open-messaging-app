@@ -22,6 +22,7 @@ const ContactItem = ({
 
   return (
     <button
+      id={activeChatOrContactId === item.id ? "active-contact" : ""}
       data-testid={item.username}
       className={classStyles}
       onClick={handleClick}

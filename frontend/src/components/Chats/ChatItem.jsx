@@ -2,7 +2,6 @@ import { useNavigate } from "react-router";
 import ChatCard from "./ChatCard";
 
 const ChatItem = ({
-  index,
   user,
   item,
   activeChatOrContactId,
@@ -46,8 +45,9 @@ const ChatItem = ({
 
   return (
     <button
+      id={activeChatOrContactId === item.id ? "active-chat" : ""}
       className={classStyles}
-      data-testid={`chat-item-${index}`}
+      data-testid={`chat-item-${item.id}`}
       onClick={handlePress}
     >
       <ChatCard user={user} chat={item} />

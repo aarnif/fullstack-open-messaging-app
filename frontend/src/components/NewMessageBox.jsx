@@ -9,7 +9,7 @@ const ImagePreview = ({ image, handleCancelImage }) => {
   return (
     <div className="p-4 w-full bg-slate-100 dark:bg-slate-900 flex flex-col justify-center items-center">
       <div className="w-full flex justify-end items-center">
-        <button onClick={handleCancelImage}>
+        <button data-testid="cancel-image-button" onClick={handleCancelImage}>
           <MdClose className="w-7 h-7 text-slate-700 dark:text-slate-200 fill-current" />
         </button>
       </div>
@@ -62,7 +62,10 @@ const NewMessageBox = ({
       {image && (
         <ImagePreview image={image} handleCancelImage={handleCancelImage} />
       )}
-      <div className="absolute bottom-[50px] right-4">
+      <div
+        data-testid="emoji-picker"
+        className="absolute bottom-[50px] right-4"
+      >
         <EmojiPicker
           open={showEmojiPicker}
           onEmojiClick={(emoji) => setMessage((prev) => prev + emoji.emoji)}
@@ -74,12 +77,13 @@ const NewMessageBox = ({
       </div>
       <div className="w-full h-[50px] p-2 flex bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 lg:shadow-lg">
         <div className="mx-2 flex justify-center items-center space-x-2">
-          <button onClick={handleClickAddImage}>
+          <button data-testid="add-image-button" onClick={handleClickAddImage}>
             <FaImage
               size={26}
               className="w-6 h-6 sm:w-7 sm:h-7 fill-current text-green-600"
             />
             <input
+              data-testid="image-input"
               ref={messageImageRef}
               hidden={true}
               type="file"
@@ -90,7 +94,10 @@ const NewMessageBox = ({
           </button>
         </div>
 
-        <div className="w-full flex justify-center items-center border-2 rounded-full border-slate-200 dark:border-slate-500 bg-slate-200 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
+        <div
+          data-testid="new-message-box"
+          className="w-full flex justify-center items-center border-2 rounded-full border-slate-200 dark:border-slate-500 bg-slate-200 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition"
+        >
           <input
             data-testid="new-message-input"
             className="w-full pl-3 rounded-full text-mobile sm:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-200 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
@@ -100,7 +107,10 @@ const NewMessageBox = ({
           />
         </div>
         <div className="mx-2 flex justify-center items-center space-x-2">
-          <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+          <button
+            data-testid="show-emoji-picker-button"
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+          >
             <FaRegSmile className="w-6 h-6 sm:w-7 sm:h-7 fill-current text-green-600" />
           </button>
           <button data-testid="send-new-message-button" onClick={handleSubmit}>

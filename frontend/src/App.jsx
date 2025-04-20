@@ -69,6 +69,7 @@ const App = () => {
         ) : (
           <div className="bg-light dark:bg-dark">
             <motion.div
+              data-testid="front-page"
               key="front-page"
               className="h-screen flex flex-col"
               initial={{ opacity: 0 }}

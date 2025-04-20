@@ -48,6 +48,7 @@ const UpdateMembersModal = ({
       exit={{ width: "0vw", opacity: 0, transition: { delay: 1.0 } }}
     >
       <motion.div
+        data-testid="update-members-modal"
         key={"updateMembersModal"}
         className="w-full h-[90vh] sm:w-[500px] sm:h-[600px] bg-white dark:bg-slate-800 rounded-t-xl sm:rounded-xl text-slate-700 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
@@ -58,7 +59,11 @@ const UpdateMembersModal = ({
       >
         <div className="h-full flex-grow flex flex-col pt-4 px-4">
           <div className="w-full flex justify-center items-center">
-            <button className="text-2xl text-slate-700" onClick={handleCancel}>
+            <button
+              data-testid="close-update-members-modal-button"
+              className="text-2xl text-slate-700"
+              onClick={handleCancel}
+            >
               <MdClose className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 fill-current" />
             </button>
             <h2 className="flex-grow text-xl sm:text-2xl font-bold text-slate-700 dark:text-slate-100 text-center">
@@ -73,7 +78,10 @@ const UpdateMembersModal = ({
             </button>
           </div>
           <>
-            <SearchBar searchWord={searchWord} />
+            <SearchBar
+              searchWord={searchWord}
+              dataTestId={"search-contacts-input"}
+            />
             {result.loading ? (
               <Loading />
             ) : (

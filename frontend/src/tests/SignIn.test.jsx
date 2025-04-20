@@ -5,8 +5,10 @@ import userEvent from "@testing-library/user-event";
 import * as apolloClient from "@apollo/client";
 import SignIn from "../components/SignIn";
 import { describe, test, vi, expect } from "vitest";
-import mockData from "./mocks/data.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
+
+const { loginMock } = mutationMocks;
 
 const { client, setActiveMenuItem, localStorage, navigate } = mocks;
 
@@ -20,6 +22,16 @@ vi.mock("react-router", async () => {
 
 Object.defineProperty(global, "localStorage", { value: localStorage });
 
+const renderSignIn = () => {
+  return render(
+    <MockedProvider mocks={[loginMock]}>
+      <MemoryRouter>
+        <SignIn setActiveMenuItem={setActiveMenuItem} />
+      </MemoryRouter>
+    </MockedProvider>
+  );
+};
+
 describe("<SignIn />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -29,23 +41,11 @@ describe("<SignIn />", () => {
 
   test("clicking sign in works", async () => {
     const user = userEvent.setup();
+    const { username, password } = loginMock.request.variables;
 
-    render(
-      <MockedProvider mocks={mockData}>
-        <MemoryRouter>
-          <SignIn setActiveMenuItem={setActiveMenuItem} />
-        </MemoryRouter>
-      </MockedProvider>
-    );
-
-    await user.type(
-      screen.getByTestId("username-input"),
-      mockData[0].request.variables.username
-    );
-    await user.type(
-      screen.getByTestId("password-input"),
-      mockData[0].request.variables.password
-    );
+    renderSignIn();
+    await user.type(screen.getByTestId("username-input"), username);
+    await user.type(screen.getByTestId("password-input"), password);
     await user.click(screen.getByTestId("sign-in-button"));
 
     expect(screen.getByTestId("sign-in-title")).toBeInTheDocument();
@@ -62,13 +62,7 @@ describe("<SignIn />", () => {
   test("clicking sign up button navigates to signup page", async () => {
     const user = userEvent.setup();
 
-    render(
-      <MockedProvider mocks={mockData}>
-        <MemoryRouter>
-          <SignIn setActiveMenuItem={setActiveMenuItem} />
-        </MemoryRouter>
-      </MockedProvider>
-    );
+    renderSignIn();
 
     await user.click(screen.getByTestId("sign-up-button"));
     expect(navigate).toHaveBeenCalledWith("/signup");

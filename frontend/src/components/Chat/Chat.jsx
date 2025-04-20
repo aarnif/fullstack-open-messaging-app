@@ -13,7 +13,10 @@ import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal"
 import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal";
 
 const ChatNotFound = () => (
-  <div className="flex-grow w-full overflow-y-auto h-0 flex flex-col justify-center items-center">
+  <div
+    data-testid="chat-not-found"
+    className="flex-grow w-full overflow-y-auto h-0 flex flex-col justify-center items-center"
+  >
     <div className="text-xl text-red-600 font-bold">Chat not found!</div>
     <div className="text-xl text-red-600 font-bold">
       This could be due to wrong id or the chat was deleted.
@@ -36,12 +39,7 @@ const Chat = ({
   });
 
   const [mutateMarkMessagesInChatRead] = useMutation(
-    MARK_MESSAGES_IN_CHAT_READ,
-    {
-      onError: (error) => {
-        console.log(error.graphQLErrors[0].message);
-      },
-    }
+    MARK_MESSAGES_IN_CHAT_READ
   );
 
   useEffect(() => {
@@ -62,8 +60,10 @@ const Chat = ({
     setActiveMenuItem,
   ]);
 
+  // console.log("Chat data:", data);
+
   return (
-    <div className="flex-grow flex">
+    <div data-testid="chat-page" className="flex-grow flex">
       <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
         {menuComponent}
       </div>
@@ -93,7 +93,10 @@ const Chat = ({
               chat={data.findChatById}
               setShowChatInfoModal={setShowChatInfoModal}
             />
-            <div className="flex-grow w-full overflow-y-auto h-0">
+            <div
+              data-testid="chat-info"
+              className="flex-grow w-full overflow-y-auto h-0"
+            >
               <Messages
                 user={user}
                 messages={[...(data?.findChatById.messages || [])].reverse()}

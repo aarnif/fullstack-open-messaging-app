@@ -13,9 +13,10 @@ const Messages = ({ user, messages }) => {
   }, [messages]);
 
   return (
-    <div className="h-full flex-grow flex flex-col">
+    <div data-testid="chat-messages" className="h-full flex-grow flex flex-col">
       {!messages.length ? (
         <div
+          data-testid="no-messages"
           className="w-full flex-grow flex justify-center items-center"
           key={"Empty item"}
         >
@@ -27,7 +28,7 @@ const Messages = ({ user, messages }) => {
         <div className="w-full flex-grow py-4 sm:py-8 px-4 sm:px-16">
           {messages.map((item, index) => {
             return (
-              <Fragment key={item.id} data-testid={`message-${index}`}>
+              <Fragment key={item.id}>
                 <Message user={user} message={item} index={index} />
                 <div ref={messagesEndRef} />
               </Fragment>

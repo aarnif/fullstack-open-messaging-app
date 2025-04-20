@@ -6,6 +6,7 @@ const Loading = ({ maxHeight = null, loadingText = "" }) => {
   const iconSize = 2.5;
   return (
     <div
+      data-testid="loading"
       className="w-full h-full flex flex-col justify-center items-center"
       style={{ maxHeight: maxHeight }}
     >
@@ -25,7 +26,9 @@ const Loading = ({ maxHeight = null, loadingText = "" }) => {
           className="absolute fill-current text-slate-300"
         />
       </motion.div>
-      <div className="text-slate-500">{loadingText}</div>
+      <div data-testid="loading-text" className="text-slate-500">
+        {loadingText}
+      </div>
     </div>
   );
 };

@@ -3,7 +3,10 @@ import ClickableImage from "../ClickableImage";
 const IndividualContactCard = ({ user, contact }) => {
   return (
     <>
-      <div className="w-full flex-grow py-0 sm:py-4 flex flex-col justify-start items-center">
+      <div
+        data-testid="individual-contact-card"
+        className="w-full flex-grow py-0 sm:py-4 flex flex-col justify-start items-center"
+      >
         <h2 className="mt-0 mx-0 lg:mt-4 lg:mx-4 mb-2 text-xl sm:text-2xl text-slate-800 dark:text-slate-100 font-bold">
           {user.username === contact.username ? "You" : "Contact"}
         </h2>
