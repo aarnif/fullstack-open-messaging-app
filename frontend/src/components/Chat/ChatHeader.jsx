@@ -3,7 +3,7 @@ import { IoChevronBack } from "react-icons/io5";
 
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
-const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
+const ChatHeader = ({ user, chat, setShowGroupChatInfoModal }) => {
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -15,8 +15,12 @@ const ChatHeader = ({ user, chat, setShowChatInfoModal }) => {
       console.log("Clicked group chat info!");
     } else {
       console.log("Clicked private chat info!");
+      const anotherPrivateChatMember = chat.members.find(
+        (member) => member.id !== user.id
+      );
+      navigate(`/contacts/${anotherPrivateChatMember.id}`);
     }
-    setShowChatInfoModal(true);
+    setShowGroupChatInfoModal(true);
   };
 
   const chatMembersString = chatAndMessageHelpers.sliceLatestMessage(

@@ -10,7 +10,6 @@ import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";
 import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal";
-import PrivateChatInfoModal from "../Modals/PrivateChatInfoModal";
 
 const ChatNotFound = () => (
   <div
@@ -30,7 +29,7 @@ const Chat = ({
   setActiveChatOrContactId,
   menuComponent,
 }) => {
-  const [showChatInfoModal, setShowChatInfoModal] = useState(false);
+  const [showGroupChatInfoModal, setShowGroupChatInfoModal] = useState(false);
   const match = useMatch("/chats/:chatId").params;
   const { data, loading } = useQuery(FIND_CHAT_BY_ID, {
     variables: {
@@ -60,8 +59,6 @@ const Chat = ({
     setActiveMenuItem,
   ]);
 
-  // console.log("Chat data:", data);
-
   return (
     <div data-testid="chat-page" className="flex-grow flex">
       <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
@@ -73,25 +70,18 @@ const Chat = ({
         ) : data?.findChatById ? (
           <>
             <AnimatePresence>
-              {showChatInfoModal &&
-                (data.findChatById.isGroupChat ? (
-                  <GroupChatInfoModal
-                    user={user}
-                    chat={data.findChatById}
-                    setShowChatInfoModal={setShowChatInfoModal}
-                  />
-                ) : (
-                  <PrivateChatInfoModal
-                    user={user}
-                    chat={data.findChatById}
-                    setShowChatInfoModal={setShowChatInfoModal}
-                  />
-                ))}
+              {showGroupChatInfoModal && (
+                <GroupChatInfoModal
+                  user={user}
+                  chat={data.findChatById}
+                  setShowGroupChatInfoModal={setShowGroupChatInfoModal}
+                />
+              )}
             </AnimatePresence>
             <ChatHeader
               user={user}
               chat={data.findChatById}
-              setShowChatInfoModal={setShowChatInfoModal}
+              setShowGroupChatInfoModal={setShowGroupChatInfoModal}
             />
             <div
               data-testid="chat-info"

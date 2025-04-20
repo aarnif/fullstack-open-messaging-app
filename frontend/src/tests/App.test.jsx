@@ -27,23 +27,6 @@ const {
   chatDeletedMock,
 } = subscriptionMocks;
 
-// const darkModeUserMock = {
-//   ...currentUserMock,
-//   result: {
-//     ...currentUserMock.result,
-//     data: {
-//       ...currentUserMock.result.data,
-//       me: {
-//         ...currentUserMock.result.data.me,
-//         settings: {
-//           ...currentUserMock.result.data.me.settings,
-//           theme: "dark",
-//         },
-//       },
-//     },
-//   },
-// };
-
 const darkModeUserMockData = [
   currentUserWithDarkModeMock,
   allChatsByUserMock,
