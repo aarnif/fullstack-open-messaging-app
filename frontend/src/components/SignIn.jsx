@@ -44,7 +44,10 @@ const SignIn = ({ setActiveMenuItem }) => {
   };
 
   return (
-    <div className="flex-grow w-full flex justify-center items-center">
+    <div
+      data-testid="sign-in-page"
+      className="flex-grow w-full flex justify-center items-center"
+    >
       <div
         className="flex-grow max-w-[500px] max-h-[600px] p-8 flex justify-center items-center
          lg:bg-white dark:bg-slate-800 bg-opacity-90 lg:rounded-xl text-black lg:shadow-xl"

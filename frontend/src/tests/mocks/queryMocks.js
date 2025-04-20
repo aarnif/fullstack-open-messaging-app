@@ -12,6 +12,17 @@ import {
 
 import { users, chats } from "./data";
 
+const currentUserNullMock = {
+  request: {
+    query: CURRENT_USER,
+  },
+  result: {
+    data: {
+      me: null,
+    },
+  },
+};
+
 const currentUserMock = {
   request: {
     query: CURRENT_USER,
@@ -19,6 +30,23 @@ const currentUserMock = {
   result: {
     data: {
       me: users[0],
+    },
+  },
+};
+
+const currentUserWithDarkModeMock = {
+  request: {
+    query: CURRENT_USER,
+  },
+  result: {
+    data: {
+      me: {
+        ...users[0],
+        settings: {
+          ...users[0].settings,
+          theme: "dark",
+        },
+      },
     },
   },
 };
@@ -252,7 +280,9 @@ const allContactsByUserMockWithoutSearchWord = {
 };
 
 export default {
+  currentUserNullMock,
   currentUserMock,
+  currentUserWithDarkModeMock,
   findUserByIdMock,
   allChatsByUserMock,
   findChatByMembersNullMock,

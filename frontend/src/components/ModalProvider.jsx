@@ -52,6 +52,7 @@ const ConfirmModal = ({
 }) => {
   return (
     <motion.div
+      data-testid="confirm-modal"
       initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1, duration: 0.4 }}
       exit={{ y: 50, opacity: 0 }}

@@ -1,15 +1,14 @@
 import { vi } from "vitest";
 
-const updateQueryMock = vi.fn();
-const evictMock = vi.fn();
-const identifyMock = vi.fn();
-
 const client = {
   resetStore: vi.fn(),
+  refetchQueries: vi.fn(),
+  query: vi.fn(),
   cache: {
-    updateQuery: updateQueryMock,
-    evict: evictMock,
-    identify: identifyMock,
+    updateQuery: vi.fn(),
+    readQuery: vi.fn(),
+    evict: vi.fn(),
+    identify: vi.fn(),
   },
 };
 
