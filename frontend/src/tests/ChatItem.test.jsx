@@ -42,7 +42,7 @@ const renderChatItem = (
   );
 };
 
-describe("<ContactItem />", () => {
+describe("<ChatItem />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useNavigate.mockReturnValue(navigate);
@@ -51,7 +51,9 @@ describe("<ContactItem />", () => {
   test("renders item with correct info", () => {
     renderChatItem();
 
-    expect(screen.getByTestId("chat-item-0")).toBeInTheDocument();
+    expect(
+      screen.getByTestId(`chat-item-${mockChatData.id}`)
+    ).toBeInTheDocument();
     expect(screen.getByTestId("chat-card")).toBeInTheDocument();
     expect(screen.getByText(mockChatData.title)).toBeInTheDocument();
     expect(screen.queryByText("No messages")).not.toBeInTheDocument();
@@ -86,7 +88,7 @@ describe("<ContactItem />", () => {
     const user = userEvent.setup();
     renderChatItem();
 
-    await user.click(screen.getByTestId("chat-item-0"));
+    await user.click(screen.getByTestId(`chat-item-${mockChatData.id}`));
 
     expect(navigate).toHaveBeenCalledWith(`/chats/${mockChatData.id}`);
     expect(mockSetActiveChatOrContactId).toHaveBeenCalledWith(mockChatData.id);
