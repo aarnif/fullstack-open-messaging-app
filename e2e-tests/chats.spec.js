@@ -283,14 +283,16 @@ test.describe("Chats", () => {
     await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
     await sendMessage(page, "Hello!");
 
-    let firstChatItem = await page.getByTestId("chat-item-0");
+    const chatItems = page.getByTestId(/chat-item-/);
+
+    let firstChatItem = await chatItems.first();
     await expect(firstChatItem).toBeVisible();
     await expect(firstChatItem.getByText("You: Hello!")).toBeVisible();
 
     await createPrivateChat(page, user3Credentials);
     await sendMessage(page, "Hi!");
 
-    firstChatItem = await page.getByTestId("chat-item-0");
+    firstChatItem = await chatItems.first();
     await expect(firstChatItem).toBeVisible();
     await expect(firstChatItem.getByText("You: Hi!")).toBeVisible();
   });
@@ -309,7 +311,9 @@ test.describe("Chats", () => {
     await signOut(page);
     await signIn(page, user2Credentials.username, user2Credentials.password);
 
-    await page.getByTestId("chat-item-0").click();
+    const chatItems = page.getByTestId(/chat-item-/);
+
+    await chatItems.first().click();
 
     await page.getByTestId("chat-info-button").click();
     await page.getByTestId("leave-group-chat-button").click();
@@ -331,7 +335,9 @@ test.describe("Chats", () => {
     await signOut(page);
     await signIn(page, user2Credentials.username, user2Credentials.password);
 
-    const chatItem = await page.getByTestId("chat-item-0");
+    const chatItems = page.getByTestId(/chat-item-/);
+
+    const chatItem = await chatItems.first();
     await expect(chatItem).toBeVisible();
 
     const newMessagesCount = await chatItem.getByTestId("new-messages-count");
