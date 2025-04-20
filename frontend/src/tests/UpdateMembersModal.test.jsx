@@ -16,6 +16,7 @@ const {
 const { navigate } = mocks;
 
 const chatData = findGroupChatByIdMock.result.data.findChatById;
+const user1 = allContactsByUserMock.result.data.allContactsByUser.contacts[0];
 
 const mockSetChosenUserIds = vi.fn();
 const mockSetNewMemberIds = vi.fn();
@@ -99,11 +100,11 @@ describe("<UpdateMembersModal />", () => {
     const searchInput = screen.getByTestId("search-contacts-input");
     await user.click(searchInput);
     await user.clear(searchInput);
-    await user.paste("Alice Jones"); // Paste the text because the query fetches character by character
+    await user.paste(user1.name); // Paste the text because the query fetches character by character
 
     await waitFor(() => {
       expect(screen.getByTestId("search-contacts-input")).toHaveValue(
-        "Alice Jones"
+        user1.name
       );
     });
   });

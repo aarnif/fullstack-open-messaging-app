@@ -19,6 +19,9 @@ const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
 
+const user1 = allContactsByUserMock.result.data.allContactsByUser.contacts[0];
+const user2 = allContactsByUserMock.result.data.allContactsByUser.contacts[1];
+
 const mockSetShowNewGroupChatModal = vi.fn();
 
 vi.mock("react-router", async () => {
@@ -93,11 +96,11 @@ describe("<NewGroupChatModal />", () => {
     const searchInput = screen.getByTestId("search-contacts-input");
     await user.click(searchInput);
     await user.clear(searchInput);
-    await user.paste("Alice Jones"); // Paste the text because the query fetches character by character
+    await user.paste(user1.name); // Paste the text because the query fetches character by character
 
     await waitFor(() => {
       expect(screen.getByTestId("search-contacts-input")).toHaveValue(
-        "Alice Jones"
+        user1.name
       );
     });
   });
@@ -141,10 +144,12 @@ describe("<NewGroupChatModal />", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByTestId("contact-techie_alice")).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user1.username}`)
+      ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("contact-techie_alice"));
+    await user.click(screen.getByTestId(`contact-${user1.username}`));
 
     expect(screen.getByText("1 contacts selected")).toBeInTheDocument();
 
@@ -173,12 +178,16 @@ describe("<NewGroupChatModal />", () => {
     ]);
 
     await waitFor(() => {
-      expect(screen.getByTestId("contact-techie_alice")).toBeInTheDocument();
-      expect(screen.getByTestId("contact-music_bob")).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user1.username}`)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user2.username}`)
+      ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("contact-techie_alice"));
-    await user.click(screen.getByTestId("contact-music_bob"));
+    await user.click(screen.getByTestId(`contact-${user1.username}`));
+    await user.click(screen.getByTestId(`contact-${user2.username}`));
 
     const titleInput = screen.getByTestId("group-chat-title-input");
     const descriptionInput = screen.getByTestId("group-chat-description-input");
@@ -200,12 +209,16 @@ describe("<NewGroupChatModal />", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByTestId("contact-techie_alice")).toBeInTheDocument();
-      expect(screen.getByTestId("contact-music_bob")).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user1.username}`)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user2.username}`)
+      ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("contact-techie_alice"));
-    await user.click(screen.getByTestId("contact-music_bob"));
+    await user.click(screen.getByTestId(`contact-${user1.username}`));
+    await user.click(screen.getByTestId(`contact-${user2.username}`));
 
     expect(screen.getByText("2 contacts selected")).toBeInTheDocument();
 

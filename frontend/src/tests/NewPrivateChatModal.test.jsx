@@ -20,6 +20,7 @@ const {
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
+const user1 = allContactsByUserMock.result.data.allContactsByUser.contacts[0];
 
 const mockSetShowNewPrivateChatModal = vi.fn();
 
@@ -76,11 +77,11 @@ describe("<NewPrivateChatModal />", () => {
     const searchInput = screen.getByTestId("search-contacts-input");
     await user.click(searchInput);
     await user.clear(searchInput);
-    await user.paste("Alice Jones"); // Paste the text because the query fetches character by character
+    await user.paste(user1.name); // Paste the text because the query fetches character by character
 
     await waitFor(() => {
       expect(screen.getByTestId("search-contacts-input")).toHaveValue(
-        "Alice Jones"
+        user1.name
       );
     });
   });
@@ -110,10 +111,12 @@ describe("<NewPrivateChatModal />", () => {
     ]);
 
     await waitFor(() => {
-      expect(screen.getByTestId("contact-techie_alice")).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user1.username}`)
+      ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("contact-techie_alice"));
+    await user.click(screen.getByTestId(`contact-${user1.username}`));
 
     await user.click(screen.getByTestId("start-new-private-chat-button"));
 
@@ -152,10 +155,12 @@ describe("<NewPrivateChatModal />", () => {
     ]);
 
     await waitFor(() => {
-      expect(screen.getByTestId("contact-techie_alice")).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user1.username}`)
+      ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("contact-techie_alice"));
+    await user.click(screen.getByTestId(`contact-${user1.username}`));
 
     await user.click(screen.getByTestId("start-new-private-chat-button"));
 
@@ -167,10 +172,12 @@ describe("<NewPrivateChatModal />", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByTestId("contact-techie_alice")).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user1.username}`)
+      ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("contact-techie_alice"));
+    await user.click(screen.getByTestId(`contact-${user1.username}`));
 
     await user.click(screen.getByTestId("start-new-private-chat-button"));
 

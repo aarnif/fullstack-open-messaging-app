@@ -13,6 +13,8 @@ describe("<SearchBar />", () => {
 
     expect(screen.getByTestId("search-bar")).toBeInTheDocument();
     expect(screen.getByTestId("search-input")).toBeInTheDocument();
-    expect(screen.getByTestId("search-input")).toHaveValue("Travel");
+    expect(screen.getByTestId("search-input")).toHaveValue(
+      mockSearchWord.value
+    );
   });
 });

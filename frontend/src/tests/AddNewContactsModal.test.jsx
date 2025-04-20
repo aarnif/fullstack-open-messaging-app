@@ -10,15 +10,20 @@ import mocks from "./mocks/funcs.js";
 
 const {
   currentUserMock,
+  allContactsByUserMock,
   allContactsExceptByUserMock,
   allContactsExceptByUserSearchMock,
 } = queryMocks;
 
-const { addContactsMock } = mutationMocks;
+const { addContactMock, addContactsMock } = mutationMocks;
 
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
+const user1 =
+  allContactsExceptByUserMock.result.data.allContactsExceptByUser[0];
+const user2 =
+  allContactsExceptByUserMock.result.data.allContactsExceptByUser[1];
 
 const mockSetShowAddNewContactsModal = vi.fn();
 
@@ -30,16 +35,18 @@ vi.mock("react-router", async () => {
   };
 });
 
-const renderComponent = () => {
+const renderComponent = (
+  mockData = [
+    currentUserMock,
+    allContactsByUserMock,
+    allContactsExceptByUserMock,
+    allContactsExceptByUserSearchMock,
+    addContactMock,
+    addContactsMock,
+  ]
+) => {
   render(
-    <MockedProvider
-      mocks={[
-        currentUserMock,
-        allContactsExceptByUserMock,
-        allContactsExceptByUserSearchMock,
-        addContactsMock,
-      ]}
-    >
+    <MockedProvider mocks={mockData}>
       <MemoryRouter>
         <AddNewContactsModal
           user={userData}
@@ -74,11 +81,11 @@ describe("<AddNewContactsModal />", () => {
     const searchInput = screen.getByTestId("search-contacts-input");
     await user.click(searchInput);
     await user.clear(searchInput);
-    await user.paste("Alice Jones"); // Paste the text because the query fetches character by character
+    await user.paste(user1.name); // Paste the text because the query fetches character by character
 
     await waitFor(() => {
       expect(screen.getByTestId("search-contacts-input")).toHaveValue(
-        "Alice Jones"
+        user1.name
       );
     });
   });
@@ -101,13 +108,20 @@ describe("<AddNewContactsModal />", () => {
 
   test("select one contact work", async () => {
     const user = userEvent.setup();
-    renderComponent();
+    renderComponent([
+      currentUserMock,
+      allContactsByUserMock,
+      allContactsExceptByUserMock,
+      addContactMock,
+    ]);
 
     await waitFor(() => {
-      expect(screen.getByTestId("contact-techie_alice")).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user1.username}`)
+      ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("contact-techie_alice"));
+    await user.click(screen.getByTestId(`contact-${user1.username}`));
 
     expect(screen.getByText("1 contacts selected")).toBeInTheDocument();
 
@@ -120,15 +134,24 @@ describe("<AddNewContactsModal />", () => {
 
   test("select several contacts work", async () => {
     const user = userEvent.setup();
-    renderComponent();
+    renderComponent([
+      currentUserMock,
+      allContactsByUserMock,
+      allContactsExceptByUserMock,
+      addContactsMock,
+    ]);
 
     await waitFor(() => {
-      expect(screen.getByTestId("contact-techie_alice")).toBeInTheDocument();
-      expect(screen.getByTestId("contact-music_bob")).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user1.username}`)
+      ).toBeInTheDocument();
+      expect(
+        screen.getByTestId(`contact-${user2.username}`)
+      ).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("contact-techie_alice"));
-    await user.click(screen.getByTestId("contact-music_bob"));
+    await user.click(screen.getByTestId(`contact-${user1.username}`));
+    await user.click(screen.getByTestId(`contact-${user2.username}`));
 
     expect(screen.getByText("2 contacts selected")).toBeInTheDocument();
 

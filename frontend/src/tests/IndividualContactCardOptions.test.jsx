@@ -12,6 +12,8 @@ const { currentUserMock, findUserByIdMock, findChatByMembersMock } = queryMocks;
 const userData = currentUserMock.result.data.me;
 const contactData = findUserByIdMock.result.data.findUserById;
 
+const existingChatId = findChatByMembersMock.result.data.findChatByMembers.id;
+
 const mockSetIsBlocked = vi.fn();
 const mockModal = vi.fn();
 const { navigate } = mocks;
@@ -92,7 +94,7 @@ describe("<IndividualContactCardOptions />", () => {
 
     await user.click(screen.getByTestId("chat-with-contact-button"));
 
-    expect(navigate).toHaveBeenCalledWith("/chats/67f3d9e15b5ec0457e8d19ed");
+    expect(navigate).toHaveBeenCalledWith(`/chats/${existingChatId}`);
   });
 
   test("click chat button directs to new private chat", async () => {
