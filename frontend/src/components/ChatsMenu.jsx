@@ -114,7 +114,7 @@ const ChatsList = ({
     onData: ({ data }) => {
       console.log("Use LEFT_GROUP_CHATS-subscription:");
       const leftGroupChatData = data.data.leftGroupChats;
-      console.log("Left group chats:", leftGroupChatData);
+
       client.cache.updateQuery(
         {
           query: ALL_CHATS_BY_USER,

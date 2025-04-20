@@ -23,8 +23,6 @@ const Home = ({
       console.log("Use CONTACT_BLOCKED_OR_UNBLOCKED-subscription:");
       const blockingData = data.data.contactBlockedOrUnBlocked;
 
-      console.log("Blocking data:", data);
-
       const cachedData = client.cache.readQuery({
         query: ALL_CONTACTS_BY_USER,
         variables: {
@@ -98,7 +96,6 @@ const Home = ({
   useSubscription(GROUP_CHAT_EDITED, {
     onData: ({ data }) => {
       console.log("Use GROUP_CHAT_EDITED-subscription:");
-      console.log("Data.data:", data.data);
       const { updatedChat, removedMemberIds, addedMemberIds } =
         data.data.groupChatEdited;
       client.cache.updateQuery(
