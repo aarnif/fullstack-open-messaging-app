@@ -114,17 +114,22 @@ describe("<Chat />", () => {
       expect(screen.getByTestId("chat-info")).toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByTestId("chat-info-button"));
+    await userEvent.click(screen.getByTestId("chat-info-button"));
 
     await waitFor(() => {
       expect(screen.getByTestId("group-chat-info-modal")).toBeInTheDocument();
     });
   });
 
-  test("click display private chat info modal works", async () => {
+  test("click redirect to contact page when clicking private chat info", async () => {
     useMatch.mockReturnValue({
       params: { chatId: privateChatMatch },
     });
+
+    const anotherChatMember =
+      findPrivateChatByIdMock.result.data.findChatById.members.find(
+        (member) => member.id !== userData.id
+      );
 
     renderComponent([
       findPrivateChatByIdMock,
@@ -135,10 +140,8 @@ describe("<Chat />", () => {
       expect(screen.getByTestId("chat-info")).toBeInTheDocument();
     });
 
-    userEvent.click(screen.getByTestId("chat-info-button"));
+    await userEvent.click(screen.getByTestId("chat-info-button"));
 
-    await waitFor(() => {
-      expect(screen.getByTestId("private-chat-info-modal")).toBeInTheDocument();
-    });
+    expect(navigate).toHaveBeenCalledWith(`/contacts/${anotherChatMember.id}`);
   });
 });
