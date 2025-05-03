@@ -7,6 +7,8 @@ import {
   ADD_MESSAGE_TO_CHAT,
   CREATE_CHAT,
   ADD_CONTACTS,
+  BLOCK_OR_UNBLOCK_CONTACT,
+  REMOVE_CONTACT,
 } from "../../graphql/mutations";
 
 import { users, chats } from "./data";
@@ -220,6 +222,34 @@ const addContactsMock = {
   },
 };
 
+const blockOrUnblockContactMock = {
+  request: {
+    query: BLOCK_OR_UNBLOCK_CONTACT,
+    variables: {
+      contactId: users[1].id,
+    },
+  },
+  result: {
+    data: {
+      blockOrUnBlockContact: true,
+    },
+  },
+};
+
+const removeContactMock = {
+  request: {
+    query: REMOVE_CONTACT,
+    variables: {
+      contactId: users[1].id,
+    },
+  },
+  result: {
+    data: {
+      removeContact: true,
+    },
+  },
+};
+
 const mockNewChatInfo = {
   title: "Test Group Chat",
   description: "This is a group chat.",
@@ -239,5 +269,7 @@ export default {
   addMessageToNewChatMock,
   addContactMock,
   addContactsMock,
+  blockOrUnblockContactMock,
+  removeContactMock,
   mockNewChatInfo,
 };
