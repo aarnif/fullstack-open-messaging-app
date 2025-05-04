@@ -63,24 +63,17 @@ const editProfileMock = {
   request: {
     query: EDIT_PROFILE,
     variables: {
-      name: "Edited User One",
-      about: "This is User One profile. This is another line.",
+      name: users[0].name,
+      about: users[0].about,
       input: {
-        thumbnail: "edited-thumbnail-url",
-        original: "edited-original-url",
+        thumbnail: users[0].image.thumbnail,
+        original: users[0].image.original,
       },
     },
     result: {
       data: {
         editProfile: {
           ...users[0],
-          name: "Edited User One",
-          about: "This is User One profile. This is another line.",
-          image: {
-            ...users[0].image,
-            thumbnail: "edited-thumbnail-url",
-            original: "edited-original-url",
-          },
         },
       },
     },
