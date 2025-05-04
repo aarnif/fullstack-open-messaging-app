@@ -252,7 +252,7 @@ const resolvers = {
         {
           new: true,
         }
-      );
+      ).populate("blockedContacts");
 
       return updatedUser;
     },
