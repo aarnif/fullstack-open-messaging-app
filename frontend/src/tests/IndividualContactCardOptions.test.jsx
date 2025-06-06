@@ -3,11 +3,19 @@ import { describe, test, expect } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
+import ModalProvider from "../components/ModalProvider.jsx";
 import IndividualContactCardOptions from "../components/IndividualContactCard/IndividualContactCardOptions.jsx";
 import mocks from "./mocks/funcs.js";
 import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 
-const { currentUserMock, findUserByIdMock, findChatByMembersMock } = queryMocks;
+const {
+  currentUserMock,
+  findUserByIdMock,
+  findChatByMembersMock,
+  allContactsByUserMock,
+} = queryMocks;
+const { blockOrUnblockContactMock, removeContactMock } = mutationMocks;
 
 const userData = currentUserMock.result.data.me;
 const contactData = findUserByIdMock.result.data.findUserById;
@@ -15,7 +23,6 @@ const contactData = findUserByIdMock.result.data.findUserById;
 const existingChatId = findChatByMembersMock.result.data.findChatByMembers.id;
 
 const mockSetIsBlocked = vi.fn();
-const mockModal = vi.fn();
 const { navigate } = mocks;
 
 vi.mock("react-router", async () => {
@@ -26,27 +33,28 @@ vi.mock("react-router", async () => {
   };
 });
 
-vi.mock("../hooks/useModal", () => ({
-  default: () => ({
-    modal: mockModal,
-  }),
-}));
-
 const renderIndividualContactCardOptions = (
   mockIsBlocked = false,
   mockHaveContactBlockedYou = false,
-  mockData = findChatByMembersMock
+  mockData = [
+    findChatByMembersMock,
+    allContactsByUserMock,
+    blockOrUnblockContactMock,
+    removeContactMock,
+  ]
 ) => {
   return render(
-    <MockedProvider mocks={[mockData]}>
+    <MockedProvider mocks={mockData}>
       <MemoryRouter>
-        <IndividualContactCardOptions
-          user={userData}
-          contact={contactData}
-          isBlocked={mockIsBlocked}
-          setIsBlocked={mockSetIsBlocked}
-          haveContactBlockedYou={mockHaveContactBlockedYou}
-        />
+        <ModalProvider>
+          <IndividualContactCardOptions
+            user={userData}
+            contact={contactData}
+            isBlocked={mockIsBlocked}
+            setIsBlocked={mockSetIsBlocked}
+            haveContactBlockedYou={mockHaveContactBlockedYou}
+          />
+        </ModalProvider>
       </MemoryRouter>
     </MockedProvider>
   );
@@ -114,7 +122,12 @@ describe("<IndividualContactCardOptions />", () => {
     renderIndividualContactCardOptions(
       mockIsBlocked,
       mockHaveContactBlockedYou,
-      existingChatNotFound
+      [
+        existingChatNotFound,
+        allContactsByUserMock,
+        blockOrUnblockContactMock,
+        removeContactMock,
+      ]
     );
 
     await user.click(screen.getByTestId("chat-with-contact-button"));
@@ -127,8 +140,9 @@ describe("<IndividualContactCardOptions />", () => {
     renderIndividualContactCardOptions();
 
     await user.click(screen.getByTestId("block-or-unblock-contact-button"));
+    await user.click(screen.getByTestId("confirm-button"));
 
-    expect(mockModal).toHaveBeenCalled();
+    expect(mockSetIsBlocked).toHaveBeenCalledWith(true);
   });
 
   test("click remove contact button", async () => {
@@ -136,7 +150,8 @@ describe("<IndividualContactCardOptions />", () => {
     renderIndividualContactCardOptions();
 
     await user.click(screen.getByTestId("remove-contact-button"));
+    await user.click(screen.getByTestId("confirm-button"));
 
-    expect(mockModal).toHaveBeenCalled();
+    expect(navigate).toHaveBeenCalledWith("/contacts");
   });
 });

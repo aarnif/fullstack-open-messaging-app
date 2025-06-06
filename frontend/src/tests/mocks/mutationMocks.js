@@ -7,6 +7,8 @@ import {
   ADD_MESSAGE_TO_CHAT,
   CREATE_CHAT,
   ADD_CONTACTS,
+  BLOCK_OR_UNBLOCK_CONTACT,
+  REMOVE_CONTACT,
 } from "../../graphql/mutations";
 
 import { users, chats } from "./data";
@@ -61,24 +63,17 @@ const editProfileMock = {
   request: {
     query: EDIT_PROFILE,
     variables: {
-      name: "Edited User One",
-      about: "This is User One profile. This is another line.",
+      name: users[0].name,
+      about: users[0].about,
       input: {
-        thumbnail: "edited-thumbnail-url",
-        original: "edited-original-url",
+        thumbnail: users[0].image.thumbnail,
+        original: users[0].image.original,
       },
     },
     result: {
       data: {
         editProfile: {
           ...users[0],
-          name: "Edited User One",
-          about: "This is User One profile. This is another line.",
-          image: {
-            ...users[0].image,
-            thumbnail: "edited-thumbnail-url",
-            original: "edited-original-url",
-          },
         },
       },
     },
@@ -220,6 +215,34 @@ const addContactsMock = {
   },
 };
 
+const blockOrUnblockContactMock = {
+  request: {
+    query: BLOCK_OR_UNBLOCK_CONTACT,
+    variables: {
+      contactId: users[1].id,
+    },
+  },
+  result: {
+    data: {
+      blockOrUnBlockContact: true,
+    },
+  },
+};
+
+const removeContactMock = {
+  request: {
+    query: REMOVE_CONTACT,
+    variables: {
+      contactId: users[1].id,
+    },
+  },
+  result: {
+    data: {
+      removeContact: true,
+    },
+  },
+};
+
 const mockNewChatInfo = {
   title: "Test Group Chat",
   description: "This is a group chat.",
@@ -239,5 +262,7 @@ export default {
   addMessageToNewChatMock,
   addContactMock,
   addContactsMock,
+  blockOrUnblockContactMock,
+  removeContactMock,
   mockNewChatInfo,
 };

@@ -3,6 +3,7 @@ import { describe, test, expect } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
+import ModalProvider from "../components/ModalProvider.jsx";
 import EditProfileModal from "../components/Modals/EditProfileModal.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
@@ -15,7 +16,6 @@ const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
 
-const mockModal = vi.fn();
 const mockSetShowEditProfileModal = vi.fn();
 
 vi.mock("react-router", async () => {
@@ -26,20 +26,16 @@ vi.mock("react-router", async () => {
   };
 });
 
-vi.mock("../hooks/useModal", () => ({
-  default: () => ({
-    modal: mockModal,
-  }),
-}));
-
-const renderComponent = () => {
+const renderComponent = (mockData = [currentUserMock, editProfileMock]) => {
   render(
-    <MockedProvider mocks={[currentUserMock, editProfileMock]}>
+    <MockedProvider mocks={mockData}>
       <MemoryRouter>
-        <EditProfileModal
-          user={userData}
-          setShowEditProfileModal={mockSetShowEditProfileModal}
-        />
+        <ModalProvider>
+          <EditProfileModal
+            user={userData}
+            setShowEditProfileModal={mockSetShowEditProfileModal}
+          />
+        </ModalProvider>
       </MemoryRouter>
     </MockedProvider>
   );
@@ -58,31 +54,87 @@ describe("<EditProfileModal />", () => {
   });
 
   test("edit profile text works", async () => {
+    const editProfileNameAndAboutMock = {
+      request: {
+        query: editProfileMock.request.query,
+        variables: {
+          name: "New Name",
+          about: "This is User One profile. This is a new line.",
+          input: {
+            thumbnail: userData.image.thumbnail,
+            original: userData.image.original,
+          },
+        },
+      },
+      result: {
+        data: {
+          editProfile: {
+            ...userData,
+            name: "New Name",
+            about: "This is User One profile. This is a new line.",
+            image: {
+              ...userData.image,
+              thumbnail: userData.image.thumbnail,
+              original: userData.image.original,
+            },
+          },
+        },
+      },
+    };
     const user = userEvent.setup();
-    renderComponent();
+    renderComponent([currentUserMock, editProfileNameAndAboutMock]);
 
-    await user.type(screen.getByTestId("profile-name-input"), "New Name");
-    await user.type(screen.getByTestId("profile-about-input"), "New About");
+    const profileNameInput = screen.getByTestId("profile-name-input");
+    await user.clear(profileNameInput);
+    await user.type(profileNameInput, "New Name");
+    await user.type(
+      screen.getByTestId("profile-about-input"),
+      " This is a new line."
+    );
 
     await user.click(screen.getByTestId("submit-edit-profile-button"));
+    await user.click(screen.getByTestId("confirm-button"));
 
     await waitFor(() => {
-      expect(mockModal).toHaveBeenCalled();
+      expect(mockSetShowEditProfileModal).toHaveBeenCalledWith(false);
     });
   });
 
   test("edit profile with image works", async () => {
+    const editProfileImageMock = {
+      request: {
+        query: editProfileMock.request.query,
+        variables: {
+          name: userData.name,
+          about: userData.about,
+          input: {
+            thumbnail: userData.image.thumbnail,
+            original: userData.image.original,
+          },
+        },
+      },
+      result: {
+        data: {
+          editProfile: userData,
+        },
+      },
+    };
+
     const user = userEvent.setup();
-    const file = new File(["test"], "test.png", { type: "image/png" });
-    renderComponent();
+    const file = new File(["new_profile_image"], "new_profile_image.png", {
+      type: "image/png",
+    });
+
+    renderComponent([currentUserMock, editProfileImageMock]);
 
     await user.click(screen.getByTestId("change-image-button"));
     await user.upload(screen.getByTestId("change-image-input"), file);
 
     await user.click(screen.getByTestId("submit-edit-profile-button"));
+    await user.click(screen.getByTestId("confirm-button"));
 
     await waitFor(() => {
-      expect(mockModal).toHaveBeenCalled();
+      expect(mockSetShowEditProfileModal).toHaveBeenCalledWith(false);
     });
   });
 
@@ -97,8 +149,11 @@ describe("<EditProfileModal />", () => {
     await user.type(profileNameInput, "New Name");
     await user.clear(profileNameInput);
 
-    await waitFor(() => {
-      expect(mockModal).toHaveBeenCalled();
-    });
+    await user.click(screen.getByTestId("submit-edit-profile-button"));
+
+    expect(
+      screen.getByText("Profile name cannot be empty!")
+    ).toBeInTheDocument();
+    expect(mockSetShowEditProfileModal).not.toHaveBeenCalled();
   });
 });

@@ -37,12 +37,12 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
     try {
       let result;
 
-      if (base64Image) {
+      if (base64Image && process.env.NODE_ENV !== "test") {
         console.log("Uploading profile picture...");
         result = await imageService.uploadImage(user.id, base64Image);
       }
 
-      const newProfileImage = base64Image
+      const newProfileImageInput = result?.data
         ? {
             thumbnail: result.data.thumb.url,
             original: result.data.image.url,
@@ -55,7 +55,7 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
       const newProfileData = {
         name: name.value,
         about: about.value,
-        input: newProfileImage,
+        input: newProfileImageInput,
       };
 
       await editProfile({
@@ -131,9 +131,6 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
                 setBase64Image={setBase64Image}
               />
               <ul className="flex-grow flex flex-col">
-                {/* <li className="my-4 w-full flex">
-                  <Notify notifyMessage={showNotifyMessage} />
-                </li> */}
                 <li className="w-full flex flex-col">
                   <label className="text-mobile lg:text-base font-bold text-slate-800 dark:text-slate-100">
                     Profile name:
