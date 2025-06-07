@@ -66,7 +66,7 @@ const ChangePasswordModal = ({ setShowChangePasswordModal }) => {
       <motion.div
         data-testid="change-password-modal"
         key={"newChatModal"}
-        className="p-4 w-full max-w-[500px] flex flex-col bg-white dark:bg-slate-700 rounded-xl text-slate-800 dark:text-slate-100 z-100"
+        className="p-4 w-full max-w-[500px] flex flex-col bg-white dark:bg-slate-700 rounded-t-xl sm:rounded-xl text-slate-800 dark:text-slate-100 z-100"
         onClick={(e) => e.stopPropagation()}
         initial={{ y: width <= 640 ? 50 : -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
@@ -131,7 +131,7 @@ const ChangePasswordModal = ({ setShowChangePasswordModal }) => {
                 {...confirmNewPassword}
               />
             </li>
-            <li className="mt-6 w-full flex justify-center items-end space-x-4">
+            <li className="mt-6 w-full flex flex-col-reverse sm:flex-row justify-center items-end gap-4">
               <button
                 data-testid="cancel-change-password-button"
                 type="button"
