@@ -97,7 +97,7 @@ const SettingsCard = ({ user }) => {
       <EnableDarkMode theme={theme} setTheme={setTheme} />
       <ChangeClockFormat time={time} setTime={setTime} />
       <button
-        data-testid="remove-contact-button"
+        data-testid="change-password-button"
         onClick={() => setShowChangePasswordModal(true)}
         className="my-4 w-full p-2 flex justify-center items-center text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100 border-2 
         border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
