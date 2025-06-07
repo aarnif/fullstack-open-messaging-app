@@ -63,19 +63,19 @@ const SignIn = ({ setActiveMenuItem }) => {
          bg-white dark:bg-slate-800 rounded-xl text-black shadow-xl"
       >
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
-          <Title type="primary" text="Sign In" />
+          <Title type="primary" testId="sign-in-title" text="Sign In" />
 
           <div className="w-full flex flex-col gap-3">
             <Notify notifyMessage={showNotifyMessage} />
 
             <div className="w-full flex flex-col">
               <Label title="username" />
-              <Input item={username} />
+              <Input item={username} testId="username-input" />
             </div>
 
             <div className="w-full flex flex-col">
               <Label title="password" />
-              <Input item={password} />
+              <Input item={password} testId="password-input" />
             </div>
           </div>
 
