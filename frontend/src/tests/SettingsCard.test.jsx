@@ -17,6 +17,14 @@ Object.defineProperty(global, "localStorage", { value: localStorage });
 
 const userData = currentUserMock.result.data.me;
 
+const mockModal = vi.fn();
+
+vi.mock("../hooks/useModal", () => ({
+  default: () => ({
+    modal: mockModal,
+  }),
+}));
+
 const createUserWithSettings = (settingsOverrides) => ({
   ...userData,
   settings: {
