@@ -153,3 +153,21 @@ export const BLOCK_OR_UNBLOCK_CONTACT = gql`
     blockOrUnBlockContact(contactId: $contactId)
   }
 `;
+
+export const CHANGE_PASSWORD = gql`
+  mutation ChangePassword(
+    $currentPassword: String!
+    $newPassword: String!
+    $confirmNewPassword: String!
+  ) {
+    changePassword(
+      currentPassword: $currentPassword
+      newPassword: $newPassword
+      confirmNewPassword: $confirmNewPassword
+    ) {
+      ...UserDetails
+    }
+  }
+
+  ${USER_DETAILS}
+`;

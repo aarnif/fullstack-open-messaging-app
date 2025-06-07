@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
+import { AnimatePresence } from "framer-motion";
 
 import { EDIT_SETTINGS } from "../../graphql/mutations";
+import ChangePasswordModal from "../Modals/ChangePasswordModal";
 
 const EnableDarkMode = ({ theme, setTheme }) => {
   const handleToggleDarkMode = () => {
@@ -62,6 +64,7 @@ const ChangeClockFormat = ({ time, setTime }) => {
 };
 
 const SettingsCard = ({ user }) => {
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [theme, setTheme] = useState(user.settings.theme);
   const [time, setTime] = useState(user.settings.time);
   const [mutate] = useMutation(EDIT_SETTINGS);
@@ -93,6 +96,22 @@ const SettingsCard = ({ user }) => {
       </h2>
       <EnableDarkMode theme={theme} setTheme={setTheme} />
       <ChangeClockFormat time={time} setTime={setTime} />
+      <button
+        data-testid="remove-contact-button"
+        onClick={() => setShowChangePasswordModal(true)}
+        className="my-4 w-full p-2 flex justify-center items-center text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100 border-2 
+        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
+        active:scale-95 rounded-xl transition"
+      >
+        Change Password
+      </button>
+      <AnimatePresence>
+        {showChangePasswordModal && (
+          <ChangePasswordModal
+            setShowChangePasswordModal={setShowChangePasswordModal}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 };
