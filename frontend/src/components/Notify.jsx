@@ -5,9 +5,9 @@ const Notify = ({ notifyMessage }) => {
   return (
     <div
       data-testid="notify-message"
-      className="p-2 flex justify-center items-center bg-red-400 rounded-lg"
+      className="w-full p-2 flex justify-center items-center text-md text-red-700 bg-red-400 rounded-lg"
     >
-      <span className="text-md text-red-700">{notifyMessage.content}</span>
+      {notifyMessage.content}
     </div>
   );
 };
