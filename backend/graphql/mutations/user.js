@@ -34,6 +34,11 @@ const typeDefs = `
       theme: String!
       time: String!
     ): User
+    changePassword(
+      currentPassword: String!
+      newPassword: String!
+      confirmNewPassword: String!
+    ): User
     blockOrUnBlockContact(
       contactId: ID!
     ): Boolean
@@ -305,6 +310,71 @@ const resolvers = {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             error,
+          },
+        });
+      }
+    },
+    changePassword: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      const user = await User.findById(context.currentUser.id);
+
+      const passwordMatch = await bcrypt.compare(
+        args.currentPassword,
+        user.passwordHash
+      );
+
+      if (!passwordMatch) {
+        throw new GraphQLError("Current password is incorrect!", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.currentPassword,
+          },
+        });
+      }
+
+      if (args.newPassword.length < 6) {
+        throw new GraphQLError(
+          "New password must be at least 6 characters long!",
+          {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.newPassword,
+            },
+          }
+        );
+      }
+
+      if (args.newPassword !== args.confirmNewPassword) {
+        throw new GraphQLError("New passwords do not match!", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.confirmNewPassword,
+          },
+        });
+      }
+
+      try {
+        const newPasswordHash = await bcrypt.hash(args.newPassword, 10);
+
+        const updatedUser = await User.findByIdAndUpdate(
+          context.currentUser.id,
+          { passwordHash: newPasswordHash },
+          { new: true }
+        );
+
+        return updatedUser;
+      } catch (error) {
+        throw new GraphQLError("Failed to change password!", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
           },
         });
       }

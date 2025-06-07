@@ -231,6 +231,93 @@ test.describe("Users And Contacts", () => {
         page.getByText("Profile name cannot be empty!")
       ).not.toBeVisible();
     });
+
+    test("Change user password fail with empty fields", async ({ page }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await page.getByTestId("settings-button").click();
+      await page.getByTestId("change-password-button").click();
+      await page.getByTestId("submit-change-password-button").click();
+
+      await expect(page.getByText("Please fill in all fields")).toBeVisible();
+    });
+
+    test("Change user password fails with wrong current password", async ({
+      page,
+    }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await page.getByTestId("settings-button").click();
+      await page.getByTestId("change-password-button").click();
+
+      await page.getByTestId("current-password-input").fill("wrong_password");
+      await page.getByTestId("new-password-input").fill("new_password");
+      await page.getByTestId("confirm-new-password-input").fill("new_password");
+
+      await page.getByTestId("submit-change-password-button").click();
+
+      await expect(
+        page.getByText("Current password is incorrect!")
+      ).toBeVisible();
+    });
+
+    test("Change user password fails with new passwords not matching", async ({
+      page,
+    }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await page.getByTestId("settings-button").click();
+      await page.getByTestId("change-password-button").click();
+
+      await page
+        .getByTestId("current-password-input")
+        .fill(user1Credentials.password);
+      await page.getByTestId("new-password-input").fill("new_password");
+      await page
+        .getByTestId("confirm-new-password-input")
+        .fill("wrong_password");
+
+      await page.getByTestId("submit-change-password-button").click();
+
+      await expect(page.getByText("Passwords do not match!")).toBeVisible();
+    });
+
+    test("Change user password succees with valid inputs", async ({ page }) => {
+      await signUp(
+        page,
+        user1Credentials.username,
+        user1Credentials.password,
+        user1Credentials.confirmPassword
+      );
+      await page.getByTestId("settings-button").click();
+      await page.getByTestId("change-password-button").click();
+
+      await page
+        .getByTestId("current-password-input")
+        .fill(user1Credentials.password);
+      await page.getByTestId("new-password-input").fill("new_password");
+      await page.getByTestId("confirm-new-password-input").fill("new_password");
+
+      await page.getByTestId("submit-change-password-button").click();
+
+      await expect(page.getByTestId("change-password-modal")).not.toBeVisible();
+      await expect(page.getByTestId("alert-modal")).toBeVisible();
+      await expect(
+        page.getByText("Password changed successfully")
+      ).toBeVisible();
+    });
   });
 
   test.describe("Contacts", () => {

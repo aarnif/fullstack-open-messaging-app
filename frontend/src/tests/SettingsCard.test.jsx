@@ -17,6 +17,14 @@ Object.defineProperty(global, "localStorage", { value: localStorage });
 
 const userData = currentUserMock.result.data.me;
 
+const mockModal = vi.fn();
+
+vi.mock("../hooks/useModal", () => ({
+  default: () => ({
+    modal: mockModal,
+  }),
+}));
+
 const createUserWithSettings = (settingsOverrides) => ({
   ...userData,
   settings: {
@@ -130,5 +138,17 @@ describe("<SettingsCard />", () => {
     await user.click(clockToggleButton);
     await screen.findByTestId("24-hour-clock");
     expect(screen.getByTestId("24-hour-clock")).toBeInTheDocument();
+  });
+
+  test("User can open change password modal", async () => {
+    const user = userEvent.setup();
+    renderComponent(userData, [currentUserMock]);
+
+    expect(screen.getByTestId("settings-header")).toBeInTheDocument();
+    expect(screen.getByTestId("change-password-button")).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("change-password-button"));
+
+    expect(screen.getByTestId("change-password-modal")).toBeInTheDocument();
   });
 });

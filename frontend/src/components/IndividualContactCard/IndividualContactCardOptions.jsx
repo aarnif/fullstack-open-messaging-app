@@ -171,13 +171,11 @@ const IndividualContactCardOptions = ({
             handleRemoveContact
           )
         }
-        className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 
+        className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100 border-2 
         border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
         active:scale-95 rounded-xl transition"
       >
-        <div className="text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100">
-          Remove Contact
-        </div>
+        Remove Contact
       </button>
     </div>
   );
