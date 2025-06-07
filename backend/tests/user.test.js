@@ -15,6 +15,7 @@ const {
   loginUser,
   addContacts,
   blockOrUnBlockContact,
+  changePassword,
   checkIfUserHasBlockedYou,
 } = helpers;
 
@@ -510,6 +511,75 @@ describe("User tests", () => {
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.editSettings.settings.theme).toBe("dark");
     expect(response.body.data.editSettings.settings.time).toBe("24h");
+  });
+
+  it("Change password fails with incorrect current password", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+    const response = await changePassword(
+      credentials,
+      "wrongpassword",
+      "newpassword123",
+      "newpassword123"
+    );
+
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toBe(
+      "Current password is incorrect!"
+    );
+  });
+
+  it("Change password fails with too short new password", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+    const response = await changePassword(
+      credentials,
+      credentials.password,
+      "short",
+      "short"
+    );
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toBe(
+      "New password must be at least 6 characters long!"
+    );
+  });
+
+  it("Change password fails with non-matching new passwords", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+    const response = await changePassword(
+      credentials,
+      credentials.password,
+      "newpassword123",
+      "differentpassword123"
+    );
+    expect(JSON.parse(response.text).errors).toBeDefined();
+    expect(JSON.parse(response.text).errors[0].message).toBe(
+      "New passwords do not match!"
+    );
+  });
+
+  it("Change password successfully", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+    const changePasswordResponse = await changePassword(
+      credentials,
+      credentials.password,
+      "newpassword123",
+      "newpassword123"
+    );
+
+    expect(JSON.parse(changePasswordResponse.text).errors).toBeUndefined();
+    expect(changePasswordResponse.body.data.changePassword.id).toBe(
+      credentials.id
+    );
+
+    const loginResponse = await loginUser({
+      username: credentials.username,
+      password: "newpassword123",
+    });
+    expect(JSON.parse(loginResponse.text).errors).toBeUndefined();
+    expect(loginResponse.body.data.login.value).toBeDefined();
   });
 
   it("Check if user has blocked you", async () => {

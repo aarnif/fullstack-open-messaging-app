@@ -135,6 +135,31 @@ const createChat = async (
   return response;
 };
 
+const changePassword = async (
+  credentials,
+  currentPassword,
+  newPassword,
+  confirmNewPassword
+) => {
+  const response = await requestData(
+    {
+      query: `mutation ChangePassword($currentPassword: String!, $newPassword: String!, $confirmNewPassword: String!) {
+          changePassword(currentPassword: $currentPassword, newPassword: $newPassword, confirmNewPassword: $confirmNewPassword) {
+            id
+          }
+        }`,
+      variables: {
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        confirmNewPassword: confirmNewPassword,
+      },
+    },
+    credentials.token
+  );
+
+  return response;
+};
+
 const checkIfUserHasBlockedYou = async (credentials, userId) => {
   const response = await requestData(
     {
@@ -163,5 +188,6 @@ export default {
   addContacts,
   blockOrUnBlockContact,
   createChat,
+  changePassword,
   checkIfUserHasBlockedYou,
 };
