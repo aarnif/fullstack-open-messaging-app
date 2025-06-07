@@ -131,4 +131,16 @@ describe("<SettingsCard />", () => {
     await screen.findByTestId("24-hour-clock");
     expect(screen.getByTestId("24-hour-clock")).toBeInTheDocument();
   });
+
+  test("User can open change password modal", async () => {
+    const user = userEvent.setup();
+    renderComponent(userData, [currentUserMock]);
+
+    expect(screen.getByTestId("settings-header")).toBeInTheDocument();
+    expect(screen.getByTestId("change-password-button")).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("change-password-button"));
+
+    expect(screen.getByTestId("change-password-modal")).toBeInTheDocument();
+  });
 });
