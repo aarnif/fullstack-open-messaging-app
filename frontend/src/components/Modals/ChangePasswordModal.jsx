@@ -3,12 +3,14 @@ import { MdClose } from "react-icons/md";
 import { useMutation } from "@apollo/client";
 
 import { CHANGE_PASSWORD } from "../../graphql/mutations";
+import useModal from "../../hooks/useModal";
 import useField from "../../hooks/useField";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useNotifyMessage from "../../hooks/useNotifyMessage";
 import Notify from "../Notify";
 
 const ChangePasswordModal = ({ setShowChangePasswordModal }) => {
+  const { modal } = useModal();
   const { width } = useWindowDimensions();
   const notifyMessage = useNotifyMessage();
   const [changePassword] = useMutation(CHANGE_PASSWORD);
@@ -46,12 +48,13 @@ const ChangePasswordModal = ({ setShowChangePasswordModal }) => {
           confirmNewPassword: confirmNewPassword.value,
         },
       });
-      console.log("Password updated successfully");
+      setShowChangePasswordModal(false);
+      console.log("Password changed successfully");
+      modal("alert", "Notification", "Password changed successfully");
     } catch (error) {
       console.error("Error updating password:", error);
       notifyMessage.show(error.message);
     }
-    setShowChangePasswordModal(false);
   };
 
   return (

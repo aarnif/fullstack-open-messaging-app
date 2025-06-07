@@ -212,5 +212,9 @@ describe("<ChangePasswordModal />", () => {
     );
 
     expect(mockSetShowChangePasswordModal).toHaveBeenCalledWith(false);
+    expect(screen.getByTestId("alert-modal")).toBeInTheDocument();
+    expect(
+      screen.getByText("Password changed successfully")
+    ).toBeInTheDocument();
   });
 });

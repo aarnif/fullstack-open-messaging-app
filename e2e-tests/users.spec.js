@@ -313,6 +313,10 @@ test.describe("Users And Contacts", () => {
       await page.getByTestId("submit-change-password-button").click();
 
       await expect(page.getByTestId("change-password-modal")).not.toBeVisible();
+      await expect(page.getByTestId("alert-modal")).toBeVisible();
+      await expect(
+        page.getByText("Password changed successfully")
+      ).toBeVisible();
     });
   });
 
