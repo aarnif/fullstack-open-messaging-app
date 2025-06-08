@@ -1,9 +1,9 @@
-const Button = ({ type, name, testId, text, onClick }) => {
+const Button = ({ type, variant, testId, text, onClick }) => {
   const buttonStyles = {
-    "sign-in":
+    primary:
       "py-3 text-base sm:text-lg font-bold text-white bg-green-500 border-2 border-green-500 rounded-xl hover:bg-green-600 focus:bg-green-600 active:scale-95 transition",
-    "sign-up":
-      "py-3 text-base sm:text-lg font-bold text-slate-700 dark:text-slate-300 border-2 border-slate-400 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-900 focus:bg-slate-300 active:scale-95 transition",
+    secondary:
+      "flex-grow py-3 text-base sm:text-lg font-bold text-slate-700 dark:text-slate-300 border-2 border-slate-400 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-900 focus:bg-slate-300 active:scale-95 transition",
   };
 
   return (
@@ -11,7 +11,7 @@ const Button = ({ type, name, testId, text, onClick }) => {
       type={type}
       data-testid={testId}
       onClick={onClick}
-      className={buttonStyles[name]}
+      className={buttonStyles[variant]}
     >
       {text}
     </button>

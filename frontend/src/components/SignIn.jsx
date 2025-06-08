@@ -82,7 +82,7 @@ const SignIn = ({ setActiveMenuItem }) => {
           <div className="w-full flex flex-col gap-3">
             <Button
               type="submit"
-              name="sign-in"
+              variant="primary"
               testId="sign-in-button"
               text="Sign In"
             />
@@ -93,7 +93,7 @@ const SignIn = ({ setActiveMenuItem }) => {
               </span>
               <Button
                 type="button"
-                name="sign-up"
+                variant="secondary"
                 testId="sign-up-button"
                 text="Sign Up Here"
                 onClick={handleClickSignUp}
