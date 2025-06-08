@@ -163,12 +163,12 @@ const ChatsList = ({
 
   return (
     <div className="w-full">
-      {data.allChatsByUser.map((item, index) => (
+      {data.allChatsByUser.map((chat, index) => (
         <ChatItem
-          key={item.id}
+          key={chat.id}
           index={index}
           user={user}
-          item={item}
+          chat={chat}
           activeChatOrContactId={activeChatOrContactId}
           setActiveChatOrContactId={setActiveChatOrContactId}
         />

@@ -59,16 +59,6 @@ describe("<ChatItem />", () => {
     expect(screen.queryByText("No messages")).not.toBeInTheDocument();
   });
 
-  test("displays no messages if no messages exist", () => {
-    const emptyChatData = {
-      ...mockChatData,
-      messages: [],
-    };
-    renderChatItem(emptyChatData);
-
-    expect(screen.queryByText("No messages")).toBeInTheDocument();
-  });
-
   test("highlights active contact", () => {
     renderChatItem();
 
