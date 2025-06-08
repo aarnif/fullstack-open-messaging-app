@@ -14,12 +14,12 @@ import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal"
 const ChatNotFound = () => (
   <div
     data-testid="chat-not-found"
-    className="flex-grow w-full overflow-y-auto h-0 flex flex-col justify-center items-center"
+    className="w-full flex-grow flex flex-col justify-center items-center"
   >
-    <div className="text-xl text-red-600 font-bold">Chat not found!</div>
-    <div className="text-xl text-red-600 font-bold">
+    <p className="text-xl text-red-600 font-bold">Chat not found!</p>
+    <p className="text-xl text-red-600 font-bold">
       This could be due to wrong id or the chat was deleted.
-    </div>
+    </p>
   </div>
 );
 
