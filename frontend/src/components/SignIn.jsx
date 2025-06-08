@@ -63,7 +63,7 @@ const SignIn = ({ setActiveMenuItem }) => {
          bg-white dark:bg-slate-800 rounded-xl text-black shadow-xl"
       >
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
-          <Title type="primary" testId="sign-in-title" text="Sign In" />
+          <Title variant="primary" testId="sign-in-title" text="Sign In" />
 
           <div className="w-full flex flex-col gap-3">
             <Notify notifyMessage={showNotifyMessage} />

@@ -1,4 +1,4 @@
-const Title = ({ type, testId, text }) => {
+const Title = ({ variant, testId, text }) => {
   const titles = {
     primary: (
       <h1
@@ -10,7 +10,7 @@ const Title = ({ type, testId, text }) => {
     ),
   };
 
-  return titles[type];
+  return titles[variant];
 };
 
 export default Title;
