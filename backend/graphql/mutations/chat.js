@@ -346,6 +346,15 @@ const resolvers = {
         });
       }
 
+      if (!args.title || !args.title.trim().length) {
+        throw new GraphQLError("Group chat title cannot be empty", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: { title: args.title },
+          },
+        });
+      }
+
       if (!chatToBeUpdated.admin.equals(context.currentUser.id)) {
         throw new GraphQLError("Not authorized to edit this chat", {
           extensions: { code: "FORBIDDEN" },
