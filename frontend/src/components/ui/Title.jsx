@@ -19,7 +19,7 @@ const Title = ({ variant, testId, text }) => {
     tertiary: (
       <h3
         data-testid={testId}
-        className="text-base font-bold text-slate-800 dark:text-slate-100"
+        className="text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100"
       >
         {text}
       </h3>

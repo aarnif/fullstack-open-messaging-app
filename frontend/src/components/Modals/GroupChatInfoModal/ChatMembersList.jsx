@@ -1,4 +1,5 @@
-import ChatMember from "./ChatMember";
+import Title from "../../ui/Title";
+import ContactCard from "../../Contacts/ContactCard";
 import chatAndMessageHelpers from "../../../helpers/chatAndMessageHelpers";
 
 const ChatMembersList = ({ user, chatMembers, admin }) => {
@@ -10,15 +11,16 @@ const ChatMembersList = ({ user, chatMembers, admin }) => {
   ];
 
   return (
-    <div className="mt-2 sm:mt-8 flex-grow w-full max-w-[600px] flex flex-col">
-      <div className="w-full py-2 flex flex-col justify-center items-start">
-        <div className="mx-4 text-base sm:text-xl text-slate-800 dark:text-slate-100 font-bold">
-          {`${displayChatMembers.length} members`}
-        </div>
-      </div>
-      <div className="flex-grow sm:overflow-y-auto sm:h-0">
+    <div className="flex-grow w-full flex flex-col gap-4">
+      <Title
+        variant="secondary"
+        testId="group-chat-members-title"
+        text={`${displayChatMembers.length} members`}
+      />
+
+      <div className="flex-grow sm:overflow-y-auto sm:h-0 flex flex-col gap-4">
         {displayChatMembers.map((item) => (
-          <ChatMember key={item.id} user={user} item={item} admin={admin} />
+          <ContactCard key={item.id} user={user} item={item} admin={admin} />
         ))}
       </div>
     </div>

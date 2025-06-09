@@ -2,8 +2,6 @@ import { useState } from "react";
 
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
-import { IoChevronBack } from "react-icons/io5";
-import { FiEdit } from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { LEAVE_GROUP_CHATS } from "../../../graphql/mutations";
@@ -11,8 +9,10 @@ import ChatMembersList from "./ChatMembersList";
 import EditGroupChatModal from "../EditGroupChatModal/EditGroupChatModal";
 import ClickableImage from "../../ClickableImage";
 import useModal from "../../../hooks/useModal";
+import Title from "../../ui/Title";
+import Button from "../../ui/Button";
 
-const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
+const GroupChatInfoModal = ({ user, chat, setShowGroupChatInfoModal }) => {
   const { modal } = useModal();
   const [showEditGroupChatModal, setShowEditGroupChatModal] = useState(false);
   const navigate = useNavigate();
@@ -48,45 +48,56 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
   return (
     <motion.div
       data-testid="group-chat-info-modal"
-      className="z-10 absolute top-0 left-0 w-full h-full flex flex-col bg-slate-50 dark:bg-slate-700 overflow-y-auto sm:overflow-hidden"
+      className="z-10 p-4 absolute inset-0 flex flex-col items-center bg-slate-50 dark:bg-slate-700 overflow-y-auto"
       initial={{ width: "0%", opacity: 0 }}
       animate={{ width: "100%", opacity: 1, duration: 0.2 }}
       exit={{ width: "0%", opacity: 0 }}
     >
-      <div className="m-4 flex justify-between">
-        <button
-          data-testid="close-group-chat-info-button"
-          onClick={() => setShowChatInfoModal(false)}
-        >
-          <IoChevronBack className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 fill-current" />
-        </button>
-        <button data-testid="edit-group-chat-button" onClick={handleEditChat}>
-          <FiEdit className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100" />
-        </button>
-      </div>
-      <div className="w-full py-0 sm:py-4 flex flex-col justify-center items-center">
-        <ClickableImage
-          imageUri={chat.image.thumbnail}
-          imageAlt={`${chat.title} image`}
-          fullScreenImageUri={chat.image.original}
+      <div className="w-full flex justify-between items-center">
+        <Button
+          type="button"
+          variant="return"
+          testId="close-group-chat-info-button"
+          onClick={() => setShowGroupChatInfoModal(false)}
         />
-        <div className="pt-4 text-lg sm:text-xl text-slate-800 dark:text-slate-100 font-bold">
-          {chat.title}
-        </div>
-        <div className="mx-8 text-sm text-slate-700 dark:text-slate-200 text-center">
-          {!chat.description.length ? "No description" : chat.description}
-        </div>
-      </div>
-      <div className="mb-0 sm:mb-8 w-full flex-grow flex flex-col justify-center items-center">
-        <ChatMembersList
-          user={user}
-          chatMembers={chat.members}
-          admin={chatAdmin}
+
+        <Button
+          type="button"
+          variant="edit-chat"
+          testId="edit-group-chat-button"
+          onClick={user.id === chatAdmin.id ? handleEditChat : null}
         />
-        {user.id !== chatAdmin.id && (
-          <div className="w-full px-4 py-2 sm:p-4 flex flex-col justify-center items-start">
-            <button
-              data-testid="leave-group-chat-button"
+      </div>
+      <div className="w-full max-w-[600px] flex-grow flex flex-col">
+        <div className="w-full px-4 py-0 sm:py-4 flex flex-col justify-center items-center gap-4">
+          <ClickableImage
+            imageUri={chat.image.thumbnail}
+            imageAlt={`${chat.title} image`}
+            fullScreenImageUri={chat.image.original}
+          />
+          <div className="w-full flex flex-col justify-center items-center gap-1">
+            <Title
+              variant="secondary"
+              testId="group-chat-title"
+              text={chat.title}
+            />
+            <p className="text-sm text-slate-700 dark:text-slate-200 text-center">
+              {!chat.description.length ? "No description" : chat.description}
+            </p>
+          </div>
+        </div>
+        <div className="p-4 w-full flex-grow flex flex-col justify-center items-center gap-6">
+          <ChatMembersList
+            user={user}
+            chatMembers={chat.members}
+            admin={chatAdmin}
+          />
+          {user.id === chatAdmin.id && (
+            <Button
+              type="button"
+              variant="tertiary"
+              testId="leave-group-chat-button"
+              text="Leave Chat"
               onClick={() =>
                 modal(
                   "danger",
@@ -96,12 +107,9 @@ const GroupChatInfoModal = ({ user, chat, setShowChatInfoModal }) => {
                   handleLeaveChat
                 )
               }
-              className="mb-0 sm:mb-2 w-full flex-grow max-h-[60px] p-2 flex justify-center items-center text-base sm:text-lg font-bold text-slate-700 border-2 border-slate-200 bg-slate-200 rounded-xl"
-            >
-              Leave Chat
-            </button>
-          </div>
-        )}
+            />
+          )}
+        </div>
       </div>
       <AnimatePresence>
         {showEditGroupChatModal && (
