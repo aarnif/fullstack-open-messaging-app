@@ -33,7 +33,7 @@ const renderChatItem = (
         <ChatItem
           index={0}
           user={userData}
-          item={chatData}
+          chat={chatData}
           activeChatOrContactId={activeChatOrContactId}
           setActiveChatOrContactId={mockSetActiveChatOrContactId}
         />
@@ -48,7 +48,7 @@ describe("<ChatItem />", () => {
     useNavigate.mockReturnValue(navigate);
   });
 
-  test("renders item with correct info", () => {
+  test("renders chat item with correct info", () => {
     renderChatItem();
 
     expect(
