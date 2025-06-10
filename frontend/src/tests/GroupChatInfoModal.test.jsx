@@ -22,7 +22,7 @@ const anotherUserData =
   allContactsByUserMock.result.data.allContactsByUser.contacts[0];
 const chatData = findGroupChatByIdMock.result.data.findChatById;
 
-const mockSetShowChatInfoModal = vi.fn();
+const mockSetShowGroupChatInfoModal = vi.fn();
 const mockModal = vi.fn();
 
 vi.mock("react-router", async () => {
@@ -55,7 +55,7 @@ const renderComponent = (mockUserData = userData, mockChatData = chatData) => {
         <GroupChatInfoModal
           user={mockUserData}
           chat={mockChatData}
-          setShowChatInfoModal={mockSetShowChatInfoModal}
+          setShowGroupChatInfoModal={mockSetShowGroupChatInfoModal}
         />
       </MemoryRouter>
     </MockedProvider>
@@ -94,7 +94,7 @@ describe("<GroupChatInfoModal />", () => {
 
     await user.click(screen.getByTestId("close-group-chat-info-button"));
 
-    expect(mockSetShowChatInfoModal).toHaveBeenCalledWith(false);
+    expect(mockSetShowGroupChatInfoModal).toHaveBeenCalledWith(false);
   });
 
   test("click edit group chat works", async () => {

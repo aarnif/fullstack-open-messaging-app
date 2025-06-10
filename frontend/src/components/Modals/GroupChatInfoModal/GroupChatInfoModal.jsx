@@ -92,7 +92,7 @@ const GroupChatInfoModal = ({ user, chat, setShowGroupChatInfoModal }) => {
             chatMembers={chat.members}
             admin={chatAdmin}
           />
-          {user.id === chatAdmin.id && (
+          {user.id !== chatAdmin.id && (
             <Button
               type="button"
               variant="tertiary"
