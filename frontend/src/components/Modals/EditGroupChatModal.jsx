@@ -8,7 +8,7 @@ import { EDIT_GROUP_CHAT } from "../../graphql/mutations";
 import imageService from "../../services/imageService";
 import ChangeImage from "../ChangeImage";
 import useField from "../../hooks/useField";
-import ChatMembersList from "./GroupChatInfoModal/ChatMembersList";
+import ChatMembersList from "../ui/ChatMembersList";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useModal from "../../hooks/useModal";
 import useNotifyMessage from "../../hooks/useNotifyMessage";

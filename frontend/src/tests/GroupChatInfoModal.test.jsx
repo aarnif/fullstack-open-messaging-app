@@ -4,7 +4,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 
-import GroupChatInfoModal from "../components/Modals/GroupChatInfoModal/GroupChatInfoModal.jsx";
+import GroupChatInfoModal from "../components/Modals/GroupChatInfoModal.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 

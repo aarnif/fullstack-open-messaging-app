@@ -9,7 +9,7 @@ import Loading from "../ui/Loading";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";
-import GroupChatInfoModal from "../Modals/GroupChatInfoModal/GroupChatInfoModal";
+import GroupChatInfoModal from "../Modals/GroupChatInfoModal";
 
 const ChatNotFound = () => (
   <div

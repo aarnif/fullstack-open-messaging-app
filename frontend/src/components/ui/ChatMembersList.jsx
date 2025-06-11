@@ -1,6 +1,6 @@
-import Title from "../../ui/Title";
-import ContactCard from "../../Contacts/ContactCard";
-import chatAndMessageHelpers from "../../../helpers/chatAndMessageHelpers";
+import Title from "./Title";
+import ContactCard from "../Contacts/ContactCard";
+import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const ChatMembersList = ({ user, chatMembers, admin }) => {
   const displayChatMembers = [
