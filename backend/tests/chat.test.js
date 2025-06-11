@@ -2,6 +2,7 @@ import assert from "node:assert";
 
 import data from "./data.js";
 import helpers from "./helpers.js";
+import { title } from "node:process";
 
 const { credentials, contactDetails, groupChatDetails } = data;
 
@@ -263,6 +264,8 @@ describe("Chat tests", () => {
           }`,
         variables: {
           chatId: groupChatDetails[0].id,
+          title: groupChatDetails[0].title,
+          description: groupChatDetails[0].description,
           memberIds: [credentials.id].concat(
             contactDetails.map((contact) => contact.id)
           ),
@@ -322,6 +325,8 @@ describe("Chat tests", () => {
           }`,
         variables: {
           chatId: groupChatDetails[0].id,
+          title: groupChatDetails[0].title,
+          description: groupChatDetails[0].description,
           memberIds: [
             credentials.id,
             contactDetails[0].id,
