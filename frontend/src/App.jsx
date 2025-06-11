@@ -288,7 +288,6 @@ const App = () => {
                 )}
                 {showAddNewContactsModal && (
                   <AddNewContactsModal
-                    user={data?.me}
                     setShowAddNewContactsModal={setShowAddNewContactsModal}
                   />
                 )}
