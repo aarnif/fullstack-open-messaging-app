@@ -4,7 +4,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import ModalProvider from "../components/ModalProvider.jsx";
-import IndividualContactCardOptions from "../components/IndividualContactCard/IndividualContactCardOptions.jsx";
+import { IndividualContactCardOptions } from "../components/Contact.jsx";
 import mocks from "./mocks/funcs.js";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
