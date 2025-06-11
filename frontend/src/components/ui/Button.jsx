@@ -11,6 +11,8 @@ const Button = ({ type, variant, testId, text = "", onClick }) => {
       "px-6 py-3 text-base sm:text-lg font-bold text-slate-700 dark:text-slate-300 border-2 border-slate-400 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-900 focus:bg-slate-300 active:scale-95 transition",
     tertiary:
       "w-full px-6 py-3 text-base font-bold text-slate-700 dark:text-slate-200 bg-slate-200 rounded-xl hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-900 active:scale-95 transition",
+    "new-chat-button":
+      "w-full p-2 flex justify-start items-center rounded-xl text-md text-slate-800 dark:text-slate-100 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition",
   };
 
   const content = {
