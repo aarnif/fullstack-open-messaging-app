@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { MdClose } from "react-icons/md";
 import { useMutation } from "@apollo/client";
 
 import { CHANGE_PASSWORD } from "../../graphql/mutations";
@@ -7,7 +6,12 @@ import useModal from "../../hooks/useModal";
 import useField from "../../hooks/useField";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useNotifyMessage from "../../hooks/useNotifyMessage";
+
 import Notify from "../ui/Notify";
+import Title from "../ui/Title";
+import Label from "../ui/Label";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
 
 const ChangePasswordModal = ({ setShowChangePasswordModal }) => {
   const { modal } = useModal();
@@ -77,86 +81,61 @@ const ChangePasswordModal = ({ setShowChangePasswordModal }) => {
         transition={{ delay: 0.4, type: "tween" }}
       >
         <div className="w-full flex justify-end items-center">
-          <button
-            data-testid="close-change-password-modal"
+          <Button
+            type="button"
+            variant="close"
+            testId="close-change-password-modal"
             onClick={() => setShowChangePasswordModal(false)}
-          >
-            <MdClose className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
-          </button>
+          />
         </div>
         <form
           className="w-full flex-grow flex flex-col justify-center items-center"
           onSubmit={handleUpdatePassword}
         >
-          <h1 className="mb-2 text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
-            Change Your Password
-          </h1>
-          <h2 className="mb-4 font-medium text-slate-800 dark:text-slate-100 text-center">
+          <Title
+            variant="primary"
+            testId="change-password-title"
+            text="Change Your Password"
+          />
+          <p className="font-medium text-slate-800 dark:text-slate-100 text-center">
             Enter your current password and a new password.
-          </h2>
+          </p>
           <Notify notifyMessage={notifyMessage} />
-          <ul className="mt-2 w-full flex-grow flex flex-col">
-            <li className="w-full flex flex-col">
-              <label className="text-mobile lg:text-base font-bold text-slate-800 dark:text-slate-100">
-                Current Password:
-              </label>
-            </li>
-            <li className="mb-4 w-full flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
-              <input
-                data-testid="current-password-input"
-                className="w-full text-mobile lg:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
-                {...currentPassword}
-              />
-            </li>
+          <div className="mt-4 w-full flex-grow flex flex-col gap-4">
+            <div className="w-full flex flex-col">
+              <Label title="Current Password" />
+              <Input item={currentPassword} testId="current-password-input" />
+            </div>
 
-            <li className="w-full flex flex-col">
-              <label className="text-mobile lg:text-base font-bold text-slate-800 dark:text-slate-100">
-                New Password:
-              </label>
-            </li>
-            <li className="mb-4 w-full flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
-              <input
-                data-testid="new-password-input"
-                className="w-full text-mobile lg:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
-                {...newPassword}
-              />
-            </li>
+            <div className="w-full flex flex-col">
+              <Label title="New Password" />
+              <Input item={newPassword} testId="new-password-input" />
+            </div>
 
-            <li className="w-full flex flex-col">
-              <label className="text-mobile lg:text-base font-bold text-slate-800 dark:text-slate-100">
-                Confirm New Password:
-              </label>
-            </li>
-            <li className="mb-4 w-full flex flex-col p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
-              <input
-                data-testid="confirm-new-password-input"
-                className="w-full text-mobile lg:text-base text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
-                {...confirmNewPassword}
+            <div className="w-full flex flex-col">
+              <Label title="Confirm New Password" />
+              <Input
+                item={confirmNewPassword}
+                testId="confirm-new-password-input"
               />
-            </li>
-            <li className="mt-6 w-full flex flex-col-reverse sm:flex-row justify-center items-end gap-4">
-              <button
-                data-testid="cancel-change-password-button"
+            </div>
+
+            <div className="mt-2 w-full flex flex-col-reverse sm:flex-row justify-center items-end gap-4">
+              <Button
                 type="button"
+                variant="secondary"
+                testId="cancel-change-password-button"
+                text="Cancel"
                 onClick={() => setShowChangePasswordModal(false)}
-                className="w-full py-3 flex justify-center items-center text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100 border-2 
-                    border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
-                    active:scale-95 rounded-xl transition"
-              >
-                Cancel
-              </button>
-
-              <button
-                data-testid="submit-change-password-button"
+              />
+              <Button
                 type="submit"
-                className="w-full py-3 flex justify-center items-center text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100 border-2 
-                    border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
-                    active:scale-95 rounded-xl transition"
-              >
-                Change Password
-              </button>
-            </li>
-          </ul>
+                variant="primary"
+                testId="submit-change-password-button"
+                text="Change Password"
+              />
+            </div>
+          </div>
         </form>
       </motion.div>
     </motion.div>
