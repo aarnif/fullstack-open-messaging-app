@@ -49,6 +49,10 @@ const ChatItem = ({
     setActiveChatOrContactId(chat.id);
   };
 
+  if (!chat.messages.length) {
+    return null;
+  }
+
   const latestMessage = chat.messages[0];
   const newMessagesCount = chatAndMessageHelpers.newMessagesCount(
     user,
