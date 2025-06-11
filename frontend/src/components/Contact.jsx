@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useLazyQuery, useMutation } from "@apollo/client";
 import { useMatch, useNavigate } from "react-router";
-import { IoChevronBack } from "react-icons/io5";
 
 import {
   FIND_USER_BY_ID,
@@ -10,6 +9,7 @@ import {
 } from "../graphql/queries";
 import { BLOCK_OR_UNBLOCK_CONTACT, REMOVE_CONTACT } from "../graphql/mutations";
 import useModal from "../hooks/useModal";
+import Button from "./ui/Button";
 import Loading from "./ui/Loading";
 import IndividualContactCard from "./ui/IndividualContactCard";
 
@@ -117,34 +117,22 @@ export const IndividualContactCardOptions = ({
   return (
     <div
       data-testid="individual-contact-card-options"
-      className="w-full p-4 flex flex-col justify-center items-center"
+      className="w-full flex flex-col justify-center items-center gap-2"
     >
-      <button
-        data-testid="chat-with-contact-button"
-        disabled={haveContactBlockedYou}
+      <Button
+        type="button"
+        variant={haveContactBlockedYou ? "disabled" : "tertiary"}
+        testId="chat-with-contact-button"
+        text="Chat"
         onClick={handleChatWithContact}
-        className={
-          haveContactBlockedYou
-            ? "mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 \
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 \
-        rounded-xl transition"
-            : "mb-2 w-full max-h-[60px] p-2 flex justify-center items-center border-2 \
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 \
-        active:scale-95 rounded-xl transition"
-        }
-      >
-        <div
-          className={
-            haveContactBlockedYou
-              ? "text-mobile sm:text-lg font-bold text-slate-400 dark:text-slate-500"
-              : "text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100"
-          }
-        >
-          Chat
-        </div>
-      </button>
-      <button
-        data-testid="block-or-unblock-contact-button"
+        disabled={haveContactBlockedYou}
+      />
+
+      <Button
+        type="button"
+        variant="tertiary"
+        testId="block-or-unblock-contact-button"
+        text={isBlocked ? "Unblock Contact" : "Block Contact"}
         onClick={() =>
           modal(
             isBlocked ? "success" : "danger",
@@ -156,14 +144,13 @@ export const IndividualContactCardOptions = ({
             handleBlockContact
           )
         }
-        className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100 border-2 
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
-        active:scale-95 rounded-xl transition"
-      >
-        {isBlocked ? "Unblock Contact" : "Block Contact"}
-      </button>
-      <button
-        data-testid="remove-contact-button"
+      />
+
+      <Button
+        type="button"
+        variant="tertiary"
+        testId="remove-contact-button"
+        text="Remove Contact"
         onClick={() =>
           modal(
             "danger",
@@ -173,12 +160,7 @@ export const IndividualContactCardOptions = ({
             handleRemoveContact
           )
         }
-        className="mb-2 w-full max-h-[60px] p-2 flex justify-center items-center text-mobile sm:text-lg font-bold text-slate-800 dark:text-slate-100 border-2 
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
-        active:scale-95 rounded-xl transition"
-      >
-        Remove Contact
-      </button>
+      />
     </div>
   );
 };
@@ -225,37 +207,41 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
       <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
         {menuComponent}
       </div>
-      <div className="flex-grow flex justify-center items-start">
-        <div className="relative flex-grow max-w-[1000px] h-full p-4 lg:p-8 flex flex-col justify-start items-center">
-          <div className="absolute left-8 flex justify-center items-center sm:hidden">
-            <button data-testid="go-back-button" onClick={goBack}>
-              <IoChevronBack className="w-6 h-6 lg:w-7 lg:h-7 text-slate-700 dark:text-slate-100 fill-current" />
-            </button>
+      <div className="p-4 flex-grow flex justify-center items-start">
+        <div className="w-full h-full max-w-[1000px] flex flex-col justify-start items-start gap-4">
+          <div className="w-full flex justify-start items-center lg:hidden">
+            <Button
+              type="button"
+              variant="return"
+              testId="go-back-button"
+              onClick={goBack}
+            />
           </div>
           {loading ? (
             <Loading />
           ) : (
-            <>
-              <div data-testid="contact-info" className="flex-grow">
+            <div
+              data-testid="contact-info"
+              className="w-full flex-grow flex flex-col justify-center items-center gap-4"
+            >
+              <div className="w-full flex-grow flex flex-col gap-4">
                 <IndividualContactCard
                   user={user}
                   contact={data.findUserById}
                 />
+
                 {isBlocked && (
-                  <div className="flex-grow w-full max-h-[60px] flex flex-row justify-center items-center p-2 rounded-xl">
-                    <div className="text-mobile sm:text-xl text-red-600 font-bold">
-                      You have blocked this contact!
-                    </div>
-                  </div>
+                  <p className="w-full text-center text-mobile sm:text-base text-red-600 font-bold">
+                    You have blocked this contact!
+                  </p>
                 )}
                 {haveContactBlockedYou && (
-                  <div className="flex-grow w-full max-h-[60px] flex flex-row justify-center items-center p-2 rounded-xl">
-                    <div className="text-mobile sm:text-xl text-red-600 font-bold">
-                      This contact has blocked you!
-                    </div>
-                  </div>
+                  <p className="w-full text-center text-mobile sm:text-base text-red-600 font-bold">
+                    This contact has blocked you!
+                  </p>
                 )}
               </div>
+
               <IndividualContactCardOptions
                 user={user}
                 contact={data.findUserById}
@@ -263,7 +249,7 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
                 setIsBlocked={setIsBlocked}
                 haveContactBlockedYou={haveContactBlockedYou}
               />
-            </>
+            </div>
           )}
         </div>
       </div>
