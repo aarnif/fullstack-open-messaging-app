@@ -1,12 +1,15 @@
-import SelectContactsItem from "./SelectContactsItem";
+import Title from "./Title";
+import SelectContactsItem from "../Modals/SelectContactsItem";
 
 const SelectContactsList = ({ data, chosenUserIds, setChosenUserIds }) => {
   if (!data.length) {
     return (
-      <div className="flex flex-col justify-start items-center bg-white dark:bg-slate-800 w-full h-full">
-        <div className="mt-8 text-2xl font-bold text-slate-200">
-          No contacts found
-        </div>
+      <div className="flex justify-center">
+        <Title
+          variant="secondary"
+          testId="no-contacts-found-title"
+          text="No contacts found"
+        />
       </div>
     );
   }
