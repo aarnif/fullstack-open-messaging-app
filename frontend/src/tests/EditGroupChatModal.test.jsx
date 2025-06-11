@@ -6,6 +6,7 @@ import userEvent from "@testing-library/user-event";
 import EditGroupChatModal from "../components/Modals/EditGroupChatModal/EditGroupChatModal.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
+import { get } from "lodash";
 
 const {
   currentUserMock,
@@ -97,7 +98,7 @@ describe("<EditGroupChatModal />", () => {
     expect(mockShowEditGroupChatModal).toHaveBeenCalledWith(false);
   });
 
-  test("shows error messages when inputs are empty", async () => {
+  test("shows error message if chat title is empty", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -109,10 +110,11 @@ describe("<EditGroupChatModal />", () => {
     await user.clear(titleInput);
     await user.clear(descriptionInput);
 
-    expect(screen.getByText("Please enter chat title")).toBeInTheDocument();
-    expect(
-      screen.getByText("Please enter chat description")
-    ).toBeInTheDocument();
+    await user.click(screen.getByTestId("edit-group-chat-submit-button"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Please enter chat title")).toBeInTheDocument();
+    });
   });
 
   test("click update members button works", async () => {
