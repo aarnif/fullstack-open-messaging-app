@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 
-import IndividualContactCard from "./IndividualContactCard/IndividualContactCard";
+import IndividualContactCard from "./ui/IndividualContactCard";
 import EditProfileModal from "./Modals/EditProfileModal";
 import Button from "./ui/Button";
 

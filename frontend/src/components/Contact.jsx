@@ -11,7 +11,7 @@ import {
 import { BLOCK_OR_UNBLOCK_CONTACT, REMOVE_CONTACT } from "../graphql/mutations";
 import useModal from "../hooks/useModal";
 import Loading from "./ui/Loading";
-import IndividualContactCard from "./IndividualContactCard/IndividualContactCard";
+import IndividualContactCard from "./ui/IndividualContactCard";
 
 export const IndividualContactCardOptions = ({
   user,
