@@ -2,8 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { useNavigate } from "react-router";
-import { MdClose } from "react-icons/md";
-import { IoChevronForward } from "react-icons/io5";
+import { FaSearch } from "react-icons/fa";
 
 import {
   ALL_CONTACTS_BY_USER,
@@ -13,7 +12,9 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useField from "../../hooks/useField";
 
 import Loading from "../Loading";
-import SearchBar from "../SearchBar";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import Title from "../ui/Title";
 import SelectContactsList from "../ui/SelectContactsList";
 
 import useNotifyMessage from "../../hooks/useNotifyMessage";
@@ -84,7 +85,7 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
   return (
     <motion.div
       key={"Overlay"}
-      className="fixed inset-0 flex justify-center items-end sm:items-center bg-black bg-opacity-50 z-10 transition"
+      className="fixed inset-0 flex justify-center items-end sm:items-center bg-black/50 z-10 transition"
       onClick={() => setShowNewGroupChatModal(false)}
       initial={{ width: "0vw", opacity: 0 }}
       animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
@@ -93,70 +94,67 @@ const NewGroupChatModal = ({ user, setShowNewGroupChatModal }) => {
       <motion.div
         data-testid="new-group-chat-modal"
         key={"newChatModal"}
-        className="w-full h-[90vh] sm:w-[500px] sm:h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-800 dark:text-slate-100 z-100"
+        className="w-full h-[90vh] sm:max-w-[500px] sm:max-h-[600px] bg-white dark:bg-slate-800 rounded-t-xl sm:rounded-xl"
         onClick={(e) => e.stopPropagation()}
         initial={{ y: width <= 640 ? 50 : -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
         exit={{ y: width <= 640 ? 50 : -50, opacity: 0 }}
         transition={{ delay: 0.4, type: "tween" }}
       >
-        <div className="h-full flex-grow flex flex-col pt-4 px-4">
-          <div className="w-full flex justify-center items-center">
-            <button
-              data-testid="close-new-group-chat-modal"
+        <div className="p-4 h-full flex flex-col gap-4">
+          <div className="w-full flex justify-between items-center">
+            <Button
+              type="button"
+              variant="close"
+              testId="close-new-group-chat-modal"
               onClick={() => setShowNewGroupChatModal(false)}
-            >
-              <MdClose className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
-            </button>
-            <h2 className="flex-grow text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 text-center">
-              New Group Chat
-            </h2>
-            <button
-              data-testid="start-new-group-chat-button"
-              onClick={handleCreateGroupChat}
-            >
-              <IoChevronForward className="w-6 h-6 sm:w-7 sm:h-7 text-slate-800 dark:text-slate-100 fill-current" />
-            </button>
-          </div>
-          <>
-            <Notify notifyMessage={notifyMessage} />
-            <SearchBar
-              searchWord={searchWord}
-              dataTestId={"search-contacts-input"}
             />
-            {result.loading ? (
-              <Loading />
-            ) : (
-              <>
-                <div className="flex-grow w-full overflow-y-auto h-0">
-                  <SelectContactsList
-                    user={user}
-                    data={result.data.allContactsByUser.contacts}
-                    chosenUserIds={chosenUserIds}
-                    setChosenUserIds={setChosenUserIds}
-                  />
-                </div>
-                <div className="flex justify-center items-center my-2 p-1 sm:p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
-                  <input
-                    data-testid="group-chat-title-input"
-                    className="w-full text-mobile lg:text-base pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
-                    {...groupChatTitle}
-                  />
-                </div>
 
-                <div className="flex justify-center items-center my-2 p-1 sm:p-2 border-2 border-slate-100 dark:border-slate-500 rounded-lg bg-slate-100 dark:bg-slate-500 hover:border-violet-500 focus-within:border-violet-500 transition">
-                  <input
-                    data-testid="group-chat-description-input"
-                    className="w-full text-mobile lg:text-base pl-2 text-slate-800 dark:text-slate-100 placeholder:text-slate-800 dark:placeholder:text-slate-100 bg-slate-100 dark:bg-slate-500 focus:outline-none focus:bg-opacity-0"
-                    {...groupChatDescription}
-                  />
-                </div>
-                <div className="w-full h-[40px] flex justify-center items-center bg-white dark:bg-slate-800 font-bold">
-                  {chosenUserIds.length} contacts selected
-                </div>
-              </>
-            )}
-          </>
+            <Title
+              variant="secondary"
+              testId="new-group-chat-modal-title"
+              text="New Group Chat"
+            />
+
+            <Button
+              type="button"
+              variant="forward"
+              testId="start-new-group-chat-button"
+              onClick={handleCreateGroupChat}
+            />
+          </div>
+
+          <Notify notifyMessage={notifyMessage} />
+
+          <Input
+            item={searchWord}
+            testId="search-contacts-input"
+            icon={
+              <FaSearch className="w-4 h-4 text-slate-800 dark:text-slate-100 fill-current" />
+            }
+          />
+          {result.loading ? (
+            <Loading />
+          ) : (
+            <>
+              <div className="flex-grow w-full overflow-y-auto">
+                <SelectContactsList
+                  user={user}
+                  data={result.data.allContactsByUser.contacts}
+                  chosenUserIds={chosenUserIds}
+                  setChosenUserIds={setChosenUserIds}
+                />
+              </div>
+              <Input item={groupChatTitle} testId="group-chat-title-input" />
+              <Input
+                item={groupChatDescription}
+                testId="group-chat-description-input"
+              />
+              <p className="w-full font-bold text-center text-slate-700 dark:text-slate-100">
+                {chosenUserIds.length} contacts selected
+              </p>
+            </>
+          )}
         </div>
       </motion.div>
     </motion.div>
