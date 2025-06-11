@@ -17,7 +17,7 @@ import SearchBar from "../SearchBar";
 import SelectContactsList from "../ui/SelectContactsList";
 
 import useNotifyMessage from "../../hooks/useNotifyMessage";
-import Notify from "../Notify";
+import Notify from "../ui/Notify";
 
 const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
   const notifyMessage = useNotifyMessage();

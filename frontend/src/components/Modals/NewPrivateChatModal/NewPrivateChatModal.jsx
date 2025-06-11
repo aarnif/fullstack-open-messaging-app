@@ -18,7 +18,7 @@ import SearchBar from "../../SearchBar";
 import SelectContactList from "./SelectContactList";
 
 import useNotifyMessage from "../../../hooks/useNotifyMessage";
-import Notify from "../../Notify";
+import Notify from "../../ui/Notify";
 
 const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
   const { width } = useWindowDimensions();

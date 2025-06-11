@@ -6,7 +6,7 @@ import { CREATE_USER, LOGIN } from "../graphql/mutations";
 import useNotifyMessage from "../hooks/useNotifyMessage";
 
 import Title from "./ui/Title";
-import Notify from "./Notify";
+import Notify from "./ui/Notify";
 import Label from "./ui/Label";
 import Input from "./ui/Input";
 import Button from "./ui/Button";

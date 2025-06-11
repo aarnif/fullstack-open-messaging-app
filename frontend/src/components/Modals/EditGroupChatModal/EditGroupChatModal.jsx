@@ -12,7 +12,7 @@ import UpdateMembersModal from "./UpdateMembersModal";
 import useModal from "../../../hooks/useModal";
 import useNotifyMessage from "../../../hooks/useNotifyMessage";
 
-import Notify from "../../Notify";
+import Notify from "../../ui/Notify";
 import Button from "../../ui/Button";
 import Title from "../../ui/Title";
 import Label from "../../ui/Label";

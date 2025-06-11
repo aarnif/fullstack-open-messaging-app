@@ -7,7 +7,7 @@ import useModal from "../../hooks/useModal";
 import useField from "../../hooks/useField";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useNotifyMessage from "../../hooks/useNotifyMessage";
-import Notify from "../Notify";
+import Notify from "../ui/Notify";
 
 const ChangePasswordModal = ({ setShowChangePasswordModal }) => {
   const { modal } = useModal();
