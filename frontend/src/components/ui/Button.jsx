@@ -26,6 +26,9 @@ const Button = ({ type, variant, testId, text = "", onClick }) => {
     "edit-chat": (
       <FiEdit className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-300" />
     ),
+    "edit-profile": (
+      <FiEdit className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-300" />
+    ),
   };
 
   return (
