@@ -118,7 +118,7 @@ describe("<NewPrivateChatModal />", () => {
 
     await user.click(screen.getByTestId(`contact-${user1.username}`));
 
-    await user.click(screen.getByTestId("start-new-private-chat-button"));
+    await user.click(screen.getByTestId("start-new-private-chat"));
 
     expect(mockSetShowNewPrivateChatModal).toHaveBeenCalledTimes(1);
     expect(navigate).toHaveBeenCalledWith(
@@ -132,12 +132,10 @@ describe("<NewPrivateChatModal />", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(
-        screen.getByTestId("start-new-private-chat-button")
-      ).toBeInTheDocument();
+      expect(screen.getByTestId("start-new-private-chat")).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("start-new-private-chat-button"));
+    await user.click(screen.getByTestId("start-new-private-chat"));
 
     expect(
       screen.getByText("Please select a contact to create a chat with!")
@@ -162,7 +160,7 @@ describe("<NewPrivateChatModal />", () => {
 
     await user.click(screen.getByTestId(`contact-${user1.username}`));
 
-    await user.click(screen.getByTestId("start-new-private-chat-button"));
+    await user.click(screen.getByTestId("start-new-private-chat"));
 
     expect(screen.getByText("This user has blocked you!")).toBeInTheDocument();
   });
@@ -179,7 +177,7 @@ describe("<NewPrivateChatModal />", () => {
 
     await user.click(screen.getByTestId(`contact-${user1.username}`));
 
-    await user.click(screen.getByTestId("start-new-private-chat-button"));
+    await user.click(screen.getByTestId("start-new-private-chat"));
 
     expect(mockSetShowNewPrivateChatModal).toHaveBeenCalledTimes(1);
     expect(navigate).toHaveBeenCalledWith("/chats/new");

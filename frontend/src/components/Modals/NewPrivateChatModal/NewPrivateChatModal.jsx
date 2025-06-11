@@ -109,7 +109,7 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
             <Button
               type="button"
               variant="close"
-              testId="close-add-new-contacts-modal-button"
+              testId="close-new-private-chat-modal"
               onClick={() => setShowNewPrivateChatModal(false)}
             />
 
@@ -122,7 +122,7 @@ const NewPrivateChatModal = ({ user, setShowNewPrivateChatModal }) => {
             <Button
               type="button"
               variant="forward"
-              testId="start-new-private-chat-button"
+              testId="start-new-private-chat"
               onClick={handleCreatePrivateChat}
             />
           </div>
