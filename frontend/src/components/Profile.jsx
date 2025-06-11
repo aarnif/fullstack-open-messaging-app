@@ -5,7 +5,6 @@ import IndividualContactCard from "./ui/IndividualContactCard";
 import EditProfileModal from "./Modals/EditProfileModal";
 import Button from "./ui/Button";
 
-// Add go back button to mobile view
 const Profile = ({ user, menuComponent }) => {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
 
