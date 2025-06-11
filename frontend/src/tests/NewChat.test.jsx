@@ -3,7 +3,7 @@ import { describe, test, expect, vi } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 
-import NewChat from "../components/NewChat/NewChat.jsx";
+import NewChat from "../components/NewChat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";

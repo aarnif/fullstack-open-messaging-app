@@ -5,7 +5,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { ApolloError } from "@apollo/client";
 import { MemoryRouter, useNavigate } from "react-router";
 
-import NewChatAndFirstMessage from "../components/NewChat/NewChatAndFirstMessage.jsx";
+import { NewChatAndFirstMessage } from "../components/NewChat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
