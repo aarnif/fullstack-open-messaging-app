@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { LEAVE_GROUP_CHATS } from "../../../graphql/mutations";
 import ChatMembersList from "./ChatMembersList";
-import EditGroupChatModal from "../EditGroupChatModal/EditGroupChatModal";
+import EditGroupChatModal from "../EditGroupChatModal";
 import ClickableImage from "../../ClickableImage";
 import useModal from "../../../hooks/useModal";
 import Title from "../../ui/Title";

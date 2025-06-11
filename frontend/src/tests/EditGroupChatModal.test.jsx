@@ -3,10 +3,9 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
-import EditGroupChatModal from "../components/Modals/EditGroupChatModal/EditGroupChatModal.jsx";
+import EditGroupChatModal from "../components/Modals/EditGroupChatModal.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
-import { get } from "lodash";
 
 const {
   currentUserMock,
