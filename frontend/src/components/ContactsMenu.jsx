@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 
 import { ALL_CONTACTS_BY_USER } from "../graphql/queries";
 import useField from "../hooks/useField";
-import Loading from "./Loading";
+import Loading from "./ui/Loading";
 import ContactItem from "./Contacts/ContactItem";
 import MenuHeader from "./MenuHeader";
 

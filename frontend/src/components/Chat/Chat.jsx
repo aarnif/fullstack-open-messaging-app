@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 
 import { FIND_CHAT_BY_ID } from "../../graphql/queries";
 import { MARK_MESSAGES_IN_CHAT_READ } from "../../graphql/mutations";
-import Loading from "../Loading";
+import Loading from "../ui/Loading";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import NewMessage from "./NewMessage";

@@ -4,7 +4,7 @@ import { useMatch, useNavigate } from "react-router";
 import { IoChevronBack } from "react-icons/io5";
 
 import { FIND_USER_BY_ID } from "../graphql/queries";
-import Loading from "./Loading";
+import Loading from "./ui/Loading";
 import IndividualContactCard from "./IndividualContactCard/IndividualContactCard";
 import IndividualContactCardOptions from "./IndividualContactCard/IndividualContactCardOptions";
 

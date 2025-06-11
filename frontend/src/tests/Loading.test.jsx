@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe } from "vitest";
 
-import Loading from "../components/Loading.jsx";
+import Loading from "../components/ui/Loading.jsx";
 
 describe("<Loading />", () => {
   test("renders component", () => {

@@ -8,7 +8,7 @@ import {
   LEFT_GROUP_CHATS,
 } from "../graphql/subscriptions";
 import useField from "../hooks/useField";
-import Loading from "./Loading";
+import Loading from "./ui/Loading";
 import ChatItem from "./Chats/ChatItem";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import MenuHeader from "./MenuHeader";

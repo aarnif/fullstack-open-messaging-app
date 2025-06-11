@@ -11,7 +11,7 @@ import {
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import useField from "../../hooks/useField";
 
-import Loading from "../Loading";
+import Loading from "../ui/Loading";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import Title from "../ui/Title";

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import Loading from "./Loading";
+import Loading from "./ui/Loading";
 
 const LoadingPage = () => {
   return (

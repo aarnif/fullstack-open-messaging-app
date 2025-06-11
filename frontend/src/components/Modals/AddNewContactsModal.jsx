@@ -14,7 +14,7 @@ import useField from "../../hooks/useField";
 import Button from "../ui/Button";
 import Title from "../ui/Title";
 import Input from "../ui/Input";
-import Loading from "../Loading";
+import Loading from "../ui/Loading";
 import SelectContactsList from "../ui/SelectContactsList";
 
 import useNotifyMessage from "../../hooks/useNotifyMessage";
