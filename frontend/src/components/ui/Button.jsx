@@ -2,6 +2,9 @@ import { IoChevronBack } from "react-icons/io5";
 import { FiEdit } from "react-icons/fi";
 import { MdOpenInNew, MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
+import { FaImage } from "react-icons/fa6";
+import { FaRegSmile } from "react-icons/fa";
+import { MdSend } from "react-icons/md";
 
 const Button = ({
   type,
@@ -42,6 +45,15 @@ const Button = ({
     ),
     "edit-profile": (
       <FiEdit className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-300" />
+    ),
+    "add-image-to-message": (
+      <FaImage className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-300 fill-current" />
+    ),
+    "add-emoji-to-message": (
+      <FaRegSmile className="w-6 h-6 sm:w-7 sm:h-7 text-green-600 hover:text-green-700 fill-current" />
+    ),
+    "send-new-message": (
+      <MdSend className="w-6 h-6 sm:w-7 sm:h-7 text-green-600 hover:text-green-700 fill-current" />
     ),
   };
 

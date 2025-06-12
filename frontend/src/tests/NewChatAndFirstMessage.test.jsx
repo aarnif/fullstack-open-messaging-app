@@ -65,7 +65,7 @@ describe("<NewChatAndFirstMessage />", () => {
   test("renders component", async () => {
     renderComponent();
 
-    expect(screen.getByTestId("new-message-box"));
+    expect(screen.getByTestId("new-message-input")).toBeInTheDocument();
   });
 
   test("handles create chat with first text message", async () => {

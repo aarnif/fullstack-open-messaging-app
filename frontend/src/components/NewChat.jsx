@@ -4,11 +4,10 @@ import { useNavigate } from "react-router";
 
 import { CREATE_CHAT, ADD_MESSAGE_TO_CHAT } from "../graphql/mutations";
 import { FIND_CHAT_BY_MEMBERS } from "../graphql/queries";
-// import NewChatHeader from "./NewChatHeader";
 import imageService from "../services/imageService";
+import useField from "../hooks/useField";
 import NewMessageBox from "./NewMessageBox";
 import Messages from "./Chat/Messages";
-// import NewChatAndFirstMessage from "./NewChatAndFirstMessage";
 
 export const NewChatHeader = ({ user, chat }) => {
   const navigate = useNavigate();
@@ -67,7 +66,7 @@ export const NewChatHeader = ({ user, chat }) => {
 
 export const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
   const navigate = useNavigate();
-  const [message, setMessage] = useState("");
+  const message = useField("text", "New Message...");
   const [image, setImage] = useState(null);
   const [base64Image, setBase64Image] = useState(null);
 
@@ -87,7 +86,7 @@ export const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
   const handleSendMessageAndCreateChat = async () => {
     console.log("Send message:", message);
 
-    if (!message && !base64Image) {
+    if (!message.value && !base64Image) {
       console.log("Do not send empty message!");
       return;
     }
@@ -116,7 +115,7 @@ export const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
         addMessageToChat({
           variables: {
             chatId: data.createChat.id,
-            content: message,
+            content: message.value,
             senderId: user.id,
             input: {
               thumbnail: base64Image ? result.data.thumb.url : null,
@@ -144,7 +143,6 @@ export const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
     <NewMessageBox
       user={user}
       message={message}
-      setMessage={setMessage}
       image={image}
       setImage={setImage}
       setBase64Image={setBase64Image}
@@ -154,9 +152,7 @@ export const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
 };
 
 const NewChat = ({ user, setActiveMenuItem, menuComponent }) => {
-  const [newChatInfo, setNewChatInfo] = useState(
-    JSON.parse(localStorage.getItem("new-chat-info"))
-  );
+  const newChatInfo = JSON.parse(localStorage.getItem("new-chat-info"));
 
   useEffect(() => {
     setActiveMenuItem("chats");

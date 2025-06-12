@@ -9,8 +9,13 @@ const { currentUserMock } = queryMocks;
 
 const userData = currentUserMock.result.data.me;
 
-const mockMessage = "";
-const mockSetMessage = vi.fn();
+const mockMessage = {
+  value: "",
+  onChange: vi.fn(),
+  onReset: vi.fn(),
+  type: "text",
+  placeholder: "New Message...",
+};
 const mockImage = "https://example.com/image.jpg";
 const mockSetImage = vi.fn();
 const mockSetBase64Image = vi.fn();
@@ -21,7 +26,6 @@ const renderComponent = () =>
     <NewMessageBox
       user={userData}
       message={mockMessage}
-      setMessage={mockSetMessage}
       image={mockImage}
       setImage={mockSetImage}
       setBase64Image={mockSetBase64Image}
@@ -41,7 +45,7 @@ describe("<NewMessageBox />", () => {
   test("renders component", () => {
     renderComponent();
 
-    expect(screen.getByTestId("new-message-box")).toBeInTheDocument();
+    expect(screen.getByTestId("new-message-input")).toBeInTheDocument();
   });
 
   test("handles image upload", async () => {
@@ -74,7 +78,7 @@ describe("<NewMessageBox />", () => {
 
     await user.type(newMessageInput, newMessageContent);
 
-    expect(mockSetMessage).toHaveBeenCalled();
+    expect(mockMessage.onChange).toHaveBeenCalled();
   });
 
   test("handles emoji picker toggle", async () => {
