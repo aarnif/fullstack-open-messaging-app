@@ -7,11 +7,17 @@ const useField = (type, placeholder, initialValue = "") => {
     setValue(event.target.value);
   };
 
+  const onReset = () => {
+    setValue("");
+  };
+
   return {
     type,
     value,
     placeholder,
+    setValue,
     onChange,
+    onReset,
   };
 };
 
