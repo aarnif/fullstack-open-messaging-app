@@ -1,6 +1,6 @@
 import { IoChevronBack } from "react-icons/io5";
 import { FiEdit } from "react-icons/fi";
-import { MdClose } from "react-icons/md";
+import { MdOpenInNew, MdClose } from "react-icons/md";
 import { IoChevronForward } from "react-icons/io5";
 
 const Button = ({
@@ -33,6 +33,9 @@ const Button = ({
     ),
     forward: (
       <IoChevronForward className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-300 fill-current" />
+    ),
+    "new-chat": (
+      <MdOpenInNew className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-300 fill-current" />
     ),
     "edit-chat": (
       <FiEdit className="w-6 h-6 sm:w-7 sm:h-7 text-slate-700 dark:text-slate-100 hover:text-slate-900 dark:hover:text-slate-300" />
