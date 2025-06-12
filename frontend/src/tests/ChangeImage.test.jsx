@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import ChangeImage from "../components/ChangeImage.jsx";
+import ChangeImage from "../components/ui/ChangeImage.jsx";
 
 describe("<ChangeImage />", () => {
   const mockSetBase64Image = vi.fn();
