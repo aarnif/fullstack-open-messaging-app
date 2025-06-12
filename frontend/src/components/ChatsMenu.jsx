@@ -11,7 +11,7 @@ import useField from "../hooks/useField";
 import Loading from "./ui/Loading";
 import ChatItem from "./Chats/ChatItem";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
-import MenuHeader from "./MenuHeader";
+import MenuHeader from "./ui/MenuHeader";
 
 const ChatsList = ({
   user,

@@ -1,8 +1,8 @@
 import { FaSearch } from "react-icons/fa";
 
-import Title from "./ui/Title";
-import Button from "./ui/Button";
-import Input from "./ui/Input";
+import Title from "./Title";
+import Button from "./Button";
+import Input from "./Input";
 
 const MenuHeader = ({ title, handleCallBack, searchWord }) => {
   return (

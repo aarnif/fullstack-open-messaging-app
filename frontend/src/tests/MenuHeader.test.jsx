@@ -3,7 +3,7 @@ import { describe, test, expect } from "vitest";
 import userEvent from "@testing-library/user-event";
 import queryMocks from "./mocks/queryMocks.js";
 
-import MenuHeader from "../components/MenuHeader";
+import MenuHeader from "../components/ui/MenuHeader";
 
 const { mockSearchWord } = queryMocks;
 

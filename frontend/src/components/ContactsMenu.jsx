@@ -4,7 +4,7 @@ import { ALL_CONTACTS_BY_USER } from "../graphql/queries";
 import useField from "../hooks/useField";
 import Loading from "./ui/Loading";
 import ContactItem from "./Contacts/ContactItem";
-import MenuHeader from "./MenuHeader";
+import MenuHeader from "./ui/MenuHeader";
 
 const ContactsList = ({
   user,
