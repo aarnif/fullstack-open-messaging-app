@@ -7,10 +7,10 @@ const SelectContactItem = ({ item, chosenUserId, setChosenUserId }) => {
   };
 
   return (
-    <div
+    <button
       onClick={handlePress}
       data-testid={`contact-${item.username}`}
-      className="flex items-center px-0 py-2 sm:px-4 rounded-lg cursor-pointer"
+      className="w-full flex items-center cursor-pointer"
     >
       <ContactCard item={item} />
 
@@ -21,25 +21,23 @@ const SelectContactItem = ({ item, chosenUserId, setChosenUserId }) => {
       ) : (
         <div className="w-6 h-6 flex justify-center items-center border border-slate-300 rounded-full"></div>
       )}
-    </div>
+    </button>
   );
 };
 
 const SelectContactList = ({ data, chosenUserId, setChosenUserId }) => {
   if (!data.length) {
     return (
-      <div className="flex flex-col justify-start items-center bg-white dark:bg-slate-800 w-full h-full">
-        <div className="mt-8 text-2xl font-bold text-slate-200">
-          No contacts found
-        </div>
-      </div>
+      <p className="w-full mt-8 text-center text-xl font-semibold text-slate-600 dark:text-slate-300">
+        No contacts found
+      </p>
     );
   }
 
   return (
     <div
       data-testid="select-contact-list"
-      className="w-full bg-white dark:bg-slate-800"
+      className="px-2 w-full flex flex-col gap-4 bg-white dark:bg-slate-800"
     >
       {data.map((item) => (
         <SelectContactItem
