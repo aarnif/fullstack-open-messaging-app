@@ -63,7 +63,7 @@ const ChangeClockFormat = ({ time, setTime }) => {
   );
 };
 
-export const SettingsCard = ({ user }) => {
+const Settings = ({ user, menuComponent }) => {
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [theme, setTheme] = useState(user.settings.theme);
   const [time, setTime] = useState(user.settings.time);
@@ -87,37 +87,6 @@ export const SettingsCard = ({ user }) => {
   }, [mutate, theme, time, user.settings.theme, user.settings.time]);
 
   return (
-    <>
-      <h2
-        data-testid="settings-header"
-        className="mt-4 mx-4 mb-2 text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100"
-      >
-        Settings
-      </h2>
-      <EnableDarkMode theme={theme} setTheme={setTheme} />
-      <ChangeClockFormat time={time} setTime={setTime} />
-      <button
-        data-testid="change-password-button"
-        onClick={() => setShowChangePasswordModal(true)}
-        className="my-4 w-full p-2 flex justify-center items-center text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100 border-2 
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
-        active:scale-95 rounded-xl transition"
-      >
-        Change Password
-      </button>
-      <AnimatePresence>
-        {showChangePasswordModal && (
-          <ChangePasswordModal
-            setShowChangePasswordModal={setShowChangePasswordModal}
-          />
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
-
-const Settings = ({ user, menuComponent }) => {
-  return (
     <div
       data-testid="settings-page"
       className="flex-grow flex bg-slate-50 dark:bg-slate-700"
@@ -125,9 +94,32 @@ const Settings = ({ user, menuComponent }) => {
       <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
         {menuComponent}
       </div>
-      <div className="flex-grow flex justify-center items-start">
-        <div className="flex-grow max-w-[1000px] p-8 flex flex-col justify-start items-center">
-          <SettingsCard user={user} />
+      <div className="p-4 flex-grow flex justify-center items-start">
+        <div className="flex-grow max-w-[1000px] flex flex-col justify-start items-center">
+          <h2
+            data-testid="settings-header"
+            className="mt-4 mx-4 mb-2 text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100"
+          >
+            Settings
+          </h2>
+          <EnableDarkMode theme={theme} setTheme={setTheme} />
+          <ChangeClockFormat time={time} setTime={setTime} />
+          <button
+            data-testid="change-password-button"
+            onClick={() => setShowChangePasswordModal(true)}
+            className="my-4 w-full p-2 flex justify-center items-center text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100 border-2 
+        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
+        active:scale-95 rounded-xl transition"
+          >
+            Change Password
+          </button>
+          <AnimatePresence>
+            {showChangePasswordModal && (
+              <ChangePasswordModal
+                setShowChangePasswordModal={setShowChangePasswordModal}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>
