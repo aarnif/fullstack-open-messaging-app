@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { AnimatePresence } from "framer-motion";
 
-import { EDIT_SETTINGS } from "../../graphql/mutations";
-import ChangePasswordModal from "../Modals/ChangePasswordModal";
+import { EDIT_SETTINGS } from "../graphql/mutations";
+import ChangePasswordModal from "./Modals/ChangePasswordModal";
 
 const EnableDarkMode = ({ theme, setTheme }) => {
   const handleToggleDarkMode = () => {
@@ -63,7 +63,7 @@ const ChangeClockFormat = ({ time, setTime }) => {
   );
 };
 
-const SettingsCard = ({ user }) => {
+export const SettingsCard = ({ user }) => {
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [theme, setTheme] = useState(user.settings.theme);
   const [time, setTime] = useState(user.settings.time);
@@ -116,4 +116,22 @@ const SettingsCard = ({ user }) => {
   );
 };
 
-export default SettingsCard;
+const Settings = ({ user, menuComponent }) => {
+  return (
+    <div
+      data-testid="settings-page"
+      className="flex-grow flex bg-slate-50 dark:bg-slate-700"
+    >
+      <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
+        {menuComponent}
+      </div>
+      <div className="flex-grow flex justify-center items-start">
+        <div className="flex-grow max-w-[1000px] p-8 flex flex-col justify-start items-center">
+          <SettingsCard user={user} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Settings;

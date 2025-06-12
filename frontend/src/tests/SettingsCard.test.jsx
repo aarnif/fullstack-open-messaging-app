@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter } from "react-router";
 import userEvent from "@testing-library/user-event";
-import SettingsCard from "../components/Settings/SettingsCard.jsx";
+import { SettingsCard } from "../components/Settings.jsx";
 import { describe, test, vi, expect, beforeEach } from "vitest";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";

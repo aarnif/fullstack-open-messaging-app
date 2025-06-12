@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
-import Settings from "../components/Settings/Settings.jsx";
+import Settings from "../components/Settings.jsx";
 import { describe, test, expect } from "vitest";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
