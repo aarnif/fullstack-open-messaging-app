@@ -1,5 +1,5 @@
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
-import ClickableImage from "../ClickableImage";
+import ClickableImage from "../ui/ClickableImage";
 
 const NotificationMessage = ({ message }) => {
   return (

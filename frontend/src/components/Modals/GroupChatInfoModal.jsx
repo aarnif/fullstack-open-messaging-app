@@ -5,10 +5,10 @@ import { useNavigate } from "react-router";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { LEAVE_GROUP_CHATS } from "../../graphql/mutations";
+import useModal from "../../hooks/useModal";
 import ChatMembersList from "../ui/ChatMembersList";
 import EditGroupChatModal from "./EditGroupChatModal";
-import ClickableImage from "../ClickableImage";
-import useModal from "../../hooks/useModal";
+import ClickableImage from "../ui/ClickableImage";
 import Title from "../ui/Title";
 import Button from "../ui/Button";
 

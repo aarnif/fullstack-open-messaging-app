@@ -1,4 +1,4 @@
-import ClickableImage from "../ClickableImage";
+import ClickableImage from "./ClickableImage";
 import Title from "./Title";
 
 const IndividualContactCard = ({ user, contact }) => {
