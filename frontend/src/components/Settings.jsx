@@ -3,56 +3,33 @@ import { useMutation } from "@apollo/client";
 import { AnimatePresence } from "framer-motion";
 
 import { EDIT_SETTINGS } from "../graphql/mutations";
+import Title from "./ui/Title";
+import Button from "./ui/Button";
 import ChangePasswordModal from "./Modals/ChangePasswordModal";
 
-const EnableDarkMode = ({ theme, setTheme }) => {
-  const handleToggleDarkMode = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    console.log("Setting theme to:", newTheme);
-    setTheme(newTheme);
-    document.documentElement.classList.toggle("dark");
-  };
-
+const SettingToggle = ({
+  label,
+  titleTestId,
+  buttonTestId,
+  isActive,
+  onClick,
+  activeColor = "#22c55e",
+  inactiveColor = "#94a3b8",
+}) => {
   return (
-    <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 dark:bg-slate-800">
-      <div
-        data-testid={theme === "dark" ? "dark-mode" : "light-mode"}
+    <div className="w-full py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 dark:bg-slate-800">
+      <p
+        data-testid={titleTestId}
         className="text-mobile lg:text-base font-semibold text-slate-800 dark:text-slate-100"
       >
-        {theme === "dark" ? "Light Mode" : "Dark Mode"}
-      </div>
-      <button data-testid="dark-mode-button" onClick={handleToggleDarkMode}>
-        <div
-          style={{
-            backgroundColor: theme === "dark" ? "#22c55e" : "#94a3b8",
-            justifyContent: theme === "dark" ? "flex-end" : "flex-start",
-          }}
-          className="w-14 sm:w-16 h-7 sm:h-8 flex justify-center rounded-full"
-        >
-          <div className="m-1 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-100"></div>
-        </div>
-      </button>
-    </div>
-  );
-};
+        {label}
+      </p>
 
-const ChangeClockFormat = ({ time, setTime }) => {
-  return (
-    <div className="w-full mt-4 mx-4 py-2 px-4 flex justify-between items-center rounded-lg bg-slate-200 dark:bg-slate-800">
-      <div className="text-mobile lg:text-base font-semibold text-slate-800 dark:text-slate-100">
-        24-Hour Clock
-      </div>
-      <button
-        data-testid="time-format-button"
-        onClick={() =>
-          setTime((prevState) => (prevState === "12h" ? "24h" : "12h"))
-        }
-      >
+      <button data-testid={buttonTestId} onClick={onClick}>
         <div
-          data-testid={time === "24h" ? "24-hour-clock" : "12-hour-clock"}
           style={{
-            backgroundColor: time === "12h" ? "#94a3b8" : "#22c55e",
-            justifyContent: time === "12h" ? "flex-start" : "flex-end",
+            backgroundColor: isActive ? activeColor : inactiveColor,
+            justifyContent: isActive ? "flex-end" : "flex-start",
           }}
           className="w-14 sm:w-16 h-7 sm:h-8 flex justify-center rounded-full"
         >
@@ -68,6 +45,17 @@ const Settings = ({ user, menuComponent }) => {
   const [theme, setTheme] = useState(user.settings.theme);
   const [time, setTime] = useState(user.settings.time);
   const [mutate] = useMutation(EDIT_SETTINGS);
+
+  const handleToggleDarkMode = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    console.log("Setting theme to:", newTheme);
+    setTheme(newTheme);
+    document.documentElement.classList.toggle("dark");
+  };
+
+  const handleToggleTimeFormat = () => {
+    setTime((prevState) => (prevState === "12h" ? "24h" : "12h"));
+  };
 
   useEffect(() => {
     const updateUserSettings = async () => {
@@ -95,24 +83,29 @@ const Settings = ({ user, menuComponent }) => {
         {menuComponent}
       </div>
       <div className="p-4 flex-grow flex justify-center items-start">
-        <div className="flex-grow max-w-[1000px] flex flex-col justify-start items-center">
-          <h2
-            data-testid="settings-header"
-            className="mt-4 mx-4 mb-2 text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100"
-          >
-            Settings
-          </h2>
-          <EnableDarkMode theme={theme} setTheme={setTheme} />
-          <ChangeClockFormat time={time} setTime={setTime} />
-          <button
-            data-testid="change-password-button"
+        <div className="flex-grow max-w-[1000px] flex flex-col justify-start items-center gap-4">
+          <Title variant="secondary" testId="settings-header" text="Settings" />
+          <SettingToggle
+            label={"Dark Mode"}
+            titleTestId={theme === "dark" ? "dark-mode" : "light-mode"}
+            buttonTestId="dark-mode-button"
+            isActive={theme === "dark"}
+            onClick={handleToggleDarkMode}
+          />
+          <SettingToggle
+            label="24-Hour Clock"
+            titleTestId={time === "24h" ? "24-hour-clock" : "12-hour-clock"}
+            buttonTestId="time-format-button"
+            isActive={time === "24h"}
+            onClick={handleToggleTimeFormat}
+          />
+          <Button
+            type="button"
+            variant="tertiary"
+            testId="change-password-button"
+            text="Change Password"
             onClick={() => setShowChangePasswordModal(true)}
-            className="my-4 w-full p-2 flex justify-center items-center text-mobile sm:text-base font-bold text-slate-800 dark:text-slate-100 border-2 
-        border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 hover:dark:bg-slate-900 hover:border-slate-300 hover:dark:border-slate-900 
-        active:scale-95 rounded-xl transition"
-          >
-            Change Password
-          </button>
+          />
           <AnimatePresence>
             {showChangePasswordModal && (
               <ChangePasswordModal
