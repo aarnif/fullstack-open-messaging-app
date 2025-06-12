@@ -167,6 +167,7 @@ export const IndividualContactCardOptions = ({
 
 const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
   const navigate = useNavigate();
+  const { modal } = useModal();
 
   const [isBlocked, setIsBlocked] = useState(null);
   const [haveContactBlockedYou, setHaveContactBlockedYou] = useState(null);
@@ -175,6 +176,24 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
   const { data, loading } = useQuery(FIND_USER_BY_ID, {
     variables: {
       id: match.contactId,
+    },
+  });
+
+  const contact = data?.findUserById;
+
+  const [findChatByMembers] = useLazyQuery(FIND_CHAT_BY_MEMBERS);
+
+  const [blockOrUnblockContact] = useMutation(BLOCK_OR_UNBLOCK_CONTACT, {
+    onError: (error) => {
+      console.log("Error blocking contact mutation:");
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
+
+  const [removeContact] = useMutation(REMOVE_CONTACT, {
+    onError: (error) => {
+      console.log("Error removing contact mutation:");
+      console.log(error.graphQLErrors[0].message);
     },
   });
 
@@ -197,6 +216,81 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
 
   const goBack = () => {
     navigate("/contacts");
+  };
+
+  const handleChatWithContact = async () => {
+    console.log("Press chat with contact button!");
+
+    const checkIfChatExists = await findChatByMembers({
+      variables: {
+        members: [user.id, contact.id],
+      },
+    });
+
+    if (checkIfChatExists.data?.findChatByMembers) {
+      console.log("Navigating to existing chat with contact:", contact.name);
+      navigate(`/chats/${checkIfChatExists.data.findChatByMembers.id}`);
+      return;
+    }
+
+    const newPrivateChatInfo = {
+      title: contact.name,
+      description: "",
+      members: [user, contact],
+      image: contact.image.thumbnail,
+    };
+
+    localStorage.setItem("new-chat-info", JSON.stringify(newPrivateChatInfo));
+    navigate("/chats/new");
+  };
+
+  const handleBlockContact = async () => {
+    console.log("Press block/unblock contact button!");
+
+    try {
+      const { data } = await blockOrUnblockContact({
+        variables: {
+          contactId: contact.id,
+        },
+      });
+
+      const isContactBlocked = data.blockOrUnBlockContact;
+
+      if (isContactBlocked) {
+        console.log("Blocked contact:", contact.name);
+      } else {
+        console.log("Unblocked contact:", contact.name);
+      }
+      setIsBlocked(isContactBlocked);
+    } catch (error) {
+      console.log("Error blocking contact:", error);
+      console.log(error.message);
+    }
+  };
+
+  const handleRemoveContact = async () => {
+    console.log("Removing contact...");
+    try {
+      await removeContact({
+        variables: {
+          contactId: contact.id,
+        },
+        refetchQueries: [
+          {
+            query: ALL_CONTACTS_BY_USER,
+            variables: {
+              searchByName: "",
+            },
+          },
+        ],
+      });
+
+      console.log("Removed contact:", contact.name);
+      navigate("/contacts");
+    } catch (error) {
+      console.log("Error removing contact:", error);
+      console.log(error.message);
+    }
   };
 
   return (
@@ -242,13 +336,53 @@ const Contact = ({ user, setActiveMenuItem, menuComponent }) => {
                 )}
               </div>
 
-              <IndividualContactCardOptions
-                user={user}
-                contact={data.findUserById}
-                isBlocked={isBlocked}
-                setIsBlocked={setIsBlocked}
-                haveContactBlockedYou={haveContactBlockedYou}
-              />
+              <div
+                data-testid="individual-contact-card-options"
+                className="w-full flex flex-col justify-center items-center gap-2"
+              >
+                <Button
+                  type="button"
+                  variant={haveContactBlockedYou ? "disabled" : "tertiary"}
+                  testId="chat-with-contact-button"
+                  text="Chat"
+                  onClick={handleChatWithContact}
+                  disabled={haveContactBlockedYou}
+                />
+
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  testId="block-or-unblock-contact-button"
+                  text={isBlocked ? "Unblock Contact" : "Block Contact"}
+                  onClick={() =>
+                    modal(
+                      isBlocked ? "success" : "danger",
+                      isBlocked ? "Unblock Contact" : "Block Contact",
+                      `Are you sure you want to ${
+                        isBlocked ? "unblock" : "block"
+                      } ${contact.name}?`,
+                      isBlocked ? "Unblock" : "Block",
+                      handleBlockContact
+                    )
+                  }
+                />
+
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  testId="remove-contact-button"
+                  text="Remove Contact"
+                  onClick={() =>
+                    modal(
+                      "danger",
+                      "Remove Contact",
+                      `Are you sure you want to remove ${contact.name} from your contacts?`,
+                      "Remove",
+                      handleRemoveContact
+                    )
+                  }
+                />
+              </div>
             </div>
           )}
         </div>
