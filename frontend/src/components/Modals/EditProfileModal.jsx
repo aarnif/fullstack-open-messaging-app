@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { IoChevronBack } from "react-icons/io5";
 import { motion } from "framer-motion";
 
 import { EDIT_PROFILE } from "../../graphql/mutations";
 import imageService from "../../services/imageService";
-import ChangeImage from "../ChangeImage";
+import ChangeImage from "../ui/ChangeImage";
 import useField from "../../hooks/useField";
 import useModal from "../../hooks/useModal";
 

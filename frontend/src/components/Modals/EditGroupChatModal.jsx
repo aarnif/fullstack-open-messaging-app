@@ -6,7 +6,6 @@ import { FaSearch } from "react-icons/fa";
 import { ALL_CONTACTS_BY_USER } from "../../graphql/queries";
 import { EDIT_GROUP_CHAT } from "../../graphql/mutations";
 import imageService from "../../services/imageService";
-import ChangeImage from "../ChangeImage";
 import useField from "../../hooks/useField";
 import ChatMembersList from "../ui/ChatMembersList";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
@@ -15,6 +14,7 @@ import useNotifyMessage from "../../hooks/useNotifyMessage";
 
 import Loading from "../ui/Loading";
 import SelectContactsList from "../ui/SelectContactsList";
+import ChangeImage from "../ui/ChangeImage";
 import Notify from "../ui/Notify";
 import Button from "../ui/Button";
 import Title from "../ui/Title";
