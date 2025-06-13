@@ -23,8 +23,16 @@ const Button = ({
       "w-full px-6 py-3 text-mobile sm:text-base font-bold text-slate-700 dark:text-slate-200 bg-slate-200 rounded-xl hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-900 active:scale-95 transition",
     "new-chat-button":
       "w-full p-2 flex justify-start items-center rounded-xl text-md text-slate-800 dark:text-slate-100 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition",
+    "close-alert":
+      "w-full px-6 py-3 text-base font-bold text-yellow-900 bg-yellow-200 rounded-xl shadow-xl flex justify-center items-center hover:bg-yellow-300 active:scale-95 transition",
+    "cancel-button":
+      "w-full flex justify-center items-center text-base font-medium text-slate-500 hover:underline transition",
+    "success-confirm":
+      "w-full px-6 py-3 text-base font-bold text-green-900 bg-green-200 rounded-xl shadow-xl flex justify-center items-center hover:bg-green-300 active:scale-95 transition",
+    "danger-confirm":
+      "w-full px-6 py-3 text-base font-bold text-red-900 bg-red-200 rounded-xl shadow-xl flex justify-center items-center hover:bg-red-300 active:scale-95 transition",
     disabled:
-      "w-full px-6 py-3 text-mobile sm:text-base font-bold text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 rounded-xl",
+      "w-full px-6 py-3 text-base font-bold text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-800 bg-slate-200 dark:bg-slate-800 rounded-xl",
   };
 
   const content = {

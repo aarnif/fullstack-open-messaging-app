@@ -24,6 +24,30 @@ const Title = ({ variant, testId, text }) => {
         {text}
       </h3>
     ),
+    alert: (
+      <h2
+        data-testid={testId}
+        className="text-lg text-yellow-900 font-semibold font-robo-condensed"
+      >
+        {text}
+      </h2>
+    ),
+    success: (
+      <h2
+        data-testid={testId}
+        className="text-lg text-green-900 font-semibold font-robo-condensed"
+      >
+        {text}
+      </h2>
+    ),
+    danger: (
+      <h2
+        data-testid={testId}
+        className="text-lg text-red-900 font-semibold font-robo-condensed"
+      >
+        {text}
+      </h2>
+    ),
   };
 
   return titles[variant];
