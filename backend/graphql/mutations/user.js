@@ -369,7 +369,7 @@ const resolvers = {
           { new: true }
         );
 
-        return updatedUser;
+        return updatedUser.populate("blockedContacts");
       } catch (error) {
         throw new GraphQLError("Failed to change password!", {
           extensions: {
