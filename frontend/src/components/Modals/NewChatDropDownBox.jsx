@@ -16,8 +16,7 @@ const DropDownMenuItem = ({ menuItem }) => {
 
 const NewChatDropDownBox = ({
   setShowNewChatDropdownBox,
-  setShowNewPrivateChatModal,
-  setShowNewGroupChatModal,
+  setNewChatModalType,
 }) => {
   const menuItems = [
     {
@@ -25,7 +24,7 @@ const NewChatDropDownBox = ({
       title: "New Private Chat",
       handleClick: () => {
         setShowNewChatDropdownBox(false);
-        setShowNewPrivateChatModal(true);
+        setNewChatModalType("private");
       },
       "data-testid": "new-private-chat-button",
     },
@@ -34,7 +33,7 @@ const NewChatDropDownBox = ({
       title: "New Group Chat",
       handleClick: () => {
         setShowNewChatDropdownBox(false);
-        setShowNewGroupChatModal(true);
+        setNewChatModalType("group");
       },
       "data-testid": "new-group-chat-button",
     },

@@ -23,8 +23,7 @@ import Profile from "./components/Profile";
 import Settings from "./components/Settings";
 
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
-import NewPrivateChatModal from "./components/Modals/NewPrivateChatModal";
-import NewGroupChatModal from "./components/Modals/NewGroupChatModal";
+import NewChatModal from "./components/Modals/NewChatModal";
 import AddNewContactsModal from "./components/Modals/AddNewContactsModal";
 
 const App = () => {
@@ -36,8 +35,7 @@ const App = () => {
     useState("chats");
   const [activeChatOrContactId, setActiveChatOrContactId] = useState(null);
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
-  const [showNewPrivateChatModal, setShowNewPrivateChatModal] = useState(false);
-  const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
+  const [newChatModalType, setNewChatModalType] = useState(null);
   const [showAddNewContactsModal, setShowAddNewContactsModal] = useState(false);
 
   const { data, loading } = useQuery(CURRENT_USER);
@@ -270,20 +268,14 @@ const App = () => {
                 {showNewChatDropdownBox && (
                   <NewChatDropDownBox
                     setShowNewChatDropdownBox={setShowNewChatDropdownBox}
-                    setShowNewPrivateChatModal={setShowNewPrivateChatModal}
-                    setShowNewGroupChatModal={setShowNewGroupChatModal}
+                    setNewChatModalType={setNewChatModalType}
                   />
                 )}
-                {showNewPrivateChatModal && (
-                  <NewPrivateChatModal
+                {newChatModalType && (
+                  <NewChatModal
                     user={data?.me}
-                    setShowNewPrivateChatModal={setShowNewPrivateChatModal}
-                  />
-                )}
-                {showNewGroupChatModal && (
-                  <NewGroupChatModal
-                    user={data?.me}
-                    setShowNewGroupChatModal={setShowNewGroupChatModal}
+                    chatType={newChatModalType}
+                    setShowNewChatModal={() => setNewChatModalType(null)}
                   />
                 )}
                 {showAddNewContactsModal && (
