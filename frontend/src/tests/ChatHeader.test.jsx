@@ -3,7 +3,7 @@ import { describe, test, expect } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
-import ChatHeader from "../components/Chat/ChatHeader.jsx";
+import { ChatHeader } from "../components/Chat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
@@ -38,7 +38,7 @@ const renderChatHeader = () => {
   );
 };
 
-describe("<ContactItem />", () => {
+describe("<ChatHeader />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useNavigate.mockReturnValue(navigate);

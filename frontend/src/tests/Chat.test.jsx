@@ -4,7 +4,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate, useMatch } from "react-router";
 import userEvent from "@testing-library/user-event";
 
-import Chat from "../components/Chat/Chat.jsx";
+import Chat from "../components/Chat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";

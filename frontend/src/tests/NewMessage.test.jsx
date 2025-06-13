@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { MockedProvider } from "@apollo/client/testing";
 import { ApolloError } from "@apollo/client";
 
-import NewMessage from "../components/Chat/NewMessage.jsx";
+import { NewMessage } from "../components/Chat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
 

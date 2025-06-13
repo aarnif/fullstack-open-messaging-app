@@ -15,7 +15,7 @@ import ChatsMenu from "./components/ChatsMenu";
 import ContactsMenu from "./components/ContactsMenu";
 
 import Chats from "./components/Chats/Chats";
-import Chat from "./components/Chat/Chat";
+import Chat from "./components/Chat";
 import NewChat from "./components/NewChat";
 import Contacts from "./components/Contacts/Contacts";
 import Contact from "./components/Contact";

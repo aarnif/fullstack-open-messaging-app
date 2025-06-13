@@ -7,7 +7,7 @@ import { FIND_CHAT_BY_MEMBERS } from "../graphql/queries";
 import imageService from "../services/imageService";
 import useField from "../hooks/useField";
 import NewMessageBox from "./NewMessageBox";
-import Messages from "./Chat/Messages";
+import { Messages } from "./Chat";
 
 export const NewChatHeader = ({ user, chat }) => {
   const navigate = useNavigate();
