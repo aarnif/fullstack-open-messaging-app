@@ -111,101 +111,91 @@ const NotificationMessage = ({ message }) => (
   </div>
 );
 
-const MessageByAnotherUser = ({ user, message }) => (
-  <div
-    data-testid="message-by-another-user"
-    className="flex flex-col items-start"
-  >
-    <div className="min-w-[100px] max-w-[250px] sm:max-w-[600px] ml-8 pt-2 px-2 flex flex-col bg-slate-300 dark:bg-slate-500 rounded-lg relative">
-      <h3 className="text-mobile sm:text-base text-slate-800 dark:text-slate-100 font-bold">
-        {message.sender.name}
-      </h3>
-      {message.image.thumbnail && (
-        <ClickableImage
-          fullScreenImageUri={message.image.original}
-          imageAlt="message-image"
-          imageUri={message.image.thumbnail}
-          className="w-[120px] h-[120px]"
-        />
-      )}
-      {message.content && (
-        <p
-          style={{
-            marginTop: message.image.thumbnail ? 2 : 0,
-            fontSize: message.type === "singleEmoji" ? 32 : "inherit",
-            textAlign: message.type === "singleEmoji" ? "center" : "inherit",
-          }}
-          className="text-sm sm:text-base text-slate-800 dark:text-slate-100 break-words"
-        >
-          {message.content}
-        </p>
-      )}
-      <p className="my-1 text-end text-xs text-slate-800 dark:text-slate-100">
-        {chatAndMessageHelpers.formatMessageTime(
-          message.createdAt,
-          user.settings.time === "24h"
-        )}
-      </p>
-      <div className="absolute bottom-0 -left-2 border-t-[16px] border-t-transparent border-r-[16px] border-r-slate-300 dark:border-r-slate-500"></div>
-    </div>
-    <img
-      src={message.sender.image.thumbnail}
-      alt="sender-thumbnail"
-      className="relative right-[12px] w-12 h-12 rounded-full"
-    />
-  </div>
-);
+const MessageBubble = ({ user, message, isCurrentUser }) => {
+  const bubbleStyles = isCurrentUser
+    ? "bg-green-300"
+    : "bg-slate-300 dark:bg-slate-500 ml-8";
 
-const MessageByCurrentUser = ({ user, message }) => (
-  <div
-    data-testid="message-by-current-user"
-    className="flex flex-col items-end"
-  >
-    <div className="relative min-w-[100px] max-w-[250px] sm:max-w-[600px] pt-2 px-2 flex flex-col bg-green-300 rounded-lg">
-      <h3 className="text-mobile sm:text-base text-slate-800 font-bold">You</h3>
-      {message.image.thumbnail && (
-        <ClickableImage
-          fullScreenImageUri={message.image.original}
-          imageAlt="message-image"
-          imageUri={message.image.thumbnail}
+  const tailStyles = isCurrentUser
+    ? "absolute bottom-0 -right-2 border-t-[16px] border-t-transparent border-l-[16px] border-l-green-300"
+    : "absolute bottom-0 -left-2 border-t-[16px] border-t-transparent border-r-[16px] border-r-slate-300 dark:border-r-slate-500";
+
+  const textColor = isCurrentUser
+    ? "text-slate-800"
+    : "text-slate-800 dark:text-slate-100";
+
+  const senderName = isCurrentUser ? "You" : message.sender.name;
+
+  return (
+    <div
+      data-testid={
+        isCurrentUser ? "message-by-current-user" : "message-by-another-user"
+      }
+      className={`flex flex-col ${isCurrentUser ? "items-end" : "items-start"}`}
+    >
+      <div
+        className={`relative min-w-[100px] max-w-[250px] sm:max-w-[600px] pt-2 px-2 flex flex-col rounded-lg ${bubbleStyles}`}
+      >
+        <h3 className={`text-mobile sm:text-base font-bold ${textColor}`}>
+          {senderName}
+        </h3>
+
+        {message.image.thumbnail && (
+          <ClickableImage
+            fullScreenImageUri={message.image.original}
+            imageAlt="message-image"
+            imageUri={message.image.thumbnail}
+            className="w-[120px] h-[120px]"
+          />
+        )}
+
+        {message.content && (
+          <p
+            style={{
+              marginTop: message.image.thumbnail ? 2 : 0,
+              fontSize: message.type === "singleEmoji" ? 32 : "inherit",
+              textAlign: message.type === "singleEmoji" ? "center" : "inherit",
+            }}
+            className={`text-sm sm:text-base break-words ${textColor}`}
+          >
+            {message.content}
+          </p>
+        )}
+
+        <p className={`my-1 text-end text-xs ${textColor}`}>
+          {chatAndMessageHelpers.formatMessageTime(
+            message.createdAt,
+            user.settings.time === "24h"
+          )}
+        </p>
+
+        <div className={tailStyles}></div>
+      </div>
+
+      {!isCurrentUser && (
+        <img
+          src={message.sender.image.thumbnail}
+          alt="sender-thumbnail"
+          className="relative right-[12px] w-12 h-12 rounded-full"
         />
       )}
-      {message.content && (
-        <p
-          style={{
-            marginTop: message.image.thumbnail ? 2 : 0,
-            fontSize: message.type === "singleEmoji" ? 32 : "inherit",
-            textAlign: message.type === "singleEmoji" ? "center" : "inherit",
-          }}
-          className="text-sm sm:text-base text-slate-800 break-words"
-        >
-          {message.content}
-        </p>
-      )}
-      <p className="my-1 text-xs text-slate-800 text-end">
-        {chatAndMessageHelpers.formatMessageTime(
-          message.createdAt,
-          user.settings.time === "24h"
-        )}
-      </p>
-      <div className="absolute bottom-0 -right-2 border-t-[16px] border-t-transparent border-l-[16px] border-l-green-300"></div>
     </div>
-  </div>
-);
+  );
+};
 
 export const Message = ({ user, message }) => {
   if (message.type === "notification") {
     return <NotificationMessage message={message} />;
   }
 
+  const isCurrentUser = message.sender.id === user.id;
+
   return (
-    <>
-      {message.sender.id === user.id ? (
-        <MessageByCurrentUser user={user} message={message} />
-      ) : (
-        <MessageByAnotherUser user={user} message={message} />
-      )}
-    </>
+    <MessageBubble
+      user={user}
+      message={message}
+      isCurrentUser={isCurrentUser}
+    />
   );
 };
 
