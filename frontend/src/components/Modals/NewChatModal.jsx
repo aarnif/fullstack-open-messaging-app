@@ -104,6 +104,12 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
     CHECK_IF_USER_HAS_BLOCKED_YOU
   );
 
+  const navigateToNewChatView = (chatInfo) => {
+    localStorage.setItem("new-chat-info", JSON.stringify(chatInfo));
+    navigate("/chats/new");
+    setShowNewChatModal(false);
+  };
+
   const handleCreatePrivateChat = async () => {
     if (!chosenUserId) {
       notifyMessage.show("Please select a contact to create a chat with!");
@@ -144,9 +150,7 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
       image: chosenContact.image.thumbnail,
     };
 
-    localStorage.setItem("new-chat-info", JSON.stringify(newPrivateChatInfo));
-    navigate("/chats/new");
-    setShowNewChatModal(false);
+    navigateToNewChatView(newPrivateChatInfo);
   };
 
   const handleCreateGroupChat = async () => {
@@ -184,9 +188,7 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
       image: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
     };
 
-    localStorage.setItem("new-chat-info", JSON.stringify(newGroupChatInfo));
-    navigate("/chats/new");
-    setShowNewChatModal(false);
+    navigateToNewChatView(newGroupChatInfo);
   };
 
   const handleSubmit = () => {
