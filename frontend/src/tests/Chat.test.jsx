@@ -83,7 +83,7 @@ describe("<Chat />", () => {
     expect(screen.getByTestId("chat-page")).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByTestId("chat-info")).toBeInTheDocument();
+      expect(screen.getByTestId("chat-header")).toBeInTheDocument();
     });
   });
 
@@ -111,7 +111,7 @@ describe("<Chat />", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByTestId("chat-info")).toBeInTheDocument();
+      expect(screen.getByTestId("chat-header")).toBeInTheDocument();
     });
 
     await userEvent.click(screen.getByTestId("chat-info-button"));
@@ -137,7 +137,7 @@ describe("<Chat />", () => {
     ]);
 
     await waitFor(() => {
-      expect(screen.getByTestId("chat-info")).toBeInTheDocument();
+      expect(screen.getByTestId("chat-header")).toBeInTheDocument();
     });
 
     await userEvent.click(screen.getByTestId("chat-info-button"));

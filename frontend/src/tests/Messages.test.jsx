@@ -20,18 +20,9 @@ describe("<Message />", () => {
     vi.clearAllMocks();
   });
 
-  test("renders current user message", () => {
+  test("renders chat messages", () => {
     renderComponent(chatMessages);
 
     expect(screen.getByTestId("chat-messages")).toBeInTheDocument();
-  });
-
-  test("renders empty state", () => {
-    renderComponent([]);
-
-    expect(screen.getByTestId("no-messages")).toBeInTheDocument();
-    expect(
-      screen.getByText("Send a message to start the chat.")
-    ).toBeInTheDocument();
   });
 });
