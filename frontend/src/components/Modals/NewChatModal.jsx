@@ -48,7 +48,7 @@ const SelectContactItem = ({ item, chosenUserId, setChosenUserId }) => {
   );
 };
 
-const SelectContactList = ({ data, chosenUserId, setChosenUserId }) => {
+export const SelectContactList = ({ data, chosenUserId, setChosenUserId }) => {
   if (!data.length) {
     return (
       <p className="w-full mt-8 text-center text-xl font-semibold text-slate-600 dark:text-slate-300">
