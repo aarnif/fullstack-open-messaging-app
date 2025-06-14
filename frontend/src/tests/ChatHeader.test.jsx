@@ -7,14 +7,16 @@ import { ChatHeader } from "../components/Chat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
-const { currentUserMock, findGroupChatByIdMock } = queryMocks;
+const { currentUserMock, findGroupChatByIdMock, findPrivateChatByIdMock } =
+  queryMocks;
 
 const { navigate } = mocks;
 
 const mockUserData = currentUserMock.result.data.me;
-const mockChatData = findGroupChatByIdMock.result.data.findChatById;
+const mockGroupChatData = findGroupChatByIdMock.result.data.findChatById;
+const mockPrivateChatData = findPrivateChatByIdMock.result.data.findChatById;
 
-const mockSetShowChatInfoModal = vi.fn();
+const mockSetShowGroupChatInfoModal = vi.fn();
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -24,14 +26,14 @@ vi.mock("react-router", async () => {
   };
 });
 
-const renderChatHeader = () => {
+const renderChatHeader = (mockChatData = mockGroupChatData) => {
   return render(
     <MockedProvider>
       <MemoryRouter>
         <ChatHeader
           user={mockUserData}
           chat={mockChatData}
-          setShowChatInfoModal={mockSetShowChatInfoModal}
+          setShowGroupChatInfoModal={mockSetShowGroupChatInfoModal}
         />
       </MemoryRouter>
     </MockedProvider>
@@ -48,7 +50,7 @@ describe("<ChatHeader />", () => {
     renderChatHeader();
 
     expect(screen.getByTestId("chat-header")).toBeInTheDocument();
-    expect(screen.getByText(mockChatData.title)).toBeInTheDocument();
+    expect(screen.getByText(mockGroupChatData.title)).toBeInTheDocument();
   });
 
   test("click go back button works", async () => {
@@ -58,5 +60,25 @@ describe("<ChatHeader />", () => {
     await user.click(screen.getByTestId("go-back-button"));
 
     expect(navigate).toHaveBeenCalledWith("/chats");
+  });
+
+  test("click group chat info button works", async () => {
+    const user = userEvent.setup();
+    renderChatHeader();
+
+    await user.click(screen.getByTestId("chat-info-button"));
+
+    expect(mockSetShowGroupChatInfoModal).toHaveBeenCalledWith(true);
+  });
+
+  test("click private chat info button navigates to contact page", async () => {
+    const user = userEvent.setup();
+    renderChatHeader(mockPrivateChatData);
+
+    await user.click(screen.getByTestId("chat-info-button"));
+
+    expect(navigate).toHaveBeenCalledWith(
+      `/contacts/${mockPrivateChatData.members[1].id}`
+    );
   });
 });
