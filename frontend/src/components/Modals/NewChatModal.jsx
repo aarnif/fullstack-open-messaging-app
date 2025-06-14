@@ -147,7 +147,10 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
       title: chosenContact.name,
       description: "",
       members: [user, chosenContact],
-      image: chosenContact.image.thumbnail,
+      image: {
+        thumbnail: chosenContact.image.thumbnail,
+        original: chosenContact.image.original,
+      },
     };
 
     navigateToNewChatView(newPrivateChatInfo);

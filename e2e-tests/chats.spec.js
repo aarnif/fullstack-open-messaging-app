@@ -57,7 +57,9 @@ test.describe("Chats", () => {
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
 
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
     await sendMessage(page, "Hello!");
 
     await expect(page.getByText("Hello!", { exact: true })).toBeVisible(); // Check if message shows in chat window
@@ -79,7 +81,7 @@ test.describe("Chats", () => {
       user3Credentials,
     ]);
 
-    const chatTitle = await page.getByTestId("new-chat-title");
+    const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
     await expect(chatTitle).toHaveText("Test chat");
@@ -101,7 +103,9 @@ test.describe("Chats", () => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
 
     const chatItems = page.getByTestId(/chat-item-/);
     const initialCount = await chatItems.count();
@@ -121,7 +125,9 @@ test.describe("Chats", () => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
 
     await sendMessage(page, "Hello!");
 
@@ -203,7 +209,7 @@ test.describe("Chats", () => {
       user3Credentials,
     ]);
 
-    const chatTitle = await page.getByTestId("new-chat-title");
+    const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
     await expect(chatTitle).toHaveText("Test chat");
@@ -243,7 +249,7 @@ test.describe("Chats", () => {
       user5Credentials,
     ]);
 
-    const chatTitle = await page.getByTestId("new-chat-title");
+    const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
     await expect(chatTitle).toHaveText("Test chat");
@@ -265,7 +271,8 @@ test.describe("Chats", () => {
 
     await expect(latestMessage).toBeVisible();
     await expect(latestMessage).toHaveText(
-      `${user2Credentials.name} was removed`
+      `${user2Credentials.name} was removed`,
+      { exact: true }
     );
   });
 
@@ -275,7 +282,9 @@ test.describe("Chats", () => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials, user3Credentials]);
     await createPrivateChat(page, user2Credentials);
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
     await sendMessage(page, "Hello!");
 
     const chatItems = page.getByTestId(/chat-item-/);
