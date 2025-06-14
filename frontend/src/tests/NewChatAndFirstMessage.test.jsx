@@ -12,12 +12,14 @@ import mocks from "./mocks/funcs.js";
 
 const { currentUserMock, findNewChatByMembersMock } = queryMocks;
 
-const { createNewChatMock, addMessageToNewChatMock, mockNewChatInfo } =
+const { createNewChatMock, createNewChatWithImageOnlyMock, mockNewChatInfo } =
   mutationMocks;
 
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
+
+const TEST_MESSAGE = "Hello, this is a test message!";
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -41,11 +43,7 @@ vi.mock("../services/imageService", () => ({
 }));
 
 const renderComponent = (
-  mockData = [
-    findNewChatByMembersMock,
-    createNewChatMock,
-    addMessageToNewChatMock,
-  ]
+  mockData = [findNewChatByMembersMock, createNewChatMock]
 ) => {
   render(
     <MockedProvider mocks={mockData}>
@@ -72,15 +70,9 @@ describe("<NewChatAndFirstMessage />", () => {
     const user = userEvent.setup();
 
     renderComponent();
-    await user.type(
-      screen.getByTestId("new-message-input"),
-      addMessageToNewChatMock.result.data.addMessageToChat.messages[0].content
-    );
+    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
     await user.click(screen.getByTestId("send-new-message-button"));
 
-    expect(screen.getByTestId("new-message-input")).toHaveValue(
-      addMessageToNewChatMock.result.data.addMessageToChat.messages[0].content
-    );
     expect(navigate).toHaveBeenCalledWith(
       `/chats/${createNewChatMock.result.data.createChat.id}`
     );
@@ -88,43 +80,14 @@ describe("<NewChatAndFirstMessage />", () => {
 
   test("handles create chat with first image message", async () => {
     const user = userEvent.setup();
-    const addMessageWithImageMock = {
-      request: {
-        query: addMessageToNewChatMock.request.query,
-        variables: {
-          ...addMessageToNewChatMock.request.variables,
-          input: { thumbnail: "thumb_url", original: "original_url" },
-        },
-      },
-      result: {
-        data: {
-          addMessageToChat: {
-            ...addMessageToNewChatMock.result.data.addMessageToChat,
-            image: {
-              thumbnail: { url: "thumb_url" },
-              original: { url: "original_url" },
-            },
-          },
-        },
-      },
-    };
-    renderComponent([
-      findNewChatByMembersMock,
-      createNewChatMock,
-      addMessageWithImageMock,
-    ]);
+
+    renderComponent();
 
     const file = new File(["test"], "test.png", { type: "image/png" });
     await user.upload(screen.getByTestId("image-input"), file);
-    await user.type(
-      screen.getByTestId("new-message-input"),
-      addMessageToNewChatMock.result.data.addMessageToChat.messages[0].content
-    );
+    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
     await user.click(screen.getByTestId("send-new-message-button"));
 
-    expect(screen.getByTestId("new-message-input")).toHaveValue(
-      addMessageToNewChatMock.result.data.addMessageToChat.messages[0].content
-    );
     expect(navigate).toHaveBeenCalledWith(
       `/chats/${createNewChatMock.result.data.createChat.id}`
     );
@@ -141,47 +104,15 @@ describe("<NewChatAndFirstMessage />", () => {
 
   test("handles image-only message", async () => {
     const user = userEvent.setup();
-    const addImageOnlyMessageMock = {
-      request: {
-        query: addMessageToNewChatMock.request.query,
-        variables: {
-          ...addMessageToNewChatMock.request.variables,
-          content: "",
-          input: { thumbnail: "thumb_url", original: "original_url" },
-        },
-      },
-      result: {
-        data: {
-          addMessageToChat: {
-            ...addMessageToNewChatMock.result.data.addMessageToChat,
-            messages: [
-              {
-                ...addMessageToNewChatMock.result.data.addMessageToChat
-                  .messages[0],
-                content: "",
-              },
-            ],
-            image: {
-              thumbnail: { url: "thumb_url" },
-              original: { url: "original_url" },
-            },
-          },
-        },
-      },
-    };
 
-    renderComponent([
-      findNewChatByMembersMock,
-      createNewChatMock,
-      addImageOnlyMessageMock,
-    ]);
+    renderComponent([findNewChatByMembersMock, createNewChatWithImageOnlyMock]);
 
     const file = new File(["test"], "test.png", { type: "image/png" });
     await user.upload(screen.getByTestId("image-input"), file);
     await user.click(screen.getByTestId("send-new-message-button"));
 
     expect(navigate).toHaveBeenCalledWith(
-      `/chats/${createNewChatMock.result.data.createChat.id}`
+      `/chats/${createNewChatWithImageOnlyMock.result.data.createChat.id}`
     );
   });
 
@@ -198,13 +129,9 @@ describe("<NewChatAndFirstMessage />", () => {
       error,
     };
 
-    renderComponent([
-      findNewChatByMembersMock,
-      createNewChatErrorMock,
-      addMessageToNewChatMock,
-    ]);
+    renderComponent([findNewChatByMembersMock, createNewChatErrorMock]);
 
-    await user.type(screen.getByTestId("new-message-input"), "Test message");
+    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
     await user.click(screen.getByTestId("send-new-message-button"));
 
     expect(navigate).not.toHaveBeenCalled();

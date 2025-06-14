@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 
-import { CREATE_CHAT, ADD_MESSAGE_TO_CHAT } from "../graphql/mutations";
+import { CREATE_CHAT } from "../graphql/mutations";
 import { FIND_CHAT_BY_MEMBERS } from "../graphql/queries";
 import imageService from "../services/imageService";
 import useField from "../hooks/useField";
@@ -23,14 +23,8 @@ export const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
     },
   });
 
-  const [addMessageToChat] = useMutation(ADD_MESSAGE_TO_CHAT, {
-    onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
-    },
-  });
-
-  const handleSendMessageAndCreateChat = async () => {
-    console.log("Send message:", message);
+  const handleCreateChat = async () => {
+    console.log("Send message:", message.value);
 
     if (!message.value && !base64Image) {
       console.log("Do not send empty message!");
@@ -43,40 +37,29 @@ export const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
           title: newChatInfo.title ? newChatInfo.title : "",
           description: newChatInfo.description ? newChatInfo.description : "",
           memberIds: newChatInfo.members.map((member) => member.id),
+          initialMessage: {
+            type: "message",
+            content: message.value,
+          },
         },
+        refetchQueries: [
+          {
+            query: FIND_CHAT_BY_MEMBERS,
+            variables: {
+              members: newChatInfo.members.map((member) => member.id),
+            },
+          },
+        ],
       });
 
       if (data) {
-        console.log("Created chat:", data);
-        let result;
+        console.log("Created chat successfully");
 
         if (base64Image) {
           console.log("Uploading chat picture...");
-          result = await imageService.uploadImage(
-            data.createChat.id,
-            base64Image
-          );
+          await imageService.uploadImage(data.createChat.id, base64Image);
         }
 
-        addMessageToChat({
-          variables: {
-            chatId: data.createChat.id,
-            content: message.value,
-            senderId: user.id,
-            input: {
-              thumbnail: base64Image ? result.data.thumb.url : null,
-              original: base64Image ? result.data.image.url : null,
-            },
-          },
-          refetchQueries: [
-            {
-              query: FIND_CHAT_BY_MEMBERS,
-              variables: {
-                members: newChatInfo.members.map((member) => member.id),
-              },
-            },
-          ],
-        });
         navigate(`/chats/${data.createChat.id}`);
       }
     } catch (error) {
@@ -92,7 +75,7 @@ export const NewChatAndFirstMessage = ({ user, newChatInfo }) => {
       image={image}
       setImage={setImage}
       setBase64Image={setBase64Image}
-      handleSubmit={handleSendMessageAndCreateChat}
+      handleSubmit={handleCreateChat}
     />
   );
 };

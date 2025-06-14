@@ -2,13 +2,11 @@ import assert from "node:assert";
 
 import data from "./data.js";
 import helpers from "./helpers.js";
-import { title } from "node:process";
 
 const { credentials, contactDetails, groupChatDetails } = data;
 
 const {
   timeOut,
-
   startServer,
   stopServer,
   resetDataBase,
@@ -37,20 +35,19 @@ describe("Chat tests", () => {
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
 
-    const response = await createChat(credentials, [
-      credentials.id,
-      contactDetails[0].id,
-    ]);
+    const response = await createChat(
+      credentials,
+      [credentials.id, contactDetails[0].id],
+      groupChatDetails[0].startingMessage
+    );
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.createChat.title).toBe(contactDetails[0].name);
     expect(response.body.data.createChat.isGroupChat).toBe(false);
     expect(response.body.data.createChat.members.length).toBe(2);
-    expect(response.body.data.createChat.members[0].username).toBe(
-      credentials.username
-    );
-    expect(response.body.data.createChat.members[1].username).toBe(
-      contactDetails[0].username
+    expect(response.body.data.createChat.messages.length).toBe(1);
+    expect(response.body.data.createChat.messages[0].content).toBe(
+      groupChatDetails[0].startingMessage.content
     );
   });
 
@@ -65,6 +62,7 @@ describe("Chat tests", () => {
         credentials.id,
         ...contactDetails.slice(0, 2).map((contact) => contact.id),
       ],
+      groupChatDetails[0].startingMessage,
       groupChatDetails[0].title,
       groupChatDetails[0].description
     );
@@ -90,6 +88,10 @@ describe("Chat tests", () => {
     expect(response.body.data.createChat.members[2].username).toBe(
       contactDetails[1].username
     );
+    expect(response.body.data.createChat.messages.length).toBe(1);
+    expect(response.body.data.createChat.messages[0].content).toBe(
+      groupChatDetails[0].startingMessage.content
+    );
   });
 
   it("Add message to chat titled 'Gamers'", async () => {
@@ -100,6 +102,7 @@ describe("Chat tests", () => {
     const createdChat = await createChat(
       credentials,
       [credentials.id, contactDetails[0].id, contactDetails[1].id],
+      groupChatDetails[0].startingMessage,
       groupChatDetails[0].title,
       groupChatDetails[0].description
     );
@@ -123,7 +126,7 @@ describe("Chat tests", () => {
         variables: {
           chatId: groupChatDetails[0].id,
           type: "message",
-          content: "Hello gamers!",
+          content: "This is a new message",
         },
       },
       credentials.token
@@ -133,12 +136,12 @@ describe("Chat tests", () => {
     expect(response.body.data.addMessageToChat.title).toBe(
       groupChatDetails[0].title
     );
-    expect(response.body.data.addMessageToChat.messages.length).toBe(1);
+    expect(response.body.data.addMessageToChat.messages.length).toBe(2);
     expect(
       response.body.data.addMessageToChat.messages[0].sender.username
     ).toBe(credentials.username);
     expect(response.body.data.addMessageToChat.messages[0].content).toBe(
-      "Hello gamers!"
+      "This is a new message"
     );
   });
 
@@ -149,6 +152,7 @@ describe("Chat tests", () => {
     await createChat(
       credentials,
       [credentials.id, contactDetails[0].id, contactDetails[1].id],
+      groupChatDetails[0].startingMessage,
       groupChatDetails[0].title,
       groupChatDetails[0].description
     );
@@ -177,6 +181,7 @@ describe("Chat tests", () => {
     const createdChat = await createChat(
       credentials,
       [credentials.id, contactDetails[0].id, contactDetails[1].id],
+      groupChatDetails[0].startingMessage,
       groupChatDetails[0].title,
       groupChatDetails[0].description
     );
@@ -204,6 +209,7 @@ describe("Chat tests", () => {
     const createdChat = await createChat(
       credentials,
       [credentials.id, contactDetails[0].id, contactDetails[1].id],
+      groupChatDetails[0].startingMessage,
       groupChatDetails[0].title,
       groupChatDetails[0].description
     );
@@ -235,6 +241,7 @@ describe("Chat tests", () => {
     const createdChat = await createChat(
       credentials,
       [credentials.id, contactDetails[0].id, contactDetails[1].id],
+      groupChatDetails[0].startingMessage,
       groupChatDetails[0].title,
       groupChatDetails[0].description
     );
@@ -296,6 +303,7 @@ describe("Chat tests", () => {
     const createdChat = await createChat(
       credentials,
       contactDetails.map((contact) => contact.id),
+      groupChatDetails[0].startingMessage,
       groupChatDetails[0].title,
       groupChatDetails[0].description
     );

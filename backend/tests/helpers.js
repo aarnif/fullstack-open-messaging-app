@@ -59,8 +59,8 @@ const loginUser = async (credentials) => {
   return response;
 };
 
-const addContacts = async (credentials, contactDetails) => {
-  const response = await requestData(
+const addContacts = async (credentials, contactDetails) =>
+  await requestData(
     {
       query: `mutation AddContacts($userIds: [ID!]) {
         addContacts(userIds: $userIds) {
@@ -80,11 +80,8 @@ const addContacts = async (credentials, contactDetails) => {
     credentials.token
   );
 
-  return response;
-};
-
-const blockOrUnBlockContact = async (credentials, contactId) => {
-  const response = await requestData(
+const blockOrUnBlockContact = async (credentials, contactId) =>
+  await requestData(
     {
       query: `mutation BlockOrUnBlockContact($contactId: ID!) {
         blockOrUnBlockContact(contactId: $contactId)
@@ -96,52 +93,67 @@ const blockOrUnBlockContact = async (credentials, contactId) => {
     credentials.token
   );
 
-  return response;
-};
-
 const createChat = async (
   credentials,
   memberIds,
+  initialMessage,
   title = "",
   description = ""
-) => {
-  const response = await requestData(
+) =>
+  await requestData(
     {
-      query: `mutation CreateChat($title: String, $description: String, $memberIds: [ID!]!) {
-      createChat(title: $title, description: $description, memberIds: $memberIds) {
-        id
-        title
-        description
-        isGroupChat
-        admin {
+      query: `mutation CreateChat(
+        $title: String
+        $description: String
+        $memberIds: [ID!]!
+        $initialMessage: MessageInput!
+      ) {
+        createChat(
+          title: $title
+          description: $description
+          memberIds: $memberIds
+          initialMessage: $initialMessage
+        ) {
           id
-          username
+          title
+          description
+          isGroupChat
+          admin {
+            id
+            username
+          }
+          members {
+            id
+            username
+          }
+          messages {
+            id
+            type
+            sender {
+              id
+              username
+            }
+            content
+          }
         }
-        members {
-          id
-          username
-        }
-      }
-    }`,
+      }`,
       variables: {
-        title: title,
-        description: description,
-        memberIds: memberIds,
+        title,
+        description,
+        memberIds,
+        initialMessage,
       },
     },
     credentials.token
   );
-
-  return response;
-};
 
 const changePassword = async (
   credentials,
   currentPassword,
   newPassword,
   confirmNewPassword
-) => {
-  const response = await requestData(
+) =>
+  await requestData(
     {
       query: `mutation ChangePassword($currentPassword: String!, $newPassword: String!, $confirmNewPassword: String!) {
           changePassword(currentPassword: $currentPassword, newPassword: $newPassword, confirmNewPassword: $confirmNewPassword) {
@@ -157,11 +169,8 @@ const changePassword = async (
     credentials.token
   );
 
-  return response;
-};
-
-const checkIfUserHasBlockedYou = async (credentials, userId) => {
-  const response = await requestData(
+const checkIfUserHasBlockedYou = async (credentials, userId) =>
+  await requestData(
     {
       query: `query CheckIfUserHasBlockedYou($userId: ID!) {
         checkIfUserHasBlockedYou(userId: $userId)
@@ -172,9 +181,6 @@ const checkIfUserHasBlockedYou = async (credentials, userId) => {
     },
     credentials.token
   );
-
-  return response;
-};
 
 export default {
   timeOut,

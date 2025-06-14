@@ -54,11 +54,19 @@ const groupChatDetails = [
     id: "",
     title: "Gamers",
     description: "Chat for gamers",
+    startingMessage: {
+      type: "message",
+      content: "Welcome to the Gamers chat!",
+    },
   },
   {
     id: "",
     title: "OffTopic",
     description: "Chat for off topic",
+    startingMessage: {
+      type: "message",
+      content: "Let's chat about random stuff!",
+    },
   },
 ];
 

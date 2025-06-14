@@ -152,6 +152,10 @@ const createNewChatMock = {
       title: "Test Group Chat",
       description: "This is a group chat.",
       memberIds: [users[0].id, users[1].id, users[2].id],
+      initialMessage: {
+        type: "message",
+        content: "Hello, this is a test message!",
+      },
     },
   },
   result: {
@@ -161,19 +165,22 @@ const createNewChatMock = {
   },
 };
 
-const addMessageToNewChatMock = {
+const createNewChatWithImageOnlyMock = {
   request: {
-    query: ADD_MESSAGE_TO_CHAT,
+    query: CREATE_CHAT,
     variables: {
-      chatId: "2",
-      content: "Welcome to the group chat!",
-      senderId: users[0].id,
-      input: { thumbnail: null, original: null },
+      title: "Test Group Chat",
+      description: "This is a group chat.",
+      memberIds: [users[0].id, users[1].id, users[2].id],
+      initialMessage: {
+        type: "message",
+        content: "",
+      },
     },
   },
   result: {
     data: {
-      addMessageToChat: chats[1],
+      createChat: chats[1],
     },
   },
 };
@@ -276,7 +283,7 @@ export default {
   markAllMessagesInPrivateChatReadMock,
   addMessageToChatMock,
   createNewChatMock,
-  addMessageToNewChatMock,
+  createNewChatWithImageOnlyMock,
   addContactMock,
   addContactsMock,
   blockOrUnblockContactMock,
