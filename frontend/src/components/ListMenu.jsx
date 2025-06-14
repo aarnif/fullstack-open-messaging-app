@@ -256,12 +256,12 @@ const ListMenu = ({
       data-testid={testId}
       className="flex-grow lg:max-w-[450px] flex flex-col bg-white dark:bg-slate-600"
     >
+      <MenuHeader
+        title={title}
+        handleCallBack={handleClickCallback}
+        searchWord={searchWord}
+      />
       <div className="flex-grow flex flex-col overflow-y-auto h-0">
-        <MenuHeader
-          title={title}
-          handleCallBack={handleClickCallback}
-          searchWord={searchWord}
-        />
         {isChatsMenu ? (
           <ChatsList
             user={user}
