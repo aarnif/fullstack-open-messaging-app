@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
 
-import Chats from "../components/Chats/Chats.jsx";
+import Chats from "../components/Chats.jsx";
 
 describe("<Chats />", () => {
   test("renders chats page", () => {

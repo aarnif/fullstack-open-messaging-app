@@ -13,7 +13,7 @@ import SignUp from "./components/SignUp";
 import Title from "./components/ui/Title";
 import ListMenu from "./components/ui/ListMenu";
 
-import Chats from "./components/Chats/Chats";
+import Chats from "./components/Chats";
 import Chat from "./components/Chat";
 import NewChat from "./components/NewChat";
 import Contacts from "./components/Contacts";
