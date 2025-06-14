@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect } from "vitest";
-import ContactCard from "../components/Contacts/ContactCard";
+import ContactCard from "../components/ui/ContactCard";
 import queryMocks from "./mocks/queryMocks.js";
 
 const { currentUserMock, findUserByIdMock } = queryMocks;

@@ -1,5 +1,5 @@
 import Title from "./Title";
-import ContactCard from "../Contacts/ContactCard";
+import ContactCard from "./ContactCard";
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const ChatMembersList = ({ user, chatMembers, admin }) => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ContactCard from "../Contacts/ContactCard";
+import ContactCard from "../ui/ContactCard";
 import { MdCheck } from "react-icons/md";
 
 const SelectContactsItem = ({ item, chosenUserIds, setChosenUserIds }) => {

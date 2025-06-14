@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import ContactCard from "./ContactCard";
+import ContactCard from "../ui/ContactCard";
 
 const ContactItem = ({
   user,

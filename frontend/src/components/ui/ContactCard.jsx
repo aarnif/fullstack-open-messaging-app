@@ -1,4 +1,4 @@
-import Title from "../ui/Title";
+import Title from "./Title";
 
 const ContactCard = ({ user, item, admin }) => {
   const isCurrentUser = user?.id === item.id;

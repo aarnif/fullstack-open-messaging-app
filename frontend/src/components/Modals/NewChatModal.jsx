@@ -19,7 +19,7 @@ import Input from "../ui/Input";
 import Button from "../ui/Button";
 import Title from "../ui/Title";
 import SelectContactsList from "../ui/SelectContactsList";
-import ContactCard from "../Contacts/ContactCard";
+import ContactCard from "../ui/ContactCard";
 
 import useNotifyMessage from "../../hooks/useNotifyMessage";
 import Notify from "../ui/Notify";
