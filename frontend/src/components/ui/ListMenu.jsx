@@ -1,4 +1,5 @@
 import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
+import { useNavigate } from "react-router";
 import { FaSearch } from "react-icons/fa";
 
 import { ALL_CHATS_BY_USER, ALL_CONTACTS_BY_USER } from "../../graphql/queries";
@@ -14,7 +15,8 @@ import Title from "./Title";
 import Button from "./Button";
 import Input from "./Input";
 import ChatItem from "../Chats/ChatItem";
-import ContactItem from "../Contacts/ContactItem";
+import ContactCard from "./ContactCard";
+// import ContactItem from "../Contacts/ContactItem";
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const EmptyState = ({ message, testId }) => (
@@ -166,6 +168,37 @@ const ChatsList = ({
         />
       ))}
     </div>
+  );
+};
+
+export const ContactItem = ({
+  user,
+  item,
+  activeChatOrContactId,
+  setActiveChatOrContactId,
+}) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    console.log("Pressed contact named:", item.name);
+    navigate(`/contacts/${item.id}`);
+    setActiveChatOrContactId(item.id);
+  };
+
+  const classStyles =
+    activeChatOrContactId === item.id
+      ? "w-full flex items-start py-2 px-4 border-b bg-slate-200 dark:bg-slate-700 transition"
+      : "w-full flex items-start py-2 px-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
+
+  return (
+    <button
+      id={activeChatOrContactId === item.id ? "active-contact" : ""}
+      data-testid={item.username}
+      className={classStyles}
+      onClick={handleClick}
+    >
+      <ContactCard user={user} item={item} />
+    </button>
   );
 };
 

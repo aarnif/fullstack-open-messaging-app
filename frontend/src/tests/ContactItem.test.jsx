@@ -3,7 +3,7 @@ import { describe, test, expect } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
-import ContactItem from "../components/Contacts/ContactItem.jsx";
+import { ContactItem } from "../components/ui/ListMenu.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
