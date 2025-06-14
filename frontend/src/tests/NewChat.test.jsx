@@ -10,8 +10,7 @@ import mocks from "./mocks/funcs.js";
 
 const { currentUserMock } = queryMocks;
 
-const { createNewChatMock, addMessageToNewChatMock, mockNewChatInfo } =
-  mutationMocks;
+const { createNewChatMock, mockNewChatInfo } = mutationMocks;
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
@@ -30,7 +29,7 @@ Object.defineProperty(global, "localStorage", { value: localStorage });
 
 const renderComponent = () => {
   render(
-    <MockedProvider mocks={[createNewChatMock, addMessageToNewChatMock]}>
+    <MockedProvider mocks={[createNewChatMock]}>
       <MemoryRouter>
         <NewChat
           user={userData}
