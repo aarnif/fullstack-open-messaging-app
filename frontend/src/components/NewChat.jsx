@@ -115,9 +115,7 @@ const NewChat = ({ user, setActiveMenuItem, menuComponent }) => {
           chat={newChatInfo}
           setShowGroupChatInfoModal={null}
         />
-        <div className="flex-grow w-full overflow-y-auto h-0">
-          <Messages user={user} messages={[]} />
-        </div>
+        <Messages user={user} messages={[]} />
         <NewChatAndFirstMessage user={user} newChatInfo={newChatInfo} />
       </div>
     </div>
