@@ -5,7 +5,7 @@ import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import * as apolloClient from "@apollo/client";
 import ModalProvider from "../components/ModalProvider.jsx";
-import ListMenu from "../components/ListMenu.jsx";
+import ListMenu from "../components/ui/ListMenu.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
 import subscriptionMocks from "./mocks/subscriptionsMocks.js";

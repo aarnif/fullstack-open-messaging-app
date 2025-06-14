@@ -1,21 +1,21 @@
 import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 import { FaSearch } from "react-icons/fa";
 
-import { ALL_CHATS_BY_USER, ALL_CONTACTS_BY_USER } from "../graphql/queries";
+import { ALL_CHATS_BY_USER, ALL_CONTACTS_BY_USER } from "../../graphql/queries";
 import {
   NEW_MESSAGE_TO_CHAT_ADDED,
   NEW_CHAT_CREATED,
   CHAT_DELETED,
   LEFT_GROUP_CHATS,
-} from "../graphql/subscriptions";
-import useField from "../hooks/useField";
-import Loading from "./ui/Loading";
-import Title from "./ui/Title";
-import Button from "./ui/Button";
-import Input from "./ui/Input";
-import ChatItem from "./Chats/ChatItem";
-import ContactItem from "./Contacts/ContactItem";
-import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
+} from "../../graphql/subscriptions";
+import useField from "../../hooks/useField";
+import Loading from "./Loading";
+import Title from "./Title";
+import Button from "./Button";
+import Input from "./Input";
+import ChatItem from "../Chats/ChatItem";
+import ContactItem from "../Contacts/ContactItem";
+import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const EmptyState = ({ message, testId }) => (
   <div data-testid={testId} className="flex justify-start items-center">

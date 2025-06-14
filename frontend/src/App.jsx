@@ -11,7 +11,7 @@ import Home from "./components/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import ListMenu from "./components/ListMenu";
+import ListMenu from "./components/ui/ListMenu";
 
 import Chats from "./components/Chats/Chats";
 import Chat from "./components/Chat";
