@@ -11,8 +11,7 @@ import Home from "./components/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import ChatsMenu from "./components/ChatsMenu";
-import ContactsMenu from "./components/ContactsMenu";
+import ListMenu from "./components/ListMenu";
 
 import Chats from "./components/Chats/Chats";
 import Chat from "./components/Chat";
@@ -115,9 +114,10 @@ const App = () => {
                         <Chats
                           user={data?.me}
                           menuComponent={
-                            <ChatsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewChat={handleClickNewChat}
+                              menuType="chats"
+                              handleClickCallback={handleClickNewChat}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -135,9 +135,10 @@ const App = () => {
                           setActiveMenuItem={setActiveMenuItem}
                           setActiveChatOrContactId={setActiveChatOrContactId}
                           menuComponent={
-                            <ChatsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewChat={handleClickNewChat}
+                              menuType="chats"
+                              handleClickCallback={handleClickNewChat}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -154,9 +155,10 @@ const App = () => {
                           user={data?.me}
                           setActiveMenuItem={setActiveMenuItem}
                           menuComponent={
-                            <ChatsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewChat={handleClickNewChat}
+                              menuType="chats"
+                              handleClickCallback={handleClickNewChat}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -171,9 +173,10 @@ const App = () => {
                       element={
                         <Contacts
                           menuComponent={
-                            <ContactsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewContact={handleClickNewContact}
+                              menuType="contacts"
+                              handleClickCallback={handleClickNewContact}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -190,9 +193,10 @@ const App = () => {
                           user={data?.me}
                           setActiveMenuItem={setActiveMenuItem}
                           menuComponent={
-                            <ContactsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewContact={handleClickNewContact}
+                              menuType="contacts"
+                              handleClickCallback={handleClickNewContact}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -208,25 +212,19 @@ const App = () => {
                         <Profile
                           user={data?.me}
                           menuComponent={
-                            activeListMenuComponent === "chats" ? (
-                              <ChatsMenu
-                                user={data?.me}
-                                handleClickNewChat={handleClickNewChat}
-                                activeChatOrContactId={activeChatOrContactId}
-                                setActiveChatOrContactId={
-                                  setActiveChatOrContactId
-                                }
-                              />
-                            ) : (
-                              <ContactsMenu
-                                user={data?.me}
-                                handleClickNewContact={handleClickNewContact}
-                                activeChatOrContactId={activeChatOrContactId}
-                                setActiveChatOrContactId={
-                                  setActiveChatOrContactId
-                                }
-                              />
-                            )
+                            <ListMenu
+                              user={data?.me}
+                              menuType={activeListMenuComponent}
+                              handleClickCallback={
+                                activeListMenuComponent === "chats"
+                                  ? handleClickNewChat
+                                  : handleClickNewContact
+                              }
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
+                            />
                           }
                         />
                       }
@@ -237,25 +235,19 @@ const App = () => {
                         <Settings
                           user={data?.me}
                           menuComponent={
-                            activeListMenuComponent === "chats" ? (
-                              <ChatsMenu
-                                user={data?.me}
-                                handleClickNewChat={handleClickNewChat}
-                                activeChatOrContactId={activeChatOrContactId}
-                                setActiveChatOrContactId={
-                                  setActiveChatOrContactId
-                                }
-                              />
-                            ) : (
-                              <ContactsMenu
-                                user={data?.me}
-                                handleClickNewContact={handleClickNewContact}
-                                activeChatOrContactId={activeChatOrContactId}
-                                setActiveChatOrContactId={
-                                  setActiveChatOrContactId
-                                }
-                              />
-                            )
+                            <ListMenu
+                              user={data?.me}
+                              menuType={activeListMenuComponent}
+                              handleClickCallback={
+                                activeListMenuComponent === "chats"
+                                  ? handleClickNewChat
+                                  : handleClickNewContact
+                              }
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
+                            />
                           }
                         />
                       }
