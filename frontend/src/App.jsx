@@ -6,11 +6,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import ModalProvider from "./components/ModalProvider";
 import { CURRENT_USER } from "./graphql/queries";
 import LoadingPage from "./components/LoadingPage";
-import Header from "./components/Header";
 import Home from "./components/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
+import Title from "./components/ui/Title";
 import ListMenu from "./components/ui/ListMenu";
 
 import Chats from "./components/Chats/Chats";
@@ -24,6 +24,22 @@ import Settings from "./components/Settings";
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
 import NewChatModal from "./components/Modals/NewChatModal";
 import AddNewContactsModal from "./components/Modals/AddNewContactsModal";
+
+export const Header = () => {
+  const location = useLocation();
+  const condition =
+    location.pathname !== "/signin" && location.pathname !== "/signup";
+  return (
+    <header
+      data-testid="header"
+      className={`py-2 w-full flex justify-center items-center ${
+        condition && "bg-white shadow-lg dark:bg-slate-900"
+      }`}
+    >
+      <Title variant="primary" testId="header-title" text="Messaging App" />
+    </header>
+  );
+};
 
 const App = () => {
   const location = useLocation();

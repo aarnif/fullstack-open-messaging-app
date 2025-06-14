@@ -3,7 +3,7 @@ import { describe } from "vitest";
 import { useLocation } from "react-router";
 
 import mocks from "./mocks/funcs.js";
-import Header from "../components/Header";
+import { Header } from "../App.jsx";
 
 const { location } = mocks;
 
