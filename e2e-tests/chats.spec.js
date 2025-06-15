@@ -52,12 +52,14 @@ test.describe("Chats", () => {
     await page.goto("http://localhost:5173");
   });
 
-  test("Start a private chat", async ({ page, request }) => {
+  test("Start a private chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
 
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
     await sendMessage(page, "Hello!");
 
     await expect(page.getByText("Hello!", { exact: true })).toBeVisible(); // Check if message shows in chat window
@@ -79,7 +81,7 @@ test.describe("Chats", () => {
       user3Credentials,
     ]);
 
-    const chatTitle = await page.getByTestId("new-chat-title");
+    const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
     await expect(chatTitle).toHaveText("Test chat");
@@ -97,14 +99,13 @@ test.describe("Chats", () => {
     ).toBeVisible(); // Check if message shows in chats list
   });
 
-  test("Does not create a chat without first message", async ({
-    page,
-    request,
-  }) => {
+  test("Does not create a chat without first message", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
 
     const chatItems = page.getByTestId(/chat-item-/);
     const initialCount = await chatItems.count();
@@ -120,12 +121,13 @@ test.describe("Chats", () => {
 
   test("Does not send an empty message in an existing chat", async ({
     page,
-    request,
   }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
 
     await sendMessage(page, "Hello!");
 
@@ -188,7 +190,7 @@ test.describe("Chats", () => {
     await page.getByTestId("close-group-chat-info-button").click();
   });
 
-  test("Add new members to group chat", async ({ page, request }) => {
+  test("Add new members to group chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
     await expect(
@@ -207,7 +209,7 @@ test.describe("Chats", () => {
       user3Credentials,
     ]);
 
-    const chatTitle = await page.getByTestId("new-chat-title");
+    const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
     await expect(chatTitle).toHaveText("Test chat");
@@ -226,7 +228,7 @@ test.describe("Chats", () => {
     await page.getByTestId("close-group-chat-info-button").click();
   });
 
-  test("Remove members from group chat", async ({ page, request }) => {
+  test("Remove members from group chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
     await expect(
@@ -247,7 +249,7 @@ test.describe("Chats", () => {
       user5Credentials,
     ]);
 
-    const chatTitle = await page.getByTestId("new-chat-title");
+    const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
     await expect(chatTitle).toHaveText("Test chat");
@@ -269,18 +271,20 @@ test.describe("Chats", () => {
 
     await expect(latestMessage).toBeVisible();
     await expect(latestMessage).toHaveText(
-      `${user2Credentials.name} was removed`
+      `${user2Credentials.name} was removed`,
+      { exact: true }
     );
   });
 
   test("Chats are appearing on ascending order based on latest message", async ({
     page,
-    request,
   }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials, user3Credentials]);
     await createPrivateChat(page, user2Credentials);
-    await expect(page.getByText(`You, ${user2Credentials.name}`)).toBeVisible();
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
     await sendMessage(page, "Hello!");
 
     const chatItems = page.getByTestId(/chat-item-/);
@@ -322,10 +326,7 @@ test.describe("Chats", () => {
     await expect(page.getByText("No chats found")).toBeVisible();
   });
 
-  test("Users receive notifications for new messages", async ({
-    page,
-    browser,
-  }) => {
+  test("Users receive notifications for new messages", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);

@@ -6,26 +6,38 @@ import { AnimatePresence, motion } from "framer-motion";
 import ModalProvider from "./components/ModalProvider";
 import { CURRENT_USER } from "./graphql/queries";
 import LoadingPage from "./components/LoadingPage";
-import Header from "./components/Header";
 import Home from "./components/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import ChatsMenu from "./components/ChatsMenu";
-import ContactsMenu from "./components/ContactsMenu";
+import Title from "./components/ui/Title";
+import ListMenu from "./components/ui/ListMenu";
 
-import Chats from "./components/Chats/Chats";
-import Chat from "./components/Chat/Chat";
-import NewChat from "./components/NewChat/NewChat";
-import Contacts from "./components/Contacts/Contacts";
+import ListPage from "./components/ListPage";
+import Chat from "./components/Chat";
 import Contact from "./components/Contact";
 import Profile from "./components/Profile";
-import Settings from "./components/Settings/Settings";
+import Settings from "./components/Settings";
 
 import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
-import NewPrivateChatModal from "./components/Modals/NewPrivateChatModal/NewPrivateChatModal";
-import NewGroupChatModal from "./components/Modals/NewGroupChatModal";
+import NewChatModal from "./components/Modals/NewChatModal";
 import AddNewContactsModal from "./components/Modals/AddNewContactsModal";
+
+export const Header = () => {
+  const location = useLocation();
+  const condition =
+    location.pathname !== "/signin" && location.pathname !== "/signup";
+  return (
+    <header
+      data-testid="header"
+      className={`py-2 w-full flex justify-center items-center ${
+        condition && "bg-white shadow-lg dark:bg-slate-900"
+      }`}
+    >
+      <Title variant="primary" testId="header-title" text="Messaging App" />
+    </header>
+  );
+};
 
 const App = () => {
   const location = useLocation();
@@ -36,8 +48,7 @@ const App = () => {
     useState("chats");
   const [activeChatOrContactId, setActiveChatOrContactId] = useState(null);
   const [showNewChatDropdownBox, setShowNewChatDropdownBox] = useState(false);
-  const [showNewPrivateChatModal, setShowNewPrivateChatModal] = useState(false);
-  const [showNewGroupChatModal, setShowNewGroupChatModal] = useState(false);
+  const [newChatModalType, setNewChatModalType] = useState(null);
   const [showAddNewContactsModal, setShowAddNewContactsModal] = useState(false);
 
   const { data, loading } = useQuery(CURRENT_USER);
@@ -114,12 +125,13 @@ const App = () => {
                     <Route
                       path="/chats"
                       element={
-                        <Chats
-                          user={data?.me}
+                        <ListPage
+                          type="chats"
                           menuComponent={
-                            <ChatsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewChat={handleClickNewChat}
+                              menuType="chats"
+                              handleClickCallback={handleClickNewChat}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -137,9 +149,10 @@ const App = () => {
                           setActiveMenuItem={setActiveMenuItem}
                           setActiveChatOrContactId={setActiveChatOrContactId}
                           menuComponent={
-                            <ChatsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewChat={handleClickNewChat}
+                              menuType="chats"
+                              handleClickCallback={handleClickNewChat}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -152,13 +165,15 @@ const App = () => {
                     <Route
                       path="/chats/new"
                       element={
-                        <NewChat
+                        <Chat
                           user={data?.me}
                           setActiveMenuItem={setActiveMenuItem}
+                          setActiveChatOrContactId={setActiveChatOrContactId}
                           menuComponent={
-                            <ChatsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewChat={handleClickNewChat}
+                              menuType="chats"
+                              handleClickCallback={handleClickNewChat}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -171,11 +186,13 @@ const App = () => {
                     <Route
                       path="/contacts"
                       element={
-                        <Contacts
+                        <ListPage
+                          type="contacts"
                           menuComponent={
-                            <ContactsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewContact={handleClickNewContact}
+                              menuType="contacts"
+                              handleClickCallback={handleClickNewContact}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -192,9 +209,10 @@ const App = () => {
                           user={data?.me}
                           setActiveMenuItem={setActiveMenuItem}
                           menuComponent={
-                            <ContactsMenu
+                            <ListMenu
                               user={data?.me}
-                              handleClickNewContact={handleClickNewContact}
+                              menuType="contacts"
+                              handleClickCallback={handleClickNewContact}
                               activeChatOrContactId={activeChatOrContactId}
                               setActiveChatOrContactId={
                                 setActiveChatOrContactId
@@ -210,25 +228,19 @@ const App = () => {
                         <Profile
                           user={data?.me}
                           menuComponent={
-                            activeListMenuComponent === "chats" ? (
-                              <ChatsMenu
-                                user={data?.me}
-                                handleClickNewChat={handleClickNewChat}
-                                activeChatOrContactId={activeChatOrContactId}
-                                setActiveChatOrContactId={
-                                  setActiveChatOrContactId
-                                }
-                              />
-                            ) : (
-                              <ContactsMenu
-                                user={data?.me}
-                                handleClickNewContact={handleClickNewContact}
-                                activeChatOrContactId={activeChatOrContactId}
-                                setActiveChatOrContactId={
-                                  setActiveChatOrContactId
-                                }
-                              />
-                            )
+                            <ListMenu
+                              user={data?.me}
+                              menuType={activeListMenuComponent}
+                              handleClickCallback={
+                                activeListMenuComponent === "chats"
+                                  ? handleClickNewChat
+                                  : handleClickNewContact
+                              }
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
+                            />
                           }
                         />
                       }
@@ -239,25 +251,19 @@ const App = () => {
                         <Settings
                           user={data?.me}
                           menuComponent={
-                            activeListMenuComponent === "chats" ? (
-                              <ChatsMenu
-                                user={data?.me}
-                                handleClickNewChat={handleClickNewChat}
-                                activeChatOrContactId={activeChatOrContactId}
-                                setActiveChatOrContactId={
-                                  setActiveChatOrContactId
-                                }
-                              />
-                            ) : (
-                              <ContactsMenu
-                                user={data?.me}
-                                handleClickNewContact={handleClickNewContact}
-                                activeChatOrContactId={activeChatOrContactId}
-                                setActiveChatOrContactId={
-                                  setActiveChatOrContactId
-                                }
-                              />
-                            )
+                            <ListMenu
+                              user={data?.me}
+                              menuType={activeListMenuComponent}
+                              handleClickCallback={
+                                activeListMenuComponent === "chats"
+                                  ? handleClickNewChat
+                                  : handleClickNewContact
+                              }
+                              activeChatOrContactId={activeChatOrContactId}
+                              setActiveChatOrContactId={
+                                setActiveChatOrContactId
+                              }
+                            />
                           }
                         />
                       }
@@ -270,25 +276,18 @@ const App = () => {
                 {showNewChatDropdownBox && (
                   <NewChatDropDownBox
                     setShowNewChatDropdownBox={setShowNewChatDropdownBox}
-                    setShowNewPrivateChatModal={setShowNewPrivateChatModal}
-                    setShowNewGroupChatModal={setShowNewGroupChatModal}
+                    setNewChatModalType={setNewChatModalType}
                   />
                 )}
-                {showNewPrivateChatModal && (
-                  <NewPrivateChatModal
+                {newChatModalType && (
+                  <NewChatModal
                     user={data?.me}
-                    setShowNewPrivateChatModal={setShowNewPrivateChatModal}
-                  />
-                )}
-                {showNewGroupChatModal && (
-                  <NewGroupChatModal
-                    user={data?.me}
-                    setShowNewGroupChatModal={setShowNewGroupChatModal}
+                    chatType={newChatModalType}
+                    setShowNewChatModal={() => setNewChatModalType(null)}
                   />
                 )}
                 {showAddNewContactsModal && (
                   <AddNewContactsModal
-                    user={data?.me}
                     setShowAddNewContactsModal={setShowAddNewContactsModal}
                   />
                 )}

@@ -3,7 +3,7 @@ import { describe, test, expect } from "vitest";
 
 import queryMocks from "./mocks/queryMocks.js";
 
-import SelectContactList from "../components/Modals/NewPrivateChatModal/SelectContactList";
+import { SelectContactList } from "../components/Modals/NewChatModal";
 
 const { allContactsByUserMock } = queryMocks;
 const contactData =

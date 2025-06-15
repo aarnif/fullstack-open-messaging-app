@@ -10,6 +10,8 @@ import {
   BLOCK_OR_UNBLOCK_CONTACT,
   REMOVE_CONTACT,
   CHANGE_PASSWORD,
+  LEAVE_GROUP_CHATS,
+  EDIT_GROUP_CHAT,
 } from "../../graphql/mutations";
 
 import { users, chats } from "./data";
@@ -116,7 +118,7 @@ const addMessageToChatMock = {
     query: ADD_MESSAGE_TO_CHAT,
     variables: {
       chatId: "2",
-      content: "This is a test.",
+      content: "Hello, this is a test message!",
       input: { thumbnail: null, original: null },
     },
   },
@@ -129,7 +131,7 @@ const addMessageToChatMock = {
             __typename: "Message",
             id: "2",
             type: "message",
-            content: "This is a test.",
+            content: "Hello, this is a test message!",
             image: {
               __typename: "Image",
               thumbnail: null,
@@ -152,6 +154,10 @@ const createNewChatMock = {
       title: "Test Group Chat",
       description: "This is a group chat.",
       memberIds: [users[0].id, users[1].id, users[2].id],
+      initialMessage: {
+        type: "message",
+        content: "Hello, this is a test message!",
+      },
     },
   },
   result: {
@@ -161,19 +167,22 @@ const createNewChatMock = {
   },
 };
 
-const addMessageToNewChatMock = {
+const createNewChatWithImageOnlyMock = {
   request: {
-    query: ADD_MESSAGE_TO_CHAT,
+    query: CREATE_CHAT,
     variables: {
-      chatId: "2",
-      content: "Welcome to the group chat!",
-      senderId: users[0].id,
-      input: { thumbnail: null, original: null },
+      title: "Test Group Chat",
+      description: "This is a group chat.",
+      memberIds: [users[0].id, users[1].id, users[2].id],
+      initialMessage: {
+        type: "message",
+        content: "",
+      },
     },
   },
   result: {
     data: {
-      addMessageToChat: chats[1],
+      createChat: chats[1],
     },
   },
 };
@@ -260,6 +269,45 @@ const changePasswordMock = {
   },
 };
 
+const leaveGroupChatMock = {
+  request: {
+    query: LEAVE_GROUP_CHATS,
+    variables: {
+      chatIds: [chats[1].id],
+    },
+  },
+  result: {
+    data: {
+      leaveGroupChats: [chats[1].id],
+    },
+  },
+};
+
+const editGroupChatMock = {
+  request: {
+    query: EDIT_GROUP_CHAT,
+    variables: {
+      chatId: chats[1].id,
+      title: "Updated Chat Title",
+      description: "Updated Chat Description",
+      input: {
+        thumbnail: chats[1].image.thumbnail,
+        original: chats[1].image.original,
+      },
+      memberIds: [users[0].id, users[1].id, users[2].id],
+    },
+  },
+  result: {
+    data: {
+      editGroupChat: {
+        ...chats[1],
+        title: "Updated Chat Title",
+        description: "Updated Chat Description",
+      },
+    },
+  },
+};
+
 const mockNewChatInfo = {
   title: "Test Group Chat",
   description: "This is a group chat.",
@@ -276,11 +324,13 @@ export default {
   markAllMessagesInPrivateChatReadMock,
   addMessageToChatMock,
   createNewChatMock,
-  addMessageToNewChatMock,
+  createNewChatWithImageOnlyMock,
   addContactMock,
   addContactsMock,
   blockOrUnblockContactMock,
   removeContactMock,
   changePasswordMock,
+  leaveGroupChatMock,
+  editGroupChatMock,
   mockNewChatInfo,
 };

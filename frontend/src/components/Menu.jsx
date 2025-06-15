@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useApolloClient } from "@apollo/client";
 import {
@@ -8,44 +7,34 @@ import {
   FaCog,
   FaSignOutAlt,
 } from "react-icons/fa";
-import { motion } from "framer-motion";
 
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import useModal from "../hooks/useModal";
 
 const MenuTitle = ({ title }) => {
   return (
-    <motion.div
-      initial={{ x: -20, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      className="hidden absolute left-[80px] h-10 w-28 lg:flex justify-center items-center bg-slate-200 rounded-lg dark:bg-slate-800"
-    >
-      <div className="text-slate-800 dark:text-white font-bold">
-        {chatAndMessageHelpers.capitalizeString(title)}
-      </div>
+    <div className="hidden absolute left-20 h-10 w-28 opacity-0 peer-hover:animate-fade-in peer-hover:opacity-100 lg:flex justify-center items-center text-slate-800 dark:text-white font-bold bg-slate-200 rounded-lg dark:bg-slate-800 transition pointer-events-none">
+      {chatAndMessageHelpers.capitalizeString(title)}
       <div className="absolute left-[-8px] border-t-[10px] border-t-transparent border-r-[10px] border-r-slate-200 dark:border-r-slate-800 border-b-[10px] border-b-transparent"></div>
-    </motion.div>
+    </div>
   );
 };
 
 const MenuItem = ({ item, onClick, activeMenuItem }) => {
-  const [hovered, setHovered] = useState(false);
   return (
-    <div className="flex justify-center lg:justify-between items-center">
+    <div className="relative flex items-center">
       <button
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
         onClick={onClick}
         data-testid={item["data-testid"]}
         className={
           item.id === activeMenuItem
-            ? "relative group w-10 h-10 sm:w-14 sm:h-14 rounded-lg bg-violet-500 flex justify-center items-center active:scale-95 transition"
-            : "relative group w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-slate-200 dark:bg-slate-500 flex justify-center items-center hover:rounded-lg hover:bg-violet-500 active:scale-95 transition"
+            ? "group peer w-10 h-10 sm:w-14 sm:h-14 rounded-lg bg-violet-500 flex justify-center items-center active:scale-95 transition"
+            : "group peer w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-slate-200 dark:bg-slate-500 flex justify-center items-center hover:rounded-lg hover:bg-violet-500 active:scale-95 transition"
         }
       >
         {item.icon}
       </button>
-      {hovered && <MenuTitle title={item.id} />}
+      <MenuTitle title={item.id} />
     </div>
   );
 };
@@ -165,7 +154,7 @@ const Menu = ({
 
   return (
     <div data-testid="menu" className="bg-slate-200 dark:bg-slate-800">
-      <ul className="flex justify-around lg:justify-center items-center flex-row lg:flex-col px-4 lg:px-0 my-0 lg:my-2">
+      <ul className="px-4 lg:px-0 py-0 lg:py-2 flex flex-row lg:flex-col justify-around lg:justify-center items-center">
         {menuItems.map((item, index) => (
           <li key={index} id={item.id} className="m-1 lg:m-2">
             <MenuItem

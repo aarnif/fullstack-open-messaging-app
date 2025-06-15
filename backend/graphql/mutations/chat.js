@@ -12,11 +12,18 @@ const typeDefs = `
     original: String
   }
 
+  input MessageInput {
+    type: String
+    content: String
+    image: ImageInput
+  }
+
   extend type Mutation {
     createChat(
       title: String
       description: String
       memberIds: [ID!]!
+      initialMessage: MessageInput!
     ): Chat
     addMessageToChat(
       chatId: ID!
@@ -123,6 +130,26 @@ const resolvers = {
         });
       }
 
+      const trimmedContent = args.initialMessage.content.trim();
+      let messageType = args.initialMessage.type || "message";
+
+      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
+        messageType = "singleEmoji";
+      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
+        messageType = "singleImage";
+      }
+
+      const initialMessageContent = {
+        type: messageType,
+        sender: context.currentUser.id,
+        content: trimmedContent,
+        image: args.initialMessage.image,
+        isReadBy: args.memberIds.map((memberId) => ({
+          member: memberId,
+          isRead: context.currentUser.id === memberId,
+        })),
+      };
+
       const newChat = new Chat({
         title: chatTitle,
         image: chatImage,
@@ -130,6 +157,7 @@ const resolvers = {
         isGroupChat,
         admin: context.currentUser.id,
         members: args.memberIds,
+        messages: [initialMessageContent],
       });
 
       try {
@@ -146,6 +174,18 @@ const resolvers = {
           .populate({
             path: "members",
             populate: { path: "blockedContacts" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
           });
 
         pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
@@ -342,6 +382,15 @@ const resolvers = {
           extensions: {
             code: "NOT_FOUND",
             invalidArgs: args.chatId,
+          },
+        });
+      }
+
+      if (!args.title || !args.title.trim().length) {
+        throw new GraphQLError("Group chat title cannot be empty", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: { title: args.title },
           },
         });
       }

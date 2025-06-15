@@ -183,7 +183,7 @@ const resolvers = {
 
       try {
         const user = await User.findByIdAndUpdate(
-          context.currentUser,
+          context.currentUser.id,
           {
             $addToSet: { contacts: { $each: args.userIds } },
           },
@@ -250,7 +250,7 @@ const resolvers = {
       }
 
       const updatedUser = await User.findByIdAndUpdate(
-        context.currentUser,
+        context.currentUser.id,
         {
           $set: { ...args, image: args.input },
         },
@@ -296,7 +296,7 @@ const resolvers = {
 
       try {
         const updatedUser = await User.findByIdAndUpdate(
-          context.currentUser,
+          context.currentUser.id,
           { $set: { settings: args } },
           {
             new: true,
@@ -304,7 +304,7 @@ const resolvers = {
           }
         );
 
-        return updatedUser;
+        return updatedUser.populate("blockedContacts");
       } catch (error) {
         throw new GraphQLError("Failed to update settings!", {
           extensions: {
@@ -369,7 +369,7 @@ const resolvers = {
           { new: true }
         );
 
-        return updatedUser;
+        return updatedUser.populate("blockedContacts");
       } catch (error) {
         throw new GraphQLError("Failed to change password!", {
           extensions: {

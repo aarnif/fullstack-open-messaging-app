@@ -3,9 +3,10 @@ import { describe, test, expect } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
-import ChatItem from "../components/Chats/ChatItem.jsx";
+import { ChatItem } from "../components/ui/ListMenu.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
+import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers.js";
 
 const { currentUserMock, findGroupChatByIdMock } = queryMocks;
 const { navigate } = mocks;
@@ -33,7 +34,7 @@ const renderChatItem = (
         <ChatItem
           index={0}
           user={userData}
-          item={chatData}
+          chat={chatData}
           activeChatOrContactId={activeChatOrContactId}
           setActiveChatOrContactId={mockSetActiveChatOrContactId}
         />
@@ -48,7 +49,7 @@ describe("<ChatItem />", () => {
     useNavigate.mockReturnValue(navigate);
   });
 
-  test("renders item with correct info", () => {
+  test("renders chat item with correct info", () => {
     renderChatItem();
 
     expect(
@@ -59,14 +60,14 @@ describe("<ChatItem />", () => {
     expect(screen.queryByText("No messages")).not.toBeInTheDocument();
   });
 
-  test("displays no messages if no messages exist", () => {
-    const emptyChatData = {
+  test("renders nothing when chat has no messages", () => {
+    const chatWithNoMessages = {
       ...mockChatData,
       messages: [],
     };
-    renderChatItem(emptyChatData);
 
-    expect(screen.queryByText("No messages")).toBeInTheDocument();
+    const { container } = renderChatItem(chatWithNoMessages);
+    expect(container.firstChild).toBeNull();
   });
 
   test("highlights active contact", () => {
@@ -92,5 +93,124 @@ describe("<ChatItem />", () => {
 
     expect(navigate).toHaveBeenCalledWith(`/chats/${mockChatData.id}`);
     expect(mockSetActiveChatOrContactId).toHaveBeenCalledWith(mockChatData.id);
+  });
+
+  test("do not display new messages count if count zero", () => {
+    renderChatItem();
+    expect(screen.queryByTestId("new-messages-count")).not.toBeInTheDocument();
+  });
+
+  test("displays new messages count if count greater than zero", () => {
+    const chatWithNewMessages = {
+      ...mockChatData,
+      messages: [
+        ...mockChatData.messages,
+        {
+          ...mockChatData.messages[0],
+          sender: { id: userData.id },
+          isReadBy: [{ isRead: false, member: { id: userData.id } }],
+        },
+      ],
+    };
+    renderChatItem(chatWithNewMessages);
+    expect(screen.queryByTestId("new-messages-count")).toBeInTheDocument();
+  });
+
+  test("displays notification message correctly", () => {
+    const chatWithNotification = {
+      ...mockChatData,
+      messages: [
+        {
+          ...mockChatData.messages[0],
+          type: "notification",
+          content: "User joined the chat",
+          sender: { id: "someone-else", name: "Someone Else" },
+        },
+      ],
+    };
+
+    renderChatItem(chatWithNotification);
+    expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
+      "User joined the chat"
+    );
+  });
+
+  test("displays text message from current user correctly", () => {
+    const message = "Hello world";
+    const chatWithMessage = {
+      ...mockChatData,
+      messages: [
+        {
+          ...mockChatData.messages[0],
+          type: "text",
+          content: message,
+          sender: { id: userData.id, name: userData.name },
+        },
+      ],
+    };
+
+    renderChatItem(chatWithMessage);
+    expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
+      `You: ${chatAndMessageHelpers.sliceLatestMessage(message)}`
+    );
+  });
+
+  test("displays text message from another user correctly", () => {
+    const message = "Hello there";
+    const senderName = "Jane Smith";
+    const chatWithMessage = {
+      ...mockChatData,
+      messages: [
+        {
+          ...mockChatData.messages[0],
+          type: "text",
+          content: message,
+          sender: { id: "another-user", name: senderName },
+        },
+      ],
+    };
+
+    renderChatItem(chatWithMessage);
+    expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
+      `${senderName}: ${chatAndMessageHelpers.sliceLatestMessage(message)}`
+    );
+  });
+
+  test("displays image message from current user correctly", () => {
+    const chatWithImage = {
+      ...mockChatData,
+      messages: [
+        {
+          ...mockChatData.messages[0],
+          type: "singleImage",
+          content: "image-url",
+          sender: { id: userData.id, name: userData.name },
+        },
+      ],
+    };
+
+    renderChatItem(chatWithImage);
+    expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
+      "You sent an image"
+    );
+  });
+
+  test("displays image message from another user correctly", () => {
+    const chatWithImage = {
+      ...mockChatData,
+      messages: [
+        {
+          ...mockChatData.messages[0],
+          type: "singleImage",
+          content: "image-url",
+          sender: { id: "other-user-id", name: "John Doe" },
+        },
+      ],
+    };
+
+    renderChatItem(chatWithImage);
+    expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
+      "John Doe sent an image"
+    );
   });
 });

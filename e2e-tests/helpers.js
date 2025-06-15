@@ -48,7 +48,7 @@ const createPrivateChat = async (page, contact) => {
   await page.getByTestId("new-chat-button").click();
   await page.getByTestId("new-private-chat-button").click();
   await page.getByTestId(`contact-${contact.username}`).click();
-  await page.getByTestId("start-new-private-chat-button").click();
+  await page.getByTestId("start-new-private-chat").click();
 };
 
 const createGroupChat = async (page, title, description, contacts) => {

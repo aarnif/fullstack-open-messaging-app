@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import ClickableImage from "../components/ClickableImage.jsx";
+import ClickableImage from "../components/ui/ClickableImage.jsx";
 
 describe("<ClickableImage />", () => {
   const testImageUrl = "https://example.com/test-image.jpg";

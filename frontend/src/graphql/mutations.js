@@ -30,11 +30,13 @@ export const CREATE_CHAT = gql`
     $title: String
     $description: String
     $memberIds: [ID!]!
+    $initialMessage: MessageInput!
   ) {
     createChat(
       title: $title
       description: $description
       memberIds: $memberIds
+      initialMessage: $initialMessage
     ) {
       ...ChatDetails
     }

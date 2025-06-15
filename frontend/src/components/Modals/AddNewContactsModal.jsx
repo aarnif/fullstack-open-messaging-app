@@ -2,8 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useQuery, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
-import { MdClose } from "react-icons/md";
-import { IoChevronForward } from "react-icons/io5";
+import { FaSearch } from "react-icons/fa";
 
 import {
   ALL_CONTACTS_EXCEPT_BY_USER,
@@ -12,14 +11,16 @@ import {
 import { ADD_CONTACTS } from "../../graphql/mutations";
 import useField from "../../hooks/useField";
 
-import Loading from "../Loading";
-import SearchBar from "../SearchBar";
-import SelectContactsList from "./SelectContactsList";
+import Button from "../ui/Button";
+import Title from "../ui/Title";
+import Input from "../ui/Input";
+import Loading from "../ui/Loading";
+import SelectContactsList from "../ui/SelectContactsList";
 
 import useNotifyMessage from "../../hooks/useNotifyMessage";
-import Notify from "../Notify";
+import Notify from "../ui/Notify";
 
-const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
+const AddNewContactsModal = ({ setShowAddNewContactsModal }) => {
   const notifyMessage = useNotifyMessage();
   const navigate = useNavigate();
 
@@ -77,7 +78,7 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
   return (
     <motion.div
       key={"Overlay"}
-      className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 transition"
+      className="fixed inset-0 flex justify-center items-end sm:items-center bg-black/50 z-10 transition"
       onClick={() => setShowAddNewContactsModal(false)}
       initial={{ width: "0vw", opacity: 0 }}
       animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
@@ -86,57 +87,57 @@ const AddNewContactsModal = ({ user, setShowAddNewContactsModal }) => {
       <motion.div
         key={"newContactModal"}
         data-testid="add-new-contacts-modal"
-        className="w-[500px] h-[600px] bg-white dark:bg-slate-800 rounded-xl text-slate-700 dark:text-slate-100 z-100"
+        className="w-full h-[90vh] sm:max-w-[500px] sm:max-h-[600px] bg-white dark:bg-slate-800 rounded-t-xl sm:rounded-xl"
         onClick={(e) => e.stopPropagation()}
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1, duration: 0.4 }}
         exit={{ y: -50, opacity: 0 }}
         transition={{ delay: 0.4, type: "tween" }}
       >
-        <div className="h-full flex-grow flex flex-col pt-4 px-4">
-          <div className="w-full flex justify-center items-center">
-            <button
-              data-testid="close-add-new-contacts-modal-button"
-              className="text-2xl text-slate-700"
+        <div className="p-4 h-full flex flex-col gap-4">
+          <div className="w-full flex justify-between items-center">
+            <Button
+              type="button"
+              variant="close"
+              testId="close-add-new-contacts-modal-button"
               onClick={() => setShowAddNewContactsModal(false)}
-            >
-              <MdClose className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
-            </button>
-            <h2 className="flex-grow text-2xl font-bold text-slate-700 dark:text-slate-100 text-center">
-              Add New Contacts
-            </h2>
-            <button
-              data-testid="add-new-contacts-button"
-              className="text-2xl text-slate-700"
-              onClick={handleAddNewContacts}
-            >
-              <IoChevronForward className="w-7 h-7 text-slate-700 dark:text-slate-100 fill-current" />
-            </button>
-          </div>
-          <>
-            <Notify notifyMessage={notifyMessage} />
-            <SearchBar
-              searchWord={searchWord}
-              dataTestId={"search-contacts-input"}
             />
-            {result.loading ? (
-              <Loading />
-            ) : (
-              <>
-                <div className="flex-grow w-full overflow-y-auto h-0">
-                  <SelectContactsList
-                    user={user}
-                    data={result.data.allContactsExceptByUser}
-                    chosenUserIds={chosenUserIds}
-                    setChosenUserIds={setChosenUserIds}
-                  />
-                </div>
-                <div className="w-full h-[40px] flex justify-center items-center bg-white dark:bg-slate-800 font-bold">
-                  {chosenUserIds.length} contacts selected
-                </div>
-              </>
-            )}
-          </>
+
+            <Title
+              variant="secondary"
+              testId="add-new-contacts-modal-title"
+              text="Add New Contacts"
+            />
+
+            <Button
+              type="button"
+              variant="forward"
+              testId="add-new-contacts-button"
+              onClick={handleAddNewContacts}
+            />
+          </div>
+          <Notify notifyMessage={notifyMessage} />
+          <Input
+            item={searchWord}
+            testId="search-contacts-input"
+            icon={
+              <FaSearch className="w-4 h-4 text-slate-800 dark:text-slate-100 fill-current" />
+            }
+          />
+          {result.loading ? (
+            <Loading />
+          ) : (
+            <div className="flex-grow w-full overflow-y-auto">
+              <SelectContactsList
+                data={result.data.allContactsExceptByUser}
+                chosenUserIds={chosenUserIds}
+                setChosenUserIds={setChosenUserIds}
+              />
+            </div>
+          )}
+          <p className="w-full font-bold text-center text-slate-700 dark:text-slate-100">
+            {chosenUserIds.length} contacts selected
+          </p>
         </div>
       </motion.div>
     </motion.div>

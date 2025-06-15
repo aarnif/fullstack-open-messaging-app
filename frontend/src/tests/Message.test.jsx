@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, test, expect, vi } from "vitest";
 
-import Message from "../components/Chat/Message.jsx";
+import { Message } from "../components/Chat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 
 const { currentUserMock, findGroupChatByIdMock } = queryMocks;

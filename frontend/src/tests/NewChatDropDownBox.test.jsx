@@ -6,15 +6,13 @@ import { vi } from "vitest";
 import NewChatDropDownBox from "../components/Modals/NewChatDropDownBox.jsx";
 
 const mockSetShowNewChatDropdownBox = vi.fn();
-const mockSetShowNewPrivateChatModal = vi.fn();
-const mockSetShowNewGroupChatModal = vi.fn();
+const mockSetNewChatModalType = vi.fn();
 
 const renderNewChatDropDownBox = () => {
   return render(
     <NewChatDropDownBox
       setShowNewChatDropdownBox={mockSetShowNewChatDropdownBox}
-      setShowNewPrivateChatModal={mockSetShowNewPrivateChatModal}
-      setShowNewGroupChatModal={mockSetShowNewGroupChatModal}
+      setNewChatModalType={mockSetNewChatModalType}
     />
   );
 };
@@ -39,7 +37,7 @@ describe("<NewChatDropDownBox />", () => {
     await user.click(screen.getByTestId("new-private-chat-button"));
 
     expect(mockSetShowNewChatDropdownBox).toHaveBeenCalledWith(false);
-    expect(mockSetShowNewPrivateChatModal).toHaveBeenCalledWith(true);
+    expect(mockSetNewChatModalType).toHaveBeenCalledWith("private");
   });
 
   test("clicking New Group Chat button calls correct functions", async () => {
@@ -49,6 +47,6 @@ describe("<NewChatDropDownBox />", () => {
     await user.click(screen.getByTestId("new-group-chat-button"));
 
     expect(mockSetShowNewChatDropdownBox).toHaveBeenCalledWith(false);
-    expect(mockSetShowNewGroupChatModal).toHaveBeenCalledWith(true);
+    expect(mockSetNewChatModalType).toHaveBeenCalledWith("group");
   });
 });

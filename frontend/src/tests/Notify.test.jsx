@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import Notify from "../components/Notify.jsx";
+import Notify from "../components/ui/Notify.jsx";
 import { describe, vi } from "vitest";
 
 describe("<Notify />", () => {
