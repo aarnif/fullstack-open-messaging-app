@@ -3,23 +3,22 @@ import { useQuery, useMutation } from "@apollo/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaSearch } from "react-icons/fa";
 
-import { ALL_CONTACTS_BY_USER } from "../../graphql/queries";
-import { EDIT_GROUP_CHAT } from "../../graphql/mutations";
-import imageService from "../../services/imageService";
-import useField from "../../hooks/useField";
-import ChatMembersList from "../ui/ChatMembersList";
-import useWindowDimensions from "../../hooks/useWindowDimensions";
-import useModal from "../../hooks/useModal";
-import useNotifyMessage from "../../hooks/useNotifyMessage";
-
-import Loading from "../ui/Loading";
-import SelectContactsList from "../ui/SelectContactsList";
-import ChangeImage from "../ui/ChangeImage";
-import Notify from "../ui/Notify";
-import Button from "../ui/Button";
-import Title from "../ui/Title";
-import Label from "../ui/Label";
-import Input from "../ui/Input";
+import { ALL_CONTACTS_BY_USER } from "../graphql/queries";
+import { EDIT_GROUP_CHAT } from "../graphql/mutations";
+import imageService from "../services/imageService";
+import useField from "../hooks/useField";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+import useModal from "../hooks/useModal";
+import useNotifyMessage from "../hooks/useNotifyMessage";
+import ChatMembersList from "./ui/ChatMembersList";
+import Loading from "./ui/Loading";
+import SelectContactsList from "./ui/SelectContactsList";
+import ChangeImage from "./ui/ChangeImage";
+import Notify from "./ui/Notify";
+import Button from "./ui/Button";
+import Title from "./ui/Title";
+import Label from "./ui/Label";
+import Input from "./ui/Input";
 
 export const UpdateMembersModal = ({
   chat,
@@ -115,12 +114,7 @@ export const UpdateMembersModal = ({
   );
 };
 
-const EditGroupChatModal = ({
-  user,
-  chat,
-  chatAdmin,
-  showEditGroupChatModal,
-}) => {
+const EditGroupChat = ({ user, chat, chatAdmin, showEditGroupChat }) => {
   const { modal } = useModal();
   const showNotifyMessage = useNotifyMessage();
 
@@ -152,7 +146,7 @@ const EditGroupChatModal = ({
   const goBack = (event) => {
     event.preventDefault();
     console.log("Go back to chat page!");
-    showEditGroupChatModal(false);
+    showEditGroupChat(false);
   };
 
   const handleSubmit = async () => {
@@ -195,7 +189,7 @@ const EditGroupChatModal = ({
     }
 
     setShowUpdateMembersModal(false);
-    showEditGroupChatModal(false);
+    showEditGroupChat(false);
   };
 
   const handleClickSubmit = (event) => {
@@ -307,4 +301,4 @@ const EditGroupChatModal = ({
   );
 };
 
-export default EditGroupChatModal;
+export default EditGroupChat;

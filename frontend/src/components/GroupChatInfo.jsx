@@ -7,14 +7,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { LEAVE_GROUP_CHATS } from "../graphql/mutations";
 import useModal from "../hooks/useModal";
 import ChatMembersList from "./ui/ChatMembersList";
-import EditGroupChatModal from "./Modals/EditGroupChatModal";
+import EditGroupChat from "./EditGroupChat";
 import ClickableImage from "./ui/ClickableImage";
 import Title from "./ui/Title";
 import Button from "./ui/Button";
 
 const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
   const { modal } = useModal();
-  const [showEditGroupChatModal, setShowEditGroupChatModal] = useState(false);
+  const [showEditGroupChat, setShowEditGroupChat] = useState(false);
   const navigate = useNavigate();
   const chatAdmin = chat.admin;
 
@@ -41,7 +41,7 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
   };
 
   const handleEditChat = () => {
-    setShowEditGroupChatModal(true);
+    setShowEditGroupChat(true);
     console.log("Handle edit chat.");
   };
 
@@ -112,12 +112,12 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
         </div>
       </div>
       <AnimatePresence>
-        {showEditGroupChatModal && (
-          <EditGroupChatModal
+        {showEditGroupChat && (
+          <EditGroupChat
             user={user}
             chat={chat}
             chatAdmin={chatAdmin}
-            showEditGroupChatModal={setShowEditGroupChatModal}
+            showEditGroupChatModal={setShowEditGroupChat}
           />
         )}
       </AnimatePresence>

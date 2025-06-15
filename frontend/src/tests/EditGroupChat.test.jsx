@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
-import EditGroupChatModal from "../components/Modals/EditGroupChatModal.jsx";
+import EditGroupChat from "../components/EditGroupChat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 
@@ -20,7 +20,7 @@ const userData = currentUserMock.result.data.me;
 const chatData = findGroupChatByIdMock.result.data.findChatById;
 
 const mockModal = vi.fn();
-const mockShowEditGroupChatModal = vi.fn();
+const mockShowEditGroupChat = vi.fn();
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -47,18 +47,18 @@ const renderComponent = (
   render(
     <MockedProvider mocks={mockDataArray}>
       <MemoryRouter>
-        <EditGroupChatModal
+        <EditGroupChat
           user={userData}
           chat={chatData}
           chatAdmin={userData}
-          showEditGroupChatModal={mockShowEditGroupChatModal}
+          showEditGroupChat={mockShowEditGroupChat}
         />
       </MemoryRouter>
     </MockedProvider>
   );
 };
 
-describe("<EditGroupChatModal />", () => {
+describe("<EditGroupChat />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useNavigate.mockReturnValue(navigate);
@@ -94,7 +94,7 @@ describe("<EditGroupChatModal />", () => {
 
     await user.click(screen.getByTestId("close-edit-group-chat-modal-button"));
 
-    expect(mockShowEditGroupChatModal).toHaveBeenCalledWith(false);
+    expect(mockShowEditGroupChat).toHaveBeenCalledWith(false);
   });
 
   test("shows error message if chat title is empty", async () => {
