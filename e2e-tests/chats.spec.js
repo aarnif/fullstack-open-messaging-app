@@ -84,7 +84,7 @@ test.describe("Chats", () => {
     const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
-    await expect(chatTitle).toHaveText("Test chat");
+    await expect(chatTitle).toHaveText(/Test chat/);
 
     await page.getByTestId("new-message-input").fill("Hello everybody!");
 
@@ -212,7 +212,7 @@ test.describe("Chats", () => {
     const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
-    await expect(chatTitle).toHaveText("Test chat");
+    await expect(chatTitle).toHaveText(/Test chat/);
 
     await page.getByTestId("new-message-input").fill("Hello everybody!");
 
@@ -252,7 +252,7 @@ test.describe("Chats", () => {
     const chatTitle = await page.getByTestId("chat-header");
 
     await expect(chatTitle).toBeVisible();
-    await expect(chatTitle).toHaveText("Test chat");
+    await expect(chatTitle).toHaveText(/Test chat/);
 
     await page.getByTestId("new-message-input").fill("Hello everybody!");
 

@@ -188,8 +188,14 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
       title: groupChatTitle.value.trim(),
       description: groupChatDescription.value.trim(),
       members: [user, ...chosenContacts],
-      image: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+      isGroupChat: true,
+      image: {
+        thumbnail: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
+        original: "https://i.ibb.co/FqHrScZ/chat-placeholder.png",
+      },
     };
+
+    console.log("New group chat info:", newGroupChatInfo);
 
     navigateToNewChatView(newGroupChatInfo);
   };

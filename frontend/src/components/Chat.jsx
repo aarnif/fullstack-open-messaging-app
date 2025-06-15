@@ -59,6 +59,8 @@ export const ChatHeader = ({
     }
   };
 
+  console.log("Chat header rendered with chat:", chat);
+
   const chatMembersString = chatAndMessageHelpers.sliceLatestMessage(
     chatAndMessageHelpers
       .sortChatMembersByNameAndUsername([...chat.members])
