@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import queryMocks from "./mocks/queryMocks.js";
-import NewMessageBox from "../components/NewMessageBox";
+import { NewMessageBox } from "../components/Chat.jsx";
 import { MockedIntersectionObserver } from "jsdom-testing-mocks";
 
 const { currentUserMock } = queryMocks;

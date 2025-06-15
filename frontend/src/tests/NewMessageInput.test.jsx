@@ -6,7 +6,7 @@ import { ApolloError } from "@apollo/client";
 import { MemoryRouter, useNavigate } from "react-router";
 
 import ModalProvider from "../components/ModalProvider.jsx";
-import NewMessageInput from "../components/ui/NewMessageInput.jsx";
+import { NewMessageInput } from "../components/Chat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
