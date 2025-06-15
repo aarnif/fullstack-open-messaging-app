@@ -13,9 +13,8 @@ import SignUp from "./components/SignUp";
 import Title from "./components/ui/Title";
 import ListMenu from "./components/ui/ListMenu";
 
-import Chats from "./components/Chats";
+import ListPage from "./components/ListPage";
 import Chat from "./components/Chat";
-import Contacts from "./components/Contacts";
 import Contact from "./components/Contact";
 import Profile from "./components/Profile";
 import Settings from "./components/Settings";
@@ -126,8 +125,8 @@ const App = () => {
                     <Route
                       path="/chats"
                       element={
-                        <Chats
-                          user={data?.me}
+                        <ListPage
+                          type="chats"
                           menuComponent={
                             <ListMenu
                               user={data?.me}
@@ -187,7 +186,8 @@ const App = () => {
                     <Route
                       path="/contacts"
                       element={
-                        <Contacts
+                        <ListPage
+                          type="contacts"
                           menuComponent={
                             <ListMenu
                               user={data?.me}
