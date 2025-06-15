@@ -2,18 +2,18 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { motion } from "framer-motion";
 
-import { EDIT_PROFILE } from "../../graphql/mutations";
-import imageService from "../../services/imageService";
-import ChangeImage from "../ui/ChangeImage";
-import useField from "../../hooks/useField";
-import useModal from "../../hooks/useModal";
+import { EDIT_PROFILE } from "../graphql/mutations";
+import imageService from "../services/imageService";
+import ChangeImage from "./ui/ChangeImage";
+import useField from "../hooks/useField";
+import useModal from "../hooks/useModal";
 
-import Button from "../ui/Button";
-import Title from "../ui/Title";
-import Label from "../ui/Label";
-import Input from "../ui/Input";
+import Button from "./ui/Button";
+import Title from "./ui/Title";
+import Label from "./ui/Label";
+import Input from "./ui/Input";
 
-const EditProfileModal = ({ user, setShowEditProfileModal }) => {
+const EditProfile = ({ user, setShowEditProfile }) => {
   const { modal } = useModal();
   const [base64Image, setBase64Image] = useState(null);
   const name = useField("text", "Enter profile name...", user.name);
@@ -32,7 +32,7 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
   const goBack = (event) => {
     event.preventDefault();
     console.log("Go back to profile page!");
-    setShowEditProfileModal(false);
+    setShowEditProfile(false);
   };
 
   const handleSubmit = async () => {
@@ -72,7 +72,7 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
       console.log(error);
     }
 
-    setShowEditProfileModal(false);
+    setShowEditProfile(false);
   };
 
   const handleClickSubmit = (event) => {
@@ -156,4 +156,4 @@ const EditProfileModal = ({ user, setShowEditProfileModal }) => {
   );
 };
 
-export default EditProfileModal;
+export default EditProfile;

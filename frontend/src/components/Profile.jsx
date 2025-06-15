@@ -2,11 +2,11 @@ import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 
 import IndividualContactCard from "./ui/IndividualContactCard";
-import EditProfileModal from "./Modals/EditProfileModal";
+import EditProfile from "./EditProfile";
 import Button from "./ui/Button";
 
 const Profile = ({ user, menuComponent }) => {
-  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
 
   return (
     <div
@@ -22,16 +22,13 @@ const Profile = ({ user, menuComponent }) => {
             type="button"
             variant="edit-profile"
             testId="edit-profile-button"
-            onClick={() => setShowEditProfileModal(true)}
+            onClick={() => setShowEditProfile(true)}
           />
         </div>
         <IndividualContactCard user={user} contact={user} />
         <AnimatePresence>
-          {showEditProfileModal && (
-            <EditProfileModal
-              user={user}
-              setShowEditProfileModal={setShowEditProfileModal}
-            />
+          {showEditProfile && (
+            <EditProfile user={user} setShowEditProfile={setShowEditProfile} />
           )}
         </AnimatePresence>
       </div>

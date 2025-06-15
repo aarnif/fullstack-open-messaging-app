@@ -4,7 +4,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 import ModalProvider from "../components/ModalProvider.jsx";
-import EditProfileModal from "../components/Modals/EditProfileModal.jsx";
+import EditProfile from "../components/EditProfile.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
@@ -16,7 +16,7 @@ const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
 
-const mockSetShowEditProfileModal = vi.fn();
+const mockSetShowEditProfile = vi.fn();
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -31,9 +31,9 @@ const renderComponent = (mockData = [currentUserMock, editProfileMock]) => {
     <MockedProvider mocks={mockData}>
       <MemoryRouter>
         <ModalProvider>
-          <EditProfileModal
+          <EditProfile
             user={userData}
-            setShowEditProfileModal={mockSetShowEditProfileModal}
+            setShowEditProfile={mockSetShowEditProfile}
           />
         </ModalProvider>
       </MemoryRouter>
@@ -41,7 +41,7 @@ const renderComponent = (mockData = [currentUserMock, editProfileMock]) => {
   );
 };
 
-describe("<EditProfileModal />", () => {
+describe("<EditProfile />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useNavigate.mockReturnValue(navigate);
@@ -96,7 +96,7 @@ describe("<EditProfileModal />", () => {
     await user.click(screen.getByTestId("confirm-button"));
 
     await waitFor(() => {
-      expect(mockSetShowEditProfileModal).toHaveBeenCalledWith(false);
+      expect(mockSetShowEditProfile).toHaveBeenCalledWith(false);
     });
   });
 
@@ -134,7 +134,7 @@ describe("<EditProfileModal />", () => {
     await user.click(screen.getByTestId("confirm-button"));
 
     await waitFor(() => {
-      expect(mockSetShowEditProfileModal).toHaveBeenCalledWith(false);
+      expect(mockSetShowEditProfile).toHaveBeenCalledWith(false);
     });
   });
 
@@ -154,6 +154,6 @@ describe("<EditProfileModal />", () => {
     expect(
       screen.getByText("Profile name cannot be empty!")
     ).toBeInTheDocument();
-    expect(mockSetShowEditProfileModal).not.toHaveBeenCalled();
+    expect(mockSetShowEditProfile).not.toHaveBeenCalled();
   });
 });
