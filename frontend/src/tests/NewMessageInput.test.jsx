@@ -70,137 +70,75 @@ describe("<NewMessageInput />", () => {
     localStorage.setItem("new-chat-info", JSON.stringify(mockNewChatInfo));
   });
 
-  test("handles send message", async () => {
-    const user = userEvent.setup();
-    renderComponent(
-      [currentUserMock, findGroupChatByIdMock, addMessageToChatMock],
-      chatId
-    );
+  const renderNewChatComponent = (
+    mockData = [findNewChatByMembersMock, createNewChatMock]
+  ) => {
+    return renderComponent(mockData, null, mockNewChatInfo);
+  };
 
-    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
+  const renderExistingChatComponent = (
+    mockData = [currentUserMock, findGroupChatByIdMock, addMessageToChatMock]
+  ) => {
+    return renderComponent(mockData, chatId);
+  };
+
+  const typeMessageAndSend = async (user, message = TEST_MESSAGE) => {
+    await user.type(screen.getByTestId("new-message-input"), message);
     await user.click(screen.getByTestId("send-new-message-button"));
+  };
 
-    expect(screen.getByTestId("new-message-input")).toHaveValue("");
-  });
-
-  test("handles send message with image", async () => {
-    const user = userEvent.setup();
-    const addMessageWithImageMock = {
-      request: {
-        query: addMessageToChatMock.request.query,
-        variables: {
-          ...addMessageToChatMock.request.variables,
-          input: { thumbnail: "thumb_url", original: "original_url" },
-        },
-      },
-      result: {
-        data: {
-          addMessageToChat: {
-            ...addMessageToChatMock.result.data.addMessageToChat,
-            image: {
-              thumbnail: { url: "thumb_url" },
-              original: { url: "original_url" },
-            },
-          },
-        },
-      },
-    };
-    renderComponent(
-      [currentUserMock, findGroupChatByIdMock, addMessageWithImageMock],
-      chatId
-    );
-
+  const uploadImageAndSend = async (user, message = TEST_MESSAGE) => {
     const file = new File(["test"], "test.png", { type: "image/png" });
     await user.upload(screen.getByTestId("image-input"), file);
-    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
+    await user.type(screen.getByTestId("new-message-input"), message);
     await user.click(screen.getByTestId("send-new-message-button"));
+  };
 
-    expect(screen.getByTestId("new-message-input")).toHaveValue("");
-  });
-
-  test("display error message if sending message fails", async () => {
-    const user = userEvent.setup();
-    const error = new ApolloError({
-      graphQLErrors: [{ message: "Failed to add message to chat" }],
-    });
-    const errorMock = {
-      request: {
-        query: addMessageToChatMock.request.query,
-        variables: addMessageToChatMock.request.variables,
-      },
-      error,
-    };
-
-    renderComponent(
-      [currentUserMock, findGroupChatByIdMock, errorMock],
-      chatId
-    );
-
-    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
+  const sendEmptyMessage = async (user) => {
     await user.click(screen.getByTestId("send-new-message-button"));
+  };
 
-    expect(screen.getByTestId("alert-modal")).toBeInTheDocument();
-    expect(
-      screen.getByText("Failed to add message to chat")
-    ).toBeInTheDocument();
-  });
-
-  test("handles create chat with first text message", async () => {
-    const user = userEvent.setup();
-
-    renderComponent(
-      [findNewChatByMembersMock, createNewChatMock],
-      null,
-      mockNewChatInfo
-    );
-    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
-    await user.click(screen.getByTestId("send-new-message-button"));
-
-    expect(navigate).toHaveBeenCalledWith(
-      `/chats/${createNewChatMock.result.data.createChat.id}`
-    );
-  });
-
-  test("handles create chat with first image message", async () => {
-    const user = userEvent.setup();
-
-    renderComponent(
-      [findNewChatByMembersMock, createNewChatMock],
-      null,
-      mockNewChatInfo
-    );
-
+  const uploadImageOnly = async (user) => {
     const file = new File(["test"], "test.png", { type: "image/png" });
     await user.upload(screen.getByTestId("image-input"), file);
-    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
     await user.click(screen.getByTestId("send-new-message-button"));
+  };
 
-    expect(navigate).toHaveBeenCalledWith(
-      `/chats/${createNewChatMock.result.data.createChat.id}`
-    );
-  });
-
-  test("prevents sending empty message", async () => {
-    const user = userEvent.setup();
+  test("renders component", async () => {
     renderComponent();
-
-    await user.click(screen.getByTestId("send-new-message-button"));
-
-    expect(navigate).not.toHaveBeenCalled();
+    expect(screen.getByTestId("new-message-input")).toBeInTheDocument();
   });
 
-  test("handles image-only message", async () => {
+  test("creates chat with text message", async () => {
     const user = userEvent.setup();
+    renderNewChatComponent();
 
-    renderComponent(
-      [findNewChatByMembersMock, createNewChatWithImageOnlyMock],
-      null,
-      mockNewChatInfo
+    await typeMessageAndSend(user);
+
+    expect(navigate).toHaveBeenCalledWith(
+      `/chats/${createNewChatMock.result.data.createChat.id}`
     );
+  });
 
-    const file = new File(["test"], "test.png", { type: "image/png" });
-    await user.upload(screen.getByTestId("image-input"), file);
-    await user.click(screen.getByTestId("send-new-message-button"));
+  test("creates chat with image and text", async () => {
+    const user = userEvent.setup();
+    renderNewChatComponent();
+
+    await uploadImageAndSend(user);
+
+    expect(navigate).toHaveBeenCalledWith(
+      `/chats/${createNewChatMock.result.data.createChat.id}`
+    );
+  });
+
+  test("creates chat with image only", async () => {
+    const user = userEvent.setup();
+    renderNewChatComponent([
+      findNewChatByMembersMock,
+      createNewChatWithImageOnlyMock,
+    ]);
+
+    await uploadImageOnly(user);
 
     expect(navigate).toHaveBeenCalledWith(
       `/chats/${createNewChatWithImageOnlyMock.result.data.createChat.id}`
@@ -209,25 +147,78 @@ describe("<NewMessageInput />", () => {
 
   test("handles error during chat creation", async () => {
     const user = userEvent.setup();
-    const error = new ApolloError({
-      graphQLErrors: [{ message: "Failed to create chat" }],
-    });
-    const createNewChatErrorMock = {
-      request: {
-        query: createNewChatMock.request.query,
-        variables: createNewChatMock.request.variables,
-      },
-      error,
+    const errorMock = {
+      request: createNewChatMock.request,
+      error: new ApolloError({
+        graphQLErrors: [{ message: "Failed to create chat" }],
+      }),
     };
 
-    renderComponent(
-      [findNewChatByMembersMock, createNewChatErrorMock],
-      null,
-      mockNewChatInfo
-    );
+    renderNewChatComponent([findNewChatByMembersMock, errorMock]);
+    await typeMessageAndSend(user);
 
-    await user.type(screen.getByTestId("new-message-input"), TEST_MESSAGE);
-    await user.click(screen.getByTestId("send-new-message-button"));
+    expect(navigate).not.toHaveBeenCalled();
+  });
+
+  test("sends text message to existing chat", async () => {
+    const user = userEvent.setup();
+    renderExistingChatComponent();
+
+    await typeMessageAndSend(user);
+
+    expect(screen.getByTestId("new-message-input")).toHaveValue("");
+  });
+
+  test("sends message with image to existing chat", async () => {
+    const user = userEvent.setup();
+    const mockWithImage = {
+      request: {
+        ...addMessageToChatMock.request,
+        variables: {
+          ...addMessageToChatMock.request.variables,
+          input: { thumbnail: "thumb_url", original: "original_url" },
+        },
+      },
+      result: addMessageToChatMock.result,
+    };
+
+    renderExistingChatComponent([
+      currentUserMock,
+      findGroupChatByIdMock,
+      mockWithImage,
+    ]);
+    await uploadImageAndSend(user);
+
+    expect(screen.getByTestId("new-message-input")).toHaveValue("");
+  });
+
+  test("displays error when message sending fails", async () => {
+    const user = userEvent.setup();
+    const errorMock = {
+      request: addMessageToChatMock.request,
+      error: new ApolloError({
+        graphQLErrors: [{ message: "Failed to add message to chat" }],
+      }),
+    };
+
+    renderExistingChatComponent([
+      currentUserMock,
+      findGroupChatByIdMock,
+      errorMock,
+    ]);
+    await typeMessageAndSend(user);
+
+    expect(screen.getByTestId("alert-modal")).toBeInTheDocument();
+    expect(
+      screen.getByText("Failed to add message to chat")
+    ).toBeInTheDocument();
+  });
+
+  test("prevents sending empty message", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+
+    await sendEmptyMessage(user);
 
     expect(navigate).not.toHaveBeenCalled();
   });
