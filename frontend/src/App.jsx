@@ -19,7 +19,7 @@ import Contact from "./components/Contact";
 import Profile from "./components/Profile";
 import Settings from "./components/Settings";
 
-import NewChatDropDownBox from "./components/Modals/NewChatDropDownBox";
+import NewChatDropDownBox from "./components/NewChatDropDownBox";
 import NewChatModal from "./components/Modals/NewChatModal";
 import AddNewContactsModal from "./components/Modals/AddNewContactsModal";
 
