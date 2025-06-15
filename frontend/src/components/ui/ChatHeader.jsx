@@ -5,7 +5,12 @@ import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 import Button from "./Button";
 import Title from "./Title";
 
-const ChatHeader = ({ user, chat, setShowGroupChatInfoModal }) => {
+const ChatHeader = ({
+  user,
+  chat,
+  setShowGroupChatInfoModal,
+  isNewChat = false,
+}) => {
   const navigate = useNavigate();
 
   const goBack = () => {
@@ -53,6 +58,7 @@ const ChatHeader = ({ user, chat, setShowGroupChatInfoModal }) => {
         data-testid="chat-info-button"
         onClick={getInfo}
         className="flex justify-center items-center"
+        disabled={isNewChat}
       >
         <div className="flex justify-center items-center gap-4">
           <img

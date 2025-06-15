@@ -1,9 +1,10 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { describe, test, expect, vi } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
-import { MemoryRouter, useNavigate, useMatch } from "react-router";
+import { MemoryRouter, useNavigate, useMatch, useLocation } from "react-router";
 import userEvent from "@testing-library/user-event";
 
+import ModalProvider from "../components/ModalProvider.jsx";
 import Chat from "../components/Chat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
@@ -15,6 +16,8 @@ const { currentUserMock, findGroupChatByIdMock, findPrivateChatByIdMock } =
 const {
   markAllMessagesInGroupChatReadMock,
   markAllMessagesInPrivateChatReadMock,
+  createNewChatMock,
+  mockNewChatInfo,
 } = mutationMocks;
 
 const { navigate } = mocks;
@@ -23,7 +26,7 @@ const userData = currentUserMock.result.data.me;
 
 const mockSetActiveMenuItem = vi.fn();
 const mockSetActiveChatOrContactId = vi.fn();
-const mockModal = vi.fn();
+
 const groupChatMatch = findGroupChatByIdMock.request.variables.chatId;
 const privateChatMatch = findPrivateChatByIdMock.request.variables.chatId;
 
@@ -35,27 +38,45 @@ vi.mock("react-router", async () => {
     ...actual,
     useNavigate: vi.fn(),
     useMatch: vi.fn(),
+    useLocation: vi.fn(),
   };
 });
 
-vi.mock("../hooks/useModal", () => ({
-  default: () => ({
-    modal: mockModal,
-  }),
-}));
+Object.defineProperty(global, "localStorage", { value: localStorage });
 
-const renderComponent = (
+const renderExistingChatComponent = (
   mockData = [findGroupChatByIdMock, markAllMessagesInGroupChatReadMock]
 ) => {
+  useLocation.mockReturnValue({ pathname: "/chats/1" });
   render(
     <MockedProvider mocks={mockData} addTypename={false}>
       <MemoryRouter>
-        <Chat
-          user={userData}
-          setActiveMenuItem={mockSetActiveMenuItem}
-          setActiveChatOrContactId={mockSetActiveChatOrContactId}
-          menuComponent={<></>}
-        />
+        <ModalProvider>
+          <Chat
+            user={userData}
+            setActiveMenuItem={mockSetActiveMenuItem}
+            setActiveChatOrContactId={mockSetActiveChatOrContactId}
+            menuComponent={<></>}
+          />
+        </ModalProvider>
+      </MemoryRouter>
+    </MockedProvider>
+  );
+};
+
+const renderNewChatComponent = (mockData = [createNewChatMock]) => {
+  useLocation.mockReturnValue({ pathname: "/chats/new" });
+  render(
+    <MockedProvider mocks={mockData}>
+      <MemoryRouter>
+        <ModalProvider>
+          <Chat
+            user={userData}
+            setActiveMenuItem={mockSetActiveMenuItem}
+            setActiveChatOrContactId={mockSetActiveChatOrContactId}
+            menuComponent={<></>}
+          />
+        </ModalProvider>
       </MemoryRouter>
     </MockedProvider>
   );
@@ -65,20 +86,32 @@ describe("<Chat />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useNavigate.mockReturnValue(navigate);
+    localStorage.setItem("new-chat-info", JSON.stringify(mockNewChatInfo));
+  });
+
+  test("renders new chat page", async () => {
+    renderNewChatComponent();
+
+    expect(screen.getByTestId("new-chat-page")).toBeInTheDocument();
+  });
+
+  test("renders existing chat component with loading state", () => {
     useMatch.mockReturnValue({
       params: { chatId: groupChatMatch },
     });
-  });
 
-  test("renders component with loading state", () => {
-    renderComponent();
+    renderExistingChatComponent();
 
     expect(screen.getByTestId("chat-page")).toBeInTheDocument();
     expect(screen.getByTestId("loading")).toBeInTheDocument();
   });
 
-  test("renders component with chat info after loading", async () => {
-    renderComponent();
+  test("renders existing chat component with chat info after loading", async () => {
+    useMatch.mockReturnValue({
+      params: { chatId: groupChatMatch },
+    });
+
+    renderExistingChatComponent();
 
     expect(screen.getByTestId("chat-page")).toBeInTheDocument();
 
@@ -88,6 +121,10 @@ describe("<Chat />", () => {
   });
 
   test("renders error if chat not found", async () => {
+    useMatch.mockReturnValue({
+      params: { chatId: groupChatMatch },
+    });
+
     const findChatByIdMockError = {
       ...findGroupChatByIdMock,
       result: {
@@ -95,7 +132,7 @@ describe("<Chat />", () => {
         data: { findChatById: null },
       },
     };
-    renderComponent([
+    renderExistingChatComponent([
       findChatByIdMockError,
       markAllMessagesInGroupChatReadMock,
     ]);
@@ -108,7 +145,11 @@ describe("<Chat />", () => {
   });
 
   test("click display group chat info modal works", async () => {
-    renderComponent();
+    useMatch.mockReturnValue({
+      params: { chatId: groupChatMatch },
+    });
+
+    renderExistingChatComponent();
 
     await waitFor(() => {
       expect(screen.getByTestId("chat-header")).toBeInTheDocument();
@@ -131,7 +172,7 @@ describe("<Chat />", () => {
         (member) => member.id !== userData.id
       );
 
-    renderComponent([
+    renderExistingChatComponent([
       findPrivateChatByIdMock,
       markAllMessagesInPrivateChatReadMock,
     ]);

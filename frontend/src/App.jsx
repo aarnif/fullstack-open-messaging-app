@@ -15,7 +15,6 @@ import ListMenu from "./components/ui/ListMenu";
 
 import Chats from "./components/Chats";
 import Chat from "./components/Chat";
-import NewChat from "./components/NewChat";
 import Contacts from "./components/Contacts";
 import Contact from "./components/Contact";
 import Profile from "./components/Profile";
@@ -167,9 +166,10 @@ const App = () => {
                     <Route
                       path="/chats/new"
                       element={
-                        <NewChat
+                        <Chat
                           user={data?.me}
                           setActiveMenuItem={setActiveMenuItem}
+                          setActiveChatOrContactId={setActiveChatOrContactId}
                           menuComponent={
                             <ListMenu
                               user={data?.me}

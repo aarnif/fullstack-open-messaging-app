@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, Fragment } from "react";
 import { useQuery, useMutation } from "@apollo/client";
-import { useMatch } from "react-router";
+import { useMatch, useLocation } from "react-router";
 import { AnimatePresence } from "framer-motion";
 
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
@@ -149,14 +149,14 @@ export const Messages = ({ user, messages }) => {
   );
 };
 
-const Chat = ({
+const ExistingChatContent = ({
   user,
   setActiveMenuItem,
   setActiveChatOrContactId,
-  menuComponent,
 }) => {
   const [showGroupChatInfoModal, setShowGroupChatInfoModal] = useState(false);
   const match = useMatch("/chats/:chatId").params;
+
   const { data, loading } = useQuery(FIND_CHAT_BY_ID, {
     variables: {
       chatId: match.chatId,
@@ -185,43 +185,91 @@ const Chat = ({
     setActiveMenuItem,
   ]);
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (!data?.findChatById) {
+    return <ChatNotFound />;
+  }
+
   return (
-    <div data-testid="chat-page" className="flex-grow flex">
+    <>
+      <ChatHeader
+        user={user}
+        chat={data.findChatById}
+        setShowGroupChatInfoModal={setShowGroupChatInfoModal}
+      />
+      <Messages
+        user={user}
+        messages={[...(data?.findChatById.messages || [])].reverse()}
+      />
+      <NewMessageInput user={user} chatId={match.chatId} newChatInfo={null} />
+      <AnimatePresence>
+        {showGroupChatInfoModal && (
+          <GroupChatInfoModal
+            user={user}
+            chat={data.findChatById}
+            setShowGroupChatInfoModal={setShowGroupChatInfoModal}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+const NewChatContent = ({ user, setActiveMenuItem, isNewChat }) => {
+  const newChatInfo = JSON.parse(localStorage.getItem("new-chat-info"));
+
+  useEffect(() => {
+    setActiveMenuItem("chats");
+  }, [setActiveMenuItem]);
+
+  return (
+    <>
+      <ChatHeader
+        user={user}
+        chat={newChatInfo}
+        setShowGroupChatInfoModal={null}
+        isNewChat={isNewChat}
+      />
+      <Messages user={user} messages={[]} />
+      <NewMessageInput user={user} chatId={null} newChatInfo={newChatInfo} />
+    </>
+  );
+};
+
+const Chat = ({
+  user,
+  setActiveMenuItem,
+  setActiveChatOrContactId,
+  menuComponent,
+}) => {
+  const location = useLocation();
+  const isNewChat = location.pathname === "/chats/new";
+
+  return (
+    <div
+      data-testid={isNewChat ? "new-chat-page" : "chat-page"}
+      className="flex-grow flex"
+    >
       <div className="hidden flex-grow lg:max-w-[450px] lg:flex">
         {menuComponent}
       </div>
       <div className="relative flex-grow flex flex-col justify-start items-start">
-        {loading ? (
-          <Loading />
-        ) : data?.findChatById ? (
-          <>
-            <ChatHeader
-              user={user}
-              chat={data.findChatById}
-              setShowGroupChatInfoModal={setShowGroupChatInfoModal}
-            />
-            <Messages
-              user={user}
-              messages={[...(data?.findChatById.messages || [])].reverse()}
-            />
-            <NewMessageInput
-              user={user}
-              chatId={match.chatId}
-              newChatInfo={null}
-            />
-          </>
+        {isNewChat ? (
+          <NewChatContent
+            user={user}
+            setActiveMenuItem={setActiveMenuItem}
+            isNewChat={isNewChat}
+          />
         ) : (
-          <ChatNotFound />
+          <ExistingChatContent
+            user={user}
+            setActiveMenuItem={setActiveMenuItem}
+            setActiveChatOrContactId={setActiveChatOrContactId}
+          />
         )}
-        <AnimatePresence>
-          {showGroupChatInfoModal && (
-            <GroupChatInfoModal
-              user={user}
-              chat={data.findChatById}
-              setShowGroupChatInfoModal={setShowGroupChatInfoModal}
-            />
-          )}
-        </AnimatePresence>
       </div>
     </div>
   );
