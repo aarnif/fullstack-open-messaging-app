@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import Button from "../ui/Button";
+import Button from "./ui/Button";
 
 const DropDownMenuItem = ({ menuItem }) => {
   return (
@@ -40,10 +40,12 @@ const NewChatDropDownBox = ({
   ];
 
   return (
-    <div
+    <motion.div
       key={"Overlay"}
-      className="fixed inset-0 flex justify-center items-center z-10"
+      className="fixed inset-0 flex justify-center items-end sm:items-center bg-black/50 z-10 transition"
       onClick={() => setShowNewChatDropdownBox(false)}
+      initial={{ width: "0vw", opacity: 0 }}
+      animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
     >
       <motion.div
         data-testid="new-chat-dropdown-box"
@@ -59,7 +61,7 @@ const NewChatDropDownBox = ({
           ))}
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

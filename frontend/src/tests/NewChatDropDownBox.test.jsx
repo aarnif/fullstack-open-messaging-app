@@ -3,7 +3,7 @@ import { describe, test, expect } from "vitest";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
 
-import NewChatDropDownBox from "../components/Modals/NewChatDropDownBox.jsx";
+import NewChatDropDownBox from "../components/NewChatDropDownBox.jsx";
 
 const mockSetShowNewChatDropdownBox = vi.fn();
 const mockSetNewChatModalType = vi.fn();
