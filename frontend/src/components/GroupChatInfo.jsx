@@ -117,7 +117,7 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
             user={user}
             chat={chat}
             chatAdmin={chatAdmin}
-            showEditGroupChatModal={showEditGroupChat}
+            setShowEditGroupChat={setShowEditGroupChat}
           />
         )}
       </AnimatePresence>

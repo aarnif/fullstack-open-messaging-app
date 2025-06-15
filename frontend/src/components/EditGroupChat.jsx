@@ -114,7 +114,7 @@ export const UpdateMembersModal = ({
   );
 };
 
-const EditGroupChat = ({ user, chat, chatAdmin, showEditGroupChat }) => {
+const EditGroupChat = ({ user, chat, chatAdmin, setShowEditGroupChat }) => {
   const { modal } = useModal();
   const showNotifyMessage = useNotifyMessage();
 
@@ -146,7 +146,7 @@ const EditGroupChat = ({ user, chat, chatAdmin, showEditGroupChat }) => {
   const goBack = (event) => {
     event.preventDefault();
     console.log("Go back to chat page!");
-    showEditGroupChat(false);
+    setShowEditGroupChat(false);
   };
 
   const handleSubmit = async () => {
@@ -189,7 +189,7 @@ const EditGroupChat = ({ user, chat, chatAdmin, showEditGroupChat }) => {
     }
 
     setShowUpdateMembersModal(false);
-    showEditGroupChat(false);
+    setShowEditGroupChat(false);
   };
 
   const handleClickSubmit = (event) => {

@@ -37,7 +37,7 @@ const ChatNotFound = () => (
 export const ChatHeader = ({
   user,
   chat,
-  setShowGroupChatInfoModal,
+  setShowGroupChatInfo,
   isNewChat = false,
 }) => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export const ChatHeader = ({
   const getInfo = () => {
     if (chat.isGroupChat) {
       console.log("Clicked group chat info!");
-      setShowGroupChatInfoModal(true);
+      setShowGroupChatInfo(true);
     } else {
       console.log("Clicked private chat info!");
       const anotherPrivateChatMember = chat.members.find(
@@ -506,7 +506,7 @@ const ExistingChatContent = ({
       <ChatHeader
         user={user}
         chat={data.findChatById}
-        setShowGroupChatInfoModal={setShowGroupChatInfo}
+        setShowGroupChatInfo={setShowGroupChatInfo}
       />
       <Messages
         user={user}
@@ -518,7 +518,7 @@ const ExistingChatContent = ({
           <GroupChatInfo
             user={user}
             chat={data.findChatById}
-            setShowGroupChatInfoModal={setShowGroupChatInfo}
+            setShowGroupChatInfo={setShowGroupChatInfo}
           />
         )}
       </AnimatePresence>

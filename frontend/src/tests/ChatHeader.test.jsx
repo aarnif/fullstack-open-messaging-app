@@ -16,7 +16,7 @@ const mockUserData = currentUserMock.result.data.me;
 const mockGroupChatData = findGroupChatByIdMock.result.data.findChatById;
 const mockPrivateChatData = findPrivateChatByIdMock.result.data.findChatById;
 
-const mockSetShowGroupChatInfoModal = vi.fn();
+const mockSetShowGroupChatInfo = vi.fn();
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -33,7 +33,7 @@ const renderChatHeader = (mockChatData = mockGroupChatData) => {
         <ChatHeader
           user={mockUserData}
           chat={mockChatData}
-          setShowGroupChatInfoModal={mockSetShowGroupChatInfoModal}
+          setShowGroupChatInfo={mockSetShowGroupChatInfo}
         />
       </MemoryRouter>
     </MockedProvider>
@@ -68,7 +68,7 @@ describe("<ChatHeader />", () => {
 
     await user.click(screen.getByTestId("chat-info-button"));
 
-    expect(mockSetShowGroupChatInfoModal).toHaveBeenCalledWith(true);
+    expect(mockSetShowGroupChatInfo).toHaveBeenCalledWith(true);
   });
 
   test("click private chat info button navigates to contact page", async () => {
