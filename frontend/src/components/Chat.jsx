@@ -16,7 +16,7 @@ import {
   CREATE_CHAT,
 } from "../graphql/mutations";
 import Loading from "./ui/Loading";
-import GroupChatInfoModal from "./Modals/GroupChatInfoModal";
+import GroupChatInfo from "./GroupChatInfo";
 import Button from "./ui/Button";
 import Title from "./ui/Title";
 import Input from "./ui/Input";
@@ -462,7 +462,7 @@ const ExistingChatContent = ({
   setActiveMenuItem,
   setActiveChatOrContactId,
 }) => {
-  const [showGroupChatInfoModal, setShowGroupChatInfoModal] = useState(false);
+  const [showGroupChatInfo, setShowGroupChatInfo] = useState(false);
   const match = useMatch("/chats/:chatId").params;
 
   const { data, loading } = useQuery(FIND_CHAT_BY_ID, {
@@ -506,7 +506,7 @@ const ExistingChatContent = ({
       <ChatHeader
         user={user}
         chat={data.findChatById}
-        setShowGroupChatInfoModal={setShowGroupChatInfoModal}
+        setShowGroupChatInfoModal={setShowGroupChatInfo}
       />
       <Messages
         user={user}
@@ -514,11 +514,11 @@ const ExistingChatContent = ({
       />
       <NewMessageInput user={user} chatId={match.chatId} newChatInfo={null} />
       <AnimatePresence>
-        {showGroupChatInfoModal && (
-          <GroupChatInfoModal
+        {showGroupChatInfo && (
+          <GroupChatInfo
             user={user}
             chat={data.findChatById}
-            setShowGroupChatInfoModal={setShowGroupChatInfoModal}
+            setShowGroupChatInfoModal={setShowGroupChatInfo}
           />
         )}
       </AnimatePresence>

@@ -4,15 +4,15 @@ import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { LEAVE_GROUP_CHATS } from "../../graphql/mutations";
-import useModal from "../../hooks/useModal";
-import ChatMembersList from "../ui/ChatMembersList";
-import EditGroupChatModal from "./EditGroupChatModal";
-import ClickableImage from "../ui/ClickableImage";
-import Title from "../ui/Title";
-import Button from "../ui/Button";
+import { LEAVE_GROUP_CHATS } from "../graphql/mutations";
+import useModal from "../hooks/useModal";
+import ChatMembersList from "./ui/ChatMembersList";
+import EditGroupChatModal from "./Modals/EditGroupChatModal";
+import ClickableImage from "./ui/ClickableImage";
+import Title from "./ui/Title";
+import Button from "./ui/Button";
 
-const GroupChatInfoModal = ({ user, chat, setShowGroupChatInfoModal }) => {
+const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
   const { modal } = useModal();
   const [showEditGroupChatModal, setShowEditGroupChatModal] = useState(false);
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ const GroupChatInfoModal = ({ user, chat, setShowGroupChatInfoModal }) => {
           type="button"
           variant="return"
           testId="close-group-chat-info-button"
-          onClick={() => setShowGroupChatInfoModal(false)}
+          onClick={() => setShowGroupChatInfo(false)}
         />
 
         <Button
@@ -125,4 +125,4 @@ const GroupChatInfoModal = ({ user, chat, setShowGroupChatInfoModal }) => {
   );
 };
 
-export default GroupChatInfoModal;
+export default GroupChatInfo;

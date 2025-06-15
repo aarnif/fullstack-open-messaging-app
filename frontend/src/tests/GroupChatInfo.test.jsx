@@ -4,8 +4,10 @@ import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
 
-import GroupChatInfoModal from "../components/Modals/GroupChatInfoModal.jsx";
+import ModalProvider from "../components/ModalProvider.jsx";
+import GroupChatInfo from "../components/GroupChatInfo.jsx";
 import queryMocks from "./mocks/queryMocks.js";
+import mutationMocks from "./mocks/mutationMocks.js";
 import mocks from "./mocks/funcs.js";
 
 const {
@@ -15,6 +17,8 @@ const {
   allContactsByUserMockWithoutSearchWord,
 } = queryMocks;
 
+const { leaveGroupChatMock } = mutationMocks;
+
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
@@ -22,8 +26,7 @@ const anotherUserData =
   allContactsByUserMock.result.data.allContactsByUser.contacts[0];
 const chatData = findGroupChatByIdMock.result.data.findChatById;
 
-const mockSetShowGroupChatInfoModal = vi.fn();
-const mockModal = vi.fn();
+const mockSetShowGroupChatInfo = vi.fn();
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -34,12 +37,6 @@ vi.mock("react-router", async () => {
   };
 });
 
-vi.mock("../hooks/useModal", () => ({
-  default: () => ({
-    modal: mockModal,
-  }),
-}));
-
 const renderComponent = (mockUserData = userData, mockChatData = chatData) => {
   render(
     <MockedProvider
@@ -48,21 +45,24 @@ const renderComponent = (mockUserData = userData, mockChatData = chatData) => {
         findGroupChatByIdMock,
         allContactsByUserMock,
         allContactsByUserMockWithoutSearchWord,
+        leaveGroupChatMock,
       ]}
       addTypename={false}
     >
       <MemoryRouter>
-        <GroupChatInfoModal
-          user={mockUserData}
-          chat={mockChatData}
-          setShowGroupChatInfoModal={mockSetShowGroupChatInfoModal}
-        />
+        <ModalProvider>
+          <GroupChatInfo
+            user={mockUserData}
+            chat={mockChatData}
+            setShowGroupChatInfo={mockSetShowGroupChatInfo}
+          />
+        </ModalProvider>
       </MemoryRouter>
     </MockedProvider>
   );
 };
 
-describe("<GroupChatInfoModal />", () => {
+describe("<GroupChatInfo />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useNavigate.mockReturnValue(navigate);
@@ -94,7 +94,7 @@ describe("<GroupChatInfoModal />", () => {
 
     await user.click(screen.getByTestId("close-group-chat-info-button"));
 
-    expect(mockSetShowGroupChatInfoModal).toHaveBeenCalledWith(false);
+    expect(mockSetShowGroupChatInfo).toHaveBeenCalledWith(false);
   });
 
   test("click edit group chat works", async () => {
@@ -123,12 +123,14 @@ describe("<GroupChatInfoModal />", () => {
 
     await user.click(screen.getByTestId("leave-group-chat-button"));
 
-    expect(mockModal).toHaveBeenCalledWith(
-      "danger",
-      "Leave Chat",
-      "Are you sure you want to leave the chat?",
-      "Leave",
-      expect.any(Function)
-    );
+    expect(screen.getByTestId("confirm-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("confirm-button")).toBeInTheDocument();
+    expect(
+      screen.getByText("Are you sure you want to leave the chat?")
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("confirm-button"));
+
+    expect(navigate).toHaveBeenCalledWith("/chats");
   });
 });

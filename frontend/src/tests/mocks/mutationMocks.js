@@ -10,6 +10,7 @@ import {
   BLOCK_OR_UNBLOCK_CONTACT,
   REMOVE_CONTACT,
   CHANGE_PASSWORD,
+  LEAVE_GROUP_CHATS,
 } from "../../graphql/mutations";
 
 import { users, chats } from "./data";
@@ -267,6 +268,20 @@ const changePasswordMock = {
   },
 };
 
+const leaveGroupChatMock = {
+  request: {
+    query: LEAVE_GROUP_CHATS,
+    variables: {
+      chatIds: [chats[1].id],
+    },
+  },
+  result: {
+    data: {
+      leaveGroupChats: [chats[1].id],
+    },
+  },
+};
+
 const mockNewChatInfo = {
   title: "Test Group Chat",
   description: "This is a group chat.",
@@ -289,5 +304,6 @@ export default {
   blockOrUnblockContactMock,
   removeContactMock,
   changePasswordMock,
+  leaveGroupChatMock,
   mockNewChatInfo,
 };
