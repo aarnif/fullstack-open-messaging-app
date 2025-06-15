@@ -224,8 +224,6 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
       key={"Overlay"}
       className="fixed inset-0 flex justify-center items-end sm:items-center bg-black/50 z-10 transition"
       onClick={() => setShowNewChatModal(false)}
-      initial={{ width: "0vw", opacity: 0 }}
-      animate={{ width: "100vw", opacity: 1, duration: 1.0 }}
       exit={{ width: "0vw", opacity: 0, transition: { delay: 1.0 } }}
     >
       <motion.div
