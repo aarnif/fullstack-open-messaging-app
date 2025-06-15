@@ -3,6 +3,7 @@ import { describe, test, expect, vi } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 
+import ModalProvider from "../components/ModalProvider.jsx";
 import NewChat from "../components/NewChat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mutationMocks from "./mocks/mutationMocks.js";
@@ -31,11 +32,13 @@ const renderComponent = () => {
   render(
     <MockedProvider mocks={[createNewChatMock]}>
       <MemoryRouter>
-        <NewChat
-          user={userData}
-          setActiveMenuItem={mockSetActiveMenuItem}
-          menuComponent={<></>}
-        />
+        <ModalProvider>
+          <NewChat
+            user={userData}
+            setActiveMenuItem={mockSetActiveMenuItem}
+            menuComponent={<></>}
+          />
+        </ModalProvider>
       </MemoryRouter>
     </MockedProvider>
   );

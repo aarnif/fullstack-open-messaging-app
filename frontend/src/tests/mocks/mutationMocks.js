@@ -116,7 +116,7 @@ const addMessageToChatMock = {
     query: ADD_MESSAGE_TO_CHAT,
     variables: {
       chatId: "2",
-      content: "This is a test.",
+      content: "Hello, this is a test message!",
       input: { thumbnail: null, original: null },
     },
   },
@@ -129,7 +129,7 @@ const addMessageToChatMock = {
             __typename: "Message",
             id: "2",
             type: "message",
-            content: "This is a test.",
+            content: "Hello, this is a test message!",
             image: {
               __typename: "Image",
               thumbnail: null,
