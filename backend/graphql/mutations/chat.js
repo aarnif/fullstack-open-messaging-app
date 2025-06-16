@@ -67,6 +67,18 @@ const typeDefs = `
   }   
 `;
 
+const determineMessageType = (content, defaultType = "message") => {
+  const trimmedContent = content.trim();
+
+  if (checkIfMessageIsSingleEmoji(trimmedContent)) {
+    return "singleEmoji";
+  } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
+    return "singleImage";
+  }
+
+  return defaultType;
+};
+
 const checkIfMessageIsSingleEmoji = (messageContent) => {
   const regex = emojiRegex();
   let numberOfEmojis = 0;
@@ -84,6 +96,24 @@ const checkIfMessageIsSingleEmoji = (messageContent) => {
 
 const chekcIfMessageIsImageWithoutText = (messageContent) => {
   return messageContent === ""; // Currently messages without content are always images
+};
+
+const addUnreadMessageForUsers = async (userIds, chatId, messageId) => {
+  try {
+    await User.updateMany(
+      { _id: { $in: userIds } },
+      {
+        $addToSet: {
+          unreadMessages: {
+            chatId: chatId,
+            messageId: messageId,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error adding unread message for users:", error);
+  }
 };
 
 const resolvers = {
@@ -131,13 +161,10 @@ const resolvers = {
       }
 
       const trimmedContent = args.initialMessage.content.trim();
-      let messageType = args.initialMessage.type || "message";
-
-      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
-        messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
-        messageType = "singleImage";
-      }
+      const messageType = determineMessageType(
+        args.initialMessage.content,
+        args.initialMessage.type || "message"
+      );
 
       const initialMessageContent = {
         type: messageType,
@@ -166,6 +193,17 @@ const resolvers = {
         await User.updateMany(
           { _id: { $in: args.memberIds } },
           { $push: { chats: newChat._id } }
+        );
+
+        const memberIdsExcludingSender = args.memberIds.filter(
+          (id) => id !== context.currentUser.id
+        );
+
+        const messageId = newChat.messages[0]._id.toString();
+        await addUnreadMessageForUsers(
+          memberIdsExcludingSender,
+          newChat._id,
+          messageId
         );
 
         const createdChat = await Chat.findById(newChat._id)
@@ -249,13 +287,7 @@ const resolvers = {
       }
 
       const trimmedContent = args.content.trim();
-      let messageType = "message";
-
-      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
-        messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
-        messageType = "singleImage";
-      }
+      const messageType = determineMessageType(args.content);
 
       const newMessage = {
         type: messageType,
@@ -294,6 +326,18 @@ const resolvers = {
             path: "messages",
             populate: { path: "isReadBy.member" },
           });
+
+        const memberIdsExcludingSender = chatToBeUpdated.members
+          .filter((member) => !member._id.equals(context.currentUser.id))
+          .map((member) => member._id);
+
+        const addedMessage = updatedChat.messages[0];
+        const messageId = addedMessage._id.toString();
+        await addUnreadMessageForUsers(
+          memberIdsExcludingSender,
+          args.chatId,
+          messageId
+        );
 
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
           messageToChatAdded: updatedChat,
