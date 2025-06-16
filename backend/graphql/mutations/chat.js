@@ -98,6 +98,24 @@ const chekcIfMessageIsImageWithoutText = (messageContent) => {
   return messageContent === ""; // Currently messages without content are always images
 };
 
+const addUnreadMessageForUsers = async (userIds, chatId, messageId) => {
+  try {
+    await User.updateMany(
+      { _id: { $in: userIds } },
+      {
+        $addToSet: {
+          unreadMessages: {
+            chatId: chatId,
+            messageId: messageId,
+          },
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error adding unread message for users:", error);
+  }
+};
+
 const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
@@ -175,6 +193,17 @@ const resolvers = {
         await User.updateMany(
           { _id: { $in: args.memberIds } },
           { $push: { chats: newChat._id } }
+        );
+
+        const memberIdsExcludingSender = args.memberIds.filter(
+          (id) => id !== context.currentUser.id
+        );
+
+        const messageId = newChat.messages[0]._id.toString();
+        await addUnreadMessageForUsers(
+          memberIdsExcludingSender,
+          newChat._id,
+          messageId
         );
 
         const createdChat = await Chat.findById(newChat._id)
@@ -297,6 +326,18 @@ const resolvers = {
             path: "messages",
             populate: { path: "isReadBy.member" },
           });
+
+        const memberIdsExcludingSender = chatToBeUpdated.members
+          .filter((member) => !member._id.equals(context.currentUser.id))
+          .map((member) => member._id);
+
+        const addedMessage = updatedChat.messages[0];
+        const messageId = addedMessage._id.toString();
+        await addUnreadMessageForUsers(
+          memberIdsExcludingSender,
+          args.chatId,
+          messageId
+        );
 
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
           messageToChatAdded: updatedChat,
