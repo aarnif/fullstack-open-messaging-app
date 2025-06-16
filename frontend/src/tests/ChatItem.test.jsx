@@ -24,17 +24,22 @@ vi.mock("react-router", async () => {
   };
 });
 
-const renderChatItem = (
-  chatData = mockChatData,
-  activeChatOrContactId = chatData.id
-) => {
+// Refactored render function with flexible options
+const renderChatItem = (options = {}) => {
+  const {
+    user = userData,
+    chat = mockChatData,
+    activeChatOrContactId = mockChatData.id,
+    mocks = [currentUserMock, findGroupChatByIdMock],
+  } = options;
+
   return render(
-    <MockedProvider mocks={[currentUserMock, findGroupChatByIdMock]}>
+    <MockedProvider mocks={mocks}>
       <MemoryRouter>
         <ChatItem
           index={0}
-          user={userData}
-          chat={chatData}
+          user={user}
+          chat={chat}
           activeChatOrContactId={activeChatOrContactId}
           setActiveChatOrContactId={mockSetActiveChatOrContactId}
         />
@@ -66,7 +71,7 @@ describe("<ChatItem />", () => {
       messages: [],
     };
 
-    const { container } = renderChatItem(chatWithNoMessages);
+    const { container } = renderChatItem({ chat: chatWithNoMessages });
     expect(container.firstChild).toBeNull();
   });
 
@@ -77,7 +82,7 @@ describe("<ChatItem />", () => {
   });
 
   test("does not highlight inactive contact", () => {
-    renderChatItem(mockChatData, "inactive-contact-id");
+    renderChatItem({ activeChatOrContactId: "inactive-contact-id" });
 
     expect(screen.getByRole("button")).not.toHaveAttribute(
       "id",
@@ -101,19 +106,26 @@ describe("<ChatItem />", () => {
   });
 
   test("displays new messages count if count greater than zero", () => {
-    const chatWithNewMessages = {
-      ...mockChatData,
-      messages: [
-        ...mockChatData.messages,
+    const userWithUnreadMessages = {
+      ...userData,
+      unreadMessages: [
         {
-          ...mockChatData.messages[0],
-          sender: { id: userData.id },
-          isReadBy: [{ isRead: false, member: { id: userData.id } }],
+          chatId: {
+            id: mockChatData.id,
+            title: mockChatData.title,
+            image: mockChatData.image,
+            isGroupChat: mockChatData.isGroupChat,
+          },
+          messages: [{ messageId: "msg1" }, { messageId: "msg2" }],
         },
       ],
     };
-    renderChatItem(chatWithNewMessages);
-    expect(screen.queryByTestId("new-messages-count")).toBeInTheDocument();
+
+    renderChatItem({ user: userWithUnreadMessages });
+
+    const badge = screen.queryByTestId("new-messages-count");
+    expect(badge).toBeInTheDocument();
+    expect(badge).toHaveTextContent("2");
   });
 
   test("displays notification message correctly", () => {
@@ -129,7 +141,7 @@ describe("<ChatItem />", () => {
       ],
     };
 
-    renderChatItem(chatWithNotification);
+    renderChatItem({ chat: chatWithNotification });
     expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
       "User joined the chat"
     );
@@ -149,7 +161,7 @@ describe("<ChatItem />", () => {
       ],
     };
 
-    renderChatItem(chatWithMessage);
+    renderChatItem({ chat: chatWithMessage });
     expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
       `You: ${chatAndMessageHelpers.sliceLatestMessage(message)}`
     );
@@ -170,7 +182,7 @@ describe("<ChatItem />", () => {
       ],
     };
 
-    renderChatItem(chatWithMessage);
+    renderChatItem({ chat: chatWithMessage });
     expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
       `${senderName}: ${chatAndMessageHelpers.sliceLatestMessage(message)}`
     );
@@ -189,7 +201,7 @@ describe("<ChatItem />", () => {
       ],
     };
 
-    renderChatItem(chatWithImage);
+    renderChatItem({ chat: chatWithImage });
     expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
       "You sent an image"
     );
@@ -208,7 +220,7 @@ describe("<ChatItem />", () => {
       ],
     };
 
-    renderChatItem(chatWithImage);
+    renderChatItem({ chat: chatWithImage });
     expect(screen.getByTestId("latest-chat-message")).toHaveTextContent(
       "John Doe sent an image"
     );

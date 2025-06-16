@@ -11,7 +11,7 @@ import useModal from "../hooks/useModal";
 import useField from "../hooks/useField";
 import { FIND_CHAT_BY_ID, FIND_CHAT_BY_MEMBERS } from "../graphql/queries";
 import {
-  MARK_MESSAGES_IN_CHAT_READ,
+  MARK_CHAT_AS_READ,
   ADD_MESSAGE_TO_CHAT,
   CREATE_CHAT,
 } from "../graphql/mutations";
@@ -58,8 +58,6 @@ export const ChatHeader = ({
       navigate(`/contacts/${anotherPrivateChatMember.id}`);
     }
   };
-
-  console.log("Chat header rendered with chat:", chat);
 
   const chatMembersString = chatAndMessageHelpers.sliceLatestMessage(
     chatAndMessageHelpers
@@ -473,24 +471,28 @@ const ExistingChatContent = ({
     },
   });
 
-  const [mutateMarkMessagesInChatRead] = useMutation(
-    MARK_MESSAGES_IN_CHAT_READ
-  );
+  const [mutateMarkChatAsRead] = useMutation(MARK_CHAT_AS_READ);
 
   useEffect(() => {
     setActiveMenuItem("chats");
     setActiveChatOrContactId(match.chatId);
-    const markMessagesInChatRead = async () => {
-      console.log("Marking messages in the active chat as read");
-      mutateMarkMessagesInChatRead({
-        variables: { chatId: match.chatId },
-      });
+
+    const markChatAsRead = async () => {
+      console.log("Marking chat as read using new system");
+      try {
+        await mutateMarkChatAsRead({
+          variables: { chatId: match.chatId },
+        });
+      } catch (error) {
+        console.error("Error marking chat as read:", error);
+      }
     };
-    markMessagesInChatRead();
+
+    markChatAsRead();
   }, [
     data,
     match.chatId,
-    mutateMarkMessagesInChatRead,
+    mutateMarkChatAsRead,
     setActiveChatOrContactId,
     setActiveMenuItem,
   ]);

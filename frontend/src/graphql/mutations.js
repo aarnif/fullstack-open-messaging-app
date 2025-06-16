@@ -81,6 +81,16 @@ export const MARK_MESSAGES_IN_CHAT_READ = gql`
   ${CHAT_DETAILS}
 `;
 
+export const MARK_CHAT_AS_READ = gql`
+  mutation MarkChatAsRead($chatId: ID!) {
+    markChatAsRead(chatId: $chatId) {
+      ...ChatDetails
+    }
+  }
+
+  ${CHAT_DETAILS}
+`;
+
 export const LEAVE_GROUP_CHATS = gql`
   mutation LeaveGroupChats($chatIds: [ID!]!) {
     leaveGroupChats(chatIds: $chatIds)

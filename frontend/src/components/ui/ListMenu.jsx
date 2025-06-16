@@ -14,9 +14,7 @@ import Loading from "./Loading";
 import Title from "./Title";
 import Button from "./Button";
 import Input from "./Input";
-// import ChatItem from "../Chats/ChatItem";
 import ContactCard from "./ContactCard";
-// import ContactItem from "../Contacts/ContactItem";
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const EmptyState = ({ message, testId }) => (
@@ -78,9 +76,10 @@ export const ChatItem = ({
   }
 
   const latestMessage = chat.messages[0];
-  const newMessagesCount = chatAndMessageHelpers.newMessagesCount(
+
+  const newMessagesCount = chatAndMessageHelpers.newUnreadMessagesCount(
     user,
-    chat.messages
+    chat.id
   );
 
   const classStyles =

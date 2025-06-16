@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
-export const USER_DETAILS = gql`
-  fragment UserDetails on User {
+export const USER_BASIC_DETAILS = gql`
+  fragment UserBasicDetails on User {
     id
     username
     name
@@ -20,6 +20,28 @@ export const USER_DETAILS = gql`
   }
 `;
 
+export const USER_DETAILS = gql`
+  fragment UserDetails on User {
+    ...UserBasicDetails
+    unreadMessages {
+      chatId {
+        id
+        title
+        image {
+          thumbnail
+          original
+        }
+        isGroupChat
+      }
+      messages {
+        messageId
+      }
+    }
+  }
+
+  ${USER_BASIC_DETAILS}
+`;
+
 export const CHAT_DETAILS = gql`
   fragment ChatDetails on Chat {
     id
@@ -31,13 +53,10 @@ export const CHAT_DETAILS = gql`
     description
     isGroupChat
     admin {
-      id
-      username
-      name
-      about
+      ...UserBasicDetails
     }
     members {
-      ...UserDetails
+      ...UserBasicDetails
     }
     messages {
       id
@@ -48,7 +67,7 @@ export const CHAT_DETAILS = gql`
         original
       }
       sender {
-        ...UserDetails
+        ...UserBasicDetails
       }
       isReadBy {
         member {
@@ -61,7 +80,7 @@ export const CHAT_DETAILS = gql`
     }
   }
 
-  ${USER_DETAILS}
+  ${USER_BASIC_DETAILS}
 `;
 
 export const CURRENT_USER = gql`
@@ -84,6 +103,28 @@ export const FIND_USER_BY_ID = gql`
   ${USER_DETAILS}
 `;
 
+export const ALL_CONTACTS_BY_USER = gql`
+  query AllContactsByUser($searchByName: String) {
+    allContactsByUser(searchByName: $searchByName) {
+      contacts {
+        ...UserBasicDetails
+      }
+    }
+  }
+
+  ${USER_BASIC_DETAILS}
+`;
+
+export const ALL_CONTACTS_EXCEPT_BY_USER = gql`
+  query AllContactsExceptByUser($searchByName: String) {
+    allContactsExceptByUser(searchByName: $searchByName) {
+      ...UserBasicDetails
+    }
+  }
+
+  ${USER_BASIC_DETAILS}
+`;
+
 export const ALL_CHATS_BY_USER = gql`
   query AllChatsByUser($searchByTitle: String) {
     allChatsByUser(searchByTitle: $searchByTitle) {
@@ -92,28 +133,6 @@ export const ALL_CHATS_BY_USER = gql`
   }
 
   ${CHAT_DETAILS}
-`;
-
-export const ALL_CONTACTS_BY_USER = gql`
-  query AllContactsByUser($searchByName: String) {
-    allContactsByUser(searchByName: $searchByName) {
-      contacts {
-        ...UserDetails
-      }
-    }
-  }
-
-  ${USER_DETAILS}
-`;
-
-export const ALL_CONTACTS_EXCEPT_BY_USER = gql`
-  query AllContactsExceptByUser($searchByName: String) {
-    allContactsExceptByUser(searchByName: $searchByName) {
-      ...UserDetails
-    }
-  }
-
-  ${USER_DETAILS}
 `;
 
 export const FIND_CHAT_BY_ID = gql`

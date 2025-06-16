@@ -10,6 +10,15 @@ const typeDefs = `
     time: String
   }
 
+  type UnreadMessage {
+    messageId: String!
+  }
+
+  type UnreadChat {
+    chatId: Chat!
+    messages: [UnreadMessage!]!
+  }
+
   type User {
     id: ID!
     username: String!
@@ -22,6 +31,7 @@ const typeDefs = `
     contacts: [User!]!
     blockedContacts: [User!]!
     chats: [Chat!]!
+    unreadMessages: [UnreadChat!]! 
   }
 
   type Token {
@@ -47,6 +57,10 @@ const resolvers = {
           populate: { path: "messages" },
         })
         .populate("blockedContacts")
+        .populate({
+          path: "unreadMessages.chatId",
+          model: "Chat",
+        })
         .catch((error) => {
           throw new GraphQLError("Invalid id!", {
             extensions: {
@@ -80,6 +94,10 @@ const resolvers = {
           populate: { path: "blockedContacts" },
         })
         .populate("blockedContacts")
+        .populate({
+          path: "unreadMessages.chatId",
+          model: "Chat",
+        })
         .sort({ name: "asc", username: "asc" });
     },
     allContactsExceptByUser: async (root, args, context) => {
@@ -104,6 +122,10 @@ const resolvers = {
         ],
       })
         .populate("blockedContacts")
+        .populate({
+          path: "unreadMessages.chatId",
+          model: "Chat",
+        })
         .sort({ name: "asc", username: "asc" });
     },
     checkIfUserHasBlockedYou: async (root, args, context) => {
@@ -150,7 +172,10 @@ const resolvers = {
       }
     },
     me: async (root, args, context) =>
-      User.findById(context.currentUser).populate("blockedContacts"),
+      User.findById(context.currentUser).populate("blockedContacts").populate({
+        path: "unreadMessages.chatId",
+        model: "Chat",
+      }),
   },
 };
 
