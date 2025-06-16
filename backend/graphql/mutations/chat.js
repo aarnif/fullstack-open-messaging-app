@@ -421,7 +421,12 @@ const resolvers = {
 
         await User.updateMany(
           { _id: { $in: chatToBeDeleted.members.map((member) => member._id) } },
-          { $pull: { chats: args.chatId } }
+          {
+            $pull: {
+              chats: args.chatId,
+              unreadMessages: { chatId: args.chatId },
+            },
+          }
         );
 
         pubsub.publish("CHAT_DELETED", {
@@ -521,9 +526,15 @@ const resolvers = {
             const removedUsers = await User.find({
               _id: { $in: removedMemberIds },
             });
+
             await User.updateMany(
               { _id: { $in: removedMemberIds } },
-              { $pull: { chats: args.chatId } }
+              {
+                $pull: {
+                  chats: args.chatId,
+                  unreadMessages: { chatId: args.chatId },
+                },
+              }
             );
 
             removedUsers.forEach((user) => {
@@ -741,7 +752,10 @@ const resolvers = {
         );
 
         await User.findByIdAndUpdate(context.currentUser.id, {
-          $pull: { chats: { $in: args.chatIds } },
+          $pull: {
+            chats: { $in: args.chatIds },
+            unreadMessages: { chatId: { $in: args.chatIds } },
+          },
         });
 
         const updatedChats = await Chat.find({ _id: { $in: args.chatIds } })
