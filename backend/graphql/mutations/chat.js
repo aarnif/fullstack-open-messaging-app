@@ -44,6 +44,9 @@ const typeDefs = `
     markAllMessagesInChatRead(
       chatId: ID!
     ): Chat
+    markChatAsRead(
+      chatId: ID!
+    ): Chat
     leaveGroupChats(
       chatIds: [ID!]!
     ): [String!]!
@@ -100,19 +103,47 @@ const chekcIfMessageIsImageWithoutText = (messageContent) => {
 
 const addUnreadMessageForUsers = async (userIds, chatId, messageId) => {
   try {
-    await User.updateMany(
-      { _id: { $in: userIds } },
-      {
-        $addToSet: {
-          unreadMessages: {
-            chatId: chatId,
-            messageId: messageId,
+    for (const userId of userIds) {
+      const user = await User.findById(userId);
+
+      const existingChatIndex = user.unreadMessages.findIndex(
+        (chat) => chat.chatId.toString() === chatId.toString()
+      );
+
+      if (existingChatIndex !== -1) {
+        await User.findByIdAndUpdate(
+          userId,
+          {
+            $push: {
+              [`unreadMessages.${existingChatIndex}.messages`]: { messageId },
+            },
           },
-        },
+          { new: true }
+        );
+      } else {
+        await User.findByIdAndUpdate(
+          userId,
+          { $push: { unreadMessages: { chatId, messages: [{ messageId }] } } },
+          { new: true }
+        );
       }
-    );
+    }
   } catch (error) {
     console.error("Error adding unread message for users:", error);
+    throw error;
+  }
+};
+
+const markChatAsReadForUser = async (userId, chatId) => {
+  try {
+    await User.findByIdAndUpdate(
+      userId,
+      { $pull: { unreadMessages: { chatId: chatId } } },
+      { new: true }
+    );
+  } catch (error) {
+    console.error("Error marking chat as read:", error);
+    throw error;
   }
 };
 
@@ -628,6 +659,58 @@ const resolvers = {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             error,
+          },
+        });
+      }
+    },
+
+    markChatAsRead: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      try {
+        await markChatAsReadForUser(context.currentUser.id, args.chatId);
+
+        const updatedChat = await Chat.findById(args.chatId)
+          .populate("admin")
+          .populate("members")
+          .populate({
+            path: "members",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "sender" },
+          })
+          .populate({
+            path: "messages.sender",
+            populate: { path: "blockedContacts" },
+          })
+          .populate({
+            path: "messages",
+            populate: { path: "isReadBy.member" },
+          });
+
+        if (!updatedChat) {
+          throw new GraphQLError("Chat not found!", {
+            extensions: {
+              code: "NOT_FOUND",
+              invalidArgs: args.chatId,
+            },
+          });
+        }
+
+        return updatedChat;
+      } catch (error) {
+        throw new GraphQLError("Marking chat as read failed", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
           },
         });
       }
