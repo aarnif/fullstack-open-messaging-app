@@ -67,6 +67,18 @@ const typeDefs = `
   }   
 `;
 
+const determineMessageType = (content, defaultType = "message") => {
+  const trimmedContent = content.trim();
+
+  if (checkIfMessageIsSingleEmoji(trimmedContent)) {
+    return "singleEmoji";
+  } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
+    return "singleImage";
+  }
+
+  return defaultType;
+};
+
 const checkIfMessageIsSingleEmoji = (messageContent) => {
   const regex = emojiRegex();
   let numberOfEmojis = 0;
@@ -131,13 +143,10 @@ const resolvers = {
       }
 
       const trimmedContent = args.initialMessage.content.trim();
-      let messageType = args.initialMessage.type || "message";
-
-      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
-        messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
-        messageType = "singleImage";
-      }
+      const messageType = determineMessageType(
+        args.initialMessage.content,
+        args.initialMessage.type || "message"
+      );
 
       const initialMessageContent = {
         type: messageType,
@@ -249,13 +258,7 @@ const resolvers = {
       }
 
       const trimmedContent = args.content.trim();
-      let messageType = "message";
-
-      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
-        messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
-        messageType = "singleImage";
-      }
+      const messageType = determineMessageType(args.content);
 
       const newMessage = {
         type: messageType,
