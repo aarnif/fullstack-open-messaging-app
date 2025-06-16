@@ -15,6 +15,7 @@ const {
   loginUser,
   addContacts,
   createChat,
+  addMessageToChat, // Add the new helper
 } = helpers;
 
 describe("Chat tests", () => {
@@ -108,28 +109,11 @@ describe("Chat tests", () => {
     );
 
     groupChatDetails[0].id = createdChat.body.data.createChat.id;
-    const response = await requestData(
-      {
-        query: `mutation AddMessageToChat($chatId: ID!, $type: String, $content: String) {
-          addMessageToChat(chatId: $chatId, type: $type, content: $content) {
-            id
-            title
-            messages {
-              sender {
-                id
-                username
-              }
-              content
-            }
-          }
-        }`,
-        variables: {
-          chatId: groupChatDetails[0].id,
-          type: "message",
-          content: "This is a new message",
-        },
-      },
-      credentials.token
+
+    const response = await addMessageToChat(
+      credentials,
+      groupChatDetails[0].id,
+      "This is a new message"
     );
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
