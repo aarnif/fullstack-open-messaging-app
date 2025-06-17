@@ -20,15 +20,6 @@ const sliceLatestMessage = (latestMessage, characterCount = 20) =>
     ? latestMessage.slice(0, characterCount) + "..."
     : latestMessage;
 
-const newMessagesCount = (user, messages) =>
-  messages.filter(
-    (message) =>
-      message.type === "message" &&
-      message.isReadBy.find(
-        (member) => member.member.id === user.id && !member.isRead
-      )
-  ).length;
-
 const sortChatsByDate = (chats) =>
   chats.sort((a, b) => {
     if (!a.messages.length) return 1;
@@ -58,7 +49,7 @@ const capitalizeString = (string) => {
 export default {
   formatMessageTime,
   sliceLatestMessage,
-  newMessagesCount,
+
   sortChatsByDate,
   sortChatMembersByNameAndUsername,
   capitalizeString,

@@ -71,16 +71,6 @@ export const DELETE_CHAT = gql`
   }
 `;
 
-export const MARK_MESSAGES_IN_CHAT_READ = gql`
-  mutation MarkAllMessagesInChatRead($chatId: ID!) {
-    markAllMessagesInChatRead(chatId: $chatId) {
-      ...ChatDetails
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
 export const LEAVE_GROUP_CHATS = gql`
   mutation LeaveGroupChats($chatIds: [ID!]!) {
     leaveGroupChats(chatIds: $chatIds)

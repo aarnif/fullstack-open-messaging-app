@@ -78,10 +78,7 @@ export const ChatItem = ({
   }
 
   const latestMessage = chat.messages[0];
-  const newMessagesCount = chatAndMessageHelpers.newMessagesCount(
-    user,
-    chat.messages
-  );
+  const newMessagesCount = 0;
 
   const classStyles =
     activeChatOrContactId === chat.id

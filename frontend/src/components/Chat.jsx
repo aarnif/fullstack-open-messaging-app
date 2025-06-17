@@ -10,11 +10,7 @@ import imageService from "../services/imageService";
 import useModal from "../hooks/useModal";
 import useField from "../hooks/useField";
 import { FIND_CHAT_BY_ID, FIND_CHAT_BY_MEMBERS } from "../graphql/queries";
-import {
-  MARK_MESSAGES_IN_CHAT_READ,
-  ADD_MESSAGE_TO_CHAT,
-  CREATE_CHAT,
-} from "../graphql/mutations";
+import { ADD_MESSAGE_TO_CHAT, CREATE_CHAT } from "../graphql/mutations";
 import Loading from "./ui/Loading";
 import GroupChatInfo from "./GroupChatInfo";
 import Button from "./ui/Button";
@@ -58,8 +54,6 @@ export const ChatHeader = ({
       navigate(`/contacts/${anotherPrivateChatMember.id}`);
     }
   };
-
-  console.log("Chat header rendered with chat:", chat);
 
   const chatMembersString = chatAndMessageHelpers.sliceLatestMessage(
     chatAndMessageHelpers
@@ -473,27 +467,10 @@ const ExistingChatContent = ({
     },
   });
 
-  const [mutateMarkMessagesInChatRead] = useMutation(
-    MARK_MESSAGES_IN_CHAT_READ
-  );
-
   useEffect(() => {
     setActiveMenuItem("chats");
     setActiveChatOrContactId(match.chatId);
-    const markMessagesInChatRead = async () => {
-      console.log("Marking messages in the active chat as read");
-      mutateMarkMessagesInChatRead({
-        variables: { chatId: match.chatId },
-      });
-    };
-    markMessagesInChatRead();
-  }, [
-    data,
-    match.chatId,
-    mutateMarkMessagesInChatRead,
-    setActiveChatOrContactId,
-    setActiveMenuItem,
-  ]);
+  }, [data, match.chatId, setActiveChatOrContactId, setActiveMenuItem]);
 
   if (loading) {
     return <Loading />;

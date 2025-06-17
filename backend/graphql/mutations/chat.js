@@ -41,9 +41,6 @@ const typeDefs = `
       input: ImageInput
       memberIds: [ID!]!
     ): Chat
-    markAllMessagesInChatRead(
-      chatId: ID!
-    ): Chat
     leaveGroupChats(
       chatIds: [ID!]!
     ): [String!]!
@@ -144,10 +141,6 @@ const resolvers = {
         sender: context.currentUser.id,
         content: trimmedContent,
         image: args.initialMessage.image,
-        isReadBy: args.memberIds.map((memberId) => ({
-          member: memberId,
-          isRead: context.currentUser.id === memberId,
-        })),
       };
 
       const newChat = new Chat({
@@ -182,10 +175,6 @@ const resolvers = {
           .populate({
             path: "messages.sender",
             populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
           });
 
         pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
@@ -262,10 +251,6 @@ const resolvers = {
         sender: context.currentUser.id,
         content: trimmedContent,
         image: args.input,
-        isReadBy: chatToBeUpdated.members.map((member) => ({
-          member: member._id,
-          isRead: context.currentUser._id.equals(member._id),
-        })),
       };
 
       try {
@@ -289,10 +274,6 @@ const resolvers = {
           .populate({
             path: "messages.sender",
             populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
           });
 
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
@@ -509,10 +490,6 @@ const resolvers = {
           .populate({
             path: "messages.sender",
             populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
           });
 
         groupChatEditedDetails.updatedChat = updatedChat;
@@ -526,61 +503,6 @@ const resolvers = {
         return updatedChat;
       } catch (error) {
         throw new GraphQLError("Updating chat failed", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            error,
-          },
-        });
-      }
-    },
-
-    markAllMessagesInChatRead: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
-      }
-
-      try {
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $set: {
-              "messages.$[messageElem].isReadBy.$[readElem].isRead": true,
-            },
-          },
-          {
-            arrayFilters: [
-              { "messageElem.isReadBy": { $exists: true } },
-              { "readElem.member": context.currentUser.id },
-            ],
-            new: true,
-          }
-        )
-          .populate("admin")
-          .populate("members")
-          .populate({
-            path: "members",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages.sender",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-
-        return updatedChat;
-      } catch (error) {
-        throw new GraphQLError("Marking messages as read failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             error,
@@ -631,10 +553,6 @@ const resolvers = {
           .populate({
             path: "messages.sender",
             populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
           });
 
         updatedChats.forEach((chat) => {

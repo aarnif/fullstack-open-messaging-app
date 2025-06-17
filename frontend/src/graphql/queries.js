@@ -50,13 +50,6 @@ export const CHAT_DETAILS = gql`
       sender {
         ...UserDetails
       }
-      isReadBy {
-        member {
-          id
-          username
-        }
-        isRead
-      }
       createdAt
     }
   }
