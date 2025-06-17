@@ -158,7 +158,7 @@ const resolvers = {
 
         await User.updateMany(
           { _id: { $in: args.memberIds } },
-          { $push: { chats: newChat._id } }
+          { $push: { chats: { chat: newChat._id } } }
         );
 
         const createdChat = await Chat.findById(newChat._id)
@@ -327,7 +327,7 @@ const resolvers = {
 
         await User.updateMany(
           { _id: { $in: chatToBeDeleted.members.map((member) => member._id) } },
-          { $pull: { chats: args.chatId } }
+          { $pull: { chats: { chat: args.chatId } } }
         );
 
         pubsub.publish("CHAT_DELETED", {
@@ -427,9 +427,10 @@ const resolvers = {
             const removedUsers = await User.find({
               _id: { $in: removedMemberIds },
             });
+
             await User.updateMany(
               { _id: { $in: removedMemberIds } },
-              { $pull: { chats: args.chatId } }
+              { $pull: { chats: { chat: args.chatId } } }
             );
 
             removedUsers.forEach((user) => {
@@ -450,7 +451,7 @@ const resolvers = {
 
             await User.updateMany(
               { _id: { $in: addedMemberIds } },
-              { $addToSet: { chats: args.chatId } }
+              { $addToSet: { chats: { chat: args.chatId } } }
             );
 
             addedUsers.forEach((user) => {
@@ -502,6 +503,7 @@ const resolvers = {
 
         return updatedChat;
       } catch (error) {
+        console.error("Error updating chat:", error);
         throw new GraphQLError("Updating chat failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
@@ -536,7 +538,7 @@ const resolvers = {
         );
 
         await User.findByIdAndUpdate(context.currentUser.id, {
-          $pull: { chats: { $in: args.chatIds } },
+          $pull: { chats: { chat: { $in: args.chatIds } } },
         });
 
         const updatedChats = await Chat.find({ _id: { $in: args.chatIds } })
