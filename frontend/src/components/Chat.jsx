@@ -9,7 +9,11 @@ import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import imageService from "../services/imageService";
 import useModal from "../hooks/useModal";
 import useField from "../hooks/useField";
-import { FIND_CHAT_BY_ID, FIND_CHAT_BY_MEMBERS } from "../graphql/queries";
+import {
+  FIND_CHAT_BY_ID,
+  FIND_CHAT_BY_MEMBERS,
+  CURRENT_USER,
+} from "../graphql/queries";
 import {
   MARK_CHAT_AS_READ,
   ADD_MESSAGE_TO_CHAT,
@@ -471,7 +475,10 @@ const ExistingChatContent = ({
     },
   });
 
-  const [mutateMarkChatAsRead] = useMutation(MARK_CHAT_AS_READ);
+  const [mutateMarkChatAsRead] = useMutation(MARK_CHAT_AS_READ, {
+    refetchQueries: [{ query: CURRENT_USER }],
+    awaitRefetchQueries: true,
+  });
 
   useEffect(() => {
     setActiveMenuItem("chats");

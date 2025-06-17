@@ -60,6 +60,12 @@ const typeDefs = `
     memberId: ID
     chatIds: [ID]
   }
+  type UnreadMessageAdded {
+    userId: ID!
+    chatId: ID!
+    messageId: String!
+  }
+
   type Subscription {
     newChatCreated: Chat!
     messageToChatAdded: Chat!
@@ -67,6 +73,7 @@ const typeDefs = `
     groupChatUpdated: Chat!
     leftGroupChats: leftGroupChatsDetails
     groupChatEdited: groupChatEditedDetails
+    unreadMessageAdded: UnreadMessageAdded!
   }   
 `;
 
@@ -127,6 +134,14 @@ const addUnreadMessageForUsers = async (userIds, chatId, messageId) => {
           { new: true }
         );
       }
+
+      pubsub.publish("UNREAD_MESSAGE_ADDED", {
+        unreadMessageAdded: {
+          userId: userId.toString(),
+          chatId: chatId.toString(),
+          messageId,
+        },
+      });
     }
   } catch (error) {
     console.error("Error adding unread message for users:", error);
@@ -818,6 +833,9 @@ const resolvers = {
     },
     groupChatEdited: {
       subscribe: () => pubsub.asyncIterator("GROUP_CHAT_EDITED"),
+    },
+    unreadMessageAdded: {
+      subscribe: () => pubsub.asyncIterator("UNREAD_MESSAGE_ADDED"),
     },
   },
 };
