@@ -41,9 +41,6 @@ const typeDefs = `
       input: ImageInput
       memberIds: [ID!]!
     ): Chat
-    markAllMessagesInChatRead(
-      chatId: ID!
-    ): Chat
     markChatAsRead(
       chatId: ID!
     ): Chat
@@ -627,61 +624,6 @@ const resolvers = {
         return updatedChat;
       } catch (error) {
         throw new GraphQLError("Updating chat failed", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            error,
-          },
-        });
-      }
-    },
-
-    markAllMessagesInChatRead: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
-      }
-
-      try {
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $set: {
-              "messages.$[messageElem].isReadBy.$[readElem].isRead": true,
-            },
-          },
-          {
-            arrayFilters: [
-              { "messageElem.isReadBy": { $exists: true } },
-              { "readElem.member": context.currentUser.id },
-            ],
-            new: true,
-          }
-        )
-          .populate("admin")
-          .populate("members")
-          .populate({
-            path: "members",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages.sender",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-
-        return updatedChat;
-      } catch (error) {
-        throw new GraphQLError("Marking messages as read failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             error,

@@ -30,15 +30,6 @@ const newUnreadMessagesCount = (user, chatId) => {
   return chatUnread ? chatUnread.messages.length : 0;
 };
 
-const newMessagesCount = (user, messages) =>
-  messages.filter(
-    (message) =>
-      message.type === "message" &&
-      message.isReadBy.find(
-        (member) => member.member.id === user.id && !member.isRead
-      )
-  ).length;
-
 const sortChatsByDate = (chats) =>
   chats.sort((a, b) => {
     if (!a.messages.length) return 1;
@@ -68,8 +59,7 @@ const capitalizeString = (string) => {
 export default {
   formatMessageTime,
   sliceLatestMessage,
-  newMessagesCount, // Keep old function
-  newUnreadMessagesCount, // Add new function
+  newUnreadMessagesCount,
   sortChatsByDate,
   sortChatMembersByNameAndUsername,
   capitalizeString,
