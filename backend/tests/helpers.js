@@ -147,6 +147,37 @@ const createChat = async (
     credentials.token
   );
 
+const addMessageToChat = async (
+  credentials,
+  chatId,
+  content,
+  type = "message"
+) =>
+  await requestData(
+    {
+      query: `mutation AddMessageToChat($chatId: ID!, $type: String, $content: String) {
+        addMessageToChat(chatId: $chatId, type: $type, content: $content) {
+          id
+          title
+          messages {
+            id
+            content
+             sender {
+              id
+              username
+            }
+          }
+        }
+      }`,
+      variables: {
+        chatId: chatId,
+        type: type,
+        content: content,
+      },
+    },
+    credentials.token
+  );
+
 const changePassword = async (
   credentials,
   currentPassword,
@@ -182,6 +213,22 @@ const checkIfUserHasBlockedYou = async (credentials, userId) =>
     credentials.token
   );
 
+const markChatAsRead = async (credentials, chatId) =>
+  await requestData(
+    {
+      query: `mutation MarkChatAsRead($chatId: ID!) {
+        markChatAsRead(chatId: $chatId) {
+          id
+          title
+        }
+      }`,
+      variables: {
+        chatId: chatId,
+      },
+    },
+    credentials.token
+  );
+
 export default {
   timeOut,
   testServer,
@@ -194,6 +241,8 @@ export default {
   addContacts,
   blockOrUnBlockContact,
   createChat,
+  addMessageToChat,
   changePassword,
   checkIfUserHasBlockedYou,
+  markChatAsRead,
 };

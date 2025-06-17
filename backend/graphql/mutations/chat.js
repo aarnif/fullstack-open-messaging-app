@@ -41,7 +41,7 @@ const typeDefs = `
       input: ImageInput
       memberIds: [ID!]!
     ): Chat
-    markAllMessagesInChatRead(
+    markChatAsRead(
       chatId: ID!
     ): Chat
     leaveGroupChats(
@@ -57,6 +57,12 @@ const typeDefs = `
     memberId: ID
     chatIds: [ID]
   }
+  type UnreadMessageAdded {
+    userId: ID!
+    chatId: ID!
+    messageId: String!
+  }
+
   type Subscription {
     newChatCreated: Chat!
     messageToChatAdded: Chat!
@@ -64,8 +70,21 @@ const typeDefs = `
     groupChatUpdated: Chat!
     leftGroupChats: leftGroupChatsDetails
     groupChatEdited: groupChatEditedDetails
+    unreadMessageAdded: UnreadMessageAdded!
   }   
 `;
+
+const determineMessageType = (content, defaultType = "message") => {
+  const trimmedContent = content.trim();
+
+  if (checkIfMessageIsSingleEmoji(trimmedContent)) {
+    return "singleEmoji";
+  } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
+    return "singleImage";
+  }
+
+  return defaultType;
+};
 
 const checkIfMessageIsSingleEmoji = (messageContent) => {
   const regex = emojiRegex();
@@ -84,6 +103,60 @@ const checkIfMessageIsSingleEmoji = (messageContent) => {
 
 const chekcIfMessageIsImageWithoutText = (messageContent) => {
   return messageContent === ""; // Currently messages without content are always images
+};
+
+const addUnreadMessageForUsers = async (userIds, chatId, messageId) => {
+  try {
+    for (const userId of userIds) {
+      const user = await User.findById(userId);
+
+      const existingChatIndex = user.unreadMessages.findIndex(
+        (chat) => chat.chatId.toString() === chatId.toString()
+      );
+
+      if (existingChatIndex !== -1) {
+        await User.findByIdAndUpdate(
+          userId,
+          {
+            $push: {
+              [`unreadMessages.${existingChatIndex}.messages`]: { messageId },
+            },
+          },
+          { new: true }
+        );
+      } else {
+        await User.findByIdAndUpdate(
+          userId,
+          { $push: { unreadMessages: { chatId, messages: [{ messageId }] } } },
+          { new: true }
+        );
+      }
+
+      pubsub.publish("UNREAD_MESSAGE_ADDED", {
+        unreadMessageAdded: {
+          userId: userId.toString(),
+          chatId: chatId.toString(),
+          messageId,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error adding unread message for users:", error);
+    throw error;
+  }
+};
+
+const markChatAsReadForUser = async (userId, chatId) => {
+  try {
+    await User.findByIdAndUpdate(
+      userId,
+      { $pull: { unreadMessages: { chatId: chatId } } },
+      { new: true }
+    );
+  } catch (error) {
+    console.error("Error marking chat as read:", error);
+    throw error;
+  }
 };
 
 const resolvers = {
@@ -131,13 +204,10 @@ const resolvers = {
       }
 
       const trimmedContent = args.initialMessage.content.trim();
-      let messageType = args.initialMessage.type || "message";
-
-      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
-        messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
-        messageType = "singleImage";
-      }
+      const messageType = determineMessageType(
+        args.initialMessage.content,
+        args.initialMessage.type || "message"
+      );
 
       const initialMessageContent = {
         type: messageType,
@@ -166,6 +236,17 @@ const resolvers = {
         await User.updateMany(
           { _id: { $in: args.memberIds } },
           { $push: { chats: newChat._id } }
+        );
+
+        const memberIdsExcludingSender = args.memberIds.filter(
+          (id) => id !== context.currentUser.id
+        );
+
+        const messageId = newChat.messages[0]._id.toString();
+        await addUnreadMessageForUsers(
+          memberIdsExcludingSender,
+          newChat._id,
+          messageId
         );
 
         const createdChat = await Chat.findById(newChat._id)
@@ -249,13 +330,7 @@ const resolvers = {
       }
 
       const trimmedContent = args.content.trim();
-      let messageType = "message";
-
-      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
-        messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
-        messageType = "singleImage";
-      }
+      const messageType = determineMessageType(args.content);
 
       const newMessage = {
         type: messageType,
@@ -294,6 +369,18 @@ const resolvers = {
             path: "messages",
             populate: { path: "isReadBy.member" },
           });
+
+        const memberIdsExcludingSender = chatToBeUpdated.members
+          .filter((member) => !member._id.equals(context.currentUser.id))
+          .map((member) => member._id);
+
+        const addedMessage = updatedChat.messages[0];
+        const messageId = addedMessage._id.toString();
+        await addUnreadMessageForUsers(
+          memberIdsExcludingSender,
+          args.chatId,
+          messageId
+        );
 
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
           messageToChatAdded: updatedChat,
@@ -346,7 +433,12 @@ const resolvers = {
 
         await User.updateMany(
           { _id: { $in: chatToBeDeleted.members.map((member) => member._id) } },
-          { $pull: { chats: args.chatId } }
+          {
+            $pull: {
+              chats: args.chatId,
+              unreadMessages: { chatId: args.chatId },
+            },
+          }
         );
 
         pubsub.publish("CHAT_DELETED", {
@@ -446,9 +538,15 @@ const resolvers = {
             const removedUsers = await User.find({
               _id: { $in: removedMemberIds },
             });
+
             await User.updateMany(
               { _id: { $in: removedMemberIds } },
-              { $pull: { chats: args.chatId } }
+              {
+                $pull: {
+                  chats: args.chatId,
+                  unreadMessages: { chatId: args.chatId },
+                },
+              }
             );
 
             removedUsers.forEach((user) => {
@@ -534,7 +632,7 @@ const resolvers = {
       }
     },
 
-    markAllMessagesInChatRead: async (root, args, context) => {
+    markChatAsRead: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
           extensions: {
@@ -544,21 +642,9 @@ const resolvers = {
       }
 
       try {
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $set: {
-              "messages.$[messageElem].isReadBy.$[readElem].isRead": true,
-            },
-          },
-          {
-            arrayFilters: [
-              { "messageElem.isReadBy": { $exists: true } },
-              { "readElem.member": context.currentUser.id },
-            ],
-            new: true,
-          }
-        )
+        await markChatAsReadForUser(context.currentUser.id, args.chatId);
+
+        const updatedChat = await Chat.findById(args.chatId)
           .populate("admin")
           .populate("members")
           .populate({
@@ -578,12 +664,21 @@ const resolvers = {
             populate: { path: "isReadBy.member" },
           });
 
+        if (!updatedChat) {
+          throw new GraphQLError("Chat not found!", {
+            extensions: {
+              code: "NOT_FOUND",
+              invalidArgs: args.chatId,
+            },
+          });
+        }
+
         return updatedChat;
       } catch (error) {
-        throw new GraphQLError("Marking messages as read failed", {
+        throw new GraphQLError("Marking chat as read failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
-            error,
+            error: error.message,
           },
         });
       }
@@ -614,7 +709,10 @@ const resolvers = {
         );
 
         await User.findByIdAndUpdate(context.currentUser.id, {
-          $pull: { chats: { $in: args.chatIds } },
+          $pull: {
+            chats: { $in: args.chatIds },
+            unreadMessages: { chatId: { $in: args.chatIds } },
+          },
         });
 
         const updatedChats = await Chat.find({ _id: { $in: args.chatIds } })
@@ -677,6 +775,9 @@ const resolvers = {
     },
     groupChatEdited: {
       subscribe: () => pubsub.asyncIterator("GROUP_CHAT_EDITED"),
+    },
+    unreadMessageAdded: {
+      subscribe: () => pubsub.asyncIterator("UNREAD_MESSAGE_ADDED"),
     },
   },
 };

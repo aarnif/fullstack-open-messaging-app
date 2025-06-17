@@ -2,21 +2,24 @@ import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { FaSearch } from "react-icons/fa";
 
-import { ALL_CHATS_BY_USER, ALL_CONTACTS_BY_USER } from "../../graphql/queries";
+import {
+  ALL_CHATS_BY_USER,
+  ALL_CONTACTS_BY_USER,
+  CURRENT_USER,
+} from "../../graphql/queries";
 import {
   NEW_MESSAGE_TO_CHAT_ADDED,
   NEW_CHAT_CREATED,
   CHAT_DELETED,
   LEFT_GROUP_CHATS,
+  UNREAD_MESSAGE_ADDED,
 } from "../../graphql/subscriptions";
 import useField from "../../hooks/useField";
 import Loading from "./Loading";
 import Title from "./Title";
 import Button from "./Button";
 import Input from "./Input";
-// import ChatItem from "../Chats/ChatItem";
 import ContactCard from "./ContactCard";
-// import ContactItem from "../Contacts/ContactItem";
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const EmptyState = ({ message, testId }) => (
@@ -78,9 +81,10 @@ export const ChatItem = ({
   }
 
   const latestMessage = chat.messages[0];
-  const newMessagesCount = chatAndMessageHelpers.newMessagesCount(
+
+  const newMessagesCount = chatAndMessageHelpers.newUnreadMessagesCount(
     user,
-    chat.messages
+    chat.id
   );
 
   const classStyles =
@@ -174,6 +178,76 @@ const ChatsList = ({
     },
     onError: (error) => {
       console.log("NEW_MESSAGE_TO_CHAT_ADDED-subscription error:", error);
+    },
+  });
+
+  useSubscription(UNREAD_MESSAGE_ADDED, {
+    onData: ({ data }) => {
+      console.log("Use UNREAD_MESSAGE_ADDED-subscription:");
+      const update = data.data.unreadMessageAdded;
+
+      if (update.userId !== user.id) {
+        return;
+      }
+
+      client.cache.updateQuery({ query: CURRENT_USER }, (existingUserData) => {
+        if (!existingUserData?.me) return existingUserData;
+
+        const updatedUnreadMessages = existingUserData.me.unreadMessages.map(
+          (chat) => ({
+            ...chat,
+            chatId: { ...chat.chatId },
+            messages: [...chat.messages],
+          })
+        );
+
+        const existingChatIndex = updatedUnreadMessages.findIndex(
+          (chat) => chat.chatId.id === update.chatId
+        );
+
+        if (existingChatIndex !== -1) {
+          updatedUnreadMessages[existingChatIndex].messages.push({
+            __typename: "UnreadMessage",
+            messageId: update.messageId,
+          });
+        } else {
+          const chatFromCache = client.cache
+            .readQuery({
+              query: ALL_CHATS_BY_USER,
+            })
+            ?.allChatsByUser?.find((chat) => chat.id === update.chatId);
+
+          if (chatFromCache) {
+            updatedUnreadMessages.push({
+              __typename: "UnreadChat",
+              chatId: {
+                __typename: "Chat",
+                id: update.chatId,
+                title: chatFromCache.title,
+                image: chatFromCache.image,
+                isGroupChat: chatFromCache.isGroupChat,
+              },
+              messages: [
+                {
+                  __typename: "UnreadMessage",
+                  messageId: update.messageId,
+                },
+              ],
+            });
+          }
+        }
+
+        return {
+          ...existingUserData,
+          me: {
+            ...existingUserData.me,
+            unreadMessages: updatedUnreadMessages,
+          },
+        };
+      });
+    },
+    onError: (error) => {
+      console.log("UNREAD_MESSAGE_ADDED-subscription error:", error);
     },
   });
 

@@ -14,6 +14,7 @@ const {
   createUser,
   loginUser,
   addContacts,
+  createChat,
   blockOrUnBlockContact,
   changePassword,
   checkIfUserHasBlockedYou,
@@ -49,7 +50,7 @@ describe("User tests", () => {
 
   it("Returns error when username is too short", async () => {
     const invalidCredentials = {
-      username: "abc", // Too short (less than 4 chars)
+      username: "abc",
       password: "password",
       confirmPassword: "password",
     };
@@ -65,7 +66,7 @@ describe("User tests", () => {
   it("Returns error when password is too short", async () => {
     const invalidCredentials = {
       username: "validuser",
-      password: "short", // Too short (less than 6 chars)
+      password: "short",
       confirmPassword: "short",
     };
 
@@ -615,5 +616,37 @@ describe("User tests", () => {
     );
     expect(JSON.parse(checkAfterUnblock.text).errors).toBeUndefined();
     expect(checkAfterUnblock.body.data.checkIfUserHasBlockedYou).toBe(false);
+  });
+
+  it("Should be able to mark chat as read", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+    await addContacts(credentials, [contactDetails[0]]);
+
+    await loginUser(contactDetails[0]);
+
+    const chatResponse = await createChat(
+      credentials,
+      [credentials.id, contactDetails[0].id],
+      { type: "message", content: "Hello!" }
+    );
+
+    const chatId = chatResponse.body.data.createChat.id;
+
+    const response = await requestData(
+      {
+        query: `mutation MarkChatAsRead($chatId: ID!) {
+        markChatAsRead(chatId: $chatId) {
+          id
+          title
+        }
+      }`,
+        variables: { chatId: chatId },
+      },
+      contactDetails[0].token
+    );
+
+    expect(JSON.parse(response.text).errors).toBeUndefined();
+    expect(response.body.data.markChatAsRead.id).toBe(chatId);
   });
 });

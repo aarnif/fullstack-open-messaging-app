@@ -57,6 +57,11 @@ const cache = new InMemoryCache({
             return [...incoming];
           },
         },
+        me: {
+          merge(existing, incoming) {
+            return incoming;
+          },
+        },
       },
     },
     Chat: {
@@ -76,6 +81,21 @@ const cache = new InMemoryCache({
     User: {
       fields: {
         blockedContacts: {
+          merge(_, incoming = []) {
+            return [...incoming];
+          },
+        },
+        unreadMessages: {
+          merge(_, incoming = []) {
+            return [...incoming];
+          },
+        },
+        contacts: {
+          merge(_, incoming = []) {
+            return [...incoming];
+          },
+        },
+        chats: {
           merge(_, incoming = []) {
             return [...incoming];
           },

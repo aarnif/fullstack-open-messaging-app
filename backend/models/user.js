@@ -65,6 +65,23 @@ const userSchema = new Schema({
       ref: "Chat",
     },
   ],
+  unreadMessages: [
+    {
+      chatId: {
+        type: Schema.Types.ObjectId,
+        ref: "Chat",
+        required: true,
+      },
+      messages: [
+        {
+          messageId: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
+    },
+  ],
 });
 
 userSchema.set("toJSON", {

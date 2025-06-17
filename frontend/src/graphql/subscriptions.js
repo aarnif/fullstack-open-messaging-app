@@ -63,3 +63,13 @@ export const GROUP_CHAT_EDITED = gql`
 
   ${CHAT_DETAILS}
 `;
+
+export const UNREAD_MESSAGE_ADDED = gql`
+  subscription UnreadMessageAdded {
+    unreadMessageAdded {
+      userId
+      chatId
+      messageId
+    }
+  }
+`;
