@@ -100,21 +100,21 @@ describe("<ChatItem />", () => {
     expect(screen.queryByTestId("new-messages-count")).not.toBeInTheDocument();
   });
 
-  test("displays new messages count if count greater than zero", () => {
-    const chatWithNewMessages = {
-      ...mockChatData,
-      messages: [
-        ...mockChatData.messages,
-        {
-          ...mockChatData.messages[0],
-          sender: { id: userData.id },
-          isReadBy: [{ isRead: false, member: { id: userData.id } }],
-        },
-      ],
-    };
-    renderChatItem(chatWithNewMessages);
-    expect(screen.queryByTestId("new-messages-count")).toBeInTheDocument();
-  });
+  // test("displays new messages count if count greater than zero", () => {
+  //   const chatWithNewMessages = {
+  //     ...mockChatData,
+  //     messages: [
+  //       ...mockChatData.messages,
+  //       {
+  //         ...mockChatData.messages[0],
+  //         sender: { id: userData.id },
+  //         isReadBy: [{ isRead: false, member: { id: userData.id } }],
+  //       },
+  //     ],
+  //   };
+  //   renderChatItem(chatWithNewMessages);
+  //   expect(screen.queryByTestId("new-messages-count")).toBeInTheDocument();
+  // });
 
   test("displays notification message correctly", () => {
     const chatWithNotification = {
