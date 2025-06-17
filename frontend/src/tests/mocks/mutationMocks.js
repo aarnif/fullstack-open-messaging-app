@@ -4,6 +4,7 @@ import {
   EDIT_SETTINGS,
   EDIT_PROFILE,
   MARK_MESSAGES_IN_CHAT_READ,
+  MARK_CHAT_AS_READ, // Add this import
   ADD_MESSAGE_TO_CHAT,
   CREATE_CHAT,
   ADD_CONTACTS,
@@ -83,6 +84,7 @@ const editProfileMock = {
   },
 };
 
+// Keep the old mocks for backward compatibility if needed
 const markAllMessagesInPrivateChatReadMock = {
   request: {
     query: MARK_MESSAGES_IN_CHAT_READ,
@@ -108,6 +110,37 @@ const markAllMessagesInGroupChatReadMock = {
   result: {
     data: {
       markAllMessagesInChatRead: chats[1],
+    },
+  },
+  maxUsageCount: 2,
+};
+
+// Add new mocks for the new system
+const markPrivateChatAsReadMock = {
+  request: {
+    query: MARK_CHAT_AS_READ,
+    variables: {
+      chatId: chats[0].id,
+    },
+  },
+  result: {
+    data: {
+      markChatAsRead: chats[0],
+    },
+  },
+  maxUsageCount: 2,
+};
+
+const markGroupChatAsReadMock = {
+  request: {
+    query: MARK_CHAT_AS_READ,
+    variables: {
+      chatId: chats[1].id,
+    },
+  },
+  result: {
+    data: {
+      markChatAsRead: chats[1],
     },
   },
   maxUsageCount: 2,
@@ -320,8 +353,10 @@ export default {
   createUserMock,
   editSettingsMock,
   editProfileMock,
-  markAllMessagesInGroupChatReadMock,
-  markAllMessagesInPrivateChatReadMock,
+  markAllMessagesInGroupChatReadMock, // Keep old ones
+  markAllMessagesInPrivateChatReadMock, // Keep old ones
+  markGroupChatAsReadMock, // Add new ones
+  markPrivateChatAsReadMock, // Add new ones
   addMessageToChatMock,
   createNewChatMock,
   createNewChatWithImageOnlyMock,

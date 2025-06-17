@@ -29,9 +29,13 @@ const currentUserMock = {
   },
   result: {
     data: {
-      me: users[0],
+      me: {
+        ...users[0],
+        unreadMessages: [],
+      },
     },
   },
+  maxUsageCount: Number.POSITIVE_INFINITY,
 };
 
 const currentUserWithDarkModeMock = {
