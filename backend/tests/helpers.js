@@ -182,6 +182,46 @@ const checkIfUserHasBlockedYou = async (credentials, userId) =>
     credentials.token
   );
 
+const editGroupChat = async (
+  credentials,
+  chatId,
+  title,
+  description,
+  memberIds,
+  input = null
+) =>
+  await requestData(
+    {
+      query: `mutation EditGroupChat($chatId: ID!
+                $title: String
+                $description: String
+                $input: ImageInput
+                $memberIds: [ID!]!) 
+                {
+                editGroupChat(chatId: $chatId
+                title: $title
+                description: $description
+                input: $input
+                memberIds: $memberIds) {
+                  id
+                  title
+                  members {
+                    id
+                    username
+                  }
+                }
+        }`,
+      variables: {
+        chatId,
+        title,
+        description,
+        input,
+        memberIds,
+      },
+    },
+    credentials.token
+  );
+
 export default {
   timeOut,
   testServer,
@@ -196,4 +236,5 @@ export default {
   createChat,
   changePassword,
   checkIfUserHasBlockedYou,
+  editGroupChat,
 };
