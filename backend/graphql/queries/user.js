@@ -72,11 +72,14 @@ const resolvers = {
           },
         });
       }
+
+      const searchTerm = args.searchByTitle || "";
+
       const user = await User.findById(context.currentUser.id).populate({
         path: "chats.chat",
         match: {
           title: {
-            $regex: `(?i)${args.searchByTitle}(?-i)`,
+            $regex: `(?i)${searchTerm}(?-i)`,
           },
         },
         populate: [
