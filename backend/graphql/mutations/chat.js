@@ -44,7 +44,9 @@ const typeDefs = `
     leaveGroupChats(
       chatIds: [ID!]!
     ): [String!]!
+    markChatAsRead(chatId: ID!): Boolean!
   }
+  
   type groupChatEditedDetails {
     updatedChat: Chat
     removedMemberIds: [ID]
@@ -156,9 +158,33 @@ const resolvers = {
       try {
         await newChat.save();
 
+        await User.findByIdAndUpdate(context.currentUser.id, {
+          $push: {
+            chats: {
+              chat: newChat._id,
+              unreadMessages: 0,
+              lastReadMessageId: null,
+              lastReadAt: null,
+            },
+          },
+        });
+
+        const otherMemberIds = args.memberIds.filter(
+          (id) => id !== context.currentUser.id
+        );
+
         await User.updateMany(
-          { _id: { $in: args.memberIds } },
-          { $push: { chats: { chat: newChat._id } } }
+          { _id: { $in: otherMemberIds } },
+          {
+            $push: {
+              chats: {
+                chat: newChat._id,
+                unreadMessages: 1,
+                lastReadMessageId: null,
+                lastReadAt: null,
+              },
+            },
+          }
         );
 
         const createdChat = await Chat.findById(newChat._id)
@@ -275,6 +301,16 @@ const resolvers = {
             path: "messages.sender",
             populate: { path: "blockedContacts" },
           });
+
+        await User.updateMany(
+          {
+            "chats.chat": args.chatId,
+            _id: { $ne: context.currentUser.id },
+          },
+          {
+            $inc: { "chats.$.unreadMessages": 1 },
+          }
+        );
 
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
           messageToChatAdded: updatedChat,
@@ -451,7 +487,16 @@ const resolvers = {
 
             await User.updateMany(
               { _id: { $in: addedMemberIds } },
-              { $addToSet: { chats: { chat: args.chatId } } }
+              {
+                $addToSet: {
+                  chats: {
+                    chat: args.chatId,
+                    unreadMessages: 0,
+                    lastReadMessageId: null,
+                    lastReadAt: null,
+                  },
+                },
+              }
             );
 
             addedUsers.forEach((user) => {
@@ -492,6 +537,18 @@ const resolvers = {
             path: "messages.sender",
             populate: { path: "blockedContacts" },
           });
+
+        if (notificationMessages.length > 0) {
+          await User.updateMany(
+            {
+              "chats.chat": args.chatId,
+              _id: { $ne: context.currentUser.id },
+            },
+            {
+              $inc: { "chats.$.unreadMessages": notificationMessages.length },
+            }
+          );
+        }
 
         groupChatEditedDetails.updatedChat = updatedChat;
 
@@ -541,6 +598,15 @@ const resolvers = {
           $pull: { chats: { chat: { $in: args.chatIds } } },
         });
 
+        await User.updateMany(
+          {
+            "chats.chat": { $in: args.chatIds },
+          },
+          {
+            $inc: { "chats.$.unreadMessages": 1 },
+          }
+        );
+
         const updatedChats = await Chat.find({ _id: { $in: args.chatIds } })
           .populate("admin")
           .populate("members")
@@ -576,6 +642,41 @@ const resolvers = {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             error,
+          },
+        });
+      }
+    },
+
+    markChatAsRead: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      try {
+        await User.findByIdAndUpdate(
+          context.currentUser.id,
+          {
+            $set: {
+              "chats.$[elem].unreadMessages": 0,
+              "chats.$[elem].lastReadAt": new Date(),
+            },
+          },
+          {
+            arrayFilters: [{ "elem.chat": args.chatId }],
+            new: true,
+          }
+        );
+
+        return true;
+      } catch (error) {
+        throw new GraphQLError("Failed to mark chat as read", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
           },
         });
       }

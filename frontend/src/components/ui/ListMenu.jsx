@@ -156,6 +156,7 @@ const ChatsList = ({
     onData: ({ data }) => {
       console.log("Use NEW_MESSAGE_TO_CHAT_ADDED-subscription:");
       const updatedChat = data.data.messageToChatAdded;
+
       client.cache.updateQuery(
         {
           query: EVERY_CHAT_BY_USER,
@@ -164,9 +165,17 @@ const ChatsList = ({
         ({ everyChatByUser }) => {
           const sortedChats = chatAndMessageHelpers.sortChatsByDate(
             everyChatByUser.map((userChat) => {
-              return userChat.chat.id === updatedChat.id
-                ? { ...userChat, chat: updatedChat }
-                : userChat;
+              if (userChat.chat.id === updatedChat.id) {
+                const isActiveChat = activeChatOrContactId === updatedChat.id;
+                return {
+                  ...userChat,
+                  chat: updatedChat,
+                  unreadMessages: isActiveChat
+                    ? 0
+                    : userChat.unreadMessages + 1,
+                };
+              }
+              return userChat;
             })
           );
           return { everyChatByUser: sortedChats };
@@ -182,6 +191,7 @@ const ChatsList = ({
     onData: ({ data }) => {
       console.log("Use NEW_CHAT_CREATED-subscription:");
       const newChat = data.data.newChatCreated;
+
       client.cache.updateQuery(
         {
           query: EVERY_CHAT_BY_USER,

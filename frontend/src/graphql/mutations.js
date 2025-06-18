@@ -163,3 +163,9 @@ export const CHANGE_PASSWORD = gql`
 
   ${USER_DETAILS}
 `;
+
+export const MARK_CHAT_AS_READ = gql`
+  mutation MarkChatAsRead($chatId: ID!) {
+    markChatAsRead(chatId: $chatId)
+  }
+`;

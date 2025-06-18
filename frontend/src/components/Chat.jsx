@@ -9,8 +9,16 @@ import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import imageService from "../services/imageService";
 import useModal from "../hooks/useModal";
 import useField from "../hooks/useField";
-import { FIND_CHAT_BY_ID, FIND_CHAT_BY_MEMBERS } from "../graphql/queries";
-import { ADD_MESSAGE_TO_CHAT, CREATE_CHAT } from "../graphql/mutations";
+import {
+  FIND_CHAT_BY_ID,
+  FIND_CHAT_BY_MEMBERS,
+  EVERY_CHAT_BY_USER,
+} from "../graphql/queries";
+import {
+  ADD_MESSAGE_TO_CHAT,
+  CREATE_CHAT,
+  MARK_CHAT_AS_READ,
+} from "../graphql/mutations";
 import Loading from "./ui/Loading";
 import GroupChatInfo from "./GroupChatInfo";
 import Button from "./ui/Button";
@@ -467,10 +475,38 @@ const ExistingChatContent = ({
     },
   });
 
+  const [markChatAsRead] = useMutation(MARK_CHAT_AS_READ, {
+    onError: (error) => {
+      console.log(
+        "Error marking chat as read:",
+        error.graphQLErrors[0]?.message || error.message
+      );
+    },
+  });
+
   useEffect(() => {
     setActiveMenuItem("chats");
     setActiveChatOrContactId(match.chatId);
-  }, [data, match.chatId, setActiveChatOrContactId, setActiveMenuItem]);
+
+    if (match.chatId && data?.findChatById) {
+      console.log("Marking chat as read");
+      markChatAsRead({
+        variables: { chatId: match.chatId },
+        refetchQueries: [
+          {
+            query: EVERY_CHAT_BY_USER,
+            variables: { searchByTitle: "" },
+          },
+        ],
+      });
+    }
+  }, [
+    data,
+    match.chatId,
+    setActiveChatOrContactId,
+    setActiveMenuItem,
+    markChatAsRead,
+  ]);
 
   if (loading) {
     return <Loading />;
