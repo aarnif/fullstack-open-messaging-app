@@ -22,12 +22,13 @@ const sliceLatestMessage = (latestMessage, characterCount = 20) =>
 
 const sortChatsByDate = (chats) =>
   chats.sort((a, b) => {
-    if (!a.messages.length) return 1;
+    if (!a.chat.messages.length) return 1;
 
-    if (!b.messages.length) return -1;
+    if (!b.chat.messages.length) return -1;
 
     return (
-      new Date(b.messages[0].createdAt) - new Date(a.messages[0].createdAt)
+      new Date(b.chat.messages[0].createdAt) -
+      new Date(a.chat.messages[0].createdAt)
     );
   });
 
