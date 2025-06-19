@@ -145,25 +145,35 @@ export const CHECK_IF_USER_HAS_BLOCKED_YOU = gql`
   }
 `;
 
-export const USER_CHAT_DETAILS = gql`
-  fragment UserChatDetails on UserChat {
-    unreadMessages
-    lastReadMessageId
-    lastReadAt
-    chat {
-      ...ChatDetails
-    }
-  }
-
-  ${CHAT_DETAILS}
-`;
-
 export const EVERY_CHAT_BY_USER = gql`
   query EveryChatByUser($searchByTitle: String) {
     everyChatByUser(searchByTitle: $searchByTitle) {
-      ...UserChatDetails
+      chat {
+        id
+        title
+        isGroupChat
+        messages {
+          id
+          type
+          sender {
+            id
+            name
+          }
+          content
+          image {
+            thumbnail
+            original
+          }
+          createdAt
+        }
+        image {
+          thumbnail
+          original
+        }
+      }
+      unreadMessages
+      lastReadMessageId
+      lastReadAt
     }
   }
-
-  ${USER_CHAT_DETAILS}
 `;

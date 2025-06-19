@@ -10,8 +10,16 @@ const typeDefs = `
     time: String
   }
 
+  type UserChatDetails {
+    id: ID!
+    title: String!
+    image: Image
+    isGroupChat: Boolean!
+    messages: [Message!]!
+  }
+
   type UserChat {
-    chat: Chat!
+    chat: UserChatDetails!
     unreadMessages: Int!
     lastReadMessageId: ID
     lastReadAt: Date
@@ -73,29 +81,19 @@ const resolvers = {
         });
       }
 
-      const searchTerm = args.searchByTitle || "";
-
       const user = await User.findById(context.currentUser.id).populate({
         path: "chats.chat",
         match: {
           title: {
-            $regex: `(?i)${searchTerm}(?-i)`,
+            $regex: `(?i)${args.searchByTitle || ""}(?-i)`,
           },
         },
         populate: [
           { path: "admin" },
           { path: "members" },
           {
-            path: "members",
-            populate: { path: "blockedContacts" },
-          },
-          {
             path: "messages",
             populate: { path: "sender" },
-          },
-          {
-            path: "messages.sender",
-            populate: { path: "blockedContacts" },
           },
         ],
       });
@@ -104,16 +102,11 @@ const resolvers = {
         ? []
         : user.chats
             .filter((userChat) => userChat.chat !== null)
-            .sort((a, b) => {
-              if (!a.chat.messages.length) return 1;
-
-              if (!b.chat.messages.length) return -1;
-
-              return (
+            .sort(
+              (a, b) =>
                 new Date(b.chat.messages[0].createdAt) -
                 new Date(a.chat.messages[0].createdAt)
-              );
-            });
+            );
     },
     allContactsByUser: async (root, args, context) => {
       if (!context.currentUser) {

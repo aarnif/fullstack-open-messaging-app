@@ -200,7 +200,17 @@ const ChatsList = ({
         ({ everyChatByUser }) => {
           const newUserChat = {
             __typename: "UserChat",
-            chat: newChat,
+            chat: {
+              __typename: "Chat",
+              id: newChat.id,
+              title: newChat.title,
+              isGroupChat: newChat.isGroupChat,
+              image: {
+                thumbnail: newChat.image.thumbnail,
+                original: newChat.image.original,
+              },
+              messages: newChat.messages,
+            },
             unreadMessages: 0,
             lastReadMessageId: null,
             lastReadAt: null,
