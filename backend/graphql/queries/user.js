@@ -138,7 +138,7 @@ const resolvers = {
         {
           $addFields: {
             latestMessageTime: {
-              $arrayElemAt: ["$chat.messages.createdAt", 1],
+              $arrayElemAt: ["$chat.messages.createdAt", -1],
             },
             "chat.messages": {
               $map: {

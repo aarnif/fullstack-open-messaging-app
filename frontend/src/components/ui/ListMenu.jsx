@@ -79,7 +79,7 @@ export const ChatItem = ({
     return null;
   }
 
-  const latestMessage = chat.messages[0];
+  const latestMessage = chat.messages[chat.messages.length - 1];
   const newMessagesCount = unreadMessages;
 
   const classStyles =

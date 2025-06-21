@@ -21,16 +21,11 @@ const sliceLatestMessage = (latestMessage, characterCount = 20) =>
     : latestMessage;
 
 const sortChatsByDate = (chats) =>
-  chats.sort((a, b) => {
-    if (!a.chat.messages.length) return 1;
-
-    if (!b.chat.messages.length) return -1;
-
-    return (
-      new Date(b.chat.messages[0].createdAt) -
-      new Date(a.chat.messages[0].createdAt)
-    );
-  });
+  chats.sort(
+    (a, b) =>
+      new Date(b.chat.messages[b.chat.messages.length - 1].createdAt) -
+      new Date(a.chat.messages[a.chat.messages.length - 1].createdAt)
+  );
 
 const sortChatMembersByNameAndUsername = (chatMembers) => {
   return [

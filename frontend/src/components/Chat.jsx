@@ -523,10 +523,7 @@ const ExistingChatContent = ({
         chat={data.findChatById}
         setShowGroupChatInfo={setShowGroupChatInfo}
       />
-      <Messages
-        user={user}
-        messages={[...(data?.findChatById.messages || [])].reverse()}
-      />
+      <Messages user={user} messages={data?.findChatById.messages || []} />
       <NewMessageInput user={user} chatId={match.chatId} newChatInfo={null} />
       <AnimatePresence>
         {showGroupChatInfo && (

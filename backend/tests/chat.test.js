@@ -133,15 +133,17 @@ describe("Chat tests", () => {
       credentials.token
     );
 
+    const chatMessages = response.body.data.addMessageToChat.messages;
+
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.addMessageToChat.title).toBe(
       groupChatDetails[0].title
     );
-    expect(response.body.data.addMessageToChat.messages.length).toBe(2);
-    expect(
-      response.body.data.addMessageToChat.messages[0].sender.username
-    ).toBe(credentials.username);
-    expect(response.body.data.addMessageToChat.messages[0].content).toBe(
+    expect(chatMessages.length).toBe(2);
+    expect(chatMessages[chatMessages.length - 1].sender.username).toBe(
+      credentials.username
+    );
+    expect(chatMessages[chatMessages.length - 1].content).toBe(
       "This is a new message"
     );
   });

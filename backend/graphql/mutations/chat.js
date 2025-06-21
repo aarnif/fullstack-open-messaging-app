@@ -283,7 +283,7 @@ const resolvers = {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $push: { messages: { $each: [newMessage], $position: 0 } },
+            $push: { messages: newMessage },
           },
           { new: true }
         )
@@ -518,7 +518,7 @@ const resolvers = {
           {
             $set: { ...args, image: args.input, members: args.memberIds },
             $push: {
-              messages: { $each: notificationMessages, $position: 0 },
+              messages: notificationMessages,
             },
           },
           { new: true }
@@ -589,7 +589,7 @@ const resolvers = {
         await Chat.updateMany(
           { _id: { $in: args.chatIds } },
           {
-            $push: { messages: { $each: [exitMessage], $position: 0 } },
+            $push: { messages: exitMessage },
             $pull: { members: context.currentUser.id },
           }
         );
