@@ -61,8 +61,23 @@ const userSchema = new Schema({
   ],
   chats: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Chat",
+      chat: {
+        type: Schema.Types.ObjectId,
+        ref: "Chat",
+      },
+      unreadMessages: {
+        type: Number,
+        default: 0,
+        min: 0,
+      },
+      lastReadMessageId: {
+        type: Schema.Types.ObjectId,
+        default: null,
+      },
+      lastReadAt: {
+        type: Date,
+        default: null,
+      },
     },
   ],
 });

@@ -13,12 +13,7 @@ import mocks from "./mocks/funcs.js";
 const { currentUserMock, findGroupChatByIdMock, findPrivateChatByIdMock } =
   queryMocks;
 
-const {
-  markAllMessagesInGroupChatReadMock,
-  markAllMessagesInPrivateChatReadMock,
-  createNewChatMock,
-  mockNewChatInfo,
-} = mutationMocks;
+const { createNewChatMock, mockNewChatInfo } = mutationMocks;
 
 const { navigate } = mocks;
 
@@ -44,9 +39,7 @@ vi.mock("react-router", async () => {
 
 Object.defineProperty(global, "localStorage", { value: localStorage });
 
-const renderExistingChatComponent = (
-  mockData = [findGroupChatByIdMock, markAllMessagesInGroupChatReadMock]
-) => {
+const renderExistingChatComponent = (mockData = [findGroupChatByIdMock]) => {
   useLocation.mockReturnValue({ pathname: "/chats/1" });
   render(
     <MockedProvider mocks={mockData} addTypename={false}>
@@ -132,10 +125,7 @@ describe("<Chat />", () => {
         data: { findChatById: null },
       },
     };
-    renderExistingChatComponent([
-      findChatByIdMockError,
-      markAllMessagesInGroupChatReadMock,
-    ]);
+    renderExistingChatComponent([findChatByIdMockError]);
 
     expect(screen.getByTestId("chat-page")).toBeInTheDocument();
 
@@ -172,10 +162,7 @@ describe("<Chat />", () => {
         (member) => member.id !== userData.id
       );
 
-    renderExistingChatComponent([
-      findPrivateChatByIdMock,
-      markAllMessagesInPrivateChatReadMock,
-    ]);
+    renderExistingChatComponent([findPrivateChatByIdMock]);
 
     await waitFor(() => {
       expect(screen.getByTestId("chat-header")).toBeInTheDocument();

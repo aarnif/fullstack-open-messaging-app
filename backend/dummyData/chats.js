@@ -118,7 +118,9 @@ const chats = [
 // Add each chat to the user's chat list
 chats.forEach((chat) => {
   chat.members.forEach((member) => {
-    member.chats.push(chat);
+    member.chats.push({
+      chat: chat._id,
+    });
   });
 });
 

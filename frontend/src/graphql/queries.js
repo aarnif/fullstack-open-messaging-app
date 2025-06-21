@@ -50,13 +50,6 @@ export const CHAT_DETAILS = gql`
       sender {
         ...UserDetails
       }
-      isReadBy {
-        member {
-          id
-          username
-        }
-        isRead
-      }
       createdAt
     }
   }
@@ -149,5 +142,38 @@ export const FIND_GROUP_CHAT_BY_TITLE = gql`
 export const CHECK_IF_USER_HAS_BLOCKED_YOU = gql`
   query CheckIfUserHasBlockedYou($userId: ID!) {
     checkIfUserHasBlockedYou(userId: $userId)
+  }
+`;
+
+export const EVERY_CHAT_BY_USER = gql`
+  query EveryChatByUser($searchByTitle: String) {
+    everyChatByUser(searchByTitle: $searchByTitle) {
+      chat {
+        id
+        title
+        isGroupChat
+        messages {
+          id
+          type
+          sender {
+            id
+            name
+          }
+          content
+          image {
+            thumbnail
+            original
+          }
+          createdAt
+        }
+        image {
+          thumbnail
+          original
+        }
+      }
+      unreadMessages
+      lastReadMessageId
+      lastReadAt
+    }
   }
 `;

@@ -30,8 +30,6 @@ export const addChats = async () => {
   console.log("adding chats...");
   for (let i = 0; i < chats.length; ++i) {
     const chat = chats[i];
-    // Save messages to the chat from the last message to the first
-    chat.messages.reverse();
     await new Chat(chat).save();
   }
 };

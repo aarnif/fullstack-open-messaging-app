@@ -1,7 +1,11 @@
 import { useSubscription, useApolloClient } from "@apollo/client";
 import { Outlet } from "react-router";
 
-import { ALL_CONTACTS_BY_USER, ALL_CHATS_BY_USER } from "../graphql/queries";
+import {
+  ALL_CONTACTS_BY_USER,
+  ALL_CHATS_BY_USER,
+  EVERY_CHAT_BY_USER,
+} from "../graphql/queries";
 import {
   CONTACT_BLOCKED_OR_UNBLOCKED,
   GROUP_CHAT_EDITED,
@@ -100,28 +104,34 @@ const Home = ({
         data.data.groupChatEdited;
       client.cache.updateQuery(
         {
-          query: ALL_CHATS_BY_USER,
+          query: EVERY_CHAT_BY_USER,
           variables: {
             searchByTitle: "",
           },
         },
-        ({ allChatsByUser }) => {
+        ({ everyChatByUser }) => {
           if (removedMemberIds.includes(user.id)) {
             return {
-              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
-                allChatsByUser.filter((chat) => chat.id !== updatedChat.id)
+              everyChatByUser: chatAndMessageHelpers.sortChatsByDate(
+                everyChatByUser.filter((chat) => chat.id !== updatedChat.id)
               ),
             };
           } else if (addedMemberIds.includes(user.id)) {
             return {
-              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
-                allChatsByUser.concat(updatedChat)
+              everyChatByUser: chatAndMessageHelpers.sortChatsByDate(
+                everyChatByUser.concat({
+                  __typename: "UserChat",
+                  chat: updatedChat,
+                  unreadMessages: 0,
+                  lastReadMessageId: null,
+                  lastReadAt: null,
+                })
               ),
             };
           } else {
             return {
-              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
-                allChatsByUser.map((chat) =>
+              everyChatByUser: chatAndMessageHelpers.sortChatsByDate(
+                everyChatByUser.map((chat) =>
                   chat.id === updatedChat.id ? { ...updatedChat } : chat
                 )
               ),

@@ -41,13 +41,12 @@ const typeDefs = `
       input: ImageInput
       memberIds: [ID!]!
     ): Chat
-    markAllMessagesInChatRead(
-      chatId: ID!
-    ): Chat
     leaveGroupChats(
       chatIds: [ID!]!
     ): [String!]!
+    markChatAsRead(chatId: ID!): Boolean!
   }
+  
   type groupChatEditedDetails {
     updatedChat: Chat
     removedMemberIds: [ID]
@@ -144,10 +143,6 @@ const resolvers = {
         sender: context.currentUser.id,
         content: trimmedContent,
         image: args.initialMessage.image,
-        isReadBy: args.memberIds.map((memberId) => ({
-          member: memberId,
-          isRead: context.currentUser.id === memberId,
-        })),
       };
 
       const newChat = new Chat({
@@ -163,9 +158,33 @@ const resolvers = {
       try {
         await newChat.save();
 
+        await User.findByIdAndUpdate(context.currentUser.id, {
+          $push: {
+            chats: {
+              chat: newChat._id,
+              unreadMessages: 0,
+              lastReadMessageId: null,
+              lastReadAt: null,
+            },
+          },
+        });
+
+        const otherMemberIds = args.memberIds.filter(
+          (id) => id !== context.currentUser.id
+        );
+
         await User.updateMany(
-          { _id: { $in: args.memberIds } },
-          { $push: { chats: newChat._id } }
+          { _id: { $in: otherMemberIds } },
+          {
+            $push: {
+              chats: {
+                chat: newChat._id,
+                unreadMessages: 1,
+                lastReadMessageId: null,
+                lastReadAt: null,
+              },
+            },
+          }
         );
 
         const createdChat = await Chat.findById(newChat._id)
@@ -182,10 +201,6 @@ const resolvers = {
           .populate({
             path: "messages.sender",
             populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
           });
 
         pubsub.publish("NEW_CHAT_CREATED", { newChatCreated: createdChat });
@@ -262,17 +277,13 @@ const resolvers = {
         sender: context.currentUser.id,
         content: trimmedContent,
         image: args.input,
-        isReadBy: chatToBeUpdated.members.map((member) => ({
-          member: member._id,
-          isRead: context.currentUser._id.equals(member._id),
-        })),
       };
 
       try {
         const updatedChat = await Chat.findByIdAndUpdate(
           args.chatId,
           {
-            $push: { messages: { $each: [newMessage], $position: 0 } },
+            $push: { messages: newMessage },
           },
           { new: true }
         )
@@ -289,11 +300,17 @@ const resolvers = {
           .populate({
             path: "messages.sender",
             populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
           });
+
+        await User.updateMany(
+          {
+            "chats.chat": args.chatId,
+            _id: { $ne: context.currentUser.id },
+          },
+          {
+            $inc: { "chats.$.unreadMessages": 1 },
+          }
+        );
 
         pubsub.publish("MESSAGE_TO_CHAT_ADDED", {
           messageToChatAdded: updatedChat,
@@ -346,7 +363,7 @@ const resolvers = {
 
         await User.updateMany(
           { _id: { $in: chatToBeDeleted.members.map((member) => member._id) } },
-          { $pull: { chats: args.chatId } }
+          { $pull: { chats: { chat: args.chatId } } }
         );
 
         pubsub.publish("CHAT_DELETED", {
@@ -446,9 +463,10 @@ const resolvers = {
             const removedUsers = await User.find({
               _id: { $in: removedMemberIds },
             });
+
             await User.updateMany(
               { _id: { $in: removedMemberIds } },
-              { $pull: { chats: args.chatId } }
+              { $pull: { chats: { chat: args.chatId } } }
             );
 
             removedUsers.forEach((user) => {
@@ -469,7 +487,16 @@ const resolvers = {
 
             await User.updateMany(
               { _id: { $in: addedMemberIds } },
-              { $addToSet: { chats: args.chatId } }
+              {
+                $addToSet: {
+                  chats: {
+                    chat: args.chatId,
+                    unreadMessages: 0,
+                    lastReadMessageId: null,
+                    lastReadAt: null,
+                  },
+                },
+              }
             );
 
             addedUsers.forEach((user) => {
@@ -491,7 +518,7 @@ const resolvers = {
           {
             $set: { ...args, image: args.input, members: args.memberIds },
             $push: {
-              messages: { $each: notificationMessages, $position: 0 },
+              messages: notificationMessages,
             },
           },
           { new: true }
@@ -509,11 +536,19 @@ const resolvers = {
           .populate({
             path: "messages.sender",
             populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
           });
+
+        if (notificationMessages.length > 0) {
+          await User.updateMany(
+            {
+              "chats.chat": args.chatId,
+              _id: { $ne: context.currentUser.id },
+            },
+            {
+              $inc: { "chats.$.unreadMessages": notificationMessages.length },
+            }
+          );
+        }
 
         groupChatEditedDetails.updatedChat = updatedChat;
 
@@ -525,62 +560,8 @@ const resolvers = {
 
         return updatedChat;
       } catch (error) {
+        console.error("Error updating chat:", error);
         throw new GraphQLError("Updating chat failed", {
-          extensions: {
-            code: "INTERNAL_SERVER_ERROR",
-            error,
-          },
-        });
-      }
-    },
-
-    markAllMessagesInChatRead: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new GraphQLError("Not logged in!", {
-          extensions: {
-            code: "NOT_AUTHENTICATED",
-          },
-        });
-      }
-
-      try {
-        const updatedChat = await Chat.findByIdAndUpdate(
-          args.chatId,
-          {
-            $set: {
-              "messages.$[messageElem].isReadBy.$[readElem].isRead": true,
-            },
-          },
-          {
-            arrayFilters: [
-              { "messageElem.isReadBy": { $exists: true } },
-              { "readElem.member": context.currentUser.id },
-            ],
-            new: true,
-          }
-        )
-          .populate("admin")
-          .populate("members")
-          .populate({
-            path: "members",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "sender" },
-          })
-          .populate({
-            path: "messages.sender",
-            populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
-          });
-
-        return updatedChat;
-      } catch (error) {
-        throw new GraphQLError("Marking messages as read failed", {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             error,
@@ -608,14 +589,23 @@ const resolvers = {
         await Chat.updateMany(
           { _id: { $in: args.chatIds } },
           {
-            $push: { messages: { $each: [exitMessage], $position: 0 } },
+            $push: { messages: exitMessage },
             $pull: { members: context.currentUser.id },
           }
         );
 
         await User.findByIdAndUpdate(context.currentUser.id, {
-          $pull: { chats: { $in: args.chatIds } },
+          $pull: { chats: { chat: { $in: args.chatIds } } },
         });
+
+        await User.updateMany(
+          {
+            "chats.chat": { $in: args.chatIds },
+          },
+          {
+            $inc: { "chats.$.unreadMessages": 1 },
+          }
+        );
 
         const updatedChats = await Chat.find({ _id: { $in: args.chatIds } })
           .populate("admin")
@@ -631,10 +621,6 @@ const resolvers = {
           .populate({
             path: "messages.sender",
             populate: { path: "blockedContacts" },
-          })
-          .populate({
-            path: "messages",
-            populate: { path: "isReadBy.member" },
           });
 
         updatedChats.forEach((chat) => {
@@ -656,6 +642,41 @@ const resolvers = {
           extensions: {
             code: "INTERNAL_SERVER_ERROR",
             error,
+          },
+        });
+      }
+    },
+
+    markChatAsRead: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new GraphQLError("Not logged in!", {
+          extensions: {
+            code: "NOT_AUTHENTICATED",
+          },
+        });
+      }
+
+      try {
+        await User.findByIdAndUpdate(
+          context.currentUser.id,
+          {
+            $set: {
+              "chats.$[elem].unreadMessages": 0,
+              "chats.$[elem].lastReadAt": new Date(),
+            },
+          },
+          {
+            arrayFilters: [{ "elem.chat": args.chatId }],
+            new: true,
+          }
+        );
+
+        return true;
+      } catch (error) {
+        throw new GraphQLError("Failed to mark chat as read", {
+          extensions: {
+            code: "INTERNAL_SERVER_ERROR",
+            error: error.message,
           },
         });
       }

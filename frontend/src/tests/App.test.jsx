@@ -13,7 +13,7 @@ const {
   currentUserNullMock,
   currentUserMock,
   currentUserWithDarkModeMock,
-  allChatsByUserMock,
+  everyChatByUserMock,
   allContactsByUserMock,
   allContactsExceptByUserMock,
 } = queryMocks;
@@ -29,7 +29,7 @@ const {
 
 const darkModeUserMockData = [
   currentUserWithDarkModeMock,
-  allChatsByUserMock,
+  everyChatByUserMock,
   allContactsByUserMock,
   allContactsExceptByUserMock,
   contactBlockedOrUnBlockedMock,
@@ -42,7 +42,7 @@ const darkModeUserMockData = [
 
 const userIsNotLoggedInMockData = [
   currentUserNullMock,
-  allChatsByUserMock,
+  everyChatByUserMock,
   allContactsByUserMock,
   allContactsExceptByUserMock,
   contactBlockedOrUnBlockedMock,
@@ -55,7 +55,7 @@ const userIsNotLoggedInMockData = [
 
 const userIsLoggedInMockData = [
   currentUserMock,
-  allChatsByUserMock,
+  everyChatByUserMock,
   allContactsByUserMock,
   allContactsExceptByUserMock,
   contactBlockedOrUnBlockedMock,
@@ -68,7 +68,7 @@ const userIsLoggedInMockData = [
 
 const { client, navigate } = mocks;
 
-const userChats = allChatsByUserMock.result.data.allChatsByUser;
+const userChats = everyChatByUserMock.result.data.everyChatByUser;
 const userContacts =
   allContactsByUserMock.result.data.allContactsByUser.contacts;
 
@@ -231,7 +231,7 @@ describe("<App />", () => {
 
   test("click navigate to individual chat page works", async () => {
     const user = userEvent.setup();
-    const firstChat = userChats[0];
+    const firstChat = userChats[0].chat;
     renderComponent();
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();

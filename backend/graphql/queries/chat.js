@@ -5,11 +5,6 @@ import { GraphQLError } from "graphql";
 const typeDefs = `
   scalar Date
 
-  type IsReadBy {
-    member: User
-    isRead: Boolean
-  }
-
   type Image {
     thumbnail: String
     original: String
@@ -21,7 +16,6 @@ const typeDefs = `
     sender: User!
     content: String
     image: Image
-    isReadBy: [IsReadBy!]!
     createdAt: Date
   }
 
@@ -73,10 +67,7 @@ const resolvers = {
               path: "messages.sender",
               populate: { path: "blockedContacts" },
             })
-            .populate({
-              path: "messages",
-              populate: { path: "isReadBy.member" },
-            })
+
             .sort({ "messages.0.createdAt": "desc" }),
     findChatById: async (root, args) =>
       Chat.findById(args.chatId)
@@ -93,10 +84,6 @@ const resolvers = {
         .populate({
           path: "messages.sender",
           populate: { path: "blockedContacts" },
-        })
-        .populate({
-          path: "messages",
-          populate: { path: "isReadBy.member" },
         })
         .catch((error) => {
           throw new GraphQLError("Invalid id!", {
@@ -122,10 +109,6 @@ const resolvers = {
         .populate({
           path: "messages.sender",
           populate: { path: "blockedContacts" },
-        })
-        .populate({
-          path: "messages",
-          populate: { path: "isReadBy.member" },
         }),
     findGroupChatByTitle: async (root, args) =>
       Chat.findOne({ title: args.title, isGroupChat: true })
@@ -142,10 +125,6 @@ const resolvers = {
         .populate({
           path: "messages.sender",
           populate: { path: "blockedContacts" },
-        })
-        .populate({
-          path: "messages",
-          populate: { path: "isReadBy.member" },
         }),
   },
   Chat: {

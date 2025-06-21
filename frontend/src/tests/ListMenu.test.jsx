@@ -13,7 +13,7 @@ import mocks from "./mocks/funcs.js";
 
 const {
   currentUserMock,
-  allChatsByUserMock,
+  everyChatByUserMock,
   allContactsByUserMock,
   allContactsByUserSearchMock,
   allContactsExceptByUserMock,
@@ -50,7 +50,7 @@ const renderComponent = (
   menuType,
   mockData = [
     currentUserMock,
-    allChatsByUserMock,
+    everyChatByUserMock,
     allContactsByUserMock,
     allContactsByUserSearchMock,
     allContactsExceptByUserMock,
@@ -109,21 +109,21 @@ describe("<ListMenu />", () => {
     });
 
     test("displays no chats found message", async () => {
-      const emptyAllChatsByUserMock = {
+      const emptyEveryChatByUserMock = {
         request: {
-          query: allChatsByUserMock.request.query,
-          variables: allChatsByUserMock.request.variables,
+          query: everyChatByUserMock.request.query,
+          variables: everyChatByUserMock.request.variables,
         },
         result: {
           data: {
-            allChatsByUser: [],
+            everyChatByUser: [],
           },
         },
       };
 
       renderComponent("chats", [
         currentUserMock,
-        emptyAllChatsByUserMock,
+        emptyEveryChatByUserMock,
         allContactsExceptByUserMock,
         allContactsExceptByUserSearchMock,
         addContactsMock,
@@ -142,30 +142,30 @@ describe("<ListMenu />", () => {
     });
 
     test("search chats works", async () => {
-      const initialAllChatsByUserMock = {
+      const initialEveryChatByUserMock = {
         request: {
-          query: allChatsByUserMock.request.query,
+          query: everyChatByUserMock.request.query,
           variables: {
             searchByTitle: "",
           },
         },
         result: {
           data: {
-            allChatsByUser: allChatsByUserMock.result.data.allChatsByUser,
+            everyChatByUser: everyChatByUserMock.result.data.everyChatByUser,
           },
         },
       };
 
-      const searchAllChatsByUserMock = {
+      const searchEveryChatByUserMock = {
         request: {
-          query: allChatsByUserMock.request.query,
+          query: everyChatByUserMock.request.query,
           variables: {
             searchByTitle: "Weekend Hikers",
           },
         },
         result: {
           data: {
-            allChatsByUser: allChatsByUserMock.result.data.allChatsByUser,
+            everyChatByUser: everyChatByUserMock.result.data.everyChatByUser,
           },
         },
       };
@@ -174,8 +174,8 @@ describe("<ListMenu />", () => {
 
       renderComponent("chats", [
         currentUserMock,
-        initialAllChatsByUserMock,
-        searchAllChatsByUserMock,
+        initialEveryChatByUserMock,
+        searchEveryChatByUserMock,
         allContactsExceptByUserMock,
         allContactsExceptByUserSearchMock,
         addContactsMock,
