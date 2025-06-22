@@ -22,8 +22,7 @@ const { leaveGroupChatMock } = mutationMocks;
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
-const anotherUserData =
-  allContactsByUserMock.result.data.allContactsByUser.contacts[0];
+const anotherUserData = allContactsByUserMock.result.data.allContactsByUser[0];
 const chatData = findGroupChatByIdMock.result.data.findChatById;
 
 const mockSetShowGroupChatInfo = vi.fn();

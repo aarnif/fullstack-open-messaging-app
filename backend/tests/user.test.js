@@ -231,13 +231,12 @@ describe("User tests", () => {
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
 
-    const user = response.body.data.allContactsByUser;
-    console.log("user", user);
-    expect(user.contacts.length).toBe(3);
+    const contacts = response.body.data.allContactsByUser;
+    expect(contacts.length).toBe(3);
 
-    expect(user.contacts[0].username).toBe(contactDetails[0].username);
-    expect(user.contacts[1].username).toBe(contactDetails[1].username);
-    expect(user.contacts[2].username).toBe(contactDetails[2].username);
+    expect(contacts[0].username).toBe(contactDetails[0].username);
+    expect(contacts[1].username).toBe(contactDetails[1].username);
+    expect(contacts[2].username).toBe(contactDetails[2].username);
   });
 
   it("Should return contacts that are not in the user's contacts", async () => {

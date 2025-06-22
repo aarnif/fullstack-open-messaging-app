@@ -357,7 +357,7 @@ const ContactsList = ({
     return <Loading />;
   }
 
-  const contacts = data?.allContactsByUser?.contacts || [];
+  const contacts = data?.allContactsByUser || [];
 
   if (!contacts.length) {
     return (

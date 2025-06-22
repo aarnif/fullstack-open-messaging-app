@@ -99,7 +99,7 @@ export const UpdateMembersModal = ({
           ) : (
             <div className="flex-grow w-full overflow-y-auto">
               <SelectContactsList
-                data={result.data.allContactsByUser.contacts}
+                data={result.data.allContactsByUser}
                 chosenUserIds={chosenUserIds}
                 setChosenUserIds={setChosenUserIds}
               />
@@ -270,7 +270,7 @@ const EditGroupChat = ({ user, chat, chatAdmin, setShowEditGroupChat }) => {
               chatMembers={
                 result.loading
                   ? chat.members
-                  : result.data.allContactsByUser.contacts.filter((user) =>
+                  : result.data.allContactsByUser.filter((user) =>
                       newMemberIds.includes(user.id)
                     )
               }

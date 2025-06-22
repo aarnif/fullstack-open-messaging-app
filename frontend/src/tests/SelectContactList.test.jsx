@@ -6,8 +6,7 @@ import queryMocks from "./mocks/queryMocks.js";
 import { SelectContactList } from "../components/Modals/NewChatModal";
 
 const { allContactsByUserMock } = queryMocks;
-const contactData =
-  allContactsByUserMock.result.data.allContactsByUser.contacts;
+const contactData = allContactsByUserMock.result.data.allContactsByUser;
 
 const mockSetChosenUserId = vi.fn();
 

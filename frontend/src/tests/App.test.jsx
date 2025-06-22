@@ -69,8 +69,7 @@ const userIsLoggedInMockData = [
 const { client, navigate } = mocks;
 
 const userChats = allChatsByUserMock.result.data.allChatsByUser;
-const userContacts =
-  allContactsByUserMock.result.data.allContactsByUser.contacts;
+const userContacts = allContactsByUserMock.result.data.allContactsByUser;
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");

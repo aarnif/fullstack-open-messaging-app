@@ -139,7 +139,7 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
       return;
     }
 
-    const chosenContact = result.data.allContactsByUser.contacts.find(
+    const chosenContact = result.data.allContactsByUser.find(
       (contact) => contact.id === chosenUserId
     );
 
@@ -180,8 +180,8 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
       return;
     }
 
-    const chosenContacts = result.data.allContactsByUser.contacts.filter(
-      (contact) => chosenUserIds.includes(contact.id)
+    const chosenContacts = result.data.allContactsByUser.filter((contact) =>
+      chosenUserIds.includes(contact.id)
     );
 
     const newGroupChatInfo = {
@@ -283,14 +283,14 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
                 {isPrivateChat ? (
                   <SelectContactList
                     user={user}
-                    data={result.data.allContactsByUser.contacts}
+                    data={result.data.allContactsByUser}
                     chosenUserId={chosenUserId}
                     setChosenUserId={setChosenUserId}
                   />
                 ) : (
                   <SelectContactsList
                     user={user}
-                    data={result.data.allContactsByUser.contacts}
+                    data={result.data.allContactsByUser}
                     chosenUserIds={chosenUserIds}
                     setChosenUserIds={setChosenUserIds}
                   />
