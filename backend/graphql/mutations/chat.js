@@ -277,8 +277,8 @@ const resolvers = {
       }
 
       const { messageType, trimmedContent } = processMessageContent(
-        args.initialMessage.content,
-        args.initialMessage.type
+        args.content,
+        args.type
       );
 
       const newMessage = {
