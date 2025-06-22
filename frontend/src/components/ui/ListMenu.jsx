@@ -26,33 +26,34 @@ const EmptyState = ({ message, testId }) => (
 );
 
 const LatestMessage = ({ user, latestMessage }) => {
-  let messageContent = null;
-  if (latestMessage.type === "notification") {
-    messageContent = latestMessage.content;
-  } else if (latestMessage.type === "singleImage") {
-    messageContent =
-      latestMessage.sender.id === user.id
-        ? "You sent an image"
-        : `${latestMessage.sender.name} sent an image`;
-  } else {
-    messageContent =
-      latestMessage.sender.id === user.id
-        ? `You: ${chatAndMessageHelpers.sliceLatestMessage(
-            latestMessage.content
-          )}`
-        : `${
-            latestMessage.sender.name
-          }: ${chatAndMessageHelpers.sliceLatestMessage(
-            latestMessage.content
-          )}`;
-  }
+  const isCurrentUser = latestMessage.sender.id === user.id;
+  const senderName = latestMessage.sender.name;
+
+  const getMessageContent = () => {
+    switch (latestMessage.type) {
+      case "notification":
+        return latestMessage.content;
+
+      case "singleImage":
+        return isCurrentUser
+          ? "You sent an image"
+          : `${senderName} sent an image`;
+
+      default: {
+        const content = chatAndMessageHelpers.sliceLatestMessage(
+          latestMessage.content
+        );
+        return isCurrentUser ? `You: ${content}` : `${senderName}: ${content}`;
+      }
+    }
+  };
 
   return (
     <p
       data-testid="latest-chat-message"
       className="text-mobile lg:text-base text-slate-600 dark:text-slate-200"
     >
-      {messageContent}
+      {getMessageContent()}
     </p>
   );
 };
@@ -77,16 +78,16 @@ export const ChatItem = ({
   }
 
   const latestMessage = chat.messages[chat.messages.length - 1];
-  const newMessagesCount = unreadMessages;
+  const isActiveChat = activeChatOrContactId === chat.id;
+  const hasNewMessages = unreadMessages > 0;
 
-  const classStyles =
-    activeChatOrContactId === chat.id
-      ? "w-full py-2 px-4 flex items-start gap-4 border-b bg-slate-200 dark:bg-slate-700 transition"
-      : "w-full py-2 px-4 flex items-start gap-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
+  const classStyles = isActiveChat
+    ? "w-full py-2 px-4 flex items-start gap-4 border-b bg-slate-200 dark:bg-slate-700 transition"
+    : "w-full py-2 px-4 flex items-start gap-4 border-b hover:bg-slate-200 dark:hover:bg-slate-700 transition";
 
   return (
     <button
-      id={activeChatOrContactId === chat.id ? "active-chat" : ""}
+      id={isActiveChat ? "active-chat" : ""}
       className={classStyles}
       data-testid={`chat-item-${chat.id}`}
       onClick={handlePress}
@@ -114,10 +115,10 @@ export const ChatItem = ({
         </div>
         <div className="flex justify-between items-center">
           <LatestMessage user={user} latestMessage={latestMessage} />
-          {newMessagesCount > 0 && (
+          {hasNewMessages && (
             <div
               style={{
-                backgroundColor: newMessagesCount > 0 ? "#16a34a" : "white",
+                backgroundColor: hasNewMessages ? "#16a34a" : "white",
               }}
               className="w-[22px] h-[22px] flex justify-center items-center rounded-full"
             >
@@ -125,7 +126,7 @@ export const ChatItem = ({
                 data-testid="new-messages-count"
                 className="flex justify-center items-center text-white font-semibold"
               >
-                {newMessagesCount}
+                {unreadMessages}
               </p>
             </div>
           )}
