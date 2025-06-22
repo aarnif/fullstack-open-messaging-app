@@ -28,11 +28,11 @@ test.describe("Users And Contacts", () => {
       await page.goto("http://localhost:5173");
     });
 
-    test("Page has title", async ({ page }) => {
+    test("has correct page title", async ({ page }) => {
       await expect(page).toHaveTitle(/Messaging App/);
     });
 
-    test("Try to create user with invalid username", async ({ page }) => {
+    test("prevents user creation with invalid username", async ({ page }) => {
       await signUp(
         page,
         "a",
@@ -44,17 +44,16 @@ test.describe("Users And Contacts", () => {
       ).toBeVisible();
     });
 
-    test("Try to create user with invalid password", async ({
-      page,
-      request,
-    }) => {
+    test("prevents user creation with invalid password", async ({ page }) => {
       await signUp(page, user1Credentials.username, "pass", "pass");
       await expect(
         page.getByText("Password must be at least 6 characters long!")
       ).toBeVisible();
     });
 
-    test("Try to create user with passwords not matching", async ({ page }) => {
+    test("prevents user creation with non-matching passwords", async ({
+      page,
+    }) => {
       await signUp(
         page,
         user1Credentials.username,
@@ -64,7 +63,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByText("Passwords do not match!")).toBeVisible();
     });
 
-    test("Create a new user", async ({ page, request }) => {
+    test("creates new user successfully", async ({ page, request }) => {
       await request.post("http://localhost:4000/", {
         data: {
           query: `
@@ -85,7 +84,7 @@ test.describe("Users And Contacts", () => {
       ).toBeVisible();
     });
 
-    test("Try to create same user twice", async ({ page, request }) => {
+    test("prevents creating duplicate user", async ({ page, request }) => {
       await request.post("http://localhost:4000/", {
         data: {
           query: `
@@ -111,7 +110,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByText("Username already exists!")).toBeVisible();
     });
 
-    test("Sign in success with a new user", async ({ page, request }) => {
+    test("signs in user successfully", async ({ page, request }) => {
       await request.post("http://localhost:4000/", {
         data: {
           query: `
@@ -134,7 +133,7 @@ test.describe("Users And Contacts", () => {
       ).toBeVisible();
     });
 
-    test("Sign in fails with wrong credentials", async ({ page }) => {
+    test("prevents sign in with wrong credentials", async ({ page }) => {
       await signUp(
         page,
         user1Credentials.username,
@@ -152,7 +151,7 @@ test.describe("Users And Contacts", () => {
       ).toBeVisible();
     });
 
-    test("User stays logged in after page refresh", async ({ page }) => {
+    test("maintains user session after page refresh", async ({ page }) => {
       await signUp(
         page,
         user1Credentials.username,
@@ -172,7 +171,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByTestId("profile-button")).toBeVisible();
     });
 
-    test("User session is cleared after logout", async ({ page }) => {
+    test("clears user session after logout", async ({ page }) => {
       await signUp(
         page,
         user1Credentials.username,
@@ -186,7 +185,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByTestId("sign-in-title")).toBeVisible();
     });
 
-    test("Edit user profile", async ({ page }) => {
+    test("edits user profile successfully", async ({ page }) => {
       await signUp(
         page,
         user1Credentials.username,
@@ -204,7 +203,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByText("I am John Doe.")).toBeVisible();
     });
 
-    test("Edit user profile fails with empty name", async ({ page }) => {
+    test("prevents editing profile with empty name", async ({ page }) => {
       await signUp(
         page,
         user1Credentials.username,
@@ -232,7 +231,7 @@ test.describe("Users And Contacts", () => {
       ).not.toBeVisible();
     });
 
-    test("Change user password fail with empty fields", async ({ page }) => {
+    test("prevents password change with empty fields", async ({ page }) => {
       await signUp(
         page,
         user1Credentials.username,
@@ -246,7 +245,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByText("Please fill in all fields")).toBeVisible();
     });
 
-    test("Change user password fails with wrong current password", async ({
+    test("prevents password change with wrong current password", async ({
       page,
     }) => {
       await signUp(
@@ -269,7 +268,7 @@ test.describe("Users And Contacts", () => {
       ).toBeVisible();
     });
 
-    test("Change user password fails with new passwords not matching", async ({
+    test("prevents password change with non-matching new passwords", async ({
       page,
     }) => {
       await signUp(
@@ -294,7 +293,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByText("Passwords do not match!")).toBeVisible();
     });
 
-    test("Change user password succees with valid inputs", async ({ page }) => {
+    test("changes password successfully", async ({ page }) => {
       await signUp(
         page,
         user1Credentials.username,
@@ -349,7 +348,7 @@ test.describe("Users And Contacts", () => {
       await page.goto("http://localhost:5173");
     });
 
-    test("Add new contacts", async ({ page, request }) => {
+    test("adds new contacts", async ({ page, request }) => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await addContacts(page, [user2Credentials]);
       await expect(
@@ -357,7 +356,7 @@ test.describe("Users And Contacts", () => {
       ).toBeVisible();
     });
 
-    test("Block and unblock contact", async ({ page }) => {
+    test("blocks and unblocks contact", async ({ page }) => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await addContacts(page, [user2Credentials]);
       await page.getByTestId("contacts-button").click();
@@ -376,7 +375,7 @@ test.describe("Users And Contacts", () => {
       ).not.toBeVisible();
     });
 
-    test("Remove contact", async ({ page }) => {
+    test("removes contact", async ({ page }) => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await addContacts(page, [user2Credentials]);
       await page.getByTestId("contacts-button").click();
@@ -386,7 +385,7 @@ test.describe("Users And Contacts", () => {
       await expect(page.getByText("No contacts found")).not.toBeVisible();
     });
 
-    test("Users can search for contacts", async ({ page }) => {
+    test("searches for contacts", async ({ page }) => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await addContacts(page, [user2Credentials, user3Credentials]);
 
