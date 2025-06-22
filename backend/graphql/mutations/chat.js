@@ -85,6 +85,23 @@ const chekcIfMessageIsImageWithoutText = (messageContent) => {
   return messageContent === ""; // Currently messages without content are always images
 };
 
+const processMessageContent = (content, defaultType = "message") => {
+  const trimmedContent = content.trim();
+
+  let messageType = defaultType;
+
+  if (checkIfMessageIsSingleEmoji(trimmedContent)) {
+    messageType = "singleEmoji";
+  } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
+    messageType = "singleImage";
+  }
+
+  return {
+    messageType,
+    trimmedContent,
+  };
+};
+
 const resolvers = {
   Mutation: {
     createChat: async (root, args, context) => {
@@ -129,14 +146,10 @@ const resolvers = {
         });
       }
 
-      const trimmedContent = args.initialMessage.content.trim();
-      let messageType = args.initialMessage.type || "message";
-
-      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
-        messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
-        messageType = "singleImage";
-      }
+      const { messageType, trimmedContent } = processMessageContent(
+        args.initialMessage.content,
+        args.initialMessage.type
+      );
 
       const initialMessageContent = {
         type: messageType,
@@ -263,14 +276,10 @@ const resolvers = {
         }
       }
 
-      const trimmedContent = args.content.trim();
-      let messageType = "message";
-
-      if (checkIfMessageIsSingleEmoji(trimmedContent)) {
-        messageType = "singleEmoji";
-      } else if (chekcIfMessageIsImageWithoutText(trimmedContent)) {
-        messageType = "singleImage";
-      }
+      const { messageType, trimmedContent } = processMessageContent(
+        args.initialMessage.content,
+        args.initialMessage.type
+      );
 
       const newMessage = {
         type: messageType,
