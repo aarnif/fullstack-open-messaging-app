@@ -26,33 +26,34 @@ const EmptyState = ({ message, testId }) => (
 );
 
 const LatestMessage = ({ user, latestMessage }) => {
-  let messageContent = null;
-  if (latestMessage.type === "notification") {
-    messageContent = latestMessage.content;
-  } else if (latestMessage.type === "singleImage") {
-    messageContent =
-      latestMessage.sender.id === user.id
-        ? "You sent an image"
-        : `${latestMessage.sender.name} sent an image`;
-  } else {
-    messageContent =
-      latestMessage.sender.id === user.id
-        ? `You: ${chatAndMessageHelpers.sliceLatestMessage(
-            latestMessage.content
-          )}`
-        : `${
-            latestMessage.sender.name
-          }: ${chatAndMessageHelpers.sliceLatestMessage(
-            latestMessage.content
-          )}`;
-  }
+  const isCurrentUser = latestMessage.sender.id === user.id;
+  const senderName = latestMessage.sender.name;
+
+  const getMessageContent = () => {
+    switch (latestMessage.type) {
+      case "notification":
+        return latestMessage.content;
+
+      case "singleImage":
+        return isCurrentUser
+          ? "You sent an image"
+          : `${senderName} sent an image`;
+
+      default: {
+        const content = chatAndMessageHelpers.sliceLatestMessage(
+          latestMessage.content
+        );
+        return isCurrentUser ? `You: ${content}` : `${senderName}: ${content}`;
+      }
+    }
+  };
 
   return (
     <p
       data-testid="latest-chat-message"
       className="text-mobile lg:text-base text-slate-600 dark:text-slate-200"
     >
-      {messageContent}
+      {getMessageContent()}
     </p>
   );
 };
