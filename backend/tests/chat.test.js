@@ -29,7 +29,7 @@ describe("Chat tests", () => {
     await resetDataBase();
   }, timeOut);
 
-  it("Start chat with contact", async () => {
+  it("creates private chat with contact", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
@@ -50,7 +50,7 @@ describe("Chat tests", () => {
     );
   });
 
-  it("Start group chat titled 'Gamers'", async () => {
+  it("creates group chat with multiple members", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
@@ -93,7 +93,7 @@ describe("Chat tests", () => {
     );
   });
 
-  it("Add message to chat titled 'Gamers'", async () => {
+  it("adds message to group chat", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
@@ -146,7 +146,7 @@ describe("Chat tests", () => {
     );
   });
 
-  it("Find chat by id", async () => {
+  it("finds chat by id", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
@@ -175,7 +175,7 @@ describe("Chat tests", () => {
     expect(response.body.data.findChatById.title).toBe("Gamers");
   });
 
-  it("Find chat by members", async () => {
+  it("finds chat by members", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
@@ -207,7 +207,7 @@ describe("Chat tests", () => {
     );
   });
 
-  it("Add members to chat", async () => {
+  it("adds new members to group chat", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
@@ -244,7 +244,7 @@ describe("Chat tests", () => {
     }
   });
 
-  it("Remove members from chat", async () => {
+  it("removes members from group chat", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
