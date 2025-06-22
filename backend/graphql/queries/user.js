@@ -45,7 +45,7 @@ const typeDefs = `
 
   extend type Query {
     findUserById(id: ID!): User
-    everyChatByUser(searchByTitle: String): [UserChat!]!
+    allChatsByUser(searchByTitle: String): [UserChat!]!
     allContactsByUser(searchByName: String): User!
     allContactsExceptByUser(searchByName: String): [User!]!
     checkIfUserHasBlockedYou(userId: ID!): Boolean
@@ -72,7 +72,7 @@ const resolvers = {
             },
           });
         }),
-    everyChatByUser: async (root, args, context) => {
+    allChatsByUser: async (root, args, context) => {
       if (!context.currentUser) {
         throw new GraphQLError("Not logged in!", {
           extensions: {

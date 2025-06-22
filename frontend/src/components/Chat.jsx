@@ -12,7 +12,7 @@ import useField from "../hooks/useField";
 import {
   FIND_CHAT_BY_ID,
   FIND_CHAT_BY_MEMBERS,
-  EVERY_CHAT_BY_USER,
+  ALL_CHATS_BY_USER,
 } from "../graphql/queries";
 import {
   ADD_MESSAGE_TO_CHAT,
@@ -494,7 +494,7 @@ const ExistingChatContent = ({
         variables: { chatId: match.chatId },
         refetchQueries: [
           {
-            query: EVERY_CHAT_BY_USER,
+            query: ALL_CHATS_BY_USER,
             variables: { searchByTitle: "" },
           },
         ],

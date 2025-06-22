@@ -2,10 +2,7 @@ import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { FaSearch } from "react-icons/fa";
 
-import {
-  ALL_CONTACTS_BY_USER,
-  EVERY_CHAT_BY_USER,
-} from "../../graphql/queries";
+import { ALL_CHATS_BY_USER, ALL_CONTACTS_BY_USER } from "../../graphql/queries";
 import {
   NEW_MESSAGE_TO_CHAT_ADDED,
   NEW_CHAT_CREATED,
@@ -146,7 +143,7 @@ const ChatsList = ({
 }) => {
   const client = useApolloClient();
 
-  const { data, loading } = useQuery(EVERY_CHAT_BY_USER, {
+  const { data, loading } = useQuery(ALL_CHATS_BY_USER, {
     variables: {
       searchByTitle: searchWord.value,
     },
@@ -159,12 +156,12 @@ const ChatsList = ({
 
       client.cache.updateQuery(
         {
-          query: EVERY_CHAT_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: { searchByTitle: "" },
         },
-        ({ everyChatByUser }) => {
+        ({ allChatsByUser }) => {
           const sortedChats = chatAndMessageHelpers.sortChatsByDate(
-            everyChatByUser.map((userChat) => {
+            allChatsByUser.map((userChat) => {
               if (userChat.chat.id === updatedChat.id) {
                 const isActiveChat = activeChatOrContactId === updatedChat.id;
                 return {
@@ -178,7 +175,7 @@ const ChatsList = ({
               return userChat;
             })
           );
-          return { everyChatByUser: sortedChats };
+          return { allChatsByUser: sortedChats };
         }
       );
     },
@@ -194,10 +191,10 @@ const ChatsList = ({
 
       client.cache.updateQuery(
         {
-          query: EVERY_CHAT_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: { searchByTitle: "" },
         },
-        ({ everyChatByUser }) => {
+        ({ allChatsByUser }) => {
           const newUserChat = {
             __typename: "UserChat",
             chat: {
@@ -216,9 +213,9 @@ const ChatsList = ({
             lastReadAt: null,
           };
           const sortedChats = chatAndMessageHelpers.sortChatsByDate(
-            everyChatByUser.concat(newUserChat)
+            allChatsByUser.concat(newUserChat)
           );
-          return { everyChatByUser: sortedChats };
+          return { allChatsByUser: sortedChats };
         }
       );
     },
@@ -238,12 +235,12 @@ const ChatsList = ({
 
       client.cache.updateQuery(
         {
-          query: EVERY_CHAT_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: { searchByTitle: "" },
         },
-        ({ everyChatByUser }) => {
+        ({ allChatsByUser }) => {
           return {
-            everyChatByUser: everyChatByUser.filter(
+            allChatsByUser: allChatsByUser.filter(
               (userChat) => userChat.chat.id !== deletedChatId
             ),
           };
@@ -262,22 +259,22 @@ const ChatsList = ({
 
       client.cache.updateQuery(
         {
-          query: EVERY_CHAT_BY_USER,
+          query: ALL_CHATS_BY_USER,
           variables: { searchByTitle: "" },
         },
-        ({ everyChatByUser }) => {
+        ({ allChatsByUser }) => {
           if (leftGroupChatData.memberId === user.id) {
             console.log("User left group chat");
             return {
-              everyChatByUser: chatAndMessageHelpers.sortChatsByDate(
-                everyChatByUser.filter(
+              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
+                allChatsByUser.filter(
                   (userChat) =>
                     !leftGroupChatData.chatIds.includes(userChat.chat.id)
                 )
               ),
             };
           }
-          return { everyChatByUser: everyChatByUser };
+          return { allChatsByUser: allChatsByUser };
         }
       );
     },
@@ -290,7 +287,7 @@ const ChatsList = ({
     return <Loading />;
   }
 
-  const userChats = data?.everyChatByUser || [];
+  const userChats = data?.allChatsByUser || [];
 
   if (!userChats.length) {
     return <EmptyState message="No chats found" testId="no-chats-found" />;

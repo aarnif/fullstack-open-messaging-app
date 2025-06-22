@@ -3,7 +3,7 @@ import assert from "node:assert";
 import data from "./data.js";
 import helpers from "./helpers.js";
 
-const { credentials, contactDetails } = data;
+const { credentials, contactDetails, groupChatDetails } = data;
 
 const {
   timeOut,
@@ -13,6 +13,7 @@ const {
   requestData,
   createUser,
   loginUser,
+  createChat,
   addContacts,
   blockOrUnBlockContact,
   changePassword,
@@ -49,7 +50,7 @@ describe("User tests", () => {
 
   it("Returns error when username is too short", async () => {
     const invalidCredentials = {
-      username: "abc", // Too short (less than 4 chars)
+      username: "abc",
       password: "password",
       confirmPassword: "password",
     };
@@ -65,7 +66,7 @@ describe("User tests", () => {
   it("Returns error when password is too short", async () => {
     const invalidCredentials = {
       username: "validuser",
-      password: "short", // Too short (less than 6 chars)
+      password: "short",
       confirmPassword: "short",
     };
 
@@ -163,6 +164,45 @@ describe("User tests", () => {
 
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.me.username).toBe(credentials.username);
+  });
+
+  it("Get all chats by user", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+    await addContacts(credentials, [contactDetails[0]]);
+    await createChat(
+      credentials,
+      [credentials.id, contactDetails[0].id, contactDetails[1].id],
+      groupChatDetails[0].startingMessage,
+      groupChatDetails[0].title,
+      groupChatDetails[0].description
+    );
+
+    const response = await requestData(
+      {
+        query: `query AllChatsByUser {
+              allChatsByUser {
+                chat {
+                  id
+                  title
+                }
+                unreadMessages
+                lastReadMessageId
+                lastReadAt
+              }
+            }`,
+      },
+      credentials.token
+    );
+
+    expect(response.errors).toBeUndefined();
+    assert.strictEqual(response.body.data.allChatsByUser.length, 1);
+    expect(response.body.data.allChatsByUser[0].chat.title).toBe(
+      groupChatDetails[0].title
+    );
+    expect(response.body.data.allChatsByUser[0].unreadMessages).toBe(0);
+    expect(response.body.data.allChatsByUser[0].lastReadMessageId).toBeNull();
+    expect(response.body.data.allChatsByUser[0].lastReadAt).toBeNull();
   });
 
   it("Should return valid contacts when querying users contacts", async () => {

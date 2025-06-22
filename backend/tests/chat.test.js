@@ -1,5 +1,3 @@
-import assert from "node:assert";
-
 import data from "./data.js";
 import helpers from "./helpers.js";
 
@@ -146,34 +144,6 @@ describe("Chat tests", () => {
     expect(chatMessages[chatMessages.length - 1].content).toBe(
       "This is a new message"
     );
-  });
-
-  it("Get all chats by user", async () => {
-    await createUser(credentials);
-    await loginUser(credentials);
-    await addContacts(credentials, [contactDetails[0]]);
-    await createChat(
-      credentials,
-      [credentials.id, contactDetails[0].id, contactDetails[1].id],
-      groupChatDetails[0].startingMessage,
-      groupChatDetails[0].title,
-      groupChatDetails[0].description
-    );
-
-    const response = await requestData(
-      {
-        query: `query AllChatsByUser {
-            allChatsByUser {
-              id
-              title
-            }
-          }`,
-      },
-      credentials.token
-    );
-
-    expect(response.errors).toBeUndefined();
-    assert.strictEqual(response.body.data.allChatsByUser.length, 1);
   });
 
   it("Find chat by id", async () => {

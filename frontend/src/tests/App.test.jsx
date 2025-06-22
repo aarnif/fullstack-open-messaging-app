@@ -13,7 +13,7 @@ const {
   currentUserNullMock,
   currentUserMock,
   currentUserWithDarkModeMock,
-  everyChatByUserMock,
+  allChatsByUserMock,
   allContactsByUserMock,
   allContactsExceptByUserMock,
 } = queryMocks;
@@ -29,7 +29,7 @@ const {
 
 const darkModeUserMockData = [
   currentUserWithDarkModeMock,
-  everyChatByUserMock,
+  allChatsByUserMock,
   allContactsByUserMock,
   allContactsExceptByUserMock,
   contactBlockedOrUnBlockedMock,
@@ -42,7 +42,7 @@ const darkModeUserMockData = [
 
 const userIsNotLoggedInMockData = [
   currentUserNullMock,
-  everyChatByUserMock,
+  allChatsByUserMock,
   allContactsByUserMock,
   allContactsExceptByUserMock,
   contactBlockedOrUnBlockedMock,
@@ -55,7 +55,7 @@ const userIsNotLoggedInMockData = [
 
 const userIsLoggedInMockData = [
   currentUserMock,
-  everyChatByUserMock,
+  allChatsByUserMock,
   allContactsByUserMock,
   allContactsExceptByUserMock,
   contactBlockedOrUnBlockedMock,
@@ -68,7 +68,7 @@ const userIsLoggedInMockData = [
 
 const { client, navigate } = mocks;
 
-const userChats = everyChatByUserMock.result.data.everyChatByUser;
+const userChats = allChatsByUserMock.result.data.allChatsByUser;
 const userContacts =
   allContactsByUserMock.result.data.allContactsByUser.contacts;
 

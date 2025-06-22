@@ -13,7 +13,7 @@ import mocks from "./mocks/funcs.js";
 
 const {
   currentUserMock,
-  everyChatByUserMock,
+  allChatsByUserMock,
   allContactsByUserMock,
   allContactsByUserSearchMock,
   allContactsExceptByUserMock,
@@ -50,7 +50,7 @@ const renderComponent = (
   menuType,
   mockData = [
     currentUserMock,
-    everyChatByUserMock,
+    allChatsByUserMock,
     allContactsByUserMock,
     allContactsByUserSearchMock,
     allContactsExceptByUserMock,
@@ -111,8 +111,8 @@ describe("<ListMenu />", () => {
     test("displays no chats found message", async () => {
       const emptyEveryChatByUserMock = {
         request: {
-          query: everyChatByUserMock.request.query,
-          variables: everyChatByUserMock.request.variables,
+          query: allChatsByUserMock.request.query,
+          variables: allChatsByUserMock.request.variables,
         },
         result: {
           data: {
@@ -144,28 +144,28 @@ describe("<ListMenu />", () => {
     test("search chats works", async () => {
       const initialEveryChatByUserMock = {
         request: {
-          query: everyChatByUserMock.request.query,
+          query: allChatsByUserMock.request.query,
           variables: {
             searchByTitle: "",
           },
         },
         result: {
           data: {
-            everyChatByUser: everyChatByUserMock.result.data.everyChatByUser,
+            everyChatByUser: allChatsByUserMock.result.data.everyChatByUser,
           },
         },
       };
 
       const searchEveryChatByUserMock = {
         request: {
-          query: everyChatByUserMock.request.query,
+          query: allChatsByUserMock.request.query,
           variables: {
             searchByTitle: "Weekend Hikers",
           },
         },
         result: {
           data: {
-            everyChatByUser: everyChatByUserMock.result.data.everyChatByUser,
+            everyChatByUser: allChatsByUserMock.result.data.everyChatByUser,
           },
         },
       };

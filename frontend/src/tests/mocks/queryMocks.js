@@ -2,7 +2,6 @@ import {
   CURRENT_USER,
   FIND_USER_BY_ID,
   ALL_CHATS_BY_USER,
-  EVERY_CHAT_BY_USER,
   FIND_CHAT_BY_MEMBERS,
   FIND_CHAT_BY_ID,
   FIND_GROUP_CHAT_BY_TITLE,
@@ -75,21 +74,7 @@ const allChatsByUserMock = {
   },
   result: {
     data: {
-      allChatsByUser: chats,
-    },
-  },
-};
-
-const everyChatByUserMock = {
-  request: {
-    query: EVERY_CHAT_BY_USER,
-    variables: {
-      searchByTitle: "",
-    },
-  },
-  result: {
-    data: {
-      everyChatByUser: chats.map((chat) => ({
+      allChatsByUser: chats.map((chat) => ({
         __typename: "UserChat",
         chat: chat,
         unreadMessages: 0,
@@ -306,7 +291,6 @@ export default {
   currentUserWithDarkModeMock,
   findUserByIdMock,
   allChatsByUserMock,
-  everyChatByUserMock,
   findChatByMembersNullMock,
   findChatByMembersMock,
   findGroupChatByIdMock,

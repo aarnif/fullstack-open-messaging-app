@@ -8,11 +8,11 @@ import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers.js";
 
-const { currentUserMock, everyChatByUserMock } = queryMocks;
+const { currentUserMock, allChatsByUserMock } = queryMocks;
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
-const mockChatData = everyChatByUserMock.result.data.everyChatByUser[0];
+const mockChatData = allChatsByUserMock.result.data.allChatsByUser[0];
 
 const mockSetActiveChatOrContactId = vi.fn();
 
@@ -29,7 +29,7 @@ const renderChatItem = (
   activeChatOrContactId = chatData.chat.id
 ) => {
   return render(
-    <MockedProvider mocks={[currentUserMock, everyChatByUserMock]}>
+    <MockedProvider mocks={[currentUserMock, allChatsByUserMock]}>
       <MemoryRouter>
         <ChatItem
           index={0}
