@@ -69,7 +69,7 @@ describe("<EditGroupChat />", () => {
     expect(screen.getByTestId("edit-group-chat-modal")).toBeInTheDocument();
   });
 
-  test("can type in chat title and description inputs", async () => {
+  test("allows typing in chat title and description inputs", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -88,7 +88,7 @@ describe("<EditGroupChat />", () => {
     expect(descriptionInput.value).toBe("New Chat Description");
   });
 
-  test("go back button works", async () => {
+  test("closes modal on back button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -97,7 +97,7 @@ describe("<EditGroupChat />", () => {
     expect(mockSetShowEditGroupChat).toHaveBeenCalledWith(false);
   });
 
-  test("shows error message if chat title is empty", async () => {
+  test("displays error message when chat title is empty", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -116,7 +116,7 @@ describe("<EditGroupChat />", () => {
     });
   });
 
-  test("click update members button works", async () => {
+  test("displays update members modal on button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -131,7 +131,7 @@ describe("<EditGroupChat />", () => {
     });
   });
 
-  test("calls modal confirmation when submitting valid form", async () => {
+  test("submits valid form with confirmation", async () => {
     const user = userEvent.setup();
     renderComponent();
 

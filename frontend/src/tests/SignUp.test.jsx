@@ -39,7 +39,7 @@ describe("<SignUp />", () => {
     vi.spyOn(apolloClient, "useApolloClient").mockReturnValue(client);
   });
 
-  test("clicking sign up works", async () => {
+  test("signs up user successfully", async () => {
     const user = userEvent.setup();
     const { username, password, confirmPassword } =
       createUserMock.request.variables;
@@ -65,7 +65,7 @@ describe("<SignUp />", () => {
     expect(navigate).toHaveBeenCalledWith("/chats");
   });
 
-  test("clicking return to sign in button navigates to signin page", async () => {
+  test("navigates to signin page on return button click", async () => {
     const user = userEvent.setup();
 
     renderSignUp();

@@ -61,7 +61,7 @@ describe("<ChangePasswordModal />", () => {
     expect(screen.getByTestId("change-password-modal")).toBeInTheDocument();
   });
 
-  test("change password fails with empty fields", async () => {
+  test("prevents password change with empty fields", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -75,7 +75,7 @@ describe("<ChangePasswordModal />", () => {
     });
   });
 
-  test("change password fails with wrong current password", async () => {
+  test("prevents password change with wrong current password", async () => {
     const user = userEvent.setup();
     const wrongPassword = "wrong_password";
     const errorMessage = "Incorrect current password";
@@ -116,7 +116,7 @@ describe("<ChangePasswordModal />", () => {
     });
   });
 
-  test("change password fails with too short new password", async () => {
+  test("prevents password change with too short new password", async () => {
     const user = userEvent.setup();
     const tooShortPassword = "short";
     const errorMessage = "New password must be at least 6 characters long!";
@@ -156,7 +156,7 @@ describe("<ChangePasswordModal />", () => {
     });
   });
 
-  test("change password fails with new passwords not matching", async () => {
+  test("prevents password change with non-matching new passwords", async () => {
     const user = userEvent.setup();
     const { currentPassword, newPassword } =
       changePasswordMock.request.variables;
@@ -197,7 +197,7 @@ describe("<ChangePasswordModal />", () => {
     });
   });
 
-  test("change password works with valid inputs", async () => {
+  test("changes password successfully with valid inputs", async () => {
     const user = userEvent.setup();
     const { currentPassword, newPassword, confirmNewPassword } =
       changePasswordMock.request.variables;

@@ -10,7 +10,7 @@ describe("<ClickableImage />", () => {
     vi.clearAllMocks();
   });
 
-  test("renders the image with a fullscreen toggle button", () => {
+  test("renders image with fullscreen toggle button", () => {
     render(<ClickableImage fullScreenImageUri={testImageUrl} />);
 
     expect(
@@ -24,7 +24,7 @@ describe("<ClickableImage />", () => {
     expect(screen.queryByTestId("full-screen-view")).not.toBeInTheDocument();
   });
 
-  test("displays fullscreen view after clicking the toggle button", async () => {
+  test("displays fullscreen view on toggle button click", async () => {
     const user = userEvent.setup();
 
     render(<ClickableImage fullScreenImageUri={testImageUrl} />);
@@ -32,7 +32,7 @@ describe("<ClickableImage />", () => {
     expect(screen.queryByTestId("full-screen-view")).toBeInTheDocument();
   });
 
-  test("hides fullscreen view when clicking the screen", async () => {
+  test("hides fullscreen view on screen click", async () => {
     const user = userEvent.setup();
 
     render(<ClickableImage fullScreenImageUri={testImageUrl} />);

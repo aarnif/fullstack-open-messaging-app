@@ -73,7 +73,7 @@ describe("<NewChatModal />", () => {
       expect(screen.getByText("New Private Chat")).toBeInTheDocument();
     });
 
-    test("search contacts works in private chat", async () => {
+    test("filters contacts by search input in private chat", async () => {
       const user = userEvent.setup();
       renderComponent("private");
 
@@ -93,7 +93,7 @@ describe("<NewChatModal />", () => {
       });
     });
 
-    test("closing private chat modal works", async () => {
+    test("closes private chat modal on close button click", async () => {
       renderComponent("private");
       const user = userEvent.setup();
 
@@ -133,7 +133,7 @@ describe("<NewChatModal />", () => {
       expect(mockSetShowNewChatModal).toHaveBeenCalledWith(false);
     });
 
-    test("fails to start chat without selecting a contact", async () => {
+    test("prevents starting chat without selecting contact", async () => {
       const user = userEvent.setup();
       renderComponent("private");
 
@@ -150,7 +150,7 @@ describe("<NewChatModal />", () => {
       ).toBeInTheDocument();
     });
 
-    test("fails to start chat with blocked contact", async () => {
+    test("prevents starting chat with blocked contact", async () => {
       const user = userEvent.setup();
       renderComponent("private", [
         currentUserMock,
@@ -174,7 +174,7 @@ describe("<NewChatModal />", () => {
       ).toBeInTheDocument();
     });
 
-    test("successfully starts new private chat", async () => {
+    test("starts new private chat successfully", async () => {
       const user = userEvent.setup();
       renderComponent("private");
 
@@ -201,7 +201,7 @@ describe("<NewChatModal />", () => {
       expect(screen.getByText("New Group Chat")).toBeInTheDocument();
     });
 
-    test("can type in group chat title and description inputs", async () => {
+    test("allows typing in group chat title and description inputs", async () => {
       const user = userEvent.setup();
       renderComponent("group");
 
@@ -223,7 +223,7 @@ describe("<NewChatModal />", () => {
       expect(descriptionInput).toHaveValue("This is a test group chat");
     });
 
-    test("search contacts works in group chat", async () => {
+    test("filters contacts by search input in group chat", async () => {
       const user = userEvent.setup();
       renderComponent("group");
 
@@ -243,7 +243,7 @@ describe("<NewChatModal />", () => {
       });
     });
 
-    test("closing group chat modal works", async () => {
+    test("closes group chat modal on close button click", async () => {
       renderComponent("group");
       const user = userEvent.setup();
 
@@ -259,7 +259,7 @@ describe("<NewChatModal />", () => {
       expect(mockSetShowNewChatModal).toHaveBeenCalledWith(false);
     });
 
-    test("fails to start group chat without title", async () => {
+    test("prevents starting group chat without title", async () => {
       renderComponent("group");
       const user = userEvent.setup();
 
@@ -277,7 +277,7 @@ describe("<NewChatModal />", () => {
       ).toBeInTheDocument();
     });
 
-    test("fails to start group chat with only one contact", async () => {
+    test("prevents starting group chat with only one contact", async () => {
       const user = userEvent.setup();
       renderComponent("group");
 
@@ -308,7 +308,7 @@ describe("<NewChatModal />", () => {
       ).toBeInTheDocument();
     });
 
-    test("fails to start group chat with existing title", async () => {
+    test("prevents starting group chat with existing title", async () => {
       const user = userEvent.setup();
       renderComponent("group", [
         currentUserMock,
@@ -346,7 +346,7 @@ describe("<NewChatModal />", () => {
       });
     });
 
-    test("successfully starts new group chat", async () => {
+    test("starts new group chat successfully", async () => {
       const user = userEvent.setup();
       renderComponent("group");
 

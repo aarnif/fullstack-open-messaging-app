@@ -70,7 +70,7 @@ describe("<AddNewContactsModal />", () => {
     expect(screen.getByText("Add New Contacts")).toBeInTheDocument();
   });
 
-  test("search contacts work", async () => {
+  test("filters contacts by search input", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -90,7 +90,7 @@ describe("<AddNewContactsModal />", () => {
     });
   });
 
-  test("display error if no contacts selected", async () => {
+  test("displays error when no contacts selected", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -106,7 +106,7 @@ describe("<AddNewContactsModal />", () => {
     ).toBeInTheDocument();
   });
 
-  test("select one contact work", async () => {
+  test("selects single contact successfully", async () => {
     const user = userEvent.setup();
     renderComponent([
       currentUserMock,
@@ -132,7 +132,7 @@ describe("<AddNewContactsModal />", () => {
     expect(mockSetShowAddNewContactsModal).toHaveBeenCalledWith(false);
   });
 
-  test("select several contacts work", async () => {
+  test("selects multiple contacts successfully", async () => {
     const user = userEvent.setup();
     renderComponent([
       currentUserMock,

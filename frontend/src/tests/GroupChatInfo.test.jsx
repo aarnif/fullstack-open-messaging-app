@@ -87,7 +87,7 @@ describe("<GroupChatInfo />", () => {
     expect(screen.getByText("No description")).toBeInTheDocument();
   });
 
-  test("click close modal works", async () => {
+  test("closes modal on close button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -96,7 +96,7 @@ describe("<GroupChatInfo />", () => {
     expect(mockSetShowGroupChatInfo).toHaveBeenCalledWith(false);
   });
 
-  test("click edit group chat works", async () => {
+  test("opens edit group chat modal on button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -107,7 +107,7 @@ describe("<GroupChatInfo />", () => {
     });
   });
 
-  test("do not display leave button if user is chat admin", () => {
+  test("hides leave button when user is chat admin", () => {
     renderComponent();
 
     expect(
@@ -115,7 +115,7 @@ describe("<GroupChatInfo />", () => {
     ).not.toBeInTheDocument();
   });
 
-  test("click leave group chat displays modal", async () => {
+  test("allows user to leave group chat with confirmation", async () => {
     const user = userEvent.setup();
 
     renderComponent(anotherUserData);

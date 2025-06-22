@@ -53,7 +53,7 @@ describe("<EditProfile />", () => {
     expect(screen.getByTestId("edit-profile-modal")).toBeInTheDocument();
   });
 
-  test("edit profile text works", async () => {
+  test("updates profile name and about text successfully", async () => {
     const editProfileNameAndAboutMock = {
       request: {
         query: editProfileMock.request.query,
@@ -100,7 +100,7 @@ describe("<EditProfile />", () => {
     });
   });
 
-  test("edit profile with image works", async () => {
+  test("updates profile image successfully", async () => {
     const editProfileImageMock = {
       request: {
         query: editProfileMock.request.query,
@@ -138,7 +138,7 @@ describe("<EditProfile />", () => {
     });
   });
 
-  test("edit profile with empty fields fails", async () => {
+  test("prevents profile update with empty name field", async () => {
     const user = userEvent.setup();
     renderComponent();
 

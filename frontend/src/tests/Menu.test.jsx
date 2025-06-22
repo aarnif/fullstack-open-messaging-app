@@ -43,7 +43,6 @@ describe("<Menu />", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     useNavigate.mockReturnValue(navigate);
-
     vi.spyOn(apolloClient, "useApolloClient").mockReturnValue(client);
   });
 
@@ -53,7 +52,7 @@ describe("<Menu />", () => {
     expect(screen.getByTestId("menu")).toBeInTheDocument();
   });
 
-  test("navigates to contacts page when contacts button is clicked", async () => {
+  test("navigates to contacts page on contacts button click", async () => {
     const user = userEvent.setup();
     renderMenu();
 
@@ -64,7 +63,7 @@ describe("<Menu />", () => {
     expect(navigate).toHaveBeenCalledWith("/contacts");
   });
 
-  test("navigates to profile page when profile button is clicked", async () => {
+  test("navigates to profile page on profile button click", async () => {
     const user = userEvent.setup();
     renderMenu();
 
@@ -74,7 +73,7 @@ describe("<Menu />", () => {
     expect(navigate).toHaveBeenCalledWith("/profile");
   });
 
-  test("navigates to settings page when settings button is clicked", async () => {
+  test("navigates to settings page on settings button click", async () => {
     const user = userEvent.setup();
     renderMenu();
 
@@ -84,7 +83,7 @@ describe("<Menu />", () => {
     expect(navigate).toHaveBeenCalledWith("/settings");
   });
 
-  test("navigates back to chats when chats button is clicked from another page", async () => {
+  test("navigates back to chats on chats button click from another page", async () => {
     const user = userEvent.setup();
     renderMenu("contacts");
 
@@ -95,7 +94,7 @@ describe("<Menu />", () => {
     expect(navigate).toHaveBeenCalledWith("/chats");
   });
 
-  test("shows confirmation modal when logout button is clicked", async () => {
+  test("displays confirmation modal on logout button click", async () => {
     const user = userEvent.setup();
     renderMenu();
 

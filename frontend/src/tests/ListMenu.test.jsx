@@ -89,7 +89,7 @@ describe("<ListMenu />", () => {
   });
 
   describe("Chats Menu", () => {
-    test("display loading state", () => {
+    test("displays loading state", () => {
       renderComponent("chats");
 
       expect(screen.getByTestId("loading")).toBeInTheDocument();
@@ -141,7 +141,7 @@ describe("<ListMenu />", () => {
       });
     });
 
-    test("search chats works", async () => {
+    test("filters chats by search input", async () => {
       const initialEveryChatByUserMock = {
         request: {
           query: allChatsByUserMock.request.query,
@@ -197,7 +197,7 @@ describe("<ListMenu />", () => {
       });
     });
 
-    test("click new chat button works", async () => {
+    test("calls callback on new chat button click", async () => {
       const user = userEvent.setup();
 
       renderComponent("chats");
@@ -209,7 +209,7 @@ describe("<ListMenu />", () => {
   });
 
   describe("Contacts Menu", () => {
-    test("display loading state", () => {
+    test("displays loading state", () => {
       renderComponent("contacts");
 
       expect(screen.getByTestId("loading")).toBeInTheDocument();
@@ -252,7 +252,7 @@ describe("<ListMenu />", () => {
       });
     });
 
-    test("search contacts works", async () => {
+    test("filters contacts by search input", async () => {
       const initialAllContactsByUserMock = {
         request: {
           query: allContactsByUserMock.request.query,
@@ -301,7 +301,7 @@ describe("<ListMenu />", () => {
       });
     });
 
-    test("click add new contacts works", async () => {
+    test("calls callback on add new contacts button click", async () => {
       const user = userEvent.setup();
 
       renderComponent("contacts");
