@@ -109,21 +109,21 @@ describe("<ListMenu />", () => {
     });
 
     test("displays no chats found message", async () => {
-      const emptyAllChatsByUserMock = {
+      const emptyEveryChatByUserMock = {
         request: {
           query: allChatsByUserMock.request.query,
           variables: allChatsByUserMock.request.variables,
         },
         result: {
           data: {
-            allChatsByUser: [],
+            everyChatByUser: [],
           },
         },
       };
 
       renderComponent("chats", [
         currentUserMock,
-        emptyAllChatsByUserMock,
+        emptyEveryChatByUserMock,
         allContactsExceptByUserMock,
         allContactsExceptByUserSearchMock,
         addContactsMock,
@@ -142,7 +142,7 @@ describe("<ListMenu />", () => {
     });
 
     test("search chats works", async () => {
-      const initialAllChatsByUserMock = {
+      const initialEveryChatByUserMock = {
         request: {
           query: allChatsByUserMock.request.query,
           variables: {
@@ -151,12 +151,12 @@ describe("<ListMenu />", () => {
         },
         result: {
           data: {
-            allChatsByUser: allChatsByUserMock.result.data.allChatsByUser,
+            everyChatByUser: allChatsByUserMock.result.data.everyChatByUser,
           },
         },
       };
 
-      const searchAllChatsByUserMock = {
+      const searchEveryChatByUserMock = {
         request: {
           query: allChatsByUserMock.request.query,
           variables: {
@@ -165,7 +165,7 @@ describe("<ListMenu />", () => {
         },
         result: {
           data: {
-            allChatsByUser: allChatsByUserMock.result.data.allChatsByUser,
+            everyChatByUser: allChatsByUserMock.result.data.everyChatByUser,
           },
         },
       };
@@ -174,8 +174,8 @@ describe("<ListMenu />", () => {
 
       renderComponent("chats", [
         currentUserMock,
-        initialAllChatsByUserMock,
-        searchAllChatsByUserMock,
+        initialEveryChatByUserMock,
+        searchEveryChatByUserMock,
         allContactsExceptByUserMock,
         allContactsExceptByUserSearchMock,
         addContactsMock,

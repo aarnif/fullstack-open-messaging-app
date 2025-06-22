@@ -231,7 +231,7 @@ describe("<App />", () => {
 
   test("click navigate to individual chat page works", async () => {
     const user = userEvent.setup();
-    const firstChat = userChats[0];
+    const firstChat = userChats[0].chat;
     renderComponent();
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();

@@ -20,25 +20,12 @@ const sliceLatestMessage = (latestMessage, characterCount = 20) =>
     ? latestMessage.slice(0, characterCount) + "..."
     : latestMessage;
 
-const newMessagesCount = (user, messages) =>
-  messages.filter(
-    (message) =>
-      message.type === "message" &&
-      message.isReadBy.find(
-        (member) => member.member.id === user.id && !member.isRead
-      )
-  ).length;
-
 const sortChatsByDate = (chats) =>
-  chats.sort((a, b) => {
-    if (!a.messages.length) return 1;
-
-    if (!b.messages.length) return -1;
-
-    return (
-      new Date(b.messages[0].createdAt) - new Date(a.messages[0].createdAt)
-    );
-  });
+  chats.sort(
+    (a, b) =>
+      new Date(b.chat.messages[b.chat.messages.length - 1].createdAt) -
+      new Date(a.chat.messages[a.chat.messages.length - 1].createdAt)
+  );
 
 const sortChatMembersByNameAndUsername = (chatMembers) => {
   return [
@@ -58,7 +45,7 @@ const capitalizeString = (string) => {
 export default {
   formatMessageTime,
   sliceLatestMessage,
-  newMessagesCount,
+
   sortChatsByDate,
   sortChatMembersByNameAndUsername,
   capitalizeString,

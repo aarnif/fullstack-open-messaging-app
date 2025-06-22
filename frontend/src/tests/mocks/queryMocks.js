@@ -74,7 +74,13 @@ const allChatsByUserMock = {
   },
   result: {
     data: {
-      allChatsByUser: chats,
+      allChatsByUser: chats.map((chat) => ({
+        __typename: "UserChat",
+        chat: chat,
+        unreadMessages: 0,
+        lastReadMessageId: null,
+        lastReadAt: null,
+      })),
     },
   },
 };

@@ -1,7 +1,7 @@
 import { useSubscription, useApolloClient } from "@apollo/client";
 import { Outlet } from "react-router";
 
-import { ALL_CONTACTS_BY_USER, ALL_CHATS_BY_USER } from "../graphql/queries";
+import { ALL_CHATS_BY_USER, ALL_CONTACTS_BY_USER } from "../graphql/queries";
 import {
   CONTACT_BLOCKED_OR_UNBLOCKED,
   GROUP_CHAT_EDITED,
@@ -105,22 +105,28 @@ const Home = ({
             searchByTitle: "",
           },
         },
-        ({ allChatsByUser }) => {
+        ({ everyChatByUser: allChatsByUser }) => {
           if (removedMemberIds.includes(user.id)) {
             return {
-              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
+              everyChatByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.filter((chat) => chat.id !== updatedChat.id)
               ),
             };
           } else if (addedMemberIds.includes(user.id)) {
             return {
-              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
-                allChatsByUser.concat(updatedChat)
+              everyChatByUser: chatAndMessageHelpers.sortChatsByDate(
+                allChatsByUser.concat({
+                  __typename: "UserChat",
+                  chat: updatedChat,
+                  unreadMessages: 0,
+                  lastReadMessageId: null,
+                  lastReadAt: null,
+                })
               ),
             };
           } else {
             return {
-              allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
+              everyChatByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.map((chat) =>
                   chat.id === updatedChat.id ? { ...updatedChat } : chat
                 )

@@ -8,11 +8,11 @@ import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers.js";
 
-const { currentUserMock, findGroupChatByIdMock } = queryMocks;
+const { currentUserMock, allChatsByUserMock } = queryMocks;
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
-const mockChatData = findGroupChatByIdMock.result.data.findChatById;
+const mockChatData = allChatsByUserMock.result.data.allChatsByUser[0];
 
 const mockSetActiveChatOrContactId = vi.fn();
 
@@ -26,15 +26,15 @@ vi.mock("react-router", async () => {
 
 const renderChatItem = (
   chatData = mockChatData,
-  activeChatOrContactId = chatData.id
+  activeChatOrContactId = chatData.chat.id
 ) => {
   return render(
-    <MockedProvider mocks={[currentUserMock, findGroupChatByIdMock]}>
+    <MockedProvider mocks={[currentUserMock, allChatsByUserMock]}>
       <MemoryRouter>
         <ChatItem
           index={0}
           user={userData}
-          chat={chatData}
+          userChat={chatData}
           activeChatOrContactId={activeChatOrContactId}
           setActiveChatOrContactId={mockSetActiveChatOrContactId}
         />
@@ -53,17 +53,20 @@ describe("<ChatItem />", () => {
     renderChatItem();
 
     expect(
-      screen.getByTestId(`chat-item-${mockChatData.id}`)
+      screen.getByTestId(`chat-item-${mockChatData.chat.id}`)
     ).toBeInTheDocument();
     expect(screen.getByTestId("chat-card")).toBeInTheDocument();
-    expect(screen.getByText(mockChatData.title)).toBeInTheDocument();
+    expect(screen.getByText(mockChatData.chat.title)).toBeInTheDocument();
     expect(screen.queryByText("No messages")).not.toBeInTheDocument();
   });
 
   test("renders nothing when chat has no messages", () => {
     const chatWithNoMessages = {
       ...mockChatData,
-      messages: [],
+      chat: {
+        ...mockChatData.chat,
+        messages: [],
+      },
     };
 
     const { container } = renderChatItem(chatWithNoMessages);
@@ -89,10 +92,12 @@ describe("<ChatItem />", () => {
     const user = userEvent.setup();
     renderChatItem();
 
-    await user.click(screen.getByTestId(`chat-item-${mockChatData.id}`));
+    await user.click(screen.getByTestId(`chat-item-${mockChatData.chat.id}`));
 
-    expect(navigate).toHaveBeenCalledWith(`/chats/${mockChatData.id}`);
-    expect(mockSetActiveChatOrContactId).toHaveBeenCalledWith(mockChatData.id);
+    expect(navigate).toHaveBeenCalledWith(`/chats/${mockChatData.chat.id}`);
+    expect(mockSetActiveChatOrContactId).toHaveBeenCalledWith(
+      mockChatData.chat.id
+    );
   });
 
   test("do not display new messages count if count zero", () => {
@@ -103,14 +108,7 @@ describe("<ChatItem />", () => {
   test("displays new messages count if count greater than zero", () => {
     const chatWithNewMessages = {
       ...mockChatData,
-      messages: [
-        ...mockChatData.messages,
-        {
-          ...mockChatData.messages[0],
-          sender: { id: userData.id },
-          isReadBy: [{ isRead: false, member: { id: userData.id } }],
-        },
-      ],
+      unreadMessages: 3,
     };
     renderChatItem(chatWithNewMessages);
     expect(screen.queryByTestId("new-messages-count")).toBeInTheDocument();
@@ -119,14 +117,17 @@ describe("<ChatItem />", () => {
   test("displays notification message correctly", () => {
     const chatWithNotification = {
       ...mockChatData,
-      messages: [
-        {
-          ...mockChatData.messages[0],
-          type: "notification",
-          content: "User joined the chat",
-          sender: { id: "someone-else", name: "Someone Else" },
-        },
-      ],
+      chat: {
+        ...mockChatData.chat,
+        messages: [
+          {
+            ...mockChatData.chat.messages[0],
+            type: "notification",
+            content: "User joined the chat",
+            sender: { id: "someone-else", name: "Someone Else" },
+          },
+        ],
+      },
     };
 
     renderChatItem(chatWithNotification);
@@ -137,16 +138,20 @@ describe("<ChatItem />", () => {
 
   test("displays text message from current user correctly", () => {
     const message = "Hello world";
+
     const chatWithMessage = {
       ...mockChatData,
-      messages: [
-        {
-          ...mockChatData.messages[0],
-          type: "text",
-          content: message,
-          sender: { id: userData.id, name: userData.name },
-        },
-      ],
+      chat: {
+        ...mockChatData.chat,
+        messages: [
+          {
+            ...mockChatData.chat.messages[0],
+            type: "text",
+            content: message,
+            sender: { id: userData.id, name: userData.name },
+          },
+        ],
+      },
     };
 
     renderChatItem(chatWithMessage);
@@ -158,16 +163,20 @@ describe("<ChatItem />", () => {
   test("displays text message from another user correctly", () => {
     const message = "Hello there";
     const senderName = "Jane Smith";
+
     const chatWithMessage = {
       ...mockChatData,
-      messages: [
-        {
-          ...mockChatData.messages[0],
-          type: "text",
-          content: message,
-          sender: { id: "another-user", name: senderName },
-        },
-      ],
+      chat: {
+        ...mockChatData.chat,
+        messages: [
+          {
+            ...mockChatData.chat.messages[0],
+            type: "text",
+            content: message,
+            sender: { id: "another-user", name: senderName },
+          },
+        ],
+      },
     };
 
     renderChatItem(chatWithMessage);
@@ -179,14 +188,17 @@ describe("<ChatItem />", () => {
   test("displays image message from current user correctly", () => {
     const chatWithImage = {
       ...mockChatData,
-      messages: [
-        {
-          ...mockChatData.messages[0],
-          type: "singleImage",
-          content: "image-url",
-          sender: { id: userData.id, name: userData.name },
-        },
-      ],
+      chat: {
+        ...mockChatData.chat,
+        messages: [
+          {
+            ...mockChatData.chat.messages[0],
+            type: "singleImage",
+            content: "image-url",
+            sender: { id: userData.id, name: userData.name },
+          },
+        ],
+      },
     };
 
     renderChatItem(chatWithImage);
@@ -198,14 +210,17 @@ describe("<ChatItem />", () => {
   test("displays image message from another user correctly", () => {
     const chatWithImage = {
       ...mockChatData,
-      messages: [
-        {
-          ...mockChatData.messages[0],
-          type: "singleImage",
-          content: "image-url",
-          sender: { id: "other-user-id", name: "John Doe" },
-        },
-      ],
+      chat: {
+        ...mockChatData.chat,
+        messages: [
+          {
+            ...mockChatData.chat.messages[0],
+            type: "singleImage",
+            content: "image-url",
+            sender: { id: "other-user-id", name: "John Doe" },
+          },
+        ],
+      },
     };
 
     renderChatItem(chatWithImage);

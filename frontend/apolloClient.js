@@ -61,6 +61,11 @@ const cache = new InMemoryCache({
     },
     Chat: {
       fields: {
+        image: {
+          merge(_, incoming = {}) {
+            return incoming;
+          },
+        },
         members: {
           merge(_, incoming = []) {
             return [...incoming];

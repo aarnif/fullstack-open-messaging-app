@@ -9,11 +9,15 @@ import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import imageService from "../services/imageService";
 import useModal from "../hooks/useModal";
 import useField from "../hooks/useField";
-import { FIND_CHAT_BY_ID, FIND_CHAT_BY_MEMBERS } from "../graphql/queries";
 import {
-  MARK_MESSAGES_IN_CHAT_READ,
+  FIND_CHAT_BY_ID,
+  FIND_CHAT_BY_MEMBERS,
+  ALL_CHATS_BY_USER,
+} from "../graphql/queries";
+import {
   ADD_MESSAGE_TO_CHAT,
   CREATE_CHAT,
+  MARK_CHAT_AS_READ,
 } from "../graphql/mutations";
 import Loading from "./ui/Loading";
 import GroupChatInfo from "./GroupChatInfo";
@@ -58,8 +62,6 @@ export const ChatHeader = ({
       navigate(`/contacts/${anotherPrivateChatMember.id}`);
     }
   };
-
-  console.log("Chat header rendered with chat:", chat);
 
   const chatMembersString = chatAndMessageHelpers.sliceLatestMessage(
     chatAndMessageHelpers
@@ -473,26 +475,37 @@ const ExistingChatContent = ({
     },
   });
 
-  const [mutateMarkMessagesInChatRead] = useMutation(
-    MARK_MESSAGES_IN_CHAT_READ
-  );
+  const [markChatAsRead] = useMutation(MARK_CHAT_AS_READ, {
+    onError: (error) => {
+      console.log(
+        "Error marking chat as read:",
+        error.graphQLErrors[0]?.message || error.message
+      );
+    },
+  });
 
   useEffect(() => {
     setActiveMenuItem("chats");
     setActiveChatOrContactId(match.chatId);
-    const markMessagesInChatRead = async () => {
-      console.log("Marking messages in the active chat as read");
-      mutateMarkMessagesInChatRead({
+
+    if (match.chatId && data?.findChatById) {
+      console.log("Marking chat as read");
+      markChatAsRead({
         variables: { chatId: match.chatId },
+        refetchQueries: [
+          {
+            query: ALL_CHATS_BY_USER,
+            variables: { searchByTitle: "" },
+          },
+        ],
       });
-    };
-    markMessagesInChatRead();
+    }
   }, [
     data,
     match.chatId,
-    mutateMarkMessagesInChatRead,
     setActiveChatOrContactId,
     setActiveMenuItem,
+    markChatAsRead,
   ]);
 
   if (loading) {
@@ -510,10 +523,7 @@ const ExistingChatContent = ({
         chat={data.findChatById}
         setShowGroupChatInfo={setShowGroupChatInfo}
       />
-      <Messages
-        user={user}
-        messages={[...(data?.findChatById.messages || [])].reverse()}
-      />
+      <Messages user={user} messages={data?.findChatById.messages || []} />
       <NewMessageInput user={user} chatId={match.chatId} newChatInfo={null} />
       <AnimatePresence>
         {showGroupChatInfo && (

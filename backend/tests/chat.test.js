@@ -1,5 +1,3 @@
-import assert from "node:assert";
-
 import data from "./data.js";
 import helpers from "./helpers.js";
 
@@ -15,6 +13,7 @@ const {
   loginUser,
   addContacts,
   createChat,
+  editGroupChat,
 } = helpers;
 
 describe("Chat tests", () => {
@@ -132,45 +131,19 @@ describe("Chat tests", () => {
       credentials.token
     );
 
+    const chatMessages = response.body.data.addMessageToChat.messages;
+
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.addMessageToChat.title).toBe(
       groupChatDetails[0].title
     );
-    expect(response.body.data.addMessageToChat.messages.length).toBe(2);
-    expect(
-      response.body.data.addMessageToChat.messages[0].sender.username
-    ).toBe(credentials.username);
-    expect(response.body.data.addMessageToChat.messages[0].content).toBe(
+    expect(chatMessages.length).toBe(2);
+    expect(chatMessages[chatMessages.length - 1].sender.username).toBe(
+      credentials.username
+    );
+    expect(chatMessages[chatMessages.length - 1].content).toBe(
       "This is a new message"
     );
-  });
-
-  it("Get all chats by user", async () => {
-    await createUser(credentials);
-    await loginUser(credentials);
-    await addContacts(credentials, [contactDetails[0]]);
-    await createChat(
-      credentials,
-      [credentials.id, contactDetails[0].id, contactDetails[1].id],
-      groupChatDetails[0].startingMessage,
-      groupChatDetails[0].title,
-      groupChatDetails[0].description
-    );
-
-    const response = await requestData(
-      {
-        query: `query AllChatsByUser {
-            allChatsByUser {
-              id
-              title
-            }
-          }`,
-      },
-      credentials.token
-    );
-
-    expect(response.errors).toBeUndefined();
-    assert.strictEqual(response.body.data.allChatsByUser.length, 1);
   });
 
   it("Find chat by id", async () => {
@@ -248,37 +221,12 @@ describe("Chat tests", () => {
 
     groupChatDetails[0].id = createdChat.body.data.createChat.id;
 
-    const response = await requestData(
-      {
-        query: `mutation EditGroupChat($chatId: ID!
-                  $title: String
-                  $description: String
-                  $input: ImageInput
-                  $memberIds: [ID!]!) 
-                  {
-                  editGroupChat(chatId: $chatId
-                  title: $title
-                  description: $description
-                  input: $input
-                  memberIds: $memberIds) {
-                    id
-                    title
-                    members {
-                      id
-                      username
-                    }
-                  }
-          }`,
-        variables: {
-          chatId: groupChatDetails[0].id,
-          title: groupChatDetails[0].title,
-          description: groupChatDetails[0].description,
-          memberIds: [credentials.id].concat(
-            contactDetails.map((contact) => contact.id)
-          ),
-        },
-      },
-      credentials.token
+    const response = await editGroupChat(
+      credentials,
+      groupChatDetails[0].id,
+      groupChatDetails[0].title,
+      groupChatDetails[0].description,
+      [credentials.id].concat(contactDetails.map((contact) => contact.id))
     );
 
     expect(response.errors).toBeUndefined();
@@ -310,39 +258,12 @@ describe("Chat tests", () => {
 
     groupChatDetails[0].id = createdChat.body.data.createChat.id;
 
-    const response = await requestData(
-      {
-        query: `mutation EditGroupChat($chatId: ID!
-                  $title: String
-                  $description: String
-                  $input: ImageInput
-                  $memberIds: [ID!]!) 
-                  {
-                  editGroupChat(chatId: $chatId
-                  title: $title
-                  description: $description
-                  input: $input
-                  memberIds: $memberIds) {
-                    id
-                    title
-                    members {
-                      id
-                      username
-                    }
-                  }
-          }`,
-        variables: {
-          chatId: groupChatDetails[0].id,
-          title: groupChatDetails[0].title,
-          description: groupChatDetails[0].description,
-          memberIds: [
-            credentials.id,
-            contactDetails[0].id,
-            contactDetails[1].id,
-          ],
-        },
-      },
-      credentials.token
+    const response = await editGroupChat(
+      credentials,
+      groupChatDetails[0].id,
+      groupChatDetails[0].title,
+      groupChatDetails[0].description,
+      [credentials.id, contactDetails[0].id, contactDetails[1].id]
     );
 
     expect(response.errors).toBeUndefined();

@@ -50,13 +50,6 @@ export const CHAT_DETAILS = gql`
       sender {
         ...UserDetails
       }
-      isReadBy {
-        member {
-          id
-          username
-        }
-        isRead
-      }
       createdAt
     }
   }
@@ -87,11 +80,34 @@ export const FIND_USER_BY_ID = gql`
 export const ALL_CHATS_BY_USER = gql`
   query AllChatsByUser($searchByTitle: String) {
     allChatsByUser(searchByTitle: $searchByTitle) {
-      ...ChatDetails
+      chat {
+        id
+        title
+        isGroupChat
+        messages {
+          id
+          type
+          sender {
+            id
+            name
+          }
+          content
+          image {
+            thumbnail
+            original
+          }
+          createdAt
+        }
+        image {
+          thumbnail
+          original
+        }
+      }
+      unreadMessages
+      lastReadMessageId
+      lastReadAt
     }
   }
-
-  ${CHAT_DETAILS}
 `;
 
 export const ALL_CONTACTS_BY_USER = gql`

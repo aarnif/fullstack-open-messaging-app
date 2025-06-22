@@ -14,9 +14,7 @@ import Loading from "./Loading";
 import Title from "./Title";
 import Button from "./Button";
 import Input from "./Input";
-// import ChatItem from "../Chats/ChatItem";
 import ContactCard from "./ContactCard";
-// import ContactItem from "../Contacts/ContactItem";
 import chatAndMessageHelpers from "../../helpers/chatAndMessageHelpers";
 
 const EmptyState = ({ message, testId }) => (
@@ -61,11 +59,12 @@ const LatestMessage = ({ user, latestMessage }) => {
 
 export const ChatItem = ({
   user,
-  chat,
+  userChat,
   activeChatOrContactId,
   setActiveChatOrContactId,
 }) => {
   const navigate = useNavigate();
+  const { chat, unreadMessages } = userChat;
 
   const handlePress = () => {
     console.log("Pressed chat titled:", chat.title);
@@ -77,11 +76,8 @@ export const ChatItem = ({
     return null;
   }
 
-  const latestMessage = chat.messages[0];
-  const newMessagesCount = chatAndMessageHelpers.newMessagesCount(
-    user,
-    chat.messages
-  );
+  const latestMessage = chat.messages[chat.messages.length - 1];
+  const newMessagesCount = unreadMessages;
 
   const classStyles =
     activeChatOrContactId === chat.id
@@ -157,6 +153,7 @@ const ChatsList = ({
     onData: ({ data }) => {
       console.log("Use NEW_MESSAGE_TO_CHAT_ADDED-subscription:");
       const updatedChat = data.data.messageToChatAdded;
+
       client.cache.updateQuery(
         {
           query: ALL_CHATS_BY_USER,
@@ -164,8 +161,18 @@ const ChatsList = ({
         },
         ({ allChatsByUser }) => {
           const sortedChats = chatAndMessageHelpers.sortChatsByDate(
-            allChatsByUser.map((chat) => {
-              return chat.id === updatedChat.id ? { ...updatedChat } : chat;
+            allChatsByUser.map((userChat) => {
+              if (userChat.chat.id === updatedChat.id) {
+                const isActiveChat = activeChatOrContactId === updatedChat.id;
+                return {
+                  ...userChat,
+                  chat: updatedChat,
+                  unreadMessages: isActiveChat
+                    ? 0
+                    : userChat.unreadMessages + 1,
+                };
+              }
+              return userChat;
             })
           );
           return { allChatsByUser: sortedChats };
@@ -181,14 +188,32 @@ const ChatsList = ({
     onData: ({ data }) => {
       console.log("Use NEW_CHAT_CREATED-subscription:");
       const newChat = data.data.newChatCreated;
+
       client.cache.updateQuery(
         {
           query: ALL_CHATS_BY_USER,
           variables: { searchByTitle: "" },
         },
         ({ allChatsByUser }) => {
+          const newUserChat = {
+            __typename: "UserChat",
+            chat: {
+              __typename: "Chat",
+              id: newChat.id,
+              title: newChat.title,
+              isGroupChat: newChat.isGroupChat,
+              image: {
+                thumbnail: newChat.image.thumbnail,
+                original: newChat.image.original,
+              },
+              messages: newChat.messages,
+            },
+            unreadMessages: 0,
+            lastReadMessageId: null,
+            lastReadAt: null,
+          };
           const sortedChats = chatAndMessageHelpers.sortChatsByDate(
-            allChatsByUser.concat(newChat)
+            allChatsByUser.concat(newUserChat)
           );
           return { allChatsByUser: sortedChats };
         }
@@ -216,7 +241,7 @@ const ChatsList = ({
         ({ allChatsByUser }) => {
           return {
             allChatsByUser: allChatsByUser.filter(
-              (chat) => chat.id !== deletedChatId
+              (userChat) => userChat.chat.id !== deletedChatId
             ),
           };
         }
@@ -243,7 +268,8 @@ const ChatsList = ({
             return {
               allChatsByUser: chatAndMessageHelpers.sortChatsByDate(
                 allChatsByUser.filter(
-                  (chat) => !leftGroupChatData.chatIds.includes(chat.id)
+                  (userChat) =>
+                    !leftGroupChatData.chatIds.includes(userChat.chat.id)
                 )
               ),
             };
@@ -261,20 +287,20 @@ const ChatsList = ({
     return <Loading />;
   }
 
-  const chats = data?.allChatsByUser || [];
+  const userChats = data?.allChatsByUser || [];
 
-  if (!chats.length) {
+  if (!userChats.length) {
     return <EmptyState message="No chats found" testId="no-chats-found" />;
   }
 
   return (
     <div className="w-full">
-      {chats.map((chat, index) => (
+      {userChats.map((userChat, index) => (
         <ChatItem
-          key={chat.id}
+          key={userChat.chat.id}
           index={index}
           user={user}
-          chat={chat}
+          userChat={userChat}
           activeChatOrContactId={activeChatOrContactId}
           setActiveChatOrContactId={setActiveChatOrContactId}
         />

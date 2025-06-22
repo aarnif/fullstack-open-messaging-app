@@ -3,7 +3,6 @@ import {
   CREATE_USER,
   EDIT_SETTINGS,
   EDIT_PROFILE,
-  MARK_MESSAGES_IN_CHAT_READ,
   ADD_MESSAGE_TO_CHAT,
   CREATE_CHAT,
   ADD_CONTACTS,
@@ -81,36 +80,6 @@ const editProfileMock = {
       },
     },
   },
-};
-
-const markAllMessagesInPrivateChatReadMock = {
-  request: {
-    query: MARK_MESSAGES_IN_CHAT_READ,
-    variables: {
-      chatId: chats[0].id,
-    },
-  },
-  result: {
-    data: {
-      markAllMessagesInChatRead: chats[0],
-    },
-  },
-  maxUsageCount: 2,
-};
-
-const markAllMessagesInGroupChatReadMock = {
-  request: {
-    query: MARK_MESSAGES_IN_CHAT_READ,
-    variables: {
-      chatId: chats[1].id,
-    },
-  },
-  result: {
-    data: {
-      markAllMessagesInChatRead: chats[1],
-    },
-  },
-  maxUsageCount: 2,
 };
 
 const addMessageToChatMock = {
@@ -320,8 +289,6 @@ export default {
   createUserMock,
   editSettingsMock,
   editProfileMock,
-  markAllMessagesInGroupChatReadMock,
-  markAllMessagesInPrivateChatReadMock,
   addMessageToChatMock,
   createNewChatMock,
   createNewChatWithImageOnlyMock,
