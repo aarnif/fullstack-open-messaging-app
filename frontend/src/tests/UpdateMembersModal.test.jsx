@@ -16,7 +16,7 @@ const {
 const { navigate } = mocks;
 
 const chatData = findGroupChatByIdMock.result.data.findChatById;
-const user1 = allContactsByUserMock.result.data.allContactsByUser.contacts[0];
+const user1 = allContactsByUserMock.result.data.allContactsByUser[0];
 
 const mockSetChosenUserIds = vi.fn();
 const mockSetNewMemberIds = vi.fn();

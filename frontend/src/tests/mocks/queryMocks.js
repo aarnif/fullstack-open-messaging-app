@@ -221,9 +221,7 @@ const allContactsByUserMock = {
   },
   result: {
     data: {
-      allContactsByUser: {
-        contacts: [users[1], users[2]],
-      },
+      allContactsByUser: [users[1], users[2]],
     },
   },
 };
@@ -237,9 +235,7 @@ const allContactsByUserSearchMock = {
   },
   result: {
     data: {
-      allContactsByUser: {
-        contacts: [users[1]],
-      },
+      allContactsByUser: [users[1]],
     },
   },
 };

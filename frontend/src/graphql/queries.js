@@ -113,9 +113,7 @@ export const ALL_CHATS_BY_USER = gql`
 export const ALL_CONTACTS_BY_USER = gql`
   query AllContactsByUser($searchByName: String) {
     allContactsByUser(searchByName: $searchByName) {
-      contacts {
-        ...UserDetails
-      }
+      ...UserDetails
     }
   }
 

@@ -75,10 +75,7 @@ const Home = ({
             );
 
             return {
-              allContactsByUser: {
-                ...allContactsByUser,
-                contacts: updatedContacts,
-              },
+              allContactsByUser: updatedContacts,
             };
           }
         );

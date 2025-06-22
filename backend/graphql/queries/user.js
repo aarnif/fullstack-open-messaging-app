@@ -31,7 +31,6 @@ const typeDefs = `
     name: String
     about: String
     image: Image
-    status: String!
     settings: Settings
     createdAt: Date!
     contacts: [User!]!
@@ -46,7 +45,7 @@ const typeDefs = `
   extend type Query {
     findUserById(id: ID!): User
     allChatsByUser(searchByTitle: String): [UserChat!]!
-    allContactsByUser(searchByName: String): User!
+    allContactsByUser(searchByName: String): [User!]!
     allContactsExceptByUser(searchByName: String): [User!]!
     checkIfUserHasBlockedYou(userId: ID!): Boolean
     me: User
@@ -239,7 +238,7 @@ const resolvers = {
 
       const searchRegex = args.searchByName || "";
 
-      return User.findById(context.currentUser)
+      const user = await User.findById(context.currentUser)
         .populate({
           path: "contacts",
           match: {
@@ -253,6 +252,8 @@ const resolvers = {
         })
         .populate("blockedContacts")
         .sort({ name: "asc", username: "asc" });
+
+      return user.contacts;
     },
     allContactsExceptByUser: async (root, args, context) => {
       if (!context.currentUser) {

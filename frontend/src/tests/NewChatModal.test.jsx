@@ -22,8 +22,8 @@ const {
 const { navigate } = mocks;
 
 const userData = currentUserMock.result.data.me;
-const user1 = allContactsByUserMock.result.data.allContactsByUser.contacts[0];
-const user2 = allContactsByUserMock.result.data.allContactsByUser.contacts[1];
+const user1 = allContactsByUserMock.result.data.allContactsByUser[0];
+const user2 = allContactsByUserMock.result.data.allContactsByUser[1];
 
 const mockSetShowNewChatModal = vi.fn();
 
