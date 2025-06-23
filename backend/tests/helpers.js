@@ -222,6 +222,17 @@ const editGroupChat = async (
     credentials.token
   );
 
+const deleteChat = async (credentials, chatId) =>
+  await requestData(
+    {
+      query: `mutation DeleteChat($chatId: ID!) {
+          deleteChat(chatId: $chatId)
+        }`,
+      variables: { chatId },
+    },
+    credentials.token
+  );
+
 export default {
   timeOut,
   testServer,
@@ -237,4 +248,5 @@ export default {
   changePassword,
   checkIfUserHasBlockedYou,
   editGroupChat,
+  deleteChat,
 };
