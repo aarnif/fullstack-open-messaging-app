@@ -344,4 +344,26 @@ test.describe("Chats", () => {
     chatItem.click();
     await expect(newMessagesCount).not.toBeVisible();
   });
+
+  test("allows deleting a group chat if user is admin", async ({ page }) => {
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+    await addContacts(page, [user2Credentials, user3Credentials]);
+    await createGroupChat(page, "Test Group", "A group to delete", [
+      user2Credentials,
+      user3Credentials,
+    ]);
+
+    await page.getByTestId("new-message-input").fill("Hello everybody!");
+    await page.getByTestId("send-new-message-button").click();
+
+    await page.getByTestId("chat-info-button").click();
+    await page.getByTestId("delete-group-chat-button").click();
+    await page.getByTestId("confirm-button").click();
+
+    await expect(page.getByText("Chat deleted successfully.")).toBeVisible();
+    await page.getByTestId("close-modal-button").click();
+    await expect(
+      page.getByText("Select Chat to Start Messaging.")
+    ).toBeVisible();
+  });
 });

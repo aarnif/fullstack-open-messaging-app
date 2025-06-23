@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { LEAVE_GROUP_CHATS } from "../graphql/mutations";
+import { LEAVE_GROUP_CHATS, DELETE_CHAT } from "../graphql/mutations";
 import useModal from "../hooks/useModal";
 import ChatMembersList from "./ui/ChatMembersList";
 import EditGroupChat from "./EditGroupChat";
@@ -18,7 +18,13 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
   const navigate = useNavigate();
   const chatAdmin = chat.admin;
 
-  const [mutate] = useMutation(LEAVE_GROUP_CHATS, {
+  const [leaveGroupChats] = useMutation(LEAVE_GROUP_CHATS, {
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
+    },
+  });
+
+  const [deleteChat] = useMutation(DELETE_CHAT, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
@@ -27,7 +33,7 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
   const handleLeaveChat = async () => {
     console.log("Leaving group chat...");
     try {
-      await mutate({
+      await leaveGroupChats({
         variables: {
           chatIds: [chat.id],
         },
@@ -43,6 +49,23 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
   const handleEditChat = () => {
     setShowEditGroupChat(true);
     console.log("Handle edit chat.");
+  };
+
+  const handleDeleteChat = async () => {
+    console.log("Handle delete chat.");
+    try {
+      await deleteChat({
+        variables: {
+          chatId: chat.id,
+        },
+      });
+      console.log("Chat deleted:", chat.title);
+      navigate("/chats");
+      modal("alert", "Notification", "Chat deleted successfully.");
+    } catch (error) {
+      console.log("Error deleting chat:", error);
+      console.log(error);
+    }
   };
 
   return (
@@ -92,7 +115,23 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
             chatMembers={chat.members}
             admin={chatAdmin}
           />
-          {user.id !== chatAdmin.id && (
+          {user.id === chatAdmin.id ? (
+            <Button
+              type="button"
+              variant="tertiary"
+              testId="delete-group-chat-button"
+              text="Delete Chat"
+              onClick={() =>
+                modal(
+                  "danger",
+                  "Delete Chat",
+                  "Are you sure you want to delete the chat? All messages and chat data will be permanently lost.",
+                  "Delete",
+                  handleDeleteChat
+                )
+              }
+            />
+          ) : (
             <Button
               type="button"
               variant="tertiary"

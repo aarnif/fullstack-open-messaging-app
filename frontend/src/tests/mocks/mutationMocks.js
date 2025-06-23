@@ -5,6 +5,7 @@ import {
   EDIT_PROFILE,
   ADD_MESSAGE_TO_CHAT,
   CREATE_CHAT,
+  DELETE_CHAT,
   ADD_CONTACTS,
   BLOCK_OR_UNBLOCK_CONTACT,
   REMOVE_CONTACT,
@@ -156,6 +157,20 @@ const createNewChatWithImageOnlyMock = {
   },
 };
 
+const deleteChatMock = {
+  request: {
+    query: DELETE_CHAT,
+    variables: {
+      chatId: chats[1].id,
+    },
+  },
+  result: {
+    data: {
+      deleteChat: chats[1].id,
+    },
+  },
+};
+
 const addContactMock = {
   request: {
     query: ADD_CONTACTS,
@@ -292,6 +307,7 @@ export default {
   addMessageToChatMock,
   createNewChatMock,
   createNewChatWithImageOnlyMock,
+  deleteChatMock,
   addContactMock,
   addContactsMock,
   blockOrUnblockContactMock,

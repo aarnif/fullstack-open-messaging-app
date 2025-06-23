@@ -14,6 +14,7 @@ const {
   addContacts,
   createChat,
   editGroupChat,
+  deleteChat,
 } = helpers;
 
 describe("Chat tests", () => {
@@ -279,5 +280,25 @@ describe("Chat tests", () => {
         contactDetails[i - 1].username
       );
     }
+  });
+
+  it("deletes group chat", async () => {
+    await createUser(credentials);
+    await loginUser(credentials);
+    await addContacts(credentials, [contactDetails[0]]);
+    const createdChat = await createChat(
+      credentials,
+      [credentials.id, contactDetails[0].id, contactDetails[1].id],
+      groupChatDetails[0].startingMessage,
+      groupChatDetails[0].title,
+      groupChatDetails[0].description
+    );
+
+    groupChatDetails.id = createdChat.body.data.createChat.id;
+
+    const response = await deleteChat(credentials, groupChatDetails.id);
+
+    expect(response.errors).toBeUndefined();
+    expect(response.body.data.deleteChat).toBe(groupChatDetails.id);
   });
 });
