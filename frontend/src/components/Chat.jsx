@@ -4,6 +4,7 @@ import { useMatch, useLocation, useNavigate } from "react-router";
 import { AnimatePresence } from "framer-motion";
 import EmojiPicker from "emoji-picker-react";
 import { FaImage } from "react-icons/fa6";
+import { MdClose } from "react-icons/md";
 
 import chatAndMessageHelpers from "../helpers/chatAndMessageHelpers";
 import imageService from "../services/imageService";
@@ -18,6 +19,7 @@ import {
   ADD_MESSAGE_TO_CHAT,
   CREATE_CHAT,
   MARK_CHAT_AS_READ,
+  DELETE_CHAT,
 } from "../graphql/mutations";
 import Loading from "./ui/Loading";
 import GroupChatInfo from "./GroupChatInfo";
@@ -42,9 +44,13 @@ export const ChatHeader = ({
   user,
   chat,
   setShowGroupChatInfo,
+  setActiveChatOrContactId,
+  handleDeleteChat,
   isNewChat = false,
 }) => {
   const navigate = useNavigate();
+
+  const { modal } = useModal();
 
   const goBack = () => {
     navigate("/chats");
@@ -59,6 +65,7 @@ export const ChatHeader = ({
       const anotherPrivateChatMember = chat.members.find(
         (member) => member.id !== user.id
       );
+      setActiveChatOrContactId(anotherPrivateChatMember.id);
       navigate(`/contacts/${anotherPrivateChatMember.id}`);
     }
   };
@@ -72,6 +79,8 @@ export const ChatHeader = ({
       .join(", "),
     30
   );
+
+  const isExistingPrivateChat = !isNewChat && !chat.isGroupChat;
 
   return (
     <div
@@ -110,6 +119,26 @@ export const ChatHeader = ({
           </div>
         </div>
       </button>
+
+      {isExistingPrivateChat && (
+        <div className="group absolute right-2 flex justify-center items-center">
+          <button
+            className="p-1 border border-slate-600 dark:border-slate-100 group-hover:border-slate-800 group-hover:dark:border-slate-200 group-hover:bg-slate-50 group-hover:dark:bg-slate-700 active:scale-95 rounded-full cursor-pointer transition"
+            data-testid="delete-private-chat-button"
+            onClick={() =>
+              modal(
+                "danger",
+                "Delete Chat",
+                "Are you sure you want to delete the chat? All messages and chat data will be permanently lost for everyone in the chat.",
+                "Delete",
+                handleDeleteChat
+              )
+            }
+          >
+            <MdClose className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600 dark:text-slate-100 group-hover:text-slate-800 dark:group-hover:text-slate-200 fill-current" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -466,6 +495,8 @@ const ExistingChatContent = ({
   setActiveMenuItem,
   setActiveChatOrContactId,
 }) => {
+  const navigate = useNavigate();
+  const { modal } = useModal();
   const [showGroupChatInfo, setShowGroupChatInfo] = useState(false);
   const match = useMatch("/chats/:chatId").params;
 
@@ -481,6 +512,12 @@ const ExistingChatContent = ({
         "Error marking chat as read:",
         error.graphQLErrors[0]?.message || error.message
       );
+    },
+  });
+
+  const [deleteChat] = useMutation(DELETE_CHAT, {
+    onError: (error) => {
+      console.log(error.graphQLErrors[0].message);
     },
   });
 
@@ -508,6 +545,23 @@ const ExistingChatContent = ({
     markChatAsRead,
   ]);
 
+  const handleDeleteChat = async () => {
+    console.log("Handle delete chat.");
+    try {
+      await deleteChat({
+        variables: {
+          chatId: data.findChatById.id,
+        },
+      });
+      console.log("Chat deleted:", data.findChatById.title);
+      navigate("/chats");
+      modal("alert", "Notification", "Chat deleted successfully.");
+    } catch (error) {
+      console.log("Error deleting chat:", error);
+      console.log(error);
+    }
+  };
+
   if (loading) {
     return <Loading />;
   }
@@ -522,6 +576,8 @@ const ExistingChatContent = ({
         user={user}
         chat={data.findChatById}
         setShowGroupChatInfo={setShowGroupChatInfo}
+        setActiveChatOrContactId={setActiveChatOrContactId}
+        handleDeleteChat={handleDeleteChat}
       />
       <Messages user={user} messages={data?.findChatById.messages || []} />
       <NewMessageInput user={user} chatId={match.chatId} newChatInfo={null} />
@@ -531,6 +587,7 @@ const ExistingChatContent = ({
             user={user}
             chat={data.findChatById}
             setShowGroupChatInfo={setShowGroupChatInfo}
+            handleDeleteChat={handleDeleteChat}
           />
         )}
       </AnimatePresence>
@@ -551,6 +608,8 @@ const NewChatContent = ({ user, setActiveMenuItem, isNewChat }) => {
         user={user}
         chat={newChatInfo}
         setShowGroupChatInfoModal={null}
+        setActiveChatOrContactId={null}
+        handleDeleteChat={null}
         isNewChat={isNewChat}
       />
       <Messages user={user} messages={[]} />
