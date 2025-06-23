@@ -92,7 +92,7 @@ describe("<Contact />", () => {
     });
   });
 
-  test("Display you have blocked contact if true", async () => {
+  test("displays blocked contact message when user has blocked contact", async () => {
     const modifiedUserData = {
       ...userData,
       blockedContacts: [{ id: contactData.id }],
@@ -109,7 +109,7 @@ describe("<Contact />", () => {
     ).toBeInTheDocument();
   });
 
-  test("Display contact has blocked you if true", async () => {
+  test("displays blocked contact message when contact has blocked user", async () => {
     const modifiedFindUserByIdMock = {
       ...findUserByIdMock,
       result: {
@@ -140,7 +140,7 @@ describe("<Contact />", () => {
     ).toBeInTheDocument();
   });
 
-  test("clicking back button navigates to contacts page", async () => {
+  test("navigates to contacts page on back button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -153,7 +153,7 @@ describe("<Contact />", () => {
     expect(navigate).toHaveBeenCalledWith("/contacts");
   });
 
-  test("click chat button directs to existing private chat", async () => {
+  test("navigates to existing private chat on chat button click", async () => {
     const user = userEvent.setup();
     renderComponent(userData, [
       findUserByIdMock,
@@ -173,7 +173,7 @@ describe("<Contact />", () => {
     expect(navigate).toHaveBeenCalledWith(`/chats/${existingChatId}`);
   });
 
-  test("click chat button directs to new private chat", async () => {
+  test("navigates to new private chat on chat button click", async () => {
     const existingChatNotFound = {
       ...findChatByMembersMock,
       result: {
@@ -203,7 +203,7 @@ describe("<Contact />", () => {
     expect(navigate).toHaveBeenCalledWith("/chats/new");
   });
 
-  test("click block contact button works", async () => {
+  test("blocks contact on confirmation", async () => {
     const user = userEvent.setup();
     renderComponent(userData, [
       findUserByIdMock,
@@ -228,7 +228,7 @@ describe("<Contact />", () => {
     ).toBeInTheDocument();
   });
 
-  test("click remove contact button works", async () => {
+  test("removes contact on confirmation", async () => {
     const user = userEvent.setup();
     renderComponent(userData, [
       findUserByIdMock,

@@ -67,7 +67,7 @@ describe("<Settings />", () => {
     document.documentElement.classList.remove("dark");
   });
 
-  test("Settings page renders correctly", () => {
+  test("renders settings page correctly", () => {
     renderComponent(userData, [currentUserMock, editSettingsMock]);
 
     expect(screen.getByTestId("settings-page")).toBeInTheDocument();
@@ -76,7 +76,7 @@ describe("<Settings />", () => {
     expect(header.textContent).toBe("Settings");
   });
 
-  test("User can change to dark mode", async () => {
+  test("changes to dark mode successfully", async () => {
     const editSettingsMockWithDarkMode = createSettingsMock({ theme: "dark" });
 
     const user = userEvent.setup();
@@ -92,7 +92,7 @@ describe("<Settings />", () => {
     expect(screen.getByTestId("dark-mode")).toBeInTheDocument();
   });
 
-  test("User can change from dark mode to light mode", async () => {
+  test("changes from dark mode to light mode successfully", async () => {
     const darkModeUser = createUserWithSettings({ theme: "dark" });
 
     const editSettingsMockWithLightMode = createSettingsMock({
@@ -112,12 +112,12 @@ describe("<Settings />", () => {
     expect(screen.getByTestId("light-mode")).toBeInTheDocument();
   });
 
-  test("Shows correct clock format setting", () => {
+  test("displays correct clock format setting", () => {
     renderComponent(twelveHourUser, [currentUserMock]);
     expect(screen.getByTestId("12-hour-clock")).toBeInTheDocument();
   });
 
-  test("User can toggle clock format", async () => {
+  test("toggles clock format successfully", async () => {
     const user = userEvent.setup();
 
     const editSettingsMockWith24Hour = createSettingsMock({ time: "24h" });
@@ -136,7 +136,7 @@ describe("<Settings />", () => {
     expect(screen.getByTestId("24-hour-clock")).toBeInTheDocument();
   });
 
-  test("User can open change password modal", async () => {
+  test("opens change password modal on button click", async () => {
     const user = userEvent.setup();
     renderComponent(userData, [currentUserMock]);
 

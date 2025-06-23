@@ -107,7 +107,7 @@ describe("<App />", () => {
     vi.spyOn(apolloClient, "useApolloClient").mockReturnValue(client);
   });
 
-  test("apply dark mode when user's theme is dark", async () => {
+  test("applies dark mode when user's theme is dark", async () => {
     renderComponent(darkModeUserMockData);
 
     await waitFor(() => {
@@ -115,13 +115,13 @@ describe("<App />", () => {
     });
   });
 
-  test("display loading page", () => {
+  test("displays loading page", () => {
     renderComponent();
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
   });
 
-  test("display front page after loading", async () => {
+  test("displays front page after loading", async () => {
     renderComponent();
 
     expect(screen.getByTestId("loading-page")).toBeInTheDocument();
@@ -141,7 +141,7 @@ describe("<App />", () => {
     });
   });
 
-  test("navigate to signup page works", async () => {
+  test("navigates to signup page on button click", async () => {
     const user = userEvent.setup();
     renderComponent(userIsNotLoggedInMockData);
 
@@ -175,7 +175,7 @@ describe("<App />", () => {
     });
   });
 
-  test("click navigate to contacts page works", async () => {
+  test("navigates to contacts page on button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -191,7 +191,7 @@ describe("<App />", () => {
     expect(navigate).toHaveBeenCalledWith("/contacts");
   });
 
-  test("click navigate to settings page works", async () => {
+  test("navigates to settings page on button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -207,7 +207,7 @@ describe("<App />", () => {
     expect(navigate).toHaveBeenCalledWith("/settings");
   });
 
-  test("logout works", async () => {
+  test("logs out user on confirmation", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -228,7 +228,7 @@ describe("<App />", () => {
     expect(navigate).toHaveBeenCalledWith("/signin");
   });
 
-  test("click navigate to individual chat page works", async () => {
+  test("navigates to individual chat page on chat click", async () => {
     const user = userEvent.setup();
     const firstChat = userChats[0].chat;
     renderComponent();
@@ -248,7 +248,7 @@ describe("<App />", () => {
     expect(navigate).toHaveBeenCalledWith(`/chats/${firstChat.id}`);
   });
 
-  test("navigate to individual contact page works", async () => {
+  test("navigates to individual contact page on contact click", async () => {
     const user = userEvent.setup();
     const firstContact = userContacts[0];
     renderComponent(userIsLoggedInMockData, {
@@ -268,7 +268,7 @@ describe("<App />", () => {
     expect(navigate).toHaveBeenCalledWith(`/contacts/${firstContact.id}`);
   });
 
-  test("click display new private chat modal works", async () => {
+  test("displays new private chat modal on button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -289,7 +289,7 @@ describe("<App />", () => {
     await user.click(screen.getByTestId("new-private-chat-button"));
   });
 
-  test("click display new group chat modal works", async () => {
+  test("displays new group chat modal on button click", async () => {
     const user = userEvent.setup();
     renderComponent();
 
@@ -310,7 +310,7 @@ describe("<App />", () => {
     await user.click(screen.getByTestId("new-group-chat-button"));
   });
 
-  test("click display add new contacts modal works", async () => {
+  test("displays add new contacts modal on button click", async () => {
     const user = userEvent.setup();
     renderComponent(userIsLoggedInMockData, {
       initialEntries: ["/contacts"],

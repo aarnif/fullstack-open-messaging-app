@@ -134,7 +134,7 @@ describe("<Chat />", () => {
     });
   });
 
-  test("click display group chat info modal works", async () => {
+  test("displays group chat info modal on button click", async () => {
     useMatch.mockReturnValue({
       params: { chatId: groupChatMatch },
     });
@@ -152,7 +152,7 @@ describe("<Chat />", () => {
     });
   });
 
-  test("click redirect to contact page when clicking private chat info", async () => {
+  test("redirects to contact page when clicking private chat info", async () => {
     useMatch.mockReturnValue({
       params: { chatId: privateChatMatch },
     });

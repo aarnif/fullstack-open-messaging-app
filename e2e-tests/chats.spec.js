@@ -52,7 +52,7 @@ test.describe("Chats", () => {
     await page.goto("http://localhost:5173");
   });
 
-  test("Start a private chat", async ({ page }) => {
+  test("starts private chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
@@ -67,7 +67,7 @@ test.describe("Chats", () => {
     await expect(page.getByText("You: Hello!", { exact: true })).toBeVisible(); // Check if message shows in chats list
   });
 
-  test("Start a group chat", async ({ page }) => {
+  test("starts group chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
     await expect(
@@ -99,7 +99,7 @@ test.describe("Chats", () => {
     ).toBeVisible(); // Check if message shows in chats list
   });
 
-  test("Does not create a chat without first message", async ({ page }) => {
+  test("prevents creating chat without first message", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
@@ -119,9 +119,7 @@ test.describe("Chats", () => {
     expect(finalCount).toBe(initialCount);
   });
 
-  test("Does not send an empty message in an existing chat", async ({
-    page,
-  }) => {
+  test("prevents sending empty message in existing chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);
@@ -149,7 +147,7 @@ test.describe("Chats", () => {
     await expect(page.getByText("You: Hello!", { exact: true })).toBeVisible(); // Check if last message is still the same
   });
 
-  test("Edit group chat title and description", async ({ page }) => {
+  test("edits group chat title and description", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
     await expect(
@@ -190,7 +188,7 @@ test.describe("Chats", () => {
     await page.getByTestId("close-group-chat-info-button").click();
   });
 
-  test("Add new members to group chat", async ({ page }) => {
+  test("adds new members to group chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
     await expect(
@@ -228,7 +226,7 @@ test.describe("Chats", () => {
     await page.getByTestId("close-group-chat-info-button").click();
   });
 
-  test("Remove members from group chat", async ({ page }) => {
+  test("removes members from group chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
 
     await expect(
@@ -276,9 +274,7 @@ test.describe("Chats", () => {
     );
   });
 
-  test("Chats are appearing on ascending order based on latest message", async ({
-    page,
-  }) => {
+  test("orders chats by latest message", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials, user3Credentials]);
     await createPrivateChat(page, user2Credentials);
@@ -301,7 +297,7 @@ test.describe("Chats", () => {
     await expect(firstChatItem.getByText("You: Hi!")).toBeVisible();
   });
 
-  test("User can leave a group chat", async ({ page }) => {
+  test("allows user to leave group chat", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials, user3Credentials]);
     await createGroupChat(page, "Test Group", "A group to leave", [
@@ -326,7 +322,7 @@ test.describe("Chats", () => {
     await expect(page.getByText("No chats found")).toBeVisible();
   });
 
-  test("Users receive notifications for new messages", async ({ page }) => {
+  test("shows notifications for new messages", async ({ page }) => {
     await signIn(page, user1Credentials.username, user1Credentials.password);
     await addContacts(page, [user2Credentials]);
     await createPrivateChat(page, user2Credentials);

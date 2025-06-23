@@ -73,14 +73,14 @@ describe("<ChatItem />", () => {
     expect(container.firstChild).toBeNull();
   });
 
-  test("highlights active contact", () => {
+  test("highlights active chat", () => {
     renderChatItem();
 
     expect(screen.getByRole("button")).toHaveAttribute("id", "active-chat");
   });
 
-  test("does not highlight inactive contact", () => {
-    renderChatItem(mockChatData, "inactive-contact-id");
+  test("does not highlight inactive chat", () => {
+    renderChatItem(mockChatData, "inactive-chat-id");
 
     expect(screen.getByRole("button")).not.toHaveAttribute(
       "id",
@@ -100,12 +100,12 @@ describe("<ChatItem />", () => {
     );
   });
 
-  test("do not display new messages count if count zero", () => {
+  test("hides new messages count when count is zero", () => {
     renderChatItem();
     expect(screen.queryByTestId("new-messages-count")).not.toBeInTheDocument();
   });
 
-  test("displays new messages count if count greater than zero", () => {
+  test("displays new messages count when count is greater than zero", () => {
     const chatWithNewMessages = {
       ...mockChatData,
       unreadMessages: 3,

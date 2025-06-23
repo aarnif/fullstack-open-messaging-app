@@ -28,7 +28,7 @@ describe("<ChangeImage />", () => {
     expect(imageElement.src).toBe(testImageUrl);
   });
 
-  test("handles image change correctly", async () => {
+  test("uploads and displays new image file", async () => {
     const user = userEvent.setup();
     const file = new File(["new image file content"], "example.png", {
       type: "image/png",

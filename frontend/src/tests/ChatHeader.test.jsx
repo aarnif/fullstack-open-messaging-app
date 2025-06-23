@@ -53,7 +53,7 @@ describe("<ChatHeader />", () => {
     expect(screen.getByText(mockGroupChatData.title)).toBeInTheDocument();
   });
 
-  test("click go back button works", async () => {
+  test("navigates back to chats page on back button click", async () => {
     const user = userEvent.setup();
     renderChatHeader();
 
@@ -62,7 +62,7 @@ describe("<ChatHeader />", () => {
     expect(navigate).toHaveBeenCalledWith("/chats");
   });
 
-  test("click group chat info button works", async () => {
+  test("opens group chat info modal on button click", async () => {
     const user = userEvent.setup();
     renderChatHeader();
 
@@ -71,7 +71,7 @@ describe("<ChatHeader />", () => {
     expect(mockSetShowGroupChatInfo).toHaveBeenCalledWith(true);
   });
 
-  test("click private chat info button navigates to contact page", async () => {
+  test("navigates to contact page on private chat info button click", async () => {
     const user = userEvent.setup();
     renderChatHeader(mockPrivateChatData);
 

@@ -33,13 +33,13 @@ describe("User tests", () => {
     await resetDataBase();
   }, timeOut);
 
-  it("Create new user", async () => {
+  it("creates new user", async () => {
     const response = await createUser(credentials);
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.createUser.username).toBe(credentials.username);
   });
 
-  it("Try to create same user twice", async () => {
+  it("returns error when creating duplicate user", async () => {
     await createUser(credentials);
     const responseTwo = await createUser(credentials);
     expect(JSON.parse(responseTwo.text).errors).toBeDefined();
@@ -48,7 +48,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Returns error when username is too short", async () => {
+  it("returns error when username is too short", async () => {
     const invalidCredentials = {
       username: "abc",
       password: "password",
@@ -63,7 +63,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Returns error when password is too short", async () => {
+  it("returns error when password is too short", async () => {
     const invalidCredentials = {
       username: "validuser",
       password: "short",
@@ -78,7 +78,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Returns error when passwords don't match", async () => {
+  it("returns error when passwords don't match", async () => {
     const invalidCredentials = {
       username: "validuser",
       password: "password",
@@ -93,7 +93,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Returns an error when trying to login with non-existent username", async () => {
+  it("returns error when logging in with non-existent username", async () => {
     const nonExistentUser = {
       username: "doesnotexist",
       password: "password",
@@ -114,7 +114,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Returns an error when trying to login with wrong password", async () => {
+  it("returns error when logging in with wrong password", async () => {
     await createUser(credentials);
 
     const wrongCredentials = {
@@ -140,14 +140,14 @@ describe("User tests", () => {
     );
   });
 
-  it("Login user", async () => {
+  it("logs in user successfully", async () => {
     await createUser(credentials);
     const response = await loginUser(credentials);
     expect(JSON.parse(response.text).errors).toBeUndefined();
     expect(response.body.data.login.value).toBeDefined();
   });
 
-  it("User is logged in", async () => {
+  it("verifies user is logged in", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     const response = await requestData(
@@ -166,7 +166,7 @@ describe("User tests", () => {
     expect(response.body.data.me.username).toBe(credentials.username);
   });
 
-  it("Get all chats by user", async () => {
+  it("gets all chats by user", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, [contactDetails[0]]);
@@ -205,7 +205,7 @@ describe("User tests", () => {
     expect(response.body.data.allChatsByUser[0].lastReadAt).toBeNull();
   });
 
-  it("Should return valid contacts when querying users contacts", async () => {
+  it("gets all contacts by user", async () => {
     await createUser(credentials);
     await loginUser(credentials);
 
@@ -239,7 +239,7 @@ describe("User tests", () => {
     expect(contacts[2].username).toBe(contactDetails[2].username);
   });
 
-  it("Should return contacts that are not in the user's contacts", async () => {
+  it("gets all contacts except by user", async () => {
     await createUser(credentials);
     await loginUser(credentials);
 
@@ -270,7 +270,7 @@ describe("User tests", () => {
     });
   });
 
-  it("Returns error when trying to add non-existent contact", async () => {
+  it("returns error when adding non-existent contact", async () => {
     await createUser(credentials);
     await loginUser(credentials);
 
@@ -292,7 +292,7 @@ describe("User tests", () => {
     expect(JSON.parse(response.text).errors).toBeDefined();
   });
 
-  it("Add three new contacts", async () => {
+  it("adds three new contacts", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     const response = await addContacts(credentials, contactDetails.slice(0, 3));
@@ -310,7 +310,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Remove contact", async () => {
+  it("removes contact successfully", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, contactDetails);
@@ -331,7 +331,7 @@ describe("User tests", () => {
     expect(response.body.data.removeContact).toBe(contactDetails[0].id);
   });
 
-  it("Returns error when trying to remove a contact that doesn't exist", async () => {
+  it("returns error when removing non-existent contact", async () => {
     await createUser(credentials);
     await loginUser(credentials);
 
@@ -350,7 +350,7 @@ describe("User tests", () => {
     expect(JSON.parse(response.text).errors).toBeDefined();
   });
 
-  it("Block contact", async () => {
+  it("blocks contact successfully", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, contactDetails);
@@ -385,7 +385,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Unblock contact", async () => {
+  it("unblocks contact successfully", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, contactDetails);
@@ -418,7 +418,7 @@ describe("User tests", () => {
     expect(findUserById.body.data.findUserById.blockedContacts.length).toBe(0);
   });
 
-  it("Remove contact", async () => {
+  it("removes contact successfully", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     await addContacts(credentials, contactDetails);
@@ -440,7 +440,7 @@ describe("User tests", () => {
     expect(response.body.data.removeContact).toBe(contactDetails[1].id);
   });
 
-  it("Find user by id", async () => {
+  it("finds user by id", async () => {
     await createUser(credentials);
     await loginUser(credentials);
 
@@ -464,7 +464,7 @@ describe("User tests", () => {
     expect(response.body.data.findUserById.username).toBe(credentials.username);
   });
 
-  it("Returns null for 'me' when not logged in", async () => {
+  it("returns null for current user when not logged in", async () => {
     const response = await requestData(
       {
         query: `query Me {
@@ -481,7 +481,7 @@ describe("User tests", () => {
     expect(response.body.data.me).toBe(null);
   });
 
-  it("Edit profile", async () => {
+  it("edits user profile successfully", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     const newName = "Updated Name";
@@ -506,7 +506,7 @@ describe("User tests", () => {
     expect(response.body.data.editProfile.about).toBe(newAbout);
   });
 
-  it("Returns error when unauthorized user tries to edit profile", async () => {
+  it("returns error when unauthorized user tries to edit profile", async () => {
     const response = await requestData({
       query: `mutation EditProfile($name: String) {
           editProfile(name: $name) {
@@ -522,7 +522,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Edit user settings", async () => {
+  it("edits user settings successfully", async () => {
     await createUser(credentials);
     await loginUser(credentials);
 
@@ -552,7 +552,7 @@ describe("User tests", () => {
     expect(response.body.data.editSettings.settings.time).toBe("24h");
   });
 
-  it("Change password fails with incorrect current password", async () => {
+  it("returns error when changing password with incorrect current password", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     const response = await changePassword(
@@ -568,7 +568,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Change password fails with too short new password", async () => {
+  it("returns error when changing password with too short new password", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     const response = await changePassword(
@@ -583,7 +583,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Change password fails with non-matching new passwords", async () => {
+  it("returns error when changing password with non-matching new passwords", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     const response = await changePassword(
@@ -598,7 +598,7 @@ describe("User tests", () => {
     );
   });
 
-  it("Change password successfully", async () => {
+  it("changes password successfully", async () => {
     await createUser(credentials);
     await loginUser(credentials);
     const changePasswordResponse = await changePassword(
@@ -621,7 +621,7 @@ describe("User tests", () => {
     expect(loginResponse.body.data.login.value).toBeDefined();
   });
 
-  it("Check if user has blocked you", async () => {
+  it("checks if user has blocked you", async () => {
     await createUser(credentials);
     await loginUser(credentials);
 

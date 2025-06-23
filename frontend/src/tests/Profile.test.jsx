@@ -41,7 +41,7 @@ describe("<Profile />", () => {
     expect(screen.queryByTestId("edit-profile-modal")).not.toBeInTheDocument();
   });
 
-  test("displays edit profile modal after clicking the show button", async () => {
+  test("displays edit profile modal on button click", async () => {
     const user = userEvent.setup();
     renderProfile();
     await user.click(screen.getByTestId("edit-profile-button"));

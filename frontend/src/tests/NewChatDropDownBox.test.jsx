@@ -30,7 +30,7 @@ describe("<NewChatDropDownBox />", () => {
     expect(screen.getByText("New Group Chat")).toBeInTheDocument();
   });
 
-  test("clicking New Private Chat button calls correct functions", async () => {
+  test("sets private chat type on new private chat button click", async () => {
     const user = userEvent.setup();
     renderNewChatDropDownBox();
 
@@ -40,7 +40,7 @@ describe("<NewChatDropDownBox />", () => {
     expect(mockSetNewChatModalType).toHaveBeenCalledWith("private");
   });
 
-  test("clicking New Group Chat button calls correct functions", async () => {
+  test("sets group chat type on new group chat button click", async () => {
     const user = userEvent.setup();
     renderNewChatDropDownBox();
 

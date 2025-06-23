@@ -63,7 +63,7 @@ describe("<UpdateMembersModal />", () => {
     expect(screen.getByTestId("update-members-modal")).toBeInTheDocument();
   });
 
-  test("cancel update members works", async () => {
+  test("cancels update members on close button click", async () => {
     renderComponent();
 
     await userEvent.click(
@@ -76,7 +76,7 @@ describe("<UpdateMembersModal />", () => {
     ]);
   });
 
-  test("update members works", async () => {
+  test("updates members successfully", async () => {
     renderComponent();
 
     await userEvent.click(
@@ -89,7 +89,7 @@ describe("<UpdateMembersModal />", () => {
     );
   });
 
-  test("search contacts work", async () => {
+  test("filters contacts by search input", async () => {
     const user = userEvent.setup();
     renderComponent();
 

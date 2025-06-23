@@ -32,7 +32,7 @@ describe("<MenuHeader />", () => {
     expect(screen.getByTestId("menu-header")).toHaveTextContent("Contacts");
   });
 
-  test("click new chat button works if title 'Chats'", async () => {
+  test("calls callback on new chat button click when title is 'Chats'", async () => {
     const user = userEvent.setup();
     renderMenuHeader();
 
@@ -41,7 +41,7 @@ describe("<MenuHeader />", () => {
     expect(mockHandleCallBack).toHaveBeenCalled();
   });
 
-  test("click new chat button works if title 'Contacts'", async () => {
+  test("calls callback on new contact button click when title is 'Contacts'", async () => {
     const user = userEvent.setup();
     renderMenuHeader("Contacts");
 

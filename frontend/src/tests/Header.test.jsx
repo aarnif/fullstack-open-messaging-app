@@ -16,7 +16,7 @@ vi.mock("react-router", async () => {
 });
 
 describe("<Header />", () => {
-  test("renders header", () => {
+  test("renders header with background styling", () => {
     useLocation.mockReturnValue(location);
     render(<Header />);
 
@@ -26,7 +26,7 @@ describe("<Header />", () => {
   });
 
   test.each(["/signin", "/signup"])(
-    "renders header without background on %s route",
+    "renders header without background styling on %s route",
     (pathname) => {
       useLocation.mockReturnValue({ pathname });
       render(<Header />);
