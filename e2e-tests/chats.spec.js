@@ -366,4 +366,24 @@ test.describe("Chats", () => {
       page.getByText("Select Chat to Start Messaging.")
     ).toBeVisible();
   });
+
+  test("allows deleting a private chat", async ({ page }) => {
+    await signIn(page, user1Credentials.username, user1Credentials.password);
+    await addContacts(page, [user2Credentials]);
+    await createPrivateChat(page, user2Credentials);
+    await expect(
+      page.getByText(user2Credentials.name, { exact: true })
+    ).toBeVisible();
+
+    await sendMessage(page, "Hello!");
+
+    await page.getByTestId("delete-private-chat-button").click();
+    await page.getByTestId("confirm-button").click();
+
+    await expect(page.getByText("Chat deleted successfully.")).toBeVisible();
+    await page.getByTestId("close-modal-button").click();
+    await expect(
+      page.getByText("Select Chat to Start Messaging.")
+    ).toBeVisible();
+  });
 });
