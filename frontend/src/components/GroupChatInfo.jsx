@@ -12,19 +12,18 @@ import ClickableImage from "./ui/ClickableImage";
 import Title from "./ui/Title";
 import Button from "./ui/Button";
 
-const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
+const GroupChatInfo = ({
+  user,
+  chat,
+  setShowGroupChatInfo,
+  handleDeleteChat,
+}) => {
   const { modal } = useModal();
   const [showEditGroupChat, setShowEditGroupChat] = useState(false);
   const navigate = useNavigate();
   const chatAdmin = chat.admin;
 
   const [leaveGroupChats] = useMutation(LEAVE_GROUP_CHATS, {
-    onError: (error) => {
-      console.log(error.graphQLErrors[0].message);
-    },
-  });
-
-  const [deleteChat] = useMutation(DELETE_CHAT, {
     onError: (error) => {
       console.log(error.graphQLErrors[0].message);
     },
@@ -49,23 +48,6 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
   const handleEditChat = () => {
     setShowEditGroupChat(true);
     console.log("Handle edit chat.");
-  };
-
-  const handleDeleteChat = async () => {
-    console.log("Handle delete chat.");
-    try {
-      await deleteChat({
-        variables: {
-          chatId: chat.id,
-        },
-      });
-      console.log("Chat deleted:", chat.title);
-      navigate("/chats");
-      modal("alert", "Notification", "Chat deleted successfully.");
-    } catch (error) {
-      console.log("Error deleting chat:", error);
-      console.log(error);
-    }
   };
 
   return (
@@ -125,7 +107,7 @@ const GroupChatInfo = ({ user, chat, setShowGroupChatInfo }) => {
                 modal(
                   "danger",
                   "Delete Chat",
-                  "Are you sure you want to delete the chat? All messages and chat data will be permanently lost.",
+                  "Are you sure you want to delete the chat? All messages and chat data will be permanently lost for everyone in the chat.",
                   "Delete",
                   handleDeleteChat
                 )

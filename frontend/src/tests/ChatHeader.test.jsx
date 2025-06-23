@@ -3,6 +3,7 @@ import { describe, test, expect } from "vitest";
 import { MockedProvider } from "@apollo/client/testing";
 import { MemoryRouter, useNavigate } from "react-router";
 import userEvent from "@testing-library/user-event";
+import ModalProvider from "../components/ModalProvider.jsx";
 import { ChatHeader } from "../components/Chat.jsx";
 import queryMocks from "./mocks/queryMocks.js";
 import mocks from "./mocks/funcs.js";
@@ -17,6 +18,8 @@ const mockGroupChatData = findGroupChatByIdMock.result.data.findChatById;
 const mockPrivateChatData = findPrivateChatByIdMock.result.data.findChatById;
 
 const mockSetShowGroupChatInfo = vi.fn();
+const mockSetActiveChatOrContactId = vi.fn();
+const mockHandleDeleteChat = vi.fn();
 
 vi.mock("react-router", async () => {
   const actual = await vi.importActual("react-router");
@@ -30,11 +33,15 @@ const renderChatHeader = (mockChatData = mockGroupChatData) => {
   return render(
     <MockedProvider>
       <MemoryRouter>
-        <ChatHeader
-          user={mockUserData}
-          chat={mockChatData}
-          setShowGroupChatInfo={mockSetShowGroupChatInfo}
-        />
+        <ModalProvider>
+          <ChatHeader
+            user={mockUserData}
+            chat={mockChatData}
+            setShowGroupChatInfo={mockSetShowGroupChatInfo}
+            setActiveChatOrContactId={mockSetActiveChatOrContactId}
+            handleDeleteChat={mockHandleDeleteChat}
+          />
+        </ModalProvider>
       </MemoryRouter>
     </MockedProvider>
   );
@@ -79,6 +86,9 @@ describe("<ChatHeader />", () => {
 
     expect(navigate).toHaveBeenCalledWith(
       `/contacts/${mockPrivateChatData.members[1].id}`
+    );
+    expect(mockSetActiveChatOrContactId).toHaveBeenCalledWith(
+      mockPrivateChatData.members[1].id
     );
   });
 });
