@@ -42,6 +42,7 @@ export const ChatHeader = ({
   user,
   chat,
   setShowGroupChatInfo,
+  setActiveChatOrContactId,
   isNewChat = false,
 }) => {
   const navigate = useNavigate();
@@ -59,6 +60,7 @@ export const ChatHeader = ({
       const anotherPrivateChatMember = chat.members.find(
         (member) => member.id !== user.id
       );
+      setActiveChatOrContactId(anotherPrivateChatMember.id);
       navigate(`/contacts/${anotherPrivateChatMember.id}`);
     }
   };
@@ -522,6 +524,7 @@ const ExistingChatContent = ({
         user={user}
         chat={data.findChatById}
         setShowGroupChatInfo={setShowGroupChatInfo}
+        setActiveChatOrContactId={setActiveChatOrContactId}
       />
       <Messages user={user} messages={data?.findChatById.messages || []} />
       <NewMessageInput user={user} chatId={match.chatId} newChatInfo={null} />
@@ -551,6 +554,7 @@ const NewChatContent = ({ user, setActiveMenuItem, isNewChat }) => {
         user={user}
         chat={newChatInfo}
         setShowGroupChatInfoModal={null}
+        setActiveChatOrContactId={null}
         isNewChat={isNewChat}
       />
       <Messages user={user} messages={[]} />
