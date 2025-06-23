@@ -17,7 +17,7 @@ const {
   allContactsByUserMockWithoutSearchWord,
 } = queryMocks;
 
-const { leaveGroupChatMock } = mutationMocks;
+const { leaveGroupChatMock, deleteChatMock } = mutationMocks;
 
 const { navigate } = mocks;
 
@@ -45,6 +45,7 @@ const renderComponent = (mockUserData = userData, mockChatData = chatData) => {
         allContactsByUserMock,
         allContactsByUserMockWithoutSearchWord,
         leaveGroupChatMock,
+        deleteChatMock,
       ]}
       addTypename={false}
     >
@@ -126,6 +127,24 @@ describe("<GroupChatInfo />", () => {
     expect(screen.getByTestId("confirm-button")).toBeInTheDocument();
     expect(
       screen.getByText("Are you sure you want to leave the chat?")
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("confirm-button"));
+
+    expect(navigate).toHaveBeenCalledWith("/chats");
+  });
+
+  test("deletes group chat with confirmation when user is admin", async () => {
+    const user = userEvent.setup();
+
+    renderComponent();
+
+    await user.click(screen.getByTestId("delete-group-chat-button"));
+
+    expect(screen.getByTestId("confirm-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("confirm-button")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Are you sure you want to delete the chat?/)
     ).toBeInTheDocument();
 
     await user.click(screen.getByTestId("confirm-button"));
