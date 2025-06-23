@@ -91,4 +91,21 @@ describe("<ChatHeader />", () => {
       mockPrivateChatData.members[1].id
     );
   });
+
+  test("deletes private chat with confirmation", async () => {
+    const user = userEvent.setup();
+    renderChatHeader(mockPrivateChatData);
+
+    await user.click(screen.getByTestId("delete-private-chat-button"));
+
+    expect(screen.getByTestId("confirm-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("confirm-button")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Are you sure you want to delete the chat?/)
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("confirm-button"));
+
+    expect(mockHandleDeleteChat).toHaveBeenCalled();
+  });
 });
