@@ -1,7 +1,7 @@
 import request from "supertest";
 
 import config from "../../config.js";
-import { emptyDataBase, addUsers } from "../populateDataBase.js";
+import { emptyDataBase, addUsers } from "../populateDatabase.js";
 import server from "../server.js";
 import pubsub from "../pubsub.js";
 import db from "../db.js";

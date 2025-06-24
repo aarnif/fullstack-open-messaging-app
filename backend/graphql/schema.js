@@ -32,7 +32,9 @@ const schema = makeExecutableSchema({
     chatQueries.typeDefs,
     userMutations.typeDefs,
     chatMutations.typeDefs,
-    process.env.NODE_ENV === "test" && testingMutations.typeDefs,
+    (process.env.NODE_ENV === "test" ||
+      process.env.NODE_ENV === "development") &&
+      testingMutations.typeDefs,
   ],
   resolvers: merge(
     resolvers,
@@ -40,7 +42,9 @@ const schema = makeExecutableSchema({
     chatQueries.resolvers,
     userMutations.resolvers,
     chatMutations.resolvers,
-    process.env.NODE_ENV === "test" && testingMutations.resolvers
+    (process.env.NODE_ENV === "test" ||
+      process.env.NODE_ENV === "development") &&
+      testingMutations.resolvers
   ),
 });
 
