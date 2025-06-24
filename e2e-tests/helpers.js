@@ -43,38 +43,29 @@ const addContacts = async (page, contacts) => {
   await page.getByTestId("add-new-contacts-button").click();
 };
 
-const createPrivateChat = async (page, contact) => {
-  await page.getByTestId("chats-button").click();
-  await page.getByTestId("new-chat-button").click();
-  await page.getByTestId("new-private-chat-button").click();
-  await page.getByTestId(`contact-${contact.username}`).click();
-  await page.getByTestId("start-new-private-chat").click();
+const resetDatabase = async (request) => {
+  await request.post("http://localhost:4000/", {
+    data: {
+      query: `
+        mutation Mutation {
+          resetDatabase
+        }
+      `,
+    },
+  });
 };
 
-const createGroupChat = async (page, title, description, contacts) => {
-  await page.getByTestId("chats-button").click();
-  await page.getByTestId("new-chat-button").click();
-  await page.getByTestId("new-group-chat-button").click();
-  await page.getByTestId("group-chat-title-input").fill(title);
-  await page.getByTestId("group-chat-description-input").fill(description);
-  for (const contact of contacts) {
-    await page.getByTestId(`contact-${contact.username}`).click();
+const createUsers = async (page, userCredentials) => {
+  for (const credential of userCredentials) {
+    await page.goto("http://localhost:5173");
+    await signUp(
+      page,
+      credential.username,
+      credential.password,
+      credential.confirmPassword
+    );
+    await signOut(page);
   }
-  await page.getByTestId("start-new-group-chat-button").click();
-};
-
-const sendMessage = async (page, message) => {
-  await page.getByTestId("new-message-input").fill(message);
-  await page.getByTestId("send-new-message-button").click();
-};
-
-const updateGroupChatMembers = async (page, contacts) => {
-  await page.getByTestId("edit-group-chat-button").click();
-  await page.getByTestId("update-group-chat-members-button").click();
-  for (const contact of contacts) {
-    await page.getByTestId(`contact-${contact.username}`).click();
-  }
-  await page.getByTestId("submit-update-group-chat-members-button").click();
 };
 
 export default {
@@ -82,8 +73,6 @@ export default {
   signIn,
   signOut,
   addContacts,
-  createPrivateChat,
-  createGroupChat,
-  sendMessage,
-  updateGroupChatMembers,
+  resetDatabase,
+  createUsers,
 };
