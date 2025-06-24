@@ -43,9 +43,36 @@ const addContacts = async (page, contacts) => {
   await page.getByTestId("add-new-contacts-button").click();
 };
 
+const resetDatabase = async (request) => {
+  await request.post("http://localhost:4000/", {
+    data: {
+      query: `
+        mutation Mutation {
+          resetDatabase
+        }
+      `,
+    },
+  });
+};
+
+const createUsers = async (page, userCredentials) => {
+  for (const credential of userCredentials) {
+    await page.goto("http://localhost:5173");
+    await signUp(
+      page,
+      credential.username,
+      credential.password,
+      credential.confirmPassword
+    );
+    await signOut(page);
+  }
+};
+
 export default {
   signUp,
   signIn,
   signOut,
   addContacts,
+  resetDatabase,
+  createUsers,
 };

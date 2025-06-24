@@ -12,7 +12,7 @@ const {
   user5Credentials,
 } = data;
 
-const { signUp, signIn, signOut, addContacts } = helpers;
+const { signIn, signOut, addContacts, resetDatabase, createUsers } = helpers;
 
 const createPrivateChat = async (page, contact, initialMessage) => {
   await page.getByTestId("chats-button").click();
@@ -67,28 +67,8 @@ const deleteChat = async (page, deleteButtonTestId) => {
 
 test.describe("Chats", () => {
   test.beforeEach(async ({ page, request }) => {
-    await request.post("http://localhost:4000/", {
-      data: {
-        query: `
-        mutation Mutation {
-          resetDatabase
-        }
-        `,
-      },
-    });
-
-    for (const credential of userCredentials) {
-      await page.goto("http://localhost:5173");
-      await signUp(
-        page,
-        credential.username,
-        credential.password,
-        credential.confirmPassword
-      );
-      await signOut(page);
-    }
-
-    await page.goto("http://localhost:5173");
+    await resetDatabase(request);
+    await createUsers(page, userCredentials);
   });
 
   test("starts private chat", async ({ page }) => {

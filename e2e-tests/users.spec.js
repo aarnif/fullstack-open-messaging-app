@@ -1,4 +1,3 @@
-// @ts-check
 import { test, expect } from "@playwright/test";
 
 import data from "./data.js";
@@ -11,20 +10,49 @@ const {
   user3Credentials,
 } = data;
 
-const { signUp, signIn, signOut, addContacts } = helpers;
+const { signUp, signIn, signOut, addContacts, resetDatabase, createUsers } =
+  helpers;
+
+const editProfile = async (page, name, about) => {
+  await page.getByTestId("profile-button").click();
+  await page.getByTestId("edit-profile-button").click();
+  await page.getByTestId("profile-name-input").fill(name);
+  await page.getByTestId("profile-about-input").fill(about);
+  await page.getByTestId("submit-edit-profile-button").click();
+};
+
+const openChangePasswordModal = async (page) => {
+  await page.getByTestId("settings-button").click();
+  await page.getByTestId("change-password-button").click();
+};
+
+const changePassword = async (
+  page,
+  currentPassword,
+  newPassword,
+  confirmPassword
+) => {
+  await openChangePasswordModal(page);
+  await page.getByTestId("current-password-input").fill(currentPassword);
+  await page.getByTestId("new-password-input").fill(newPassword);
+  await page.getByTestId("confirm-new-password-input").fill(confirmPassword);
+  await page.getByTestId("submit-change-password-button").click();
+};
+
+const navigateToContact = async (page, contact) => {
+  await page.getByTestId("contacts-button").click();
+  await page.getByTestId(contact.username).click();
+};
+
+const blockOrUnblockContact = async (page) => {
+  await page.getByTestId("block-or-unblock-contact-button").click();
+  await page.getByTestId("confirm-button").click();
+};
 
 test.describe("Users And Contacts", () => {
   test.describe("Users", () => {
     test.beforeEach(async ({ page, request }) => {
-      await request.post("http://localhost:4000/", {
-        data: {
-          query: `
-          mutation Mutation {
-            resetDatabase
-          }
-          `,
-        },
-      });
+      await resetDatabase(request);
       await page.goto("http://localhost:5173");
     });
 
@@ -64,15 +92,6 @@ test.describe("Users And Contacts", () => {
     });
 
     test("creates new user successfully", async ({ page, request }) => {
-      await request.post("http://localhost:4000/", {
-        data: {
-          query: `
-            mutation Mutation {
-              resetDatabase
-            }
-            `,
-        },
-      });
       await signUp(
         page,
         user1Credentials.username,
@@ -85,15 +104,6 @@ test.describe("Users And Contacts", () => {
     });
 
     test("prevents creating duplicate user", async ({ page, request }) => {
-      await request.post("http://localhost:4000/", {
-        data: {
-          query: `
-            mutation Mutation {
-              resetDatabase
-            }
-            `,
-        },
-      });
       await signUp(
         page,
         user1Credentials.username,
@@ -111,15 +121,6 @@ test.describe("Users And Contacts", () => {
     });
 
     test("signs in user successfully", async ({ page, request }) => {
-      await request.post("http://localhost:4000/", {
-        data: {
-          query: `
-            mutation Mutation {
-              resetDatabase
-            }
-            `,
-        },
-      });
       await signUp(
         page,
         user1Credentials.username,
@@ -192,11 +193,8 @@ test.describe("Users And Contacts", () => {
         user1Credentials.password,
         user1Credentials.confirmPassword
       );
-      await page.getByTestId("profile-button").click();
-      await page.getByTestId("edit-profile-button").click();
-      await page.getByTestId("profile-name-input").fill("John Doe");
-      await page.getByTestId("profile-about-input").fill("I am John Doe.");
-      await page.getByTestId("submit-edit-profile-button").click();
+
+      await editProfile(page, "John Doe", "I am John Doe.");
       await page.getByTestId("confirm-button").click();
 
       await expect(page.getByText("John Doe", { exact: true })).toBeVisible();
@@ -210,15 +208,8 @@ test.describe("Users And Contacts", () => {
         user1Credentials.password,
         user1Credentials.confirmPassword
       );
-      await page.getByTestId("profile-button").click();
-      await page.getByTestId("edit-profile-button").click();
 
-      await page.getByTestId("profile-name-input").fill("");
-      await page.getByTestId("profile-about-input").fill("I am John Doe.");
-
-      await page.pause();
-
-      await page.getByTestId("submit-edit-profile-button").click();
+      await editProfile(page, "", "I am John Doe.");
 
       await expect(
         page.getByText("Profile name cannot be empty!")
@@ -238,8 +229,8 @@ test.describe("Users And Contacts", () => {
         user1Credentials.password,
         user1Credentials.confirmPassword
       );
-      await page.getByTestId("settings-button").click();
-      await page.getByTestId("change-password-button").click();
+
+      await openChangePasswordModal(page);
       await page.getByTestId("submit-change-password-button").click();
 
       await expect(page.getByText("Please fill in all fields")).toBeVisible();
@@ -254,14 +245,13 @@ test.describe("Users And Contacts", () => {
         user1Credentials.password,
         user1Credentials.confirmPassword
       );
-      await page.getByTestId("settings-button").click();
-      await page.getByTestId("change-password-button").click();
 
-      await page.getByTestId("current-password-input").fill("wrong_password");
-      await page.getByTestId("new-password-input").fill("new_password");
-      await page.getByTestId("confirm-new-password-input").fill("new_password");
-
-      await page.getByTestId("submit-change-password-button").click();
+      await changePassword(
+        page,
+        "wrong_password",
+        "new_password",
+        "new_password"
+      );
 
       await expect(
         page.getByText("Current password is incorrect!")
@@ -277,18 +267,13 @@ test.describe("Users And Contacts", () => {
         user1Credentials.password,
         user1Credentials.confirmPassword
       );
-      await page.getByTestId("settings-button").click();
-      await page.getByTestId("change-password-button").click();
 
-      await page
-        .getByTestId("current-password-input")
-        .fill(user1Credentials.password);
-      await page.getByTestId("new-password-input").fill("new_password");
-      await page
-        .getByTestId("confirm-new-password-input")
-        .fill("wrong_password");
-
-      await page.getByTestId("submit-change-password-button").click();
+      await changePassword(
+        page,
+        user1Credentials.password,
+        "new_password",
+        "wrong_password"
+      );
 
       await expect(page.getByText("Passwords do not match!")).toBeVisible();
     });
@@ -300,16 +285,13 @@ test.describe("Users And Contacts", () => {
         user1Credentials.password,
         user1Credentials.confirmPassword
       );
-      await page.getByTestId("settings-button").click();
-      await page.getByTestId("change-password-button").click();
 
-      await page
-        .getByTestId("current-password-input")
-        .fill(user1Credentials.password);
-      await page.getByTestId("new-password-input").fill("new_password");
-      await page.getByTestId("confirm-new-password-input").fill("new_password");
-
-      await page.getByTestId("submit-change-password-button").click();
+      await changePassword(
+        page,
+        user1Credentials.password,
+        "new_password",
+        "new_password"
+      );
 
       await expect(page.getByTestId("change-password-modal")).not.toBeVisible();
       await expect(page.getByTestId("alert-modal")).toBeVisible();
@@ -321,31 +303,8 @@ test.describe("Users And Contacts", () => {
 
   test.describe("Contacts", () => {
     test.beforeEach(async ({ page, request }) => {
-      await request.post("http://localhost:4000/", {
-        data: {
-          query: `
-            mutation Mutation {
-              resetDatabase
-            }
-          `,
-        },
-      });
-      userCredentials.forEach(
-        async (credential) =>
-          await request.post("http://localhost:4000/", {
-            data: {
-              query: `
-            mutation CreateUser($username: String!, $password: String!, $confirmPassword: String!) {
-              createUser(username: $username, password: $password, confirmPassword: $confirmPassword) {
-                username
-              }
-            }
-            `,
-              variables: credential,
-            },
-          })
-      );
-      await page.goto("http://localhost:5173");
+      await resetDatabase(request);
+      await createUsers(page, userCredentials);
     });
 
     test("adds new contacts", async ({ page, request }) => {
@@ -359,16 +318,15 @@ test.describe("Users And Contacts", () => {
     test("blocks and unblocks contact", async ({ page }) => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await addContacts(page, [user2Credentials]);
-      await page.getByTestId("contacts-button").click();
-      await page.getByTestId(user2Credentials.username).click();
-      await page.getByTestId("block-or-unblock-contact-button").click();
-      await page.getByTestId("confirm-button").click();
+
+      await navigateToContact(page, user2Credentials);
+      await blockOrUnblockContact(page);
+
       await expect(
         page.getByText("You have blocked this contact!")
       ).toBeVisible();
 
-      await page.getByTestId("block-or-unblock-contact-button").click();
-      await page.getByTestId("confirm-button").click();
+      await blockOrUnblockContact(page);
 
       await expect(
         page.getByText("You have blocked this contact!")
@@ -378,10 +336,11 @@ test.describe("Users And Contacts", () => {
     test("removes contact", async ({ page }) => {
       await signIn(page, user1Credentials.username, user1Credentials.password);
       await addContacts(page, [user2Credentials]);
-      await page.getByTestId("contacts-button").click();
-      await page.getByTestId(user2Credentials.username).click();
+
+      await navigateToContact(page, user2Credentials);
       await page.getByTestId("remove-contact-button").click();
       await page.getByTestId("confirm-button").click();
+
       await expect(page.getByText("No contacts found")).not.toBeVisible();
     });
 
