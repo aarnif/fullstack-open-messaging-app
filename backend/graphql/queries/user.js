@@ -1,6 +1,8 @@
-import User from "../../models/user.js";
 import mongoose from "mongoose";
 import { GraphQLError } from "graphql";
+
+import User from "../../models/user.js";
+import { getChatTitle, getChatImage } from "../utils.js";
 
 const typeDefs = `
   scalar Date
@@ -324,6 +326,10 @@ const resolvers = {
     },
     me: async (root, args, context) =>
       User.findById(context.currentUser).populate("blockedContacts"),
+  },
+  UserChatDetails: {
+    title: (parent, args, context) => getChatTitle(parent, context),
+    image: (parent, args, context) => getChatImage(parent, context),
   },
 };
 

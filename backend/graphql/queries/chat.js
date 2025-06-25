@@ -1,6 +1,7 @@
-import Chat from "../../models/chat.js";
-
 import { GraphQLError } from "graphql";
+
+import Chat from "../../models/chat.js";
+import { getChatTitle, getChatImage } from "../utils.js";
 
 const typeDefs = `
   scalar Date
@@ -41,33 +42,6 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    // allChatsByUser: async (root, args, context) =>
-    //   !context.currentUser
-    //     ? []
-    //     : Chat.find({
-    //         members: { $in: context.currentUser.id },
-    //         title: {
-    //           $regex: args.searchByTitle
-    //             ? `(?i)${args.searchByTitle}(?-i)`
-    //             : "(?i)(?-i)",
-    //         },
-    //       })
-    //         .populate("admin")
-    //         .populate("members")
-    //         .populate({
-    //           path: "members",
-    //           populate: { path: "blockedContacts" },
-    //         })
-    //         .populate({
-    //           path: "messages",
-    //           populate: { path: "sender" },
-    //         })
-    //         .populate({
-    //           path: "messages.sender",
-    //           populate: { path: "blockedContacts" },
-    //         })
-
-    //         .sort({ "messages.0.createdAt": "desc" }),
     findChatById: async (root, args) =>
       Chat.findById(args.chatId)
         .populate("admin")
@@ -127,26 +101,8 @@ const resolvers = {
         }),
   },
   Chat: {
-    title: (parent, args, context) => {
-      if (!context.currentUser || parent.isGroupChat) {
-        return parent.title;
-      }
-      // The title of a private chat is always the name of the other member, not the current user.
-      const findOtherPrivateChatMember = parent.members.find(
-        (member) => member.id !== context.currentUser.id
-      );
-      return findOtherPrivateChatMember.name;
-    },
-    image: (parent, args, context) => {
-      if (parent.isGroupChat) {
-        return parent.image;
-      }
-      // The image of a private chat is always the image of the other member, not the current user.
-      const findOtherPrivateChatMember = parent.members.find(
-        (member) => member.id !== context.currentUser.id
-      );
-      return findOtherPrivateChatMember.image;
-    },
+    title: (parent, args, context) => getChatTitle(parent, context),
+    image: (parent, args, context) => getChatImage(parent, context),
   },
 };
 
