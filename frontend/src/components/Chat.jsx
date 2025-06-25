@@ -254,7 +254,7 @@ export const Messages = ({ user, messages }) => {
   return (
     <div
       data-testid="chat-messages"
-      className="py-4 px-8 h-0 flex-grow w-full flex flex-col gap-2 overflow-y-auto"
+      className="p-8 h-0 flex-grow w-full flex flex-col gap-2 overflow-y-auto"
     >
       {messages.map((item, index) => {
         return (
@@ -612,7 +612,7 @@ const NewChatContent = ({ user, setActiveMenuItem, isNewChat }) => {
         handleDeleteChat={null}
         isNewChat={isNewChat}
       />
-      <Messages user={user} messages={[]} />
+      <Messages user={user} messages={[newChatInfo.initialMessage]} />
       <NewMessageInput user={user} chatId={null} newChatInfo={newChatInfo} />
     </>
   );

@@ -151,6 +151,11 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
         thumbnail: chosenContact.image.thumbnail,
         original: chosenContact.image.original,
       },
+      initialMessage: {
+        id: "1",
+        type: "notification",
+        content: "Start a chat by sending a message",
+      },
     };
 
     navigateToNewChatView(newPrivateChatInfo);
@@ -192,6 +197,11 @@ const NewChatModal = ({ user, chatType, setShowNewChatModal }) => {
       image: {
         thumbnail: "https://i.ibb.co/bRb0SYw/chat-placeholder.png",
         original: "https://i.ibb.co/FqHrScZ/chat-placeholder.png",
+      },
+      initialMessage: {
+        id: "1",
+        type: "notification",
+        content: "Start a chat by sending a message",
       },
     };
 

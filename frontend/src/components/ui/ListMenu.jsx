@@ -210,8 +210,6 @@ const ChatsList = ({
               messages: newChat.messages,
             },
             unreadMessages: 1,
-            lastReadMessageId: null,
-            lastReadAt: null,
           };
           const sortedChats = chatAndMessageHelpers.sortChatsByDate(
             allChatsByUser.concat(newUserChat)

@@ -176,8 +176,6 @@ const resolvers = {
             chats: {
               chat: newChat._id,
               unreadMessages: 0,
-              lastReadMessageId: null,
-              lastReadAt: null,
             },
           },
         });
@@ -193,8 +191,6 @@ const resolvers = {
               chats: {
                 chat: newChat._id,
                 unreadMessages: 1,
-                lastReadMessageId: null,
-                lastReadAt: null,
               },
             },
           }
@@ -501,8 +497,6 @@ const resolvers = {
                   chats: {
                     chat: args.chatId,
                     unreadMessages: 0,
-                    lastReadMessageId: null,
-                    lastReadAt: null,
                   },
                 },
               }
@@ -671,7 +665,6 @@ const resolvers = {
           {
             $set: {
               "chats.$[elem].unreadMessages": 0,
-              "chats.$[elem].lastReadAt": new Date(),
             },
           },
           {

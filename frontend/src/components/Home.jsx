@@ -116,8 +116,6 @@ const Home = ({
                   __typename: "UserChat",
                   chat: updatedChat,
                   unreadMessages: 0,
-                  lastReadMessageId: null,
-                  lastReadAt: null,
                 })
               ),
             };
