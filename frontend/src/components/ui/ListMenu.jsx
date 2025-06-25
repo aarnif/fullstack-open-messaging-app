@@ -209,7 +209,7 @@ const ChatsList = ({
               },
               messages: newChat.messages,
             },
-            unreadMessages: 0,
+            unreadMessages: 1,
             lastReadMessageId: null,
             lastReadAt: null,
           };
