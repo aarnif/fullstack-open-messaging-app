@@ -297,6 +297,11 @@ const mockNewChatInfo = {
   description: "This is a group chat.",
   members: [users[0], users[1], users[2]],
   image: chats[1].image,
+  initialMessage: {
+    id: "1",
+    type: "notification",
+    content: "Start a chat by sending a message",
+  },
 };
 
 export default {

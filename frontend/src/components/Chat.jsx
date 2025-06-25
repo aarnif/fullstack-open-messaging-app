@@ -612,7 +612,7 @@ const NewChatContent = ({ user, setActiveMenuItem, isNewChat }) => {
         handleDeleteChat={null}
         isNewChat={isNewChat}
       />
-      <Messages user={user} messages={[]} />
+      <Messages user={user} messages={[newChatInfo.initialMessage]} />
       <NewMessageInput user={user} chatId={null} newChatInfo={newChatInfo} />
     </>
   );
