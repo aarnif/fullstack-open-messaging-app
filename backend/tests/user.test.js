@@ -187,8 +187,6 @@ describe("User tests", () => {
                   title
                 }
                 unreadMessages
-                lastReadMessageId
-                lastReadAt
               }
             }`,
       },
@@ -201,8 +199,6 @@ describe("User tests", () => {
       groupChatDetails[0].title
     );
     expect(response.body.data.allChatsByUser[0].unreadMessages).toBe(0);
-    expect(response.body.data.allChatsByUser[0].lastReadMessageId).toBeNull();
-    expect(response.body.data.allChatsByUser[0].lastReadAt).toBeNull();
   });
 
   it("gets all contacts by user", async () => {

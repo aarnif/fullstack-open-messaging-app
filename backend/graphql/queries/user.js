@@ -23,8 +23,6 @@ const typeDefs = `
   type UserChat {
     chat: UserChatDetails!
     unreadMessages: Int!
-    lastReadMessageId: ID
-    lastReadAt: Date
   }
 
   type User {
@@ -223,8 +221,6 @@ const resolvers = {
               createdAt: "$chat.createdAt",
             },
             unreadMessages: "$chats.unreadMessages",
-            lastReadMessageId: "$chats.lastReadMessageId",
-            lastReadAt: "$chats.lastReadAt",
           },
         },
       ]);

@@ -70,14 +70,6 @@ const userSchema = new Schema({
         default: 0,
         min: 0,
       },
-      lastReadMessageId: {
-        type: Schema.Types.ObjectId,
-        default: null,
-      },
-      lastReadAt: {
-        type: Date,
-        default: null,
-      },
     },
   ],
 });

@@ -104,8 +104,6 @@ export const ALL_CHATS_BY_USER = gql`
         }
       }
       unreadMessages
-      lastReadMessageId
-      lastReadAt
     }
   }
 `;
