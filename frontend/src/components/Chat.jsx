@@ -254,7 +254,7 @@ export const Messages = ({ user, messages }) => {
   return (
     <div
       data-testid="chat-messages"
-      className="py-4 px-8 h-0 flex-grow w-full flex flex-col gap-2 overflow-y-auto"
+      className="p-8 h-0 flex-grow w-full flex flex-col gap-2 overflow-y-auto"
     >
       {messages.map((item, index) => {
         return (
